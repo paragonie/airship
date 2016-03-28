@@ -1,0 +1,28 @@
+<h3>{{ __("Embed this Image into a Blog Post or Web Page") }}</h3>
+<div id="bridge_files_info_img">
+    <ul id="bridge_files_info_img_nav">
+        <li data-format="HTML" id="bridge_files_info_img_nav_html">HTML</li>
+        <li data-format="Markdown" id="bridge_files_info_img_nav_markdown">Markdown</li>
+        <li data-format="RST" id="bridge_files_info_img_nav_rst">RST</li>
+    </ul>
+    <div id="preview_wrapper">
+        <div id="bridge_files_info_img_code">
+            <div id="bridge_files_info_img_html">
+                <textarea class="full-textarea">{#
+                    #}<img src="{{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}" alt="alternative text" />{#
+                #}</textarea>
+            </div>
+            <div id="bridge_files_info_img_markdown">
+                <textarea class="full-textarea">{#
+                    #}![alternative text]({{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}){#
+                #}</textarea>
+            </div>
+            <div id="bridge_files_info_img_rst">
+                <textarea class="full-textarea">{#
+                    #}.. image:: {{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}
+   :alt: alternative text{#
+                #}</textarea>
+            </div>
+        </div>
+    </div>
+</div>

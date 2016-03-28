@@ -1,0 +1,11 @@
+
+        <title>{% block pageTitle %}{% if pageTitle %} {{ pageTitle }} - {% endif %}{{ SETTINGS.title|default('An Airship Blog') }}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ "/css/font-awesome.min.css"|cachebust }}" type="text/css" />
+        <link rel="stylesheet" href="{{ "/css/pure-0.6.0.css"|cachebust }}" type="text/css" />
+        <link rel="stylesheet" href="{{ "/static/Hull/base.css"|cachebust }}" type="text/css" />
+{#      #}{% set motifs = user_motif() %}{#
+        #}{% for css in motifs.config.css %}
+        <link rel="stylesheet" href="{{ ("/static/Hull/motif/" ~ motifs.config.name ~ "/" ~ css)|cachebust }}" type="text/css" />
+        {% endfor %}
+
+        <link rel="icon" href="/img/airship_ico.png" type="image/png" />

@@ -1,0 +1,72 @@
+            function db_driver_onselect(id, selectedValue) {
+                var split = id.split('_');
+                var i = split[1];
+                switch (selectedValue) {
+                    case "mysql":
+                        $('#database_'+i+'_port').attr('placeholder', 3389);
+                        break;
+                    case "pgsql":
+                        $('#database_'+i+'_port').attr('placeholder', 5432);
+                        break;
+                }
+            };
+
+            var num_db = {% if databases %}{{ databases.length|default(1) }}{% else %}1{% endif %};
+
+            var db_drivers = {
+{% for key,val in drivers %}
+                "{{ key|addslashes }}": "{{ val|addslashes }}"{% if not loop.last %},{% endif %} 
+{% endfor %}
+            };
+            $("select.db_driver").on('change', function(e) {
+                return db_driver_onselect($(this).attr('id'), $(this).val());
+            });
+            
+            $("#add_db").on('click', function(e) {
+                var html = "";
+                html += "<label for=\"database_" + num_db + "_driver\">Database Driver:</label>" + "\n";
+                html += "<select class=\"db_driver pure-input-1\" name=\"database[" + num_db + "][driver]\" id=\"database_" + num_db + "_driver\">" + "\n";
+                html += "<option value=\"\"></option>";
+                {% for key, val in drivers %}html += "<option {#
+                    #}{% if database[0] %}{#
+                        #}{% if database[0][driver] == val %}{#
+                           #} selected=\"selected\" 
+                        {% endif %}
+                    {% endif %}{#
+                    #} value=\"{{ key|e('html_attr') }}\" {#
+                #}>{{ val|e('html') }}</option>";
+                {% endfor %}html += "</select>";
+                
+                html += "<label for=\"database_" + num_db + "_group\">Database Group:</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][group]\" id=\"database_" + num_db + "_group\" placeholder=\"default\" />\n";
+                                
+                html += "<label for=\"database_" + num_db + "_host\">Host:</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][host]\" id=\"database_" + num_db + "_host\" placeholder=\"localhost\" />\n";
+
+                html += "<label for=\"database_" + num_db + "_port\">Port (optional):</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][port]\" id=\"database_" + num_db + "_port\" />\n";
+
+                html += "<label for=\"database_" + num_db + "_username\">Username:</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][username]\" id=\"database_" + num_db + "_username\" required=\"required\" placeholder=\"username\" />\n";
+
+                html += "<label for=\"database_" + num_db + "_password\">Password:</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][password]\" id=\"database_" + num_db + "_password\" placeholder=\"password\" />\n";
+
+                html += "<label for=\"database_" + num_db + "_dbname\">Database:</label>\n";
+                html += "<input class=\"pure-input-1\" type=\"text\" name=\"database[" + num_db + "][dbname]\" id=\"database_" + num_db + "_dbname\" placeholder=\"database\" />\n";
+                
+                $("#secondary_databases").append(html).append('<hr />');
+                
+                $("#database_" + num_db + "_driver").on('change', function(e) {
+                    return db_driver_onselect($(this).attr('id'), $(this).val());
+                });
+
+                num_db++;
+            });
+            
+            $(document).ready(function() {
+                db_driver_onselect("database_0_driver", "{{ database[0][driver]|e('html_attr') }}");
+                {% for key, val in database %}{% if key > 0 %}
+                    db_driver_onselect("database_{{ key|e('html_attr') }}_driver", "{{ val.driver|e('html_attr') }}");
+                {% endif %}{% endfor %}
+            });

@@ -1,0 +1,6 @@
+<?php
+$db = \Airship\getDB();
+
+if ($db->getDriver() === '@_DRIVER_@') {
+    $db->exec("@_QUERY_@");
+}

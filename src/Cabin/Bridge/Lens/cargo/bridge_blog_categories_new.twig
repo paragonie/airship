@@ -1,0 +1,42 @@
+<div id="bridge_blog_category_add">
+    <form method="post">{{ form_token() }}
+        <div class="table full-width table-pad-1">
+            <div class="table-row">
+                <div class="table-cell table-min-width text-right table-pad-right">
+                    <label for="name">{{ __("New Category") }}:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" name="name" />
+                </div>
+            </div>
+
+            <div class="table-row">
+                <div class="table-cell table-min-width text-right table-pad-right">
+                    <label for="parent">{{ __("Parent") }}:</label>
+                </div>
+                <div class="table-cell">
+                    <select id="parent" class="treeselect" name="parent">{% spaceless %}
+                            <option value="0"> -None- </option>
+                            {% for category in categories %}
+                                {{ bcatmac.selectBox(category) }}
+                            {% endfor %}
+                        {% endspaceless %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="format" value="Markdown" />
+
+        <div class="bridge_categories_rich_text_wrapper">
+            {% include cargo("rich_text_editor") with {"name": "preamble", "placeholder": "", "contents": _POST.preamble|default("")} %}
+        </div>
+
+        <fieldset class="form-button-group">
+            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-secondary">
+                <i class="fa fa-check"></i>
+                {{  __("Create New Category") }}
+            </button>
+        </fieldset>
+    </form>
+</div>

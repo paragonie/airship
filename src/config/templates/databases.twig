@@ -1,0 +1,25 @@
+{
+    /*
+        "default" is (appropriately) the default database.
+        If no database is labeled "default", then the first one will be used.
+
+        Each database supports an array of possible connection points
+        (for horizontal scaling).
+    */
+    {% for key, dbs in databases %}
+        {{ key|je }}: [
+{% for i, db in dbs %}
+                {
+                    "driver": {{ db.driver|je }},
+                    "host": {{ db.host|je }},
+                    "port": {% if port %}{{ db.port|je }}{% elseif db.driver == "pgsql" %}5432{% endif%},
+                    "database": {{ db.database|je }},
+                    "username": {{ db.username|je }},
+                    "password": {{ db.password|je }},
+                    "options": {{ db.options|default([])|je }}
+                }{% if i < dbs.length %},{% endif %}
+
+{% endfor %}
+            ]
+    {% endfor %}
+}

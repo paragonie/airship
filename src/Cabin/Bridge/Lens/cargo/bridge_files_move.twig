@@ -1,0 +1,35 @@
+<h2>{{ __("Rename File?") }}</h2>
+
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <fieldset class="form-move-fieldset">
+        <legend>{% if root_dir %}
+            {{ cabin_url(cabin) ~ "files/" ~ root_dir ~ "/" ~ dir|e('html') ~ "/" ~ file.filename|e('html') }}
+        {% else %}
+            {{ cabin_url(cabin) ~ "files/" ~ dir|e('html') ~ "/" ~ file.filename|e('html') }}
+        {% endif %}
+        </legend>
+        <div class="full-width table table-pad-1">
+            <div class="width50 table-cell">
+                <select class="full-width" name="new_dir">
+                    <option value=""></option>
+                    {% for d in all_dirs %}
+                        <option value="{{ d|e('html_attr') }}"{% if d == dir %} selected="selected"{% endif %}>{{ d|e('html') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="width50 table-cell">
+                <input class="full-width" type="text" name="new_name" value="{{ file.filename|e('html_attr') }}" />
+            </div>
+            <div class="table-cell table-btn-right">
+                <button type="submit" name="submit_btn" value="confirm" class="pure-button pure-button-secondary">
+                    {{ __("Move / Rename File") }}
+                </button>
+            </div>
+            <div class="table-cell table-btn-right">
+                <a class="pure-button pure-button-tertiary" href="{{ SETTINGS.link_prefix ~ "/" ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ dir|e('url') }}">
+                    {{ __("Cancel") }}
+                </a>
+            </div>
+        </div>
+    </fieldset>
+</form>

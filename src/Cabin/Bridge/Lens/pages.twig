@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    <h3>{{  __("Custom Page Manager") }}</h3>
+    <p class="summary-text">
+        {{ __("This section of the Bridge allows you to create and manage custom web pages for any of your Airship cabins.") }}
+    </p>
+    <div id="custom_page_index">
+        {% include cargo("bridge_pages_index") ignore missing %}
+    </div>
+{% endblock %}

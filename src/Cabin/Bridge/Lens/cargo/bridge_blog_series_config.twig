@@ -1,0 +1,28 @@
+
+<div class="table-row">
+    <label class="table-cell">
+        {{ __("Previous Link Label") }}:
+    </label>
+    <div class="table-cell">
+        <input
+                type="text"
+                name="config[leftlink]"
+                placeholder="{{ __("Prev")|e('html_attr') }}"
+                value="{% if config.leftlink %}{{ config.leftlink|e('html_attr') }}{% endif %}"
+        />
+    </div>
+</div>
+
+<div class="table-row">
+    <label class="table-cell">
+        {{ __("Next Link Label") }}:
+    </label>
+    <div class="table-cell">
+        <input
+                type="text"
+                name="config[rightlink]"
+                placeholder="{{ __("Next")|e('html_attr') }}"
+                value="{% if config.rightlink %}{{ config.rightlink|e('html_attr') }}{% endif %}"
+        />
+    </div>
+</div>

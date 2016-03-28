@@ -1,0 +1,8 @@
+{% spaceless %}
+    {% if keywords %}
+        <meta name="keywords" content="{{ keywords|e('html_attr') }}" />
+    {% endif %}
+    {% if description %}
+        <meta name="description" content="{{ description|e('html_attr') }}" />
+    {% endif %}
+{% endspaceless %}

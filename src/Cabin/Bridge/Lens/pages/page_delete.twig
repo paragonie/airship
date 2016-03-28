@@ -1,0 +1,14 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_pages_page_delete") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/js/wysihtml5/wysihtml.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/wysihtml-toolbar.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/parser_rules/advanced_and_extended.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/editor.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/pages_delete.js"|cachebust }}"></script>
+    <script src="{{ csp_hash("https://www.google.com/recaptcha/api.js", "script-src", "sha384") }}"></script>
+{% endblock %}

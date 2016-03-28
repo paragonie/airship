@@ -1,0 +1,6 @@
+{% extends base_template() %}
+{% set title = __("Blog Comments") %}
+
+{% block main %}
+    {% include cargo("bridge_blog_comments") ignore missing %}
+{% endblock %}

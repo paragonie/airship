@@ -1,0 +1,13 @@
+{% if blogpost.format == 'RST' %}{#
+    #}{{ blogpost.snippet|RST|e('html') }}{#
+    #}<span id="after-fold"></span>{#
+    #}{{ blogpost.after_fold|RST|e('html') }}{#
+#}{% elseif blogpost.format == 'Markdown' %}{#
+    #}{{ blogpost.snippet|default("")|CleanMarkdown }}{#
+    #}<span id="after-fold"></span>{#
+    #}{{ blogpost.after_fold|default("")|CleanMarkdown }}{#
+#}{% else %}{#
+    #}{{ blogpost.snippet|e('html') }}{#
+    #}<span id="after-fold"></span>{#
+    #}{{ blogpost.after_fold|e('html') }}{#
+#}{% endif %}

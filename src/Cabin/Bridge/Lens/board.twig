@@ -1,0 +1,65 @@
+{% extends base_template() %}
+{% set title = __("Boarding") %}
+
+{% block content %}
+    <div class="width50 center">
+    <h2>{{ __("Register a New Account") }}</h2>
+    {%  if post_response %}
+        <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
+    {% endif %}
+        <div class="board-form-wrapper">
+            <form
+                id="board"
+                class="board-form pure-form pure-form-stacked"
+                action="/bridge/board"
+                method="post"
+            >{{ form_token("/bridge/board") }}
+                <label for="username">{{ __("Username") }}:</label>
+                <input type="text" id="username" name="username" placeholder="{{ __("Enter your Username") }}" required="required" class="pure-input-1" />
+                <div id="username_feedback">
+
+                </div>
+
+                <label for="password">{{ __("Passphrase") }}:</label>
+                <input type="password" id="password" name="passphrase" placeholder="{{ __("Enter your Passphrase") }}" required="required" class="pure-input-1" />
+                <div id="password_feedback">
+
+                </div>
+
+                {% if config.board.captcha %}
+                    <label>{{ __("Please verify that you are human") }}:</label>
+                    <div class="g-recaptcha" data-sitekey="{{ config.recaptcha["site-key"]|e('html_attr') }}"></div>
+                {% endif %}
+                
+                <fieldset>
+                    <legend>
+                        <input class="inblock" type="checkbox" id="show_hide_optional" />
+                        <label class="inblock" for="show_hide_optional">
+                            {{ __("Fill out optional profile fields?") }}
+                            <noscript>({{ __("Requires JavaScript") }})</noscript>
+                        </label>
+                    </legend>
+                    <div id="optional_field_wrapper">
+                        {% include cargo("form_register_extra_fields") ignore missing %}
+                    </div>
+                </fieldset>
+                
+                <div>
+                    <button type="submit" class="pure-button pure-button-primary">
+                        <i class="fa fa-user-plus"></i>
+                        {{ __("Sign Up") }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_js %}
+<script src="{{ "/static/Bridge/board.js"|cachebust }}"></script>
+<script src="{{ "/static/Bridge/zxcvbn.js"|cachebust }}"></script>
+<script src="{{ "/static/Bridge/passwords.js"|cachebust }}"></script>
+{% if config.board.captcha %}
+    <script src="{{ csp_hash("https://www.google.com/recaptcha/api.js", "script-src", "sha384") }}"></script>
+{% endif %}
+{% endblock %}

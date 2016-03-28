@@ -1,0 +1,8 @@
+<div class="form-row">
+    <div class="form-column">
+        <label for="display_name">{{ __("Display Name") }}:</label>
+    </div>
+    <div class="form-column">
+        <input type="text" id="display_name" name="display_name" value="{{ account.display_name|e('html_attr') }}" placeholder="Optional" />
+    </div>
+</div>

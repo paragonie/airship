@@ -1,0 +1,11 @@
+{% import "macros/blog_comments.twig" as bcom %}{#
+#}{% if config.blog.comments.enabled %}
+    {% if comments %}
+        <h3>{{ __("Comments") }}</h3>
+        <div id="blog_comments_wrapper">{#
+            #}<ol class="blog_comments">{% for comment in comments %}{#
+                #}{{ bcom.blogComments(comment, cargo("blog_comment_display")) }}{#
+            #}{% endfor %}</ol>{#
+        #}</div>{#
+    #}{% endif %}{#
+#}{% endif %}

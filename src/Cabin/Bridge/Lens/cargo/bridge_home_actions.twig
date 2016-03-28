@@ -1,0 +1,6 @@
+{% if can_create("blog/posts") %}
+    <a href="{{ SETTINGS.link_prefix }}/blog/post/new">
+        <i class="fa fa-pencil-square-o"></i>{#
+        #}{{ __("Create a New Blog Post") }}
+    </a>
+{% endif %}

@@ -1,0 +1,19 @@
+<h2>Are you sure you want to delete this folder (and all its contents)?</h2>
+
+<pre>{{ cabin_url(cabin) ~ "files/" ~ dir|e('html') }}</pre>
+
+<ul>
+    {% for child in dir_contents %}
+    <li class="monospace">{{ cabin_url(cabin) ~ "files/" ~ child }}</li>
+    {% endfor %}
+</ul>
+
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <button type="submit" name="submit_btn" value="Confirm Delete" class="pure-button pure-button-secondary">
+        {{ __("Delete everything") }}
+    </button>
+
+    <a class="pure-button pure-button-tertiary" href="{{ SETTINGS.link_prefix ~ "/" ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ parent_dir|e('url') }}">
+        {{ __("No") }}
+    </a>
+</form>

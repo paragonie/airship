@@ -1,0 +1,46 @@
+{% import "macros/groups.twig" as grpmac %}
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <div class="table table-pad-1">
+
+        <div class="table-row">
+            <div class="table-cell">
+                {{ __("New Group Name") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" name="name" required="required" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell">{{ __("Admin Access") }}:</div>
+            <div class="table-cell">
+                <input type="checkbox" id="superuser" name="superuser" />{#
+                #}<label for="superuser">{{ __("Grant admin access to all members of this group (and any groups that inherit permissions from it)?") }}</label>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell">
+                {{ __("Parent") }}:
+            </div>
+            <div class="table-cell">
+                <select name="parent" id="groups_parents">
+                    <option value=""> -- {{ __("None")|e('html') }} --</option>
+                    {% for g in groups %}
+                        {{ grpmac.selectBox(g) }}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label"></div>
+            <div class="table-cell">
+                <button type="submit" class="pure-button pure-button-primary">
+                    {{ __("Create Group") }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</form>

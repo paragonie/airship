@@ -1,0 +1,167 @@
+{% import "macros/groups.twig" as grpmac %}
+<div class="form-table table-pad-1">
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="ledger_details" id="ledger_details_label">
+                {{ __("Trusted Supplier") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select id="trusted_supplier" name="universal[airship][trusted-supplier]">
+                {% for supplier, data in suppliers %}
+                <option value="{{ supplier|e('html_attr') }}"
+                    {% if supplier == universal.airship['trusted-supplier'] %} selected="selected"{% endif %}
+                >{{ supplier|e('html') }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="update_frequency">
+                {{ __("Check for Updates Every") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select id="update_frequency" name="universal[auto-update][check]">
+                <option {% if universal["auto-update"].check == 900 %} selected="selected"{% endif %} value="900">15 Minutes</option>
+                <option {% if universal["auto-update"].check == 1800 %} selected="selected"{% endif %} value="1800">30 Minutes</option>
+                <option {% if universal["auto-update"].check == 3600 %} selected="selected"{% endif %} value="3600">1 Hour (60 Minutes) - Recommended</option>
+                <option {% if universal["auto-update"].check == 21600 %} selected="selected"{% endif %} value="21600">6 Hours</option>
+                <option {% if universal["auto-update"].check == 43200 %} selected="selected"{% endif %} value="43200">12 Hours</option>
+                <option {% if universal["auto-update"].check == 86400 %} selected="selected"{% endif %} value="86400">24 Hours (1 Day)</option>
+                <option {% if universal["auto-update"].check == 604800 %} selected="selected"{% endif %} value="604800">7 Days (1 Week)</option>
+            </select>
+            <fieldset class="updates_auto">
+                <legend>Automatically apply changes to:</legend>
+
+                <input {% if universal["auto-update"].major %} checked="checked"{% endif %} id="update_major" type="checkbox" name="universal[auto-update][major]" value="1" />
+                <label for="update_major">Major version changes (e.g. <code>1.5.2 -> 2.0.0</code>)</label><br />
+
+                <input {% if universal["auto-update"].minor %} checked="checked"{% endif %} id="update_minor" type="checkbox" name="universal[auto-update][minor]" value="1" />
+                <label for="update_minor">Minor version changes (e.g. <code>1.5.2 -> 1.6.0</code>)</label><br />
+
+                <input {% if universal["auto-update"].patch %} checked="checked"{% endif %} id="update_patch" type="checkbox" name="universal[auto-update][patch]" value="1" checked="checked" />
+                <label for="update_patch">Patch version changes (e.g. <code>1.5.2 -> 1.5.3</code>)</label><br />
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="ledger_driver">
+                {{ __("Application Logs") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select id="ledger_driver" name="universal[ledger][driver]">
+                <option
+                        {% if universal.ledger.driver == "file" %} selected{% endif %}
+                        value="file"
+                >{{ __("Store logs in the filesystem") }}</option>
+                <option
+                        {% if universal.ledger.driver == "database" %} selected{% endif %}
+                        value="database"
+                >{{ __("Store logs in a database table") }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="ledger_details" id="ledger_details_label">
+                {{ __("Log Directory") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input id="ledger_details" type="text" name="universal[ledger][path]" value="{{ universal.ledger.path|e('html_attr') }}" />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="cookie_auth_token">
+                {{ __("Long-Term Authentication Cookie Name") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="cookie_auth_token"
+                type="text"
+                name="universal[cookie_index][auth_token]"
+                value="{{ universal['cookie_index']['auth_token']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="session_userid">
+                {{ __("Session Index for User ID") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                    id="cookie_auth_token"
+                    type="text"
+                    name="universal[session_index][user_id]"
+                    value="{{ universal['session_index']['user_id']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="session_userid">
+                {{  __("Session Index for Logout Tokens") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="cookie_auth_token"
+                type="text"
+                name="universal[session_index][logout_token]"
+                value="{{ universal['session_index']['logout_token']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="ledger_driver">
+                {{ __("Guest Groups") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select name="universal[guest_groups][]" id="guest_groups" multiple="multiple">
+                {% for g in groups %}
+                    {{ grpmac.selectBox(g, universal["guest_groups"]) }}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="ledger_driver">
+                {{ __("Optional Features") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input {% if universal["tor-only"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="universal[tor-only]" value="1" />
+            <label for="network-tor">
+                Proxy all requests over <a href="https://www.torproject.org/about/overview">Tor</a>?
+            </label>
+
+            <br />
+
+            <input {% if universal["debug"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="universal[debug]" value="1" />
+            <label for="network-tor">
+                {{ __("Debug Mode (not recommended in production environments)") }}
+            </label>
+        </div>
+    </div>
+
+</div>

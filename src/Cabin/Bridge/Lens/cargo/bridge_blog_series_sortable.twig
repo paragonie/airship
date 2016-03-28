@@ -1,0 +1,39 @@
+<ul id="blog_series_items_sortable">
+    {% spaceless %}
+    {% for key, item in items %}
+        {% include cargo("bridge_blog_series_item") with {"key": key, "item": item} %}
+    {% endfor %}
+    {% endspaceless %}
+</ul>
+<input type="hidden" name="items" id="blog_series_items_serialized" value="t" />
+<div class="table full-width table-pad-1" id="blog_series_add_wrapper">
+    <div class="table-row">
+        <label class="table-cell table-label">
+            {{ __("Add a Series") }}:
+        </label>
+        <div class="table-cell full-width">
+            <select id="existing_series" class="full-width"></select>
+        </div>
+        <div class="table-cell table-btn-right">
+            <button type="button" id="add_series_btn" class="pure-button pure-button-primary">
+                {{ __("Add Series") }}
+            </button>
+        </div>
+    </div>
+    <div class="table-row">
+        <label class="table-cell table-label">
+            {{ __("Blog Posts") }}:
+        </label>
+        <div class="table-cell full-width">
+            <select id="existing_posts" class="full-width"></select>
+        </div>
+        <div class="table-cell table-btn-right">
+            <button type="button" id="add_blogpost_btn" class="pure-button pure-button-primary">
+                {{ __("Add Blog Post") }}
+            </button>
+        </div>
+    </div>
+</div>
+<p>{{ __(
+    "Drag and drop the items in the above list to reorder them. Click the icon on the far right to remove an item."
+) }}</p>

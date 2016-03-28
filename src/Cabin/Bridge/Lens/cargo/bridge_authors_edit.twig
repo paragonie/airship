@@ -1,0 +1,64 @@
+<form method="post">{{ form_token() }}
+    <div class="table full-width table-pad-1">
+        <div class="table-row">
+            <div class="table-cell table-label">
+                <label for="author_name">{{ __("Author Name") }}:</label>
+            </div>
+            <div class="table-cell">
+                <input{#
+                    #} class="full-width"{#
+                    #} id="author_name"{#
+                    #} name="name"{#
+                    #} placeholder="{{ __("e.g. Information Technology Department")|e('html_attr') }}"{#
+                    #} value="{{ author.name|e('html_attr') }}"{#
+                    #} type="text"{#
+                #} />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                <label for="format">Byline</label>:
+            </div>
+            <div class="table-cell">
+                <input type="text" name="byline" value="{{ author.byline|e('html_attr') }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                <label for="format">Format</label>:
+            </div>
+            <div class="table-cell">
+                {% include cargo("bridge_pages_select_format") with {
+                "format": author.bio_format
+                } %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label align-top">
+                {{ __("Biography") }}:
+            </div>
+            <div class="table-cell">
+                <div class="bridge_page_rich_text_wrapper">
+                    {% include cargo("rich_text_editor") with {
+                    "name": "biography",
+                    "placeholder": __("Optional. Tell the world who you are."),
+                    "contents": author.biography
+                    } %}
+                </div>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell tabel-label"></div>
+            <div class="table-cell">
+                <button type="submit" name="save_btn" value="save" class="pure-button pure-button-secondary">
+                    <i class="fa fa-save"></i>
+                    {{  __("Save Author") }}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

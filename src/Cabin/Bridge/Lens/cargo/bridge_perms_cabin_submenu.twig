@@ -1,0 +1,81 @@
+{% set can_update = can_update() %}
+{% set can_create = can_create() %}
+<h2>{{ __("Permissions") }} - {{ cabin|e('html') }}</h2>
+
+<form method="post">{{ form_token(_REQUEST_URI) }}
+
+    <h3>{{ __("Contexts") }}</h3>
+
+    <div id="bridge_perm_cabin_submenu_contexts">
+        <ul>
+            {% for ctx in contexts %}
+                <li>
+                    {% if can_update %}<a href="{{ SETTINGS.link_prefix }}/crew/permissions/{#
+                        #}{{ cabin|e('html_attr') }}/context/{#
+                        #}{{ ctx.contextid|e('html_attr') }}"{#
+                    #}>{#
+                        #}<i class="fa fa-pencil"></i>{#
+                    #}</a>{% endif %}
+                    {{ ctx.locator }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% if can_create %}
+            {% include cargo("bridge_perms_cabin_context_form_header") %}
+
+            <div class="table table-pad-1">
+                <div class="table-row">
+                    <div class="table-cell table-label min-width-100">
+                        <label for="new_context">{{ __("New Context") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input type="text" class="full-width" id="new_context" name="new_context" placeholder="foo/{string}/bar/{id}" />
+                    </div>
+                    <div class="table-cell table-btn-right">
+                        <button type="submit" name="create_context" value="create_context" class="pure-button pure-button-secondary">
+                            {{ __("Create Context") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <h3>{{ __("Actions") }}</h3>
+
+    <div id="bridge_perm_cabin_submenu_actions">
+        <ul>
+            {% for act in actions %}
+                <li>
+                    {% if can_update %}<a href="{{ SETTINGS.link_prefix }}/crew/permissions/{#
+                        #}{{ cabin|e('html_attr') }}/action/{#
+                        #}{{ act.actionid|e('html_attr') }}"{#
+                    #}>{#
+                        #}<i class="fa fa-pencil"></i>{#
+                    #}</a>{% endif %}
+                    {{ act.label|e('html') }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% if can_create %}
+            {% include cargo("bridge_perms_cabin_action_form_header") %}
+
+            <div class="table table-pad-1">
+                <div class="table-row">
+                    <div class="table-cell table-label min-width-100">
+                        <label for="new_action">{{ __("New Action") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input type="text" class="full-width" id="new_action" name="new_action" />
+                    </div>
+                    <div class="table-cell table-btn-right">
+                        <button type="submit" name="create_action" value="create_action" class="pure-button pure-button-secondary">
+                            {{ __("Create Action") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+</form>

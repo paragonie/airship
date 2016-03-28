@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    <div id="custom_files_info">
+        {% include cargo("bridge_files_info") ignore missing %}
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/files_info.js"|cachebust }}"></script>
+{% endblock %}

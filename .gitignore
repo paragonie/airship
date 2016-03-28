@@ -1,0 +1,17 @@
+/.idea/
+/nbproject/
+/files/*
+/src/public/launch.php
+/src/config/cabins.json
+/src/config/gears.json
+/src/config/databases.json
+/src/config/keyring/*.skey
+/src/config/keyring/*.keypair
+/src/config/universal.json
+/src/tmp/cache/*.json
+/src/tmp/installing.json
+/src/tmp/last_update_check.txt
+/test/phpunit.phar
+/test/phpunit.phar.asc
+/vendor/*
+/vendor/

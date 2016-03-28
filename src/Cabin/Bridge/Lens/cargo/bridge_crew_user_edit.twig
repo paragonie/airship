@@ -1,0 +1,97 @@
+{% import "macros/groups.twig" as grpmac %}
+<h2>{{ __("Edit User Account") }}</h2>
+<form method="post">{{ form_token(
+    SETTINGS.link_prefix ~ "/crew/users/edit/" ~ user.userid
+) }}
+    <div class="table full-width table-pad-1">
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Username") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" class="full-width" name="username" value="{{ user.username|e("html_attr") }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Unique ID") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" class="full-width" name="uniqueid" value="{{ user.uniqueid|e("html_attr") }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Change Passphrase") }}:
+            </div>
+            <div class="table-cell">
+                <input type="password" class="full-width" id="password" name="passphrase" placeholder="Optional" />
+                <div id="password_feedback" class="text-shadow"></div>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Display Name") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" class="full-width" name="display_name" value="{{ user.display_name|e("html_attr") }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Real Name") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" class="full-width" name="real_name" value="{{ user.real_name|e("html_attr") }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label">
+                {{ __("Email Address") }}:
+            </div>
+            <div class="table-cell">
+                <input type="text" class="full-width" name="email" value="{{ user.email|e("html_attr") }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label align-top">
+                {{ __("Groups") }}:
+            </div>
+            <div class="table-cell">
+                <select name="groups[]" id="users_groups" class="treeselect full-width tall-select" multiple="multiple">
+                    {% for grp in groups %}
+                        {{ grpmac.selectBox(grp, user.groups) }}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="table-row">
+            <div class="table-cell table-label align-top">
+                {{ __("Custom Profile Fields (JSON)") }}:
+            </div>
+            <div class="table-cell">
+                <textarea{#
+                    #} class="full-width full-textarea"{#
+                    #} name="custom_fields"{#
+                #}>{{
+                    user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))|e('html')
+                }}</textarea>
+            </div>
+        </div>
+        <div class="table-row">
+            <div class="table-cell table-label"></div>
+            <div class="table-cell">
+                <button type="submit" class="pure-button pure-button-primary">
+                    {{ __("Update Account Information") }}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

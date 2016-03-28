@@ -1,0 +1,30 @@
+<select id="files_list_cabin">{% spaceless %}
+        {% for cab in cabins %}
+            <option
+                    value="{{ cab|e('html_attr') }}"
+                    {% if cab == cabin %} selected="selected"{% endif %}
+            >{{ cab|e('html') }}</option>
+        {% endfor %}
+    {% endspaceless %}</select>
+<ul class="bridge_file_list_header_pathinfo">
+    <li{% if current == "" %} class="current_dir"{% endif %}>
+        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}">
+            <i class="fa fa-home"></i> {{ __("Home") }}
+        </a>
+    </li>
+    {% set acc_path = '' %}
+    {% for piece in pathinfo %}
+        {% if piece %}
+            {% if acc_path %}
+                {% set acc_path = acc_path ~ '/' ~ piece %}
+            {% else %}
+                {% set acc_path = piece %}
+            {% endif %}
+            <li{% if acc_path == current %} class="current_dir"{% endif %}>
+                <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}?dir={{ acc_path|e('url') }}">
+                    {{ piece|e('html') }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

@@ -1,0 +1,71 @@
+<form method="post">{{ form_token() }}
+    <div class="form-table">
+        <div class="table-row">
+            <label class="table-cell">
+                Cabin:
+            </label>
+            <div class="table-cell">
+                <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}" target="_blank">{{ cabin|e('html') }}</a>
+            </div>
+        </div>
+        <div class="table-row">
+            <label class="table-cell">
+                Page Name:
+            </label>
+            <div class="table-cell">
+                {{ dir|e('html') }}/<input type="text" required="required" name="url" />
+            </div>
+        </div>
+        <div class="table-row">
+            <label class="table-cell">
+                Options:
+            </label>
+            <div class="table-cell bridge_page_options">
+                <fieldset class="form-button-group">
+                    <input type="checkbox" id="page_cache_checkbox" name="cache" value="1" />
+                    <label for="page_cache_checkbox">Cache this page?</label>
+                    {% if is_admin() %}
+                    <br />
+                    <input type="checkbox" id="page_raw_checkbox" name="view_raw" value="1" />
+                    <label for="page_raw_checkbox">{{ __("View raw? (Don't run through HTMLPurifier - Doesn't affect preview  - Increases risk of XSS)") }}</label>
+                    {% endif %}
+                </fieldset>
+            </div>
+        </div>
+        <div class="table-row">
+            <label class="table-cell">
+                Page Format:
+            </label>
+            <div class="table-cell">
+                {% include cargo("bridge_pages_select_format") %}
+            </div>
+        </div>
+    </div>
+    <div class="bridge_page_rich_text_wrapper">
+        {% include cargo("rich_text_editor") with {"name": "page_body", "placeholder": "", "contents": ""} %}
+    </div>
+    <fieldset class="form-metadata-wrapper">
+        <legend>
+            <input type="checkbox" id="show_metadata" />
+            <label for="show_metadata">Show Metadata Fields?</label>
+        </legend>
+        <div class="form-table" id="pages_metadata">
+            {% include cargo("bridge_pages_metadata") with {"metadata": []} %}
+        </div>
+    </fieldset>
+
+    <fieldset class="form-button-group">
+        {% if can('publish') %}
+            <button type="submit" name="save_btn" value="publish" class="pure-button pure-button-secondary">
+                {{  __("Save New Page") }}
+            </button>
+            <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-tertiary">
+                {{  __("Save Draft") }}
+            </button>
+        {% else %}
+            <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-tertiary">
+                {{  __("Save Draft") }}
+            </button>
+        {% endif %}
+    </fieldset>
+</form>

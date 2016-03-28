@@ -1,0 +1,26 @@
+<h2>{{ __("Airship - Bridge") }}</h2>
+
+<div class="text-center">
+{{ __("Welcome, %s", "default",
+    ("<strong>" ~ user_display_name()|e('html') ~ "</strong>")|raw
+) }}
+    <a href="{{ SETTINGS.link_prefix }}/my/account" title="Change Display Name"><i class="fa fa-pencil-square"></i></a>
+</div>
+<div class="table full-width table-pad-1">
+    <div class="table-row">
+        <div class="table-cell">
+            <strong>{{ __("Airship Statistics") }}</strong>:
+        </div>
+        <div class="table-cell">
+            <strong>{{ __("Actions") }}</strong>:
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-cell table-min-width cell-pad-right">
+            {% include cargo("bridge_home_stats") %}
+        </div>
+        <div class="table-cell">
+            {% include cargo("bridge_home_actions") %}
+        </div>
+    </div>
+</div>

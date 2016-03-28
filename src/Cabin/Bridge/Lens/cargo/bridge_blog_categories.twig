@@ -1,0 +1,22 @@
+<h3>Blog Categories</h3>
+<div id="bridge_blog_categories">
+    <ul id="bridge_blog_category_tree">
+        {% spaceless %}
+            {% set leaf_cargo = cargo("bridge_blog_category_tree") %}
+            {% if categories %}
+            {% for category in categories %}
+                {{ bcatmac.frontCatTree(category, null, leaf_cargo, can_update()) }}
+            {% endfor %}
+            {% else %}
+                {{ __("No categories found.") }}
+            {% endif %}
+        {% endspaceless %}
+    </ul>
+</div>
+{% if can_create() %}
+    <fieldset id="new-category-form">
+        <a class="pure-button pure-button-secondary" href="{{ SETTINGS.link_prefix }}/blog/category/new">
+            <i class="fa fa-folder-open-o"></i>{{ __("New Category") }}
+        </a>
+    </fieldset>
+{% endif %}

@@ -1,0 +1,12 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_cabins_manage") ignore missing %}
+{% endblock %}
+{% block page_js %}
+    <script src="{{ "/static/Bridge/cabin_settings.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/csp.js"|cachebust }}"></script>
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ "/css/jquery-ui.css"|cachebust }}" type="text/css" />
+{% endblock %}

@@ -1,0 +1,99 @@
+{% set can_delete = can('delete') %}
+{% set can_publish = can('publish') %}
+{% set can_update = can('update') %}
+
+<div id="bridge_file_list_container"
+     class="bridge_file_list_contents"
+     data-cabin="{{ cabin|e('html_attr') }}"
+     data-dir="{{ current|e('html_attr') }}">
+    <div class="bridge_file_list_contents_row header_row"
+    >
+        <div>{{ __("File / Directory") }}</div>
+        <div>Created</div>
+        <div>Modified</div>
+        <div></div>
+    </div>
+    {% if subdirs %}
+        {% for dir in subdirs %}
+            <div class="bridge_file_list_contents_row"
+                 data-dir="{{ dir.url|e('url') }}"
+            >
+                <div class="monospace">
+                    <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}?dir={% if current %}{#
+                        #}{{ current ~ "/" ~ dir.name|e('url') }}{#
+                    #}{% else %}{#
+                        #}{{ dir.name|e('url') }}{#
+                    #}{% endif %}">
+                        <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.name|e('html') }}
+                    </a>
+                </div>
+                <div class="monospace">
+                    {{ dir.created|date("Y-m-d H:i:s") }}
+                </div>
+                <div class="monospace">
+                    {{ dir.modified|date("Y-m-d H:i:s") }}
+                </div>
+                <div>
+                    {% if can_update %}{% spaceless %}
+                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/move?{#
+                                #}{% if current %}{#
+                                    #}dir={{ current|e('url') }}/{{ dir.name|e('url') }}{#
+                                #}{% else %}{#
+                                    #}dir={{ dir.name|e('url') }}{#
+                                #}{% endif %}" class="pure-button pure-button-primary file-button">
+                            {{ __("Move / Rename") }}
+                        </a>
+                    {% endspaceless %}{% endif %}
+                    {% if can_delete %}
+                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/delete?{#
+                            #}{% if current %}{#
+                                #}dir={{ current|e('url') }}/{{ dir.name|e('url') }}{#
+                            #}{% else %}{#
+                                #}dir={{ dir.name|e('url') }}{#
+                            #}{% endif %}" class="pure-button pure-button-primary file-button">
+                            {{ __("Delete") }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if files %}
+        {% for f in files %}
+            <div class="bridge_file_list_contents_row"
+                 data-file="{{ f.filename|e('url') }}"
+            >
+                <div class="monospace">
+                    <i class="fa fa-file icon-pad-right"></i>{{ f.filename }}
+                </div>
+                <div class="monospace">
+                    {{ f.created|date("Y-m-d H:i:s") }}
+                </div>
+                <div class="monospace">
+                    {{ f.modified|date("Y-m-d H:i:s") }}
+                </div>
+                <div>{% spaceless %}
+                    <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/info?{% if current %}{#
+                        #}dir={{ current|e('url') }}&{#
+                    #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
+                        {{ __("File Info") }}
+                    </a>
+                    {% if can_publish %}
+                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/move?{% if current %}{#
+                            #}dir={{ current|e('url') }}&{#
+                        #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
+                            {{ __("Move / Rename") }}
+                        </a>
+                    {% endif %}
+                    {% if can_delete %}
+                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/delete?{% if current %}{#
+                            #}dir={{ current|e('url') }}&{#
+                        #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
+                            {{ __("Delete") }}
+                        </a>
+                    {% endif %}
+                {% endspaceless %}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

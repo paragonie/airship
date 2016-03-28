@@ -1,0 +1,78 @@
+<div class="table" id="file_metadata">
+    <div class="table-row">
+        <div class="table-cell table-label">
+            {{ __("Cabin") }}:
+        </div>
+        <div class="table-cell">
+            <a href="{{ SETTINGS.link_prefix ~ "/" ~ path_middle ~ "/" ~ cabin|e('url') }}">{#
+                #}{{ cabin|e('html') }}{#
+            #}</a>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-cell table-label">
+            {{ __("Directory") }}:
+        </div>
+        <div class="table-cell">
+            <a href="{{ SETTINGS.link_prefix ~ "/" ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ dir|e('url') }}">{#
+                #}{{ dir|default('/')|e('html') }}{#
+            #}</a>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-cell table-label">
+            {{ __("File Name") }}:
+        </div>
+        <div class="table-cell">
+            {% if dir and root_dir %}
+                {% set rdir = root_dir ~ "/" ~ dir ~ "/" %}
+            {% elseif dir %}
+                {% set rdir = dir ~ "/" %}
+            {% elseif root_dir %}
+                {% set rdir = root_dir ~ "/" %}
+            {% else %}
+                {% set rdir = "" %}
+            {% endif %}
+            <a href="{{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('url') }}">{#
+                #}{{ file.filename|e('html') }}{#
+            #}</a>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-cell table-label">
+            {{ __("Type") }}:
+        </div>
+        <div class="table-cell">
+            {{ file.type|e('html') }}
+        </div>
+    </div>
+
+
+    <div class="table-row">
+        <div class="table-cell table-label">
+            {{ __("Size") }}:
+        </div>
+        <div class="table-cell">
+            {% set kilobyte = 1024 %}
+            {% set megabyte = kilobyte * 1024 %}
+            {% set gigabyte = megabyte * 1024 %}
+            {% set terabyte = gigabyte * 1024 %}
+
+            {% if file.size < kilobyte %}
+                {{ file.size ~ ' B' }}
+            {% elseif file.size < megabyte %}
+                {{ (file.size / kilobyte)|number_format(2, '.') ~ ' KiB' }}
+            {% elseif file.size < gigabyte %}
+                {{ (file.size / megabyte)|number_format(2, '.') ~ ' MiB' }}
+            {% elseif file.size < terabyte %}
+                {{ (file.size / gigabyte)|number_format(2, '.') ~ ' GiB' }}
+            {% else %}
+                {{ (file.size / terabyte)|number_format(2, '.') ~ ' TiB' }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if 'image' in file.type %}
+    {% include cargo("bridge_files_info_img") %}
+{% endif %}

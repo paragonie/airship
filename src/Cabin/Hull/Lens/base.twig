@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>{% block head %}
+        {% include cargo("base_head") %}
+        {% block head_extra %}{% endblock %}
+        {% block page_css %}{% endblock %}
+
+    {% endblock %}</head>
+    <body>{% block body %}
+        <div id="site-wrapper">
+            <header>{% block header %}
+                {% include cargo("header") %}
+            {% endblock %}</header>
+            <div id="content">{% block content %}
+            {% endblock %}</div>
+        </div>{#
+        #}<footer>{% block footer %}
+            {% include cargo("footer") %}
+        {% endblock %}</footer>
+    {% endblock %}
+    {% block js %}
+        <script src="{{ "/js/jquery.min.js"|cachebust }}"></script>
+        <script src="{{ "/js/jquery.browser.min.js"|cachebust }}"></script>
+    {% endblock %}
+    {% block page_js %}{% endblock %}
+    </body>
+</html>

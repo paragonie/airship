@@ -1,0 +1,38 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    
+<div class="rwidth66 center">
+    <h1>Finalize Your Airship Configuration</h1>
+    <form
+        id="dbForm"
+        action="/"
+        method="post"
+    >{{ form_token() }}
+        <a id="showConfig" class="pure-button pure-button-tertiary" onClick="showFullConfig();">
+            Review and Amend Configuration
+        </a>
+        <a id="hideConfig" class="pure-button pure-button-tertiary" onClick="hideFullConfig();">
+            Hide Configuration
+        </a>
+        <div id="fullConfig">
+            {% include "review_form.twig" %} {# separated for cleanliness #}
+        </div>
+        <hr />
+        <div class="continue-btn-wrapper">
+            <button class='pure-button pure-button-primary'>Launch Your Airship &raquo;</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{# Style definitions are stored in other Twig templates #}
+{% block js %}
+    {% include "js/config.js.twig" %}
+    {% include "js/review.js.twig" %}
+{% endblock %}
+{% block css %}
+    {% include "css/main.css.twig" %}
+    {% include "css/review.css.twig" %}
+{% endblock %}

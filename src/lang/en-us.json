@@ -1,0 +1,106 @@
+{
+    "errors": {
+        "crypto": {
+            "cannot_both_be_public_keys":
+                "Both keys cannot be public keys, at least one must be a private key.",
+            "cannot_both_be_secret_keys":
+                "Both keys cannot be secret keys, at least one must be a public key. You may in fact be doing something dangerous.",
+            "expected_public_key":
+                "We were expecting a public key here.",
+            "expected_secret_key":
+                "We were expecting a secret key here.",
+            "expected_signing_key":
+                "We were expecting a signing key here. An encryption key was provided.",
+            "expected_asymmetric_key":
+                "We were expecting an asymmetric key here.",
+            "expected_symmetric_key":
+                "We were expecting a symmetric key here.",
+            "general_error":
+                "We failed to safely perform cryptography operations.",
+            "helpful_need_secretkey":
+                "Since you cannot get a secret key from a public key, only passing a public key won't give you a valid keypair.",
+            "hkdf_bad_digest_length":
+                "Bad output length requested of HKDF.",
+            "incorrect_secret_key":
+                "We failed to decrypt the message because the wrong secret key was used.",
+            "invalid_version_tag":
+                "Invalid version tag.",
+            "mac_validation_failed":
+                "The ciphertext we attempted to decrypt was invalid.",
+            "must_specify_public_or_private":
+                "Must specify PUBLIC or PRIVATE key type",
+            "must_specify_encryption_or_authentication":
+                "Must specify ENCRYPTION or SIGNATURE",
+            "file_stream_error":
+                "An unspecified error has occurred with the file streaming operations."
+        },
+        "database": {
+            "array_passed":
+                "Arrays cannot be passed to parameters; use json_encode() manually",
+            "insert_failed":
+                "Could not insert a row into %s. PDO error: %s",
+            "invalid_identifier":
+                "Invalid identifier: \"%s\" Must begin with a letter or undescore.",
+            "multiple_candidates":
+                "There are multiple candidate queries for %s.",
+            "not_found":
+                "The database \"%s\" is not configured for this cabin.",
+            "not_implemented":
+                "This is not implemented for %s yet.",
+            "pdo_exception":
+                "Could not create a database connection. Please check your username and password.",
+            "query_not_found":
+                "There are no candidate queries for %s."
+        },
+        "file": {
+            "cannot_read_file":
+                "This file cannot be read by PHP. Please check its permissions.",
+            "cannot_write_file":
+                "This file cannot be modified by PHP. Please check its permissions.",
+            "lfi":
+                "Local File Inclusion attack detected and blocked."
+        },
+        "hail": {
+            "invalid_api_version":
+                "Invalid version (%s) for the Hail API.",
+            "peer_checksum_failed":
+                "The file we received from upstream did not match what our peers had on file for version %s of %s",
+            "no_channel_configured":
+                "There is no channel configured for this Supplier: %s",
+            "no_channel_responded":
+                "No channel responded to our update query."
+        },
+        "object": {
+            "invalid_property":
+                "Unknown property %s of class %s."
+        },
+        "pages": {
+            "collision":
+                "A name collision has been detected: A file already exists with the same name in the same directory.",
+            "directory_wrong_cabin":
+                "The specified directory (%s) does not exist in the cabin (%s), found in another cabin (%s).",
+            "directory_does_not_exist":
+                "The specified directory does not exist.",
+            "page_does_not_exist":
+                "The specified page does not exist.",
+            "unknown_page_version":
+                "No entry exists with this version ID."
+        },
+        "router": {
+            "fallback_loop":
+                "Fallback loop detected in AutoPilot. Likely cause: method does not exist."
+        },
+        "security": {
+            "invalid_persistent_token":
+                "Your persistent authentication token is invalid.",
+            "not_authenticated":
+                "You are not currently logged in"
+        },
+        "type": {
+            "expected_resource":
+                "%s must be a resource.",
+            "wrong_class":
+                "Expected an instance of %s, or of one of its child classes."
+        }
+    }
+}

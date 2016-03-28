@@ -1,0 +1,50 @@
+{% macro selectBox(groupdata, selected = "", fullpath = "", depth = 0) %}{#
+    #}{% if fullpath %}{#
+        #}{% set fullpath = fullpath ~ " &rsaquo; " ~ groupdata.name %}{#
+    #}{% else %}{#
+        #}{% set fullpath = groupdata.name %}{#
+    #}{% endif %}
+    <option
+        value="{{ groupdata.groupid|e('html_attr') }}"
+        data-fullpath="{{ fullpath|e('html_attr') }}"
+        class="
+        treeselect
+        branch_{{ depth|default(0)|e }}
+        {% if groupdata.children %}
+            treeselect_parent
+        {% endif %}"
+        {% if selected is iterable %}
+            {% if groupdata.groupid in selected %}
+                selected="selected"
+            {% endif %}
+        {% else %}
+            {% if groupdata.groupid == selected %}
+                selected="selected"
+            {% endif %}
+        {% endif %}
+    >
+        {{ groupdata.name|e('html') }}
+    </option>
+    {% if groupdata.children %}
+        {% for child in groupdata.children %}
+            {{ _self.selectBox(child, selected, fullpath, depth + 1) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro groupTree(groupdata, depth) %}
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/crew/groups/edit/{{ groupdata.groupid }}">{#
+            #}<i class="fa fa-pencil"></i>{#
+        #}</a>{#
+        #}{{ groupdata.name|e }}
+    </li>
+    {% if groupdata.children %}
+        <ul>
+            {% for child in groupdata.children %}
+                {{ _self.groupTree(child, depth|default(0) + 1) }}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+

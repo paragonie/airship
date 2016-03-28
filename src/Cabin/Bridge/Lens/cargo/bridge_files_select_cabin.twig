@@ -1,0 +1,9 @@
+<h2>File Manager</h2>
+<p>
+    Please select a Cabin.
+</p>
+<ul>
+    {% for cabin in cabins %}
+        <li><a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}">{{ cabin }}</a></li>
+    {% endfor %}
+</ul>

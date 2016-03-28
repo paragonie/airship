@@ -1,0 +1,69 @@
+<div id="pagination">
+    {% set num_pages = (pagination.count / pagination.per_page|default(20))|ceil %}
+    {% if num_pages > 0 %}
+        <ul class="pages">
+            {% if pagination.page > 1 %}
+                <li class="pagination_first" title="Go to the first page"><a href="{{ pagination.base }}{{ pagination.extra_args }}">&laquo;</a></li>
+                <li class="pagination_prev" title="Go to the previous page"><a href="{{ pagination.base ~ pagination.suffix|default('/') ~ (pagination.page - 1) }}{{ pagination.extra_args }}">&lsaquo;</a></li>
+            {% else %}
+                <li class="pagination_first" title="Go to the first page">&laquo;</li>
+                <li class="pagination_prev" title="Go to the previous page">&lsaquo;</li>
+            {% endif %}
+            {% for i, p in range (1, num_pages) %}
+                {% if p == pagination.page %}
+                    <li class="pagination_page pagination_current">{{ p }}</li>
+                {% else %}
+                    {% set page_diff = (pagination.page - p)|abs %}
+                    <li class="pagination_page {% spaceless %}
+                {% if page_diff > 19 %}
+                    page_hide_20
+                {% elseif page_diff > 18 %}
+                    page_hide_19
+                {% elseif page_diff > 17 %}
+                    page_hide_18
+                {% elseif page_diff > 16 %}
+                    page_hide_17
+                {% elseif page_diff > 15 %}
+                    page_hide_16
+                {% elseif page_diff > 14 %}
+                    page_hide_15
+                {%  elseif page_diff > 13 %}
+                    page_hide_14
+                {%  elseif page_diff > 12 %}
+                    page_hide_13
+                {%  elseif page_diff > 11 %}
+                    page_hide_12
+                {%  elseif page_diff > 10 %}
+                    page_hide_11
+                {%  elseif page_diff > 9 %}
+                    page_hide_10
+                {%  elseif page_diff > 8 %}
+                    page_hide_9
+                {%  elseif page_diff > 7 %}
+                    page_hide_8
+                {%  elseif page_diff > 6 %}
+                    page_hide_7
+                {%  elseif page_diff > 5 %}
+                    page_hide_6
+                {%  elseif page_diff > 4 %}
+                    page_hide_5
+                {%  elseif page_diff > 3 %}
+                    page_hide_4
+                {%  elseif page_diff > 2 %}
+                    page_hide_3
+                {%  elseif page_diff > 1 %}
+                    page_hide_2
+                {%  endif %}
+                {% endspaceless %}"><a href="{{ pagination.base ~ pagination.suffix|default('/') ~ p }}{{ pagination.extra_args }}">{{ p }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if num_pages - pagination.page > 0 %}
+                <li class="pagination_next" title="Go to the next page"><a href="{{ pagination.base ~ pagination.suffix|default('/') ~ (pagination.page + 1) }}{{ pagination.extra_args }}">&rsaquo;</a></li>
+                <li class="pagination_last" title="Go to the last page"><a href="{{ pagination.base ~ pagination.suffix|default('/') ~ num_pages }}{{ pagination.extra_args }}">&raquo;</a></li>
+            {% else %}
+                <li class="pagination_next" title="Go to the next page">&rsaquo;</li>
+                <li class="pagination_last" title="Go to the last page">&raquo;</li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>

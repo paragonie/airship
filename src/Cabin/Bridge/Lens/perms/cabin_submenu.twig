@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    <div id="custom_files_cabin_submenu">
+        {% include cargo("bridge_perms_cabin_submenu") ignore missing %}
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/perms_cabin_submenu.js"|cachebust }}"></script>
+{% endblock %}

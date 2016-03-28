@@ -1,0 +1,13 @@
+{
+  "board": {
+    "enabled": true,
+    "captcha": true
+  },
+  "file": {
+    "cache": 900
+  },
+  "recaptcha": {
+    "secret-key": "6Ldy5BYTAAAAAPBh868BMm2nGZelOUyXJHTUE4no",
+    "site-key": "6Ldy5BYTAAAAACk3Tj8wDUBLcVxSL2JXFBw-Dtj3"
+  }
+}

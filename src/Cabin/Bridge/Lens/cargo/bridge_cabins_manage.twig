@@ -1,0 +1,31 @@
+<h2 class="nomargin">{{ name|e('html') }}</h2>
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <div id="cabin_accordion">
+        <h3>{{ __("Routing Information") }}</h3>
+        <div id="routing">
+            {% include cargo("bridge_cabin_settings") with {
+                "config": config.cabin
+            } %}
+        </div>
+        <h3>{{ __("Cabin Configuration") }}</h3>
+        <div id="config">
+            {% include cargo("bridge_cabin_config") with {
+                "config_extra": config.cabin_extra,
+                "motifs": config.motifs,
+                "twig_vars": config["twig_vars"]
+            } %}
+        </div>
+        <h3>{{ __("Content Security Policy") }}</h3>
+        <div id="content-security-policy">
+            {% include cargo("bridge_csp") with {
+                "csp": config.content_security_policy,
+                "inherit_box": true
+            } %}
+        </div>
+    </div>
+    <div class="form-button-group">
+        <button type="submit" class="pure-button pure-button-secondary">
+            <i class="fa fa-home "></i> {{ __("Save Cabin Configuration") }}
+        </button>
+    </div>
+</form>

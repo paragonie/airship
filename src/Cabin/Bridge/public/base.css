@@ -1,0 +1,217 @@
+#main-wrapper {
+    display: table;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+}
+#bridge_table {
+    display: table;
+    width: 100%;
+    margin: 1em 0;
+}
+#announcement {
+    display: table-caption;
+    padding: 1ex;
+}
+#bridge_left {
+    display: table-cell;
+    vertical-align: top;
+    width: calc(25% - 1rem);
+    width: 24.5%;
+}
+#bridge_main {
+    display: table-cell;
+    padding: 1rem;
+    vertical-align: top;
+}
+.bridge-menu,
+.bridge-menu ul {
+    list-style: none;
+    padding-left: 1.25rem;
+}
+#bridge_main *:first-child {
+    margin-top: 0;
+}
+#bridge_main *:last-child {
+    margin-bottom: 0;
+}
+.bridge-main-link {
+    font-weight: bold;
+}
+#my_account_form fieldset {
+    border-color: rgba(0, 0, 0, 0.33);
+}
+#my_account_form fieldset + fieldset{
+    margin-top: 1ex;
+}
+#my_account_form .form-row {
+    display: table-row;
+}
+#my_account_form .form-column {
+    display: table-cell;
+    vertical-align: top;
+}
+#my_account_form .form-row > .form-column:first-of-type {
+    padding-right: 1ex;
+    text-align: right;
+    width: 160px;
+}
+.bridge_file_list_contents,
+.bridge_page_list_contents {
+    display: table;
+    width: 100%;
+}
+.bridge_file_list_contents .header_row,
+.bridge_page_list_contents .header_row {
+    font-weight: bold;
+}
+.bridge_file_list_contents_row,
+.bridge_page_list_contents_row {
+    display: table-row;
+}
+.bridge_file_list_contents_row > div,
+.bridge_page_list_contents_row > div {
+    display: table-cell;
+}
+.form-table {
+    display: table;
+    width: 100%;
+}
+.table {
+    display: table;
+}
+.table-row {
+    display: table-row;
+}
+.table-cell {
+    display: table-cell;
+}
+.inline-list {
+    display: inline;
+    list-style: none;
+    padding: 0;
+}
+.inline-list li {
+    display: inline-block;
+}
+.rich_text_tab_row {
+    display: block;
+}
+.rich_text_tab_row a {
+    display: inline-block;
+    padding: 0.25ex 0.5ex;
+    cursor: pointer;
+}
+.rich_text_tab_row a + a {
+    margin-left: 0.5ex;
+}
+.rich_text_show_one {
+    padding: 0.5em;
+    width: calc(100% - 1em);
+}
+.rich_text_textarea_wrapper {
+    text-align: center;
+}
+.full-width {
+    width: 100% !important;
+}
+.full-textarea {
+    min-height: 8em;
+    min-width: 20em;
+    max-width: 100%;
+    width: calc(100% - 1em);
+}
+#page_history_revision_list .table {
+    display: table;
+    width: 100%;
+}
+#page_history_revision_list .table-header {
+
+}
+#page_history_nav {
+    display: table;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+#page_history_nav li {
+    display: table-cell;
+}
+#page_history_nav li:first-child {
+    text-align: left;
+}
+#page_history_nav li:last-child {
+    text-align: right;
+}
+#bridge_author_list,
+#bridge_comments_list,
+#bridge_blog_list,
+#bridge_tag_list {
+    width: 100%;
+}
+.bridge_blog_post_tags li {
+    padding-right: 1ex;
+}
+#bridge_blog_header,
+#bridge_author_header {
+    margin-bottom: 0.5ex;
+}
+#bridge_author_list {
+    width: 100%;
+}
+#bridge_blog_pagination {
+    margin-top: 0.5ex;
+}
+#new-category-form .table-cell {
+    padding: 1px;
+}
+.text-right {
+    text-align: right !important;
+}
+.vertical-bottom {
+    vertical-align: bottom;
+}
+#bridge_files_info_img_nav {
+    display: inline;
+    list-style-type: none;
+    padding: 0;
+}
+#bridge_files_info_img_nav li {
+    display: inline-block;
+}
+@media screen and (min-width: 1051px) and (max-width: 1250px) {
+    .table-label {
+        max-width: 180px;
+        width: 180px;
+    }
+}
+@media screen and (min-width: 1251px) and (max-width: 1450px) {
+    .table-label {
+        max-width: 200px;
+        width: 200px;
+    }
+}
+@media screen and (min-width: 1451px) and (max-width: 2150px) {
+    .table-label {
+        max-width: 220px;
+        width: 220px;
+    }
+}
+.table-label {
+    padding-right: 1ex;
+    text-align: right;
+}
+.align-top {
+    vertical-align: top;
+}
+.permlist_perm,
+.permtable_perm {
+    text-align: center;
+}
+.test-cabin-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+.min-width-100 {
+    min-width: 100px;
+}

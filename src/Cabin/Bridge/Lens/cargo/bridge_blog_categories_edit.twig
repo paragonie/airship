@@ -1,0 +1,47 @@
+<div id="bridge_blog_category_add">
+    <form method="post">{{ form_token() }}
+        <div class="table full-width">
+            <div class="table-row">
+                <div class="table-cell text-right">
+                    <label for="name">{{ __("Category Name") }}:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" name="name" value="{{ category.name }}" />
+                </div>
+            </div>
+
+            <div class="table-row">
+                <div class="table-cell text-right">
+                    <label for="parent">{{ __("Parent") }}:</label>
+                </div>
+                <div class="table-cell">
+                    <select id="parent" class="treeselect" name="parent">{% spaceless %}
+                            <option value="0"> -None- </option>
+                            {% for cat in categories %}
+                                {{ bcatmac.selectBox(cat, category.parent) }}
+                            {% endfor %}
+                        {% endspaceless %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-row">
+                <div class="table-cell">{{ __("Preamble (Markdown)") }}:</div>
+                <div class="table-cell">
+                    <input type="hidden" id="format" value="Markdown" />
+                </div>
+            </div>
+        </div>
+
+        <div class="bridge_categories_rich_text_wrapper">
+            {% include cargo("rich_text_editor") with {"name": "preamble", "placeholder": "", "contents": _POST.preamble|default(category.preamble)} %}
+        </div>
+
+        <fieldset class="form-button-group">
+            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-secondary">
+                <i class="fa fa-check"></i>
+                {{  __("Save Changes") }}
+            </button>
+        </fieldset>
+    </form>
+</div>

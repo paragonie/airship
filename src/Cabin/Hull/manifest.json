@@ -1,0 +1,48 @@
+{
+    "name": "hull",
+    "route_fallback":
+        ["CustomPages", "routeNotFound"],
+    "routes": {
+        "ajax/blog_comment_reply/{year}/{month}/{lslug}/{_int}":
+            ["Ajax", "blogCommentReply"],
+        "blog/all":
+            ["BlogPosts", "listAll"],
+        "blog/author/{lslug}{_page}":
+            ["BlogPosts", "listByAuthor"],
+        "blog/author{_lslug}":
+            ["BlogPosts", "listByAuthor"],
+        "blog/authors":
+            ["BlogPosts", "listPublicAuthors"],
+        "blog/category/{slug}{_page}":
+            ["BlogPosts", "listByCategory"],
+        "blog/category/{_slug}":
+            ["BlogPosts", "listByCategory"],
+        "blog/category":
+            ["BlogPosts", "listByCategory"],
+        "blog/series/{slug}{_page}":
+            ["BlogPosts", "listBySeries"],
+        "blog/series/{slug}":
+        ["BlogPosts", "listBySeries"],
+        "blog/series":
+        ["BlogPosts", "listSeries"],
+        "blog/tag/{lslug}{_page}":
+            ["BlogPosts", "listByTag"],
+        "blog/tag/{_lslug}":
+            ["BlogPosts", "listByTag"],
+        "blog/{year}/{month}/{lslug}/trackback/?":
+            ["BlogPosts", "trackbackPost"],
+        "blog/{year}/{month}/{lslug}":
+            ["BlogPosts", "readPost"],
+        "blog/{year}/{month}":
+            ["BlogPosts", "listMonth"],
+        "blog/{year}":
+            ["BlogPosts", "listYear"],
+        "blog":
+            ["BlogPosts", "index"],
+        "files/(.*)":
+            ["PublicFiles", "download"],
+        "":
+            ["IndexPage", "index"]
+    },
+    "supplier": "paragonie"
+}

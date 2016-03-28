@@ -1,0 +1,12 @@
+<h3 id="about-the-author">About the Author</h3>
+{% set avatar = get_avatar(author.authorid, 'profile') %}
+{% if avatar %}
+    <img src="{{ avatar }}" alt="{{ author.name|e }} Photo" class="author_photo" />
+{% endif %}
+<h4 class="nomargin"><a href="/blog/author/{{ author.slug|e('url') }}">{{ author.name|e }}</a></h4>
+<div id="author_byline">{{ author.byline|default("")|CleanMarkdown }}</div>
+{% if author.bio %}
+<div id="author_bio">
+    {{ author.bio|default("")|CleanMarkdown }}
+</div>
+{% endif %}

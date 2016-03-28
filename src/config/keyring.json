@@ -1,0 +1,14 @@
+{
+  "cache.hash_key": {
+    "type": "AuthenticationKey",
+    "file": "cache.skey"
+  },
+  "auth.password_key": {
+    "type": "EncryptionKey",
+    "file": "password_encryption.skey"
+  },
+  "cookie.encrypt_key": {
+    "type": "EncryptionKey",
+    "file": "cookie_encryption.skey"
+  }
+}

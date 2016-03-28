@@ -1,0 +1,28 @@
+{
+  "blog": {
+    "comments": {
+      "list_all":
+      "SELECT * FROM hull_blog_comments ORDER BY approved ASC, commentid ASC OFFSET {{offset}} LIMIT {{limit}}"
+    },
+    "posts": {
+      "list_all":
+        "SELECT * FROM view_hull_blog_list ORDER BY postid DESC OFFSET {{offset}} LIMIT {{limit}}",
+      "list_mine":
+        "SELECT * FROM view_hull_blog_list l LEFT JOIN hull_blog_author_owners a ON l.author = a.authorid WHERE l.status OR a.userid = ? ORDER BY postid DESC OFFSET {{offset}} LIMIT {{limit}}",
+      "latest_version":
+        "SELECT * FROM hull_blog_post_versions WHERE post = ? ORDER BY versionid DESC OFFSET 0 LIMIT 1"
+    },
+    "series": {
+      "list_all":
+        "SELECT * FROM hull_blog_series ORDER BY name ASC OFFSET {{offset}} LIMIT {{limit}}",
+      "list_for_author":
+        "SELECT * FROM hull_blog_series WHERE author IN {{authorids}} ORDER BY name ASC OFFSET {{offset}} LIMIT {{limit}}",
+      "tree":
+        "SELECT s.* FROM hull_blog_series_items i LEFT JOIN hull_blog_series s ON i.parent = s.seriesid WHERE i.series = ? AND i.parent NOT IN {{valueset}}"
+    },
+    "tags": {
+      "list_all":
+        "SELECT * FROM hull_blog_tags {{orderby}} OFFSET {{offset}} LIMIT {{limit}}"
+    }
+  }
+}

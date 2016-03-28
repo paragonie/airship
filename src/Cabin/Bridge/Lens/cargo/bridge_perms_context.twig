@@ -1,0 +1,88 @@
+{% import "macros/permtable.twig" as ptable %}
+
+<h2 class="nomargin">Manage Permissions</h2>
+
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <div class="table table-pad-1">
+        <div class="table-row">
+            <div class="table-cell table-label">{#
+                #}{{ __("Context Locator") }}:{#
+            #}</div>{#
+            #}<div class="table-cell full-width">{#
+                #}<input type="text" class="full-width" id="context" name="context" placeholder="foo/{string}/bar/{id}" value="{{ context.locator|e('html_attr') }}" />{#
+            #}</div>
+        </div>
+    </div>
+
+    <table id="perm_edit_tree" class="full-width">
+        <thead>
+        <tr class="perm_header">
+            <th class="permtable_header_name" rowspan="2">
+                {{ __("Group")|e('html') }}
+            </th>
+            <th colspan="{{ actions|length }}" class="text-center">
+                {{ __("Permissions")|e('html') }}
+            </th>
+        </tr>
+        <tr class="perm_header">
+            {% for act in actions %}
+                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for branch in permissions %}
+            {{ ptable.permTable(branch) }}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <table id="perms_userlist" class="table full-width">
+        <thead>
+        <tr class="perm_header">
+            <th class="permtable_header_name" rowspan="2">
+                {{ __("User")|e('html') }}
+            </th>
+            <th colspan="{{ actions|length }}" class="text-center">
+                {{ __("Permissions")|e('html') }}
+            </th>
+        </tr>
+        <tr>
+            {% for act in actions %}
+                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+            {% endfor %}
+            {% set footercols = actions|length + 1 %}
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th colspan="{{ footercols }}">
+                <input type="text" name="add_user" id="newUserField" />
+                <button class="pure-button pure-button-primary" type="button" id="add_user_btn">
+                    <i class="fa fa-plus"></i>
+                    Add User
+                </button>
+            </th>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% spaceless %}{% for userid, perms in userperms %}
+            {% include "perms/user.twig" with {"userid": userid, "user": users[userid], "perms": perms} %}
+        {% endfor %}{% endspaceless %}
+        </tbody>
+    </table>
+
+    <input type="hidden" id="cabin" value="{{ cabin|e('html_attr') }}" />
+    <input type="hidden" id="contextId" value="{{ context.contextid|e('html_attr') }}" />
+    <fieldset class="form-button-group text-center">
+        <button type="submit" class="pure-button pure-button-secondary">
+            <i class="fa fa-save"></i>
+            {{ __("Save Changes") }}
+        </button>
+        <a href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('url') }}" class="pure-button pure-button-tertiary">
+            <i class="fa fa-close"></i>
+            {{ __("Cancel") }}
+        </a>
+    </fieldset>
+
+</form>

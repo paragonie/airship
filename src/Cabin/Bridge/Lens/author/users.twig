@@ -1,0 +1,14 @@
+{% extends base_template() %}
+{% set title = __("Users for Author " ~ author.name|e('html')) %}
+
+{% block main %}
+    {% include cargo("bridge_authors_users") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/js/wysihtml5/wysihtml.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/wysihtml-toolbar.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/parser_rules/advanced_and_extended.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/editor.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/author_edit.js"|cachebust }}"></script>
+{% endblock %}

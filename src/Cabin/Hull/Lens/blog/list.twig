@@ -1,0 +1,10 @@
+{% extends "blog/wrapper.twig" %}
+
+{% block blog_contents %}
+    <div id="blog_list">{% include cargo("blog_list") %}</div>
+
+    <hr class="blog-hr" />
+
+    {% include cargo("blog_pagination") ignore missing %}
+
+{% endblock %}

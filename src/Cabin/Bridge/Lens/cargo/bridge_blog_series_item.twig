@@ -1,0 +1,33 @@
+{% if item.series %}
+    <li id="series_items_series_{{ item.series|e('html') }}"{#
+                #} class="series_item_series"{#
+                #} data-itemid="{{ item.itemid|e('html') }}"{#
+                #} data-id="series_{{ item.series|e('html') }}"{#
+                #} data-type="series"{#
+                #} data-rowid="{{ item.series|e('html') }}"{#
+            #}>{#
+                #}<span>{#
+                    #}<i class="fa fa-list-alt"></i> {#
+                    #}{{ item.name|e('html') }}{#
+                #}</span>{#
+                #}<a class="delete_item" data-id="series_{{ item.series|e('html') }}">{#
+                    #}<i class="fa fa-trash"></i>{#
+                #}</a>{#
+            #}</li>
+{% else %}
+    <li id="series_items_blogpost_{{ item.post|e('html') }}"{#
+                #} class="series_item_blogpost"{#
+                #} data-itemid="{{ item.itemid|e('html') }}"{#
+                #} data-id="blogpost_{{ item.post|e('html') }}"{#
+                #} data-type="blogpost"{#
+                #} data-rowid="{{ item.post|e('html') }}"{#
+            #}>{#
+                #}<span>{#
+                    #}<i class="fa fa-file-text-o"></i> {#
+                    #}{{ item.name|e('html') }}{#
+                #}</span>{#
+                #}<a class="delete_item" data-id="blogpost_{{ item.post|e('html') }}">{#
+                    #}<i class="fa fa-trash"></i>{#
+                #}</a>{#
+            #}</li>
+{% endif %}

@@ -1,0 +1,50 @@
+<div class="rich-text-wrapper" data-name="{{ name|e('html_attr') }}" id="rich_text_{{ name|e('html_attr') }}_wrapper">
+    <div class="rich_text_show_one">
+        <div class="rich_text_textarea_wrapper" id="rich_text_{{ name|e('html_attr') }}_text">
+            {% include cargo("rich_text_toolbar") %}
+            <textarea
+                class="full-textarea editable"
+                name="{{ name }}"
+                id="rich_text_{{ name|e('html_attr') }}"
+                placeholder="{{ placeholder|e('html_attr') }}"
+                {% if readonly %}
+                    readonly="readonly"
+                {% endif %}
+            >{#
+            #}{{ contents|e('html') }}{#
+            #}</textarea>
+        </div>
+        <div id="rich_text_{{ name|e('html_attr') }}_preview" class="richtext-render"></div>
+    </div>
+    <div class="rich_text_tab_row" id="rich_text_{{ name|e('html_attr') }}_tabs">
+        <a id="rich_text_{{ name|e('html_attr') }}_edit_tab">Edit</a>
+        <a id="rich_text_{{ name|e('html_attr') }}_preview_tab">Preview</a>
+    </div>
+</div>
+<script nonce="{{ csp_nonce() }}">
+if (typeof($) === 'undefined') {
+    /**
+     * We can't reliably depend on jQuery already being loaded.
+     */
+    window._old_onload = window.onload || function () {};
+    window.onload = function () {
+        richTextWrapper(
+                "{{ name|e("html_attr") }}",
+                "{{ format_element|default("format")|e("html_attr") }}"
+        );
+        if (typeof(window._old_onload) === 'function') {
+            window._old_onload();
+        }
+    };
+} else {
+    /**
+     * If jQuery is already loaded, then just use it.
+     */
+    $(document).ready(function() {
+        richTextWrapper(
+            "{{ name|e("html_attr") }}",
+            "{{ format_element|default("format")|e("html_attr") }}"
+        );
+    });
+}
+</script>

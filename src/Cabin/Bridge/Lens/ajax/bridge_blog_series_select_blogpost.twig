@@ -1,0 +1,6 @@
+{% if items %}
+    <option value="">-- {{ __("Please Select a Blog Post") }} --</option>
+    {% for item in items %}
+        <option value="{{ item.postid|e('html_attr') }}">{{ item.title|e('html') }}</option>
+    {% endfor %}
+{% endif %}

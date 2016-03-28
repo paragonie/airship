@@ -1,0 +1,15 @@
+{% extends base_template() %}
+{% set title = __("New Author") %}
+
+{% block main %}
+    {% include cargo("bridge_authors_explain") %}
+    {% include cargo("bridge_authors_new") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/js/wysihtml5/wysihtml.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/wysihtml-toolbar.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/parser_rules/advanced_and_extended.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/editor.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/author_new.js"|cachebust }}"></script>
+{% endblock %}

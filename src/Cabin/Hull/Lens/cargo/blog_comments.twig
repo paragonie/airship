@@ -1,0 +1,7 @@
+
+{% if config.blog.comments.enabled %}
+    {% include cargo("blog_read_comments") ignore missing %}
+    {% if userid() or config.blog.comments.guests %}
+        {% include cargo("blog_comments_form") ignore missing %}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,84 @@
+{% macro permTable(groupdata, parentid, depth = 0) %}
+<tr class="perm_row"{#
+        #} data-id="{{ groupdata.groupid }}"{#
+        #} data-parent="{{ parentid|default(0) }}"{#
+        #} id="group_{{ groupdata.groupid }}"{#
+        #} data-children=""{#
+        #} data-ancestors=""{#
+    #}>
+    <td class="permtable_name perm_row_group depth_{{ depth|default(0) }}">
+        <div class="perm_groupname">{{ groupdata.name|e }}</div>
+    </td>
+    {% for label, value in groupdata.perms %}<td class="permtable_perm{#
+                #}{% if groupdata.superuser %}{#
+                    #} permtable_admin{#
+                    #}" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("Yes (Administrator)")|e('html_attr') }}{#
+                #}{% elseif value %}{#
+                    #} permtable_on{#
+                    #}" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("Yes")|e('html_attr') }}{#
+                #}{% elseif groupdata.inherit[label] %}{#
+                    #} permtable_inherits{#
+                    #}" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("Yes (Inherited)")|e('html_attr') }}{#
+                #}{% else %}{#
+                    #} permtable_off{#
+                    #}" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("No")|e('html_attr') }}{#
+                #}{% endif %}{#
+                #}" {#
+            #}id="group_{{ groupdata.groupid }}_{{ label|e }}" {#
+            #}data-group="{{ groupdata.groupid }}" {#
+            #}data-label="{{ label|e }}"{#
+            #}><!--
+         --><input class="perms_checkbox" type="checkbox" name="group_perms[{{ groupdata.groupid|e }}][{{ label|e }}]" value="1"{#
+            #}{% if groupdata.superuser %}{#
+                #} checked="true" disabled="disabled" {#
+            #}{% elseif value %}{#
+                #} checked="checked"{#
+            #}{% endif %} id="group_{{ groupdata.groupid }}_{{ label|e }}_cbox" data-id="{{ groupdata.groupid }}" /><!--
+         --><label id="group_{{ groupdata.groupid }}_{{ label|e }}_indicator" {#
+            #} for="group_{{ groupdata.groupid }}_{{ label|e }}_cbox" {#
+            #}{% if groupdata.superuser %}{#
+                #}data-default="admin" data-state="admin"><i class="fa fa-bolt perm-admin"></i>{#
+            #}{% elseif value %}{#
+                #}data-default="on" data-state="on"><i class="fa fa-check perm-on"></i>{#
+            #}{% elseif groupdata.inherit[label] %}{#
+                #}data-default="inherit" data-state="inherit"><i class="fa fa-level-up fa-flip-horizontal perm-inherits"></i>{#
+            #}{% else %}{#
+                #}data-default="off" data-state="off"><i class="fa fa-close perm-off"></i>{#
+            #}{% endif %}</label>
+        </td><!--
+        -->{% endfor %}
+    </tr>{#
+    #}{% if groupdata.children %}
+    {% for child in groupdata.children %}
+        {{ _self.permTable(child, groupdata.groupid, depth + 1) }}
+    {% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro readOnlyTable(groupdata, parentid, depth = 0) %}
+<tr class="perm_row read_only"{#
+        #} id="group_{{ groupdata.groupid }}"{#
+    #}>
+    <td class="permtable_name depth_{{ depth|default(0) }}">
+        <div class="perm_groupname"><a href="{{ SETTINGS.link_prefix }}/crew/groups/edit/{{ groupdata.groupid|e('html') }}">{#
+            #}{{ groupdata.name|e }}{#
+        #}</div>
+    </td>
+    {% for label, value in groupdata.perms %}{#
+        #}{% if groupdata.superuser or value or groupdata.inherit[label] %}{#
+            #}<td class="permtable_perm" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("Yes")|e('html_attr') }}">{#
+                #}<i class="fa fa-check perm-on"></i>{#
+            #}</td>{#
+        #}{% else %}{#
+            #}<td class="permtable_perm" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("No")|e('html_attr') }}">{#
+                #}<i class="fa fa-close perm-off"></i>{#
+            #}</td>{#
+        #}{% endif %}<!--
+        -->{% endfor %}
+    </tr>{#
+    #}{% if groupdata.children %}
+    {% for child in groupdata.children %}
+        {{ _self.readOnlyTable(child, groupdata.groupid, depth + 1) }}
+    {% endfor %}
+{% endif %}
+{% endmacro %}

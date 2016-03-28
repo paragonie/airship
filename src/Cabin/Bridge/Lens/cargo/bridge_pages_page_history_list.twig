@@ -1,0 +1,36 @@
+<div class="table">
+    <div class="table-row">
+        <div class="table-cell table-header">{{ __("Revision") }}</div>
+        {% if can('publish') %}
+            <div class="table-cell table-header">{{ __("User") }}</div>
+        {% endif %}
+        <div class="table-cell table-header">{{ __("Size") }}</div>
+        <div class="table-cell table-header">{{ __("Date / Time") }}</div>
+        <div class="table-cell table-header">{{ __("Published?") }}</div>
+    </div>
+    {% for hist in history %}
+        <div class="table-row">
+            <div class="table-cell">
+                <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/view/{{ hist.uniqueid|e("html_attr") }}">{{ hist.uniqueid|e('html') }}</a>
+            </div>
+            {% if can('publish') %}
+                <div class="table-cell">
+                    {{ user_name(hist.bridge_user) }}
+                </div>
+            {% endif %}
+            <div class="table-cell" title="{{ hist.body|length }} body, {{  hist.metadata|length }} metadata">
+                {{ hist.body|length + hist.metadata|length }}
+            </div>
+            <div class="table-cell">
+                {{ hist.created|date('Y-m-d g:i:s A') }}
+            </div>
+            <div class="table-cell">
+                {% if hist.published %}
+                    <i class="fa fa-check" title="Yes"></i>
+                {% else %}
+                    <i class="fa fa-close" title="No"></i>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

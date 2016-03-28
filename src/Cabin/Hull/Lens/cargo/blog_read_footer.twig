@@ -1,0 +1,5 @@
+{% include cargo("blog_read_socialbar") ignore missing %}
+
+{% if blogpost.series %}
+    {% include cargo("blog_read_series") ignore missing %}
+{% endif %}

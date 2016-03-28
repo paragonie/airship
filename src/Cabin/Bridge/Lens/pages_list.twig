@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    <div id="bridge_page_list">
+        {% include cargo("bridge_pages_list") ignore missing %}
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/pages_list.js"|cachebust }}"></script>
+{% endblock %}

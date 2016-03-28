@@ -1,0 +1,13 @@
+{% import "macros/groups.twig" as grpmac %}
+
+<h2>{{ __("Group Heirarchy")|e }}</h2>
+
+<ul>
+    {% for grp in groups %}
+        {{ grpmac.groupTree(grp) }}
+    {% endfor %}
+</ul>
+
+<a class="pure-button pure-button-secondary" href="{{ SETTINGS.link_prefix ~ "/crew/groups/new" }}">
+    <i class="fa fa-users"></i> Create New Group
+</a>

@@ -1,0 +1,42 @@
+{% macro frontCatTree(catdata, parentid, this_cargo, can_edit = false, depth = 0) %}
+    <li>{% include this_cargo %}{#
+    #}{% if catdata.children %}
+    <ul class="blogcat_child">
+        {% for child in catdata.children %}
+            {{ _self.frontCatTree(child, catpdata.groupid, this_cargo, can_edit, depth + 1) }}
+        {% endfor %}
+    </ul>
+{% endif %}</li>
+{% endmacro %}
+
+{% macro selectBox(catdata, selected, parentid, fullpath = "", depth = 0) %}{#
+    #}{% if fullpath %}{#
+        #}{% set fullpath = fullpath ~ " &rsaquo; " ~ catdata.name %}{#
+    #}{% else %}{#
+        #}{% set fullpath = catdata.name %}{#
+    #}{% endif %}
+    {% if not selected or catdata.categoryid != selected %}
+    <option
+            value="{{ catdata.categoryid|e }}"
+            data-ancestors="{{ catdata.ancestors|json_encode }}"
+            data-fullpath="{{ fullpath|e('html_attr') }}"
+            class="treeselect {#
+            #}branch_{{ depth|default(0)|e }}{#
+            #}{% if catdata.children %}{#
+                #} treeselect_parent{#
+            #}{% endif %}"
+            {% if catdata.categoryid == selected %}
+                selected="selected"
+            {% endif %}
+    >
+        {{ catdata.name|e }}
+    </option>
+        {% if catdata.children %}
+            {% for child in catdata.children %}
+                {% if child.categoryid not in catdata.ancestors %}
+                    {{ _self.selectBox(child, selected|default(''), catdata.categoryid, fullpath, depth + 1) }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}

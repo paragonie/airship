@@ -1,0 +1,6 @@
+{% extends base_template() %}
+{% set title = __("Authors") %}
+
+{% block main %}
+    {% include cargo("bridge_authors_list") ignore missing %}
+{% endblock %}

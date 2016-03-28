@@ -1,0 +1,183 @@
+<ul class="bridge-menu" id="bridge_main_menu_left" data-linkprefix="{{ SETTINGS.link_prefix }}">
+    <li class="bridge-main-link"><a href="{{ SETTINGS.link_prefix }}">The Bridge</a></li>
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/my/account">
+            <i class="fa fa-gear bridge-icon"></i>{{  __("My Account") }}
+        </a>
+    </li>
+    {% if can_read("author") %}
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/author" title="{{ __("Author profiles are like pen names")|e('html_attr') }}">
+            <i class="fa fa-user-secret bridge-icon"></i>{{ __("Authors") }}
+        </a>
+    </li>
+    {% endif %}
+    {% if can_read("my/files") %}
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/my/files">
+            <i class="fa fa-cloud-upload bridge-icon"></i>{{ __("My Uploaded Files") }}
+        </a>
+    </li>
+    {% endif %}
+    {% if "Hull" in state.cabin_names %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/blog">
+                <i class="fa fa-book bridge-icon"></i>Blog
+            </a>
+            <ul>
+                {% if can_read("blog/category") %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/blog/category">
+                            <i class="fa fa-folder-open-o bridge-icon"></i>{{ __("Categories") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can_read("blog/post") %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/blog/post">
+                            <i class="fa fa-file-text-o bridge-icon"></i>{{ __("Posts") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can_read("blog/series") %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/blog/series">
+                            <i class="fa fa-list-alt bridge-icon"></i>{{ __("Series") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can_read("blog/tag") %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/blog/tag">
+                            <i class="fa fa-tags bridge-icon"></i>{{ __("Tags") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can("publish", "blog/comments") %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/blog/comments">
+                            <i class="fa fa-commenting-o bridge-icon"></i>{{ __("Comments") }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if can_read("cabins") or can_read("pages") %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/cabins">
+                <i class="fa fa-map-signs bridge-icon"></i>{{ __("Cabins") }}
+            </a>
+            <ul>
+            {% for cabin in state.cabins %}
+                {% if can_read("cabins/manage/" ~ cabin.name) %}
+                    <li>
+                        <a href="{{ SETTINGS.link_prefix }}/cabins/manage/{{ cabin.name|e('url') }}">
+                            <i class="fa fa-home bridge-icon"></i>{{ cabin.name|e('html') }}
+                        </a>
+                    <ul>
+                        {% if can_read("pages/" ~ cabin.name) %}
+                            <li>
+                                <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin.name|e('url') }}">
+                                    <i class="fa fa-file-code-o bridge-icon"></i>{{ __("Web Pages") }}
+                                </a>
+                            </li>
+                        {% endif %}{# TODO BEFORE v1.0.0
+                        {% if can_read("redirects/" ~ cabin.name) %}
+                            <li>
+                                <a href="{{ SETTINGS.link_prefix }}/redirects/{{ cabin.name|e('url') }}">
+                                    <i class="fa fa-arrows-alt bridge-icon"></i>{{ __("Redirects") }}
+                                </a>
+                            </li>
+                        {% endif %}#}
+                        {% if is_admin() %}
+                            <li>
+                                <a href="{{ SETTINGS.link_prefix }}/file_manager/{{ cabin.name|e('url') }}">
+                                    <i class="fa fa-upload bridge-icon"></i>{{ __("Files") }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    </li>
+                {% endif %}
+            {% endfor %}</ul>
+        </li>
+    {% endif %}{# TODO BEFORE v1.0.0
+    {% if can_read("gadgets") %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/gadgets">
+                <i class="fa fa-laptop bridge-icon"></i>{{ __("Gadgets") }}
+            </a>
+            {% include cargo("bridge_menu_gadgets") ignore missing %}
+        </li>
+    {% endif %}#}
+    {% if is_admin() %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/admin">
+                <i class="fa fa-key bridge-icon"></i>{{ __("Administrative") }}
+            </a>
+            <ul>
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/crew">
+                        <i class="fa fa-group bridge-icon"></i>{{ __("Crew") }}
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{{ SETTINGS.link_prefix }}/crew/groups">
+                                <i class="fa fa-object-group bridge-icon"></i>{{ __("Groups") }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ SETTINGS.link_prefix }}/crew/permissions">
+                                <i class="fa fa-gavel bridge-icon"></i>{{ __("Permissions") }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ SETTINGS.link_prefix }}/crew/users">
+                                <i class="fa fa-user bridge-icon"></i>{{ __("Users") }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>{# TODO BEFORE v1.0.0
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/gears">
+                        <i class="fa fa-gears bridge-icon"></i>{{ __("Gears") }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/admin/database">
+                        <i class="fa fa-database bridge-icon"></i>{{ __("Databases") }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/motifs">
+                        <i class="fa fa-paint-brush bridge-icon"></i>{{ __("Motifs") }}
+                    </a>
+                </li>#}
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/admin/settings">
+                        <i class="fa fa-wrench bridge-icon"></i>{{ __("Airship Settings") }}
+                    </a>
+                </li>{# TODO BEFORE v1.0.0
+                <li>
+                    <a href="{{ SETTINGS.link_prefix }}/admin/skyport">
+                        <i class="fa fa-cloud bridge-icon"></i>{{ __("Skyport Marketplace") }}
+                    </a>
+                </li>#}
+                {% include cargo("bridge_menu_admin_links") ignore missing %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if can_read("my/preferences") %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/my/preferences">
+                <i class="fa fa-adjust bridge-icon"></i>{{ __("Preferences") }}
+            </a>
+        </li>
+    {% endif %}
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/logout/{{ logout_token()|e('url') }}">
+            <i class="fa fa-sign-out bridge-icon"></i>{{ __("Log Out") }}
+        </a>
+    </li>
+</ul>

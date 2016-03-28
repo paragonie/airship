@@ -1,0 +1,30 @@
+<table>
+    <tr>
+        <td>
+            <i class="fa fa-file-text-o"></i> {{ __("Blog Posts") }}:
+        </td><td class="text-right">
+            {{ stats.num_posts|number_format }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa fa-comments-o"></i> {{ __("Comments") }}:
+        </td><td class="text-right">
+            {{ stats.num_comments|number_format }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa fa-file-code-o"></i> {{ __("Custom Pages") }}:
+        </td><td class="text-right">
+            {{ stats.num_pages|number_format }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa fa-user-secret"></i> {{ __("Authors") }}:
+        </td><td class="text-right">
+            {{ stats.num_authors|number_format }}
+        </td>
+    </tr>
+</table>

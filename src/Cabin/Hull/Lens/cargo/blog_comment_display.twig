@@ -1,0 +1,21 @@
+{# This is displayed for each and every comment#}
+<div class="blog-comment-display">
+    <div class="blog-comment-meta">
+        {% if data.authorname %}
+            <a href="/blog/author/{{ data.authorslug|e('url') }}">{{ data.authorname|e('html') }}</a>
+        {% elseif data.metadata %}
+            {% if data.metadata.url %}
+                <a href="{{ data.metadata.url|e('html_attr') }}">{{ data.metadata.name|e('html') }}</a>
+            {% else %}
+                {{ data.metadata.name|e('html') }}
+            {% endif %}
+        {% endif %}
+        {{ data.created }}
+    </div>
+    {% if data.author %}
+        <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" />
+    {% elseif data.metadata.email %}
+        <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" />
+    {% endif %}
+    <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
+</div>

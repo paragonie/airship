@@ -1,0 +1,70 @@
+{% set can_delete = can('delete') %}
+{% set can_publish = can('publish') %}
+{% set can_update = can('update') %}
+
+<div id="bridge_page_list_container"
+    class="bridge_page_list_contents"
+    data-cabin="{{ cabin|e('html_attr') }}"
+    data-dir="{{ current|e('html_attr') }}">
+    <div class="bridge_page_list_contents_row header_row"
+>
+        <div>Page</div>
+        <div>Created</div>
+        <div>Modified</div>
+        <div></div>
+    </div>
+{% if dirs %}
+{% for dir in dirs %}
+    <div class="bridge_page_list_contents_row"
+         data-dir="{{ dir.url|e('url') }}"
+    >
+        <div class="monospace">
+            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}?dir={% if current %}{{ current ~ "/" ~ dir.url|e('url') }}{% else %}{{ dir.url|e('url') }}{% endif %}">
+                <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.url|e('html') }}
+            </a>
+        </div>
+        <div class="monospace">
+            {{ dir.created|date("Y-m-d H:i:s") }}
+        </div>
+        <div class="monospace">
+            {{ dir.modified|date("Y-m-d H:i:s") }}
+        </div>
+        <div>
+        {% if can_update %}{% spaceless %}
+            <a class="dir_rename pure-button pure-button-primary">{{ __("Move / Rename") }}</a>
+            <a class="dir_delete pure-button pure-button-primary">{{ __("Delete") }}</a>
+        {% endspaceless %}{% endif %}
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
+{% if pages %}
+{% for p in pages %}{% if p.active or can_publish %}
+    <div class="bridge_page_list_contents_row"
+         data-page="{{ p.url|e('url') }}"
+    >
+        <div class="monospace">
+            <i class="fa fa-file icon-pad-right"></i>{{ p.url }}
+        </div>
+        <div class="monospace">
+            {{ p.created|date("Y-m-d H:i:s") }}
+        </div>
+        <div class="monospace">
+            {{ p.modified|date("Y-m-d H:i:s") }}
+        </div>
+        <div>{% spaceless %}
+        {% if can_update %}
+            <a class="page_edit pure-button pure-button-primary">{{ __("Edit") }}</a>
+        {% endif %}
+        {% if can_publish %}
+            <a class="page_rename pure-button pure-button-primary">{{ __("Move / Rename") }}</a>
+        {% endif %}
+            <a class="page_history pure-button pure-button-primary">{{ __("History") }}</a>
+        {% if can_delete %}
+            <a class="page_delete pure-button pure-button-primary">{{ __("Delete") }}</a>
+        {% endif %}
+        {% endspaceless %}</div>
+    </div>
+{% endif %}{% endfor %}
+{% endif %}
+</div>

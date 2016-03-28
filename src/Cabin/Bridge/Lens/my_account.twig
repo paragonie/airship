@@ -1,0 +1,19 @@
+{% extends base_template() %}
+{% set title = __("My Account") %}
+
+{% block main %}
+    {% include cargo("my_account") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function() {
+            $("#password").change(function() {
+                var zx = zxcvbn($("#password").val());
+                passwordWarning(zx.feedback.warning, zx.score);
+            });
+        });
+    </script>
+    <script src="{{ csp_hash("/static/Bridge/zxcvbn.js")|cachebust }}"></script>
+    <script src="/static/Bridge/passwords.js"></script>
+{% endblock %}

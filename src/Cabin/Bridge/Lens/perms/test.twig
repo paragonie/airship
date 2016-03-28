@@ -1,0 +1,112 @@
+{% import "macros/permtable.twig" as ptable %}
+
+<div id="perm_test_results" class="table full-width table-pad-1">
+    <div class="table-row">
+        <div class="table-cell">
+            {{ __("Cabin") }}:
+        </div>
+        <div class="table-cell">
+            <a href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a>
+        </div>
+    </div>
+    {% if contexts %}
+        <div class="table-row full-width">
+            <div class="table-cell">
+                {{ __("Contexts") }}:
+            </div>
+            <div class="table-cell">
+                <ul class="test-cabin-list">{% for c in contexts %}{#
+                    #}<li>
+                        <a href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('html_attr') }}/context/{{ c.contextid|e('html_attr') }}">{#
+                            #}{{ c.locator|default(__('(Blank)'))|e('html') }}{#
+                        #}</a>
+                    </li>{#
+                #}{% endfor %}</ul>
+            </div>
+        </div>
+        <div class="table-row">
+            <div class="table-cell">
+                {{ __("Permissions") }}:
+            </div>
+            <div class="table-cell">
+                <table id="perm_test_tree" class="full-width">
+                    <thead>
+                    <tr class="perm_header">
+                        <th class="permtable_header_name" rowspan="2">
+                            Group
+                        </th>
+                        <th colspan="{{ actions|length }}" class="text-center">
+                            Permissions
+                        </th>
+                    </tr>
+                    <tr class="perm_header">
+                        {% for act in actions %}
+                            <th class="permtable_header_action read_only">{{ act|capitalize|e }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for branch in permissions %}
+                        {{ ptable.readOnlyTable(branch) }}
+                    {% endfor %}
+                    {% if userlist %}
+                        <tr class="perm_header">
+                            <th class="permtable_header_name" rowspan="2">
+                                {{ __("User") }}
+                            </th>
+                            <th colspan="{{ actions|length }}" class="text-center">
+                                {{ __("Permissions") }}
+                            </th>
+                        </tr>
+                        <tr class="perm_header">
+                            {% for act in actions %}
+                                <th class="permtable_header_action read_only">{{ act|capitalize|e }}</th>
+                            {% endfor %}
+                        </tr>
+                    {% for userid, perms in userlist %}
+                        {% set username = user_name(userid) %}
+                        <tr class="perm_row read_only"{#
+                            #} id="user_{{ userid|e('html_attr') }}"{#
+                        #}>
+                            <td class="permtable_name depth_0">
+                                <div class="perm_username">
+                                    <a href="{{ SETTINGS.link_prefix }}/crew/users/edit/{{ userid|e('html') }}">{#
+                                        #}{{ username|e('html') }}{#
+                                    #}</a>
+                                </div>
+                            </td>
+                            {% for act in actions %}
+                                {% if perms[act] %}
+                                    <td
+                                        class="permtable_perm"
+                                        title="{{ username|e('html_attr') }} - {{ act|ucfirst|e('html_attr') }}: {{ __("Yes")|e('html_attr') }}"
+                                    >{#
+                                    #}<i class="fa fa-check perm-on"></i>{#
+                                #}</td>
+                                {% else %}
+                                <td
+                                    class="permtable_perm"
+                                    title="{{ username|e('html_attr') }} - {{ act|ucfirst|e('html_attr') }}: {{ __("No")|e('html_attr') }}"
+                                >{#
+                                    #}<i class="fa fa-close perm-off"></i>{#
+                                #}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="table-row">
+            <div class="table-cell">
+                {{ __("Contexts") }}:
+            </div>
+            <div class="table-cell">
+                {{ __("No contexts found. By default, only administrators can access this feature.") }}
+            </div>
+        </div>
+    {% endif %}
+</div>

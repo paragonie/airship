@@ -1,0 +1,13 @@
+{% extends "blog/wrapper.twig" %}
+
+{% block blog_contents %}
+    {% include cargo("blog_list") ignore missing %}
+
+    <hr class="blog-hr" />
+
+    <div class="text-center">
+        <a class="btn btn-primary btn-sm readmore" href="/blog/all">
+            See All Published Blog Posts
+        </a>
+    </div>
+{% endblock %}

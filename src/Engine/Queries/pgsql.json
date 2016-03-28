@@ -1,0 +1,40 @@
+{
+  "security": {
+    "permissions": {
+      "check_groups":
+        "SELECT count(*) FROM airship_perm_rules JOIN airship_perm_contexts ON airship_perm_rules.context = airship_perm_contexts.contextid JOIN airship_perm_actions ON airship_perm_rules.action = airship_perm_actions.actionid WHERE airship_perm_actions.label = :action AND airship_perm_contexts.contextid = :context AND airship_perm_rules.groupid = :group",
+      "check_groups_deep":
+        "SELECT count(*) FROM airship_perm_rules JOIN airship_perm_contexts ON airship_perm_rules.context = airship_perm_contexts.contextid JOIN airship_perm_actions ON airship_perm_rules.action = airship_perm_actions.actionid WHERE airship_perm_actions.label = :action AND airship_perm_contexts.contextid = :context AND airship_perm_rules.groupid IN (SELECT * FROM group_ancestors(:group))",
+      "check_user":
+        "SELECT count(*) FROM airship_perm_rules JOIN airship_perm_contexts ON airship_perm_rules.context = airship_perm_contexts.contextid JOIN airship_perm_actions ON airship_perm_rules.action = airship_perm_actions.actionid WHERE airship_perm_actions.label = :action AND airship_perm_contexts.contextid = :context AND airship_perm_rules.userid = :user",
+      "check_users_groups":
+        "SELECT count(*) FROM airship_perm_rules JOIN airship_perm_contexts ON airship_perm_rules.context = airship_perm_contexts.contextid JOIN airship_perm_actions ON airship_perm_rules.action = airship_perm_actions.actionid WHERE airship_perm_actions.label = :action AND airship_perm_contexts.contextid = :context AND airship_perm_rules.groupid IN (SELECT * FROM memberOf(:user))",
+      "get_overlap":
+        "SELECT contextid FROM airship_perm_contexts WHERE cabin = ? AND ? ~ locator",
+      "get_overlap_with_locator":
+        "SELECT contextid, locator FROM airship_perm_contexts WHERE cabin = ? AND ? ~ locator",
+      "groups_inherits":
+        "SELECT * FROM airship_groups WHERE inherits = ? ORDER BY name ASC",
+      "groups_null":
+        "SELECT * FROM airship_groups WHERE inherits IS NULL ORDER BY name ASC",
+      "groups_qs":
+        "SELECT a.label FROM airship_perm_rules r LEFT JOIN airship_perm_contexts c ON r.context = c.contextid LEFT JOIN airship_perm_actions a ON r.action = a.actionid WHERE a.actionid IN {{actionids}} AND c.cabin = ? AND c.contextid = ? AND r.groupid = ? ORDER BY a.actionid ASC",
+      "groups_qs_many":
+        "SELECT a.label FROM airship_perm_rules r LEFT JOIN airship_perm_contexts c ON r.context = c.contextid LEFT JOIN airship_perm_actions a ON r.action = a.actionid WHERE a.actionid IN {{actionids}} AND c.cabin = ? AND c.contextid IN {{contextids}} AND r.groupid = ? ORDER BY a.actionid ASC",
+      "is_superuser_user":
+        "SELECT superuser::int FROM airship_users WHERE userid = ?",
+      "is_superuser_group":
+        "SELECT MAX(superuser::int) FROM airship_groups WHERE groupid IN (SELECT * FROM memberOf(?))",
+      "users_list_label":
+        "SELECT a.label FROM airship_perm_rules r JOIN airship_perm_actions a ON r.action = a.actionid JOIN airship_perm_contexts c ON r.context = c.contextid LEFT JOIN airship_users u ON r.userid = u.userid WHERE u.userid = ?",
+      "users_list_label_contextual":
+        "SELECT a.label FROM airship_perm_rules r JOIN airship_perm_actions a ON r.action = a.actionid JOIN airship_perm_contexts c ON r.context = c.contextid LEFT JOIN airship_users u ON r.userid = u.userid WHERE c.contextid = ? AND u.userid = ?",
+      "users_list_label_contextual_many":
+        "SELECT a.label FROM airship_perm_rules r JOIN airship_perm_actions a ON r.action = a.actionid JOIN airship_perm_contexts c ON r.context = c.contextid LEFT JOIN airship_users u ON r.userid = u.userid WHERE c.contextid IN {{contextids}} AND u.userid = ?",
+      "users_list_userids":
+        "SELECT DISTINCT userid FROM airship_perm_rules WHERE context = ? AND userid IS NOT NULL",
+      "users_list_userids_many":
+        "SELECT DISTINCT userid FROM airship_perm_rules WHERE context IN {{contexts}} AND userid IS NOT NULL"
+    }
+  }
+}

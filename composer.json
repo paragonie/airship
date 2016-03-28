@@ -1,0 +1,34 @@
+{
+  "name": "paragonie/airship",
+  "description": "PHP7 Content Management Platform - 'The sky is only the beginning'",
+  "license": "GPL3",
+  "keywords": [
+    "Airship",
+    "blog",
+    "CMS",
+    "content management system",
+    "Paragon Initiative Enterprises",
+    "Free Software",
+    "PHP 7",
+    "secure",
+    "self-updating"
+  ],
+  "require": {
+    "php": "^7.0.4",
+    "ext-openssl": "*",
+    "ext-libsodium": "^1.0.3",
+
+    "bjeavons/zxcvbn-php": "*",
+    "ezyang/htmlpurifier": "^4.7",
+    "gregwar/rst": "^1.0",
+    "guzzlehttp/guzzle": "^6.0",
+    "league/commonmark": "^0.13",
+    "paragonie/csp-builder": "^1.3",
+    "paragonie/constant_time_encoding": "^0.5",
+    "paragonie/halite": "^2.0",
+    "paragonie/recaptcha": "^2.0",
+    "psr/http-message": "^1.0",
+    "psr/log": "^1.0",
+    "twig/twig": "^1.22"
+  }
+}

@@ -1,0 +1,29 @@
+<fieldset class="preferences">
+    <legend>{{ __("Motif for Each Cabin") }}</legend>
+    <div class="table table-pad-1 full-width">
+    {% for cabin, motif_data in motifs %}
+        <div class="table-row">
+            <label class="table-cell table-label">
+                {{ cabin|e('html') }}:
+            </label>
+            <div class="table-cell full-width">
+                <select name="prefs[motif][{{ cabin|e('html_attr') }}]">
+                    <option value=""> -- {{ __("Automatic") }} -- </option>{#
+                        #}{% for motif_name, motif_config in motif_data %}{#
+                            #}
+                        {% set combined_name = motif_config.config.supplier ~ "/" ~ motif_name %}
+                        <option
+                                {% if prefs.motif[cabin] == combined_name %}
+                                    selected="selected"
+                                {% endif %}
+                                value="{{ combined_name|e('html_attr') }}"
+                        >{#
+                                #}{{ motif_config.config.display_name|e('html') }}{#
+                            #}</option>
+                    {% endfor %}{#
+                    #}</select>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</fieldset>

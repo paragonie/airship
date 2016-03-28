@@ -1,0 +1,6 @@
+{% if category.categoryid %}
+    <h1 id="category-name">{{ category.name }}</h1>
+    <div id="category-preamble">{{ category.preamble|default("")|CleanMarkdown }}</div>
+{% else %}
+    <h1 id="category-name">{{ __("Uncategorized Blog Posts") }}</h1>
+{% endif %}

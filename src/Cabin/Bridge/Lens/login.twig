@@ -1,0 +1,56 @@
+{% extends base_template() %}
+{% set title = __("Please Log In") %}
+
+{% block content %}
+    <div class="width50 center">
+        <h2>Airship &mdash; Bridge</h2>
+        {%  if post_response %}
+            <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
+        {% endif %}
+        <div class="login-form-wrapper">
+            <fieldset>
+                <legend>{{ __("Please Log In") }}</legend>
+                <form
+                    id="login"
+                    class="login-form pure-form pure-form-stacked"
+                    action="/bridge/login"
+                    method="post"
+                >{{ form_token("/bridge/login") }}
+                    {% include cargo("form_before_login") ignore missing %}
+                    <label for="username">{{ __("Username") }}:</label>
+                    <input type="text" id="username" name="username" placeholder="{{ __("Enter your Username") }}" class="pure-input-1" />
+
+                    <label for="password">{{ __("Passphrase") }}:</label>
+                    <input type="password" id="password" name="passphrase" placeholder="{{ __("Enter your Passphrase") }}" class="pure-input-1" />
+                    
+                    {% include cargo("form_login_extra_fields") ignore missing %}
+                    
+                    <div>
+                        <input class="inblock" type="checkbox" name="remember" id="rememberMe" value="1" />
+                        <label for="rememberMe" class="inblock">{{ __("Remember Me") }}</label>
+                    </div>
+                    
+                    {% include cargo("form_after_login") ignore missing %}
+
+                    <div>
+                        <button type="submit" class="pure-button pure-button-primary">
+                            <i class="fa fa-key"></i>
+                            {{ __("Log In") }}
+                        </button>
+                        <a href="/bridge/forgot-password" class="pure-button pure-button-tertiary float-right">
+                            <i class="fa fa-undo"></i>
+                            {{ __("I Forgot My Passphrase") }}
+                        </a>
+                    </div>
+                </form>
+            </fieldset>
+            {% if SETTINGS.allow_register %}
+                <hr />
+                <a href="/bridge/board" class="pure-button pure-button-secondary">
+                    <i class="fa fa-user-plus"></i>
+                    Register for a New Account
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

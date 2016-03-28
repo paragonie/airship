@@ -1,0 +1,13 @@
+<h2 class="nomargin">{{ author.name|e('html') }}</h2>
+<div class="blog-list-author-bio">
+{% if author.bio_format == "Markdown" %}
+    {{ author.biography|CleanMarkdown }}
+    <hr class="blog-hr" />
+{% elseif author.bio_format == "RST" %}
+    {{ author.biography|CleanRST }}
+    <hr class="blog-hr" />
+{% elseif author.biography %}
+    {{ author.biography|purify }}
+    <hr class="blog-hr" />
+{% endif %}
+</div>

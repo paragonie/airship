@@ -1,0 +1,55 @@
+{
+  "child-src": {
+    "allow": [
+      "https://www.google.com"
+    ],
+    "self": true
+  },
+  "connect-src": {
+    "allow": [],
+    "self": true
+  },
+  "font-src": {
+    "allow": [],
+    "self": true
+  },
+  "form-action": {
+    "self": true
+  },
+  "frame-ancestors": {
+    "allow": [],
+    "self": true
+  },
+  "img-src": {
+    "allow": ["*"],
+    "self": true
+  },
+  "media-src": {
+    "allow": [],
+    "self": true
+  },
+  "object-src": [],
+  "plugin-types": {
+    "allow": [
+      "application/javascript"
+    ]
+  },
+  "script-src": {
+    "allow": [
+      "https://www.google.com",
+      "https://www.gstatic.com"
+    ],
+    "data": true,
+    "self": true,
+    "unsafe-inline": false,
+    "unsafe-eval": false
+  },
+  "style-src": {
+    "allow": [
+      "*"
+    ],
+    "self": true,
+    "unsafe-inline": true
+  },
+  "upgrade-insecure-requests": false
+}

@@ -1,0 +1,34 @@
+<div class="sidebar-module" id="blog_archive_menu">
+    <h4>Archives</h4>
+    <div class="blog-sidebar-dates-wrapper"><ol id="blog_menu_dates">{% for year, months in blogmenu.years %}
+            <li class="blog_year">
+                <a href="/blog/{{ year|e('url') }}"><i class="fa fa-calendar"></i> {{ year|e }}</a>
+                <ul>{% for month, monthdisplay in months %}
+                        <li class="blog_month"><a href="/blog/{{ year|e('url') }}/{{ month|e('url') }}"><i class="fa fa-clock-o"></i> {{ monthdisplay|e }} {{ year|e }}</a></li>
+                    {% endfor %}</ul>
+            </li>
+        {% endfor %}</ol></div>
+</div>
+<div class="sidebar-module" id="blog_category_menu">
+    <h4>Blog Categories</h4>
+    <div class="blog-sidebar-categories-wrapper"><ol class="blog_categories">
+        {% for branch in blogmenu.categories %} {{ bcat.blogCategories(branch) }} {% endfor %}
+        <li>
+            <a href="/blog/category/"><i class="fa fa-folder-o"></i> Uncategorized</a>
+        </li>
+    </ol></div>
+</div>
+{% if blogmenu.tags %}
+<div class="sidebar-module" id="blog_tagcloud">
+    <h4>Tags</h4>
+    <div class="blog-sidebar-tagcloud-wrapper"><ol class="tagcloud">
+        {% for tag in blogmenu.tags %}{% if tag.post_ratio > 0.1 %}
+            <li>
+            <a href="/blog/tag/{{ tag.slug|e('html_attr') }}" style="font-size: {{ ((tag.post_ratio * 50) + 50) }}%;{% if tag.post_ratio > 1 %} font-weight: bold;{% endif %}">
+                {{ tag.name }}
+            </a>
+            </li>{% endif %}
+        {% endfor %}
+    </ol></div>
+</div>
+{% endif %}

@@ -1,0 +1,7 @@
+{% extends base_template() %}
+
+{% block main %}
+    <div id="custom_files_info">
+        {% include cargo("bridge_files_move_dir") ignore missing %}
+    </div>
+{% endblock %}

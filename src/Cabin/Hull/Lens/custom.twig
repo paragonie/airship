@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% if title %}
+    {% set pageTitle = title %}
+{% endif %}
+
+{% block content %}{{ rendered_content|raw }}{% endblock %}
+
+{% block head_extra %}
+    {% include cargo("custom_head_extra") ignore missing %}
+{% endblock %}

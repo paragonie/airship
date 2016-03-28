@@ -1,0 +1,59 @@
+
+<div class="table table-pad-1 full-width">
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="bridge_path">
+                {{ __("Cabin Name") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input type="text" name="config[name]" value="{{ config.name|e('html_attr') }}" /><br />
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="bridge_path">
+                {{ __("Hostname and Path") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input type="text" name="config[path]" value="{{ config.path|e('html_attr') }}" /><br />
+            <input id="bridge_https" class="inblock" type="checkbox" name="config[https]" value="1" {% if config.https %} checked="checked"{% endif %} />
+            <label for="bridge_https" class="inblock">
+                {{ __("Only allow HTTPS connections? (Recommended)") }}
+            </label>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="bridge_path">
+                {{ __("Canon URL") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                type="text"
+                name="config[canon_url]"
+                value="{{ config.canon_url|e('html_attr') }}"
+                placeholder="{{ __("for hyperlinks from other Cabins")|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="brige_lang">
+                Language:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select id="bridge_lang" name="config[lang]">
+                {% for ln, txt in get_languages() %}
+                <option {% if config.lang == ln %} selected="selected"{% endif %} value="{{ ln|e('html_attr') }}">
+                    {{ txt|e('html') }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>

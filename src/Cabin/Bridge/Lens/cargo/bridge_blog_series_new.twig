@@ -1,0 +1,66 @@
+<h3 class="nomargin">{{ __("Create New Series") }}</h3>
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <div id="blog_series_metadata" class="form-table full-width table-pad-1">
+        <div class="table-row">
+            <label class="table-cell table-label">
+                {{ __("Series Name") }}:
+            </label>
+            <div class="table-cell">
+                <input type="text" class="full-width" required="required" name="name" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell">
+                {{ __("Author") }}:
+            </label>
+            <div class="table-cell">
+                <select name="author" id="author" required="required">
+                    <option value=""></option>
+                    {% for author in authors %}
+                        <option value="{{ author.authorid|e('html') }}">{{ author.name|e('html') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+        <div class="table-row">
+            <label class="table-cell">
+                {{ __("Preamble Format") }}:
+            </label>
+            <div class="table-cell">
+                {% include cargo("bridge_pages_select_format") %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell align-top">
+                {{ __("Preamble") }}:
+            </label>
+            <div class="table-cell">
+                <div class="bridge_blog_series_rich_text_wrapper">
+                    {% include cargo("rich_text_editor") with {
+                        "name": "preamble",
+                        "placeholder": __("Information about this series goes here"),
+                        "contents": _POST.contents|default("")
+                    } %}
+                </div>
+            </div>
+        </div>
+        {% include cargo("bridge_blog_series_config") ignore missing %}
+    </div>
+
+    <h3 class="nomargin">{{ __("Series Contents") }}</h3>
+
+    {% include cargo("bridge_blog_series_sortable") with {
+        "items": series_items.default([])
+    } %}
+
+    <fieldset class="form-button-group">
+        <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-secondary">
+            <i class="fa fa-plus-circle"></i>
+            {{  __("Create Series") }}
+        </button>
+    </fieldset>
+</form>

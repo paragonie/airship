@@ -1,0 +1,16 @@
+{
+    "blog": {
+        "per_page": 20,
+        "comments": {
+            "enabled": true,
+            "guests": true
+        }
+    },
+    "file": {
+        "cache": 3600
+    },
+    "recaptcha": {
+        "secret-key": "6Ldy5BYTAAAAAPBh868BMm2nGZelOUyXJHTUE4no",
+        "site-key": "6Ldy5BYTAAAAACk3Tj8wDUBLcVxSL2JXFBw-Dtj3"
+    }
+}

@@ -1,0 +1,61 @@
+
+<div class="table" id="bridge_comments_list">
+    <div class="table-row table-header">
+        <div class="table-cell"></div>
+        <div class="table-cell">ID</div>
+        <div class="table-cell">
+            {{ __("Blog Post") }}
+        </div>
+        <div class="table-cell">
+            {{ __("Reply To") }}
+        </div>
+        <div class="table-cell">
+            {{ __("Date") }}
+        </div>
+        <div class="table-cell">
+            {{ __("Approved") }}
+        </div>
+    </div>
+    {% for comment in comments %}
+        <div class="table-row">
+            <div class="table-cell icons-1">
+                <a{#
+                #} title="{{ __("View Comment")|e('html_attr') }}"{#
+                #} href="{{ SETTINGS.link_prefix }}/blog/comments/view/{{ comment.commentid|e('html_attr') }}"{#
+            #}>{#
+                #}<i class="fa fa-search"></i>{#
+            #}</a>
+            </div>
+            <div class="table-cell">#{{ comment.commentid|number_format|e('html') }}</div>
+            <div class="table-cell">
+                {{ comment.blog.title|e('html') }}
+            </div>
+            <div class="table-cell">
+                {% if comment.replyto %}
+                    <a{#
+                        #} title="{{ __("View Comment")|e('html_attr') }}"{#
+                        #} href="{{ SETTINGS.link_prefix }}/blog/comments/view/{{ comment.replyto|e('html_attr') }}"{#
+                    #}>{#
+                        #}#{{ comment.replyto|e('html') }}{#
+                    #}</a>
+                {% else %}
+                    &mdash;
+                {% endif %}
+            </div>
+            <div class="table-cell">
+                {{ comment.created|date(config.format|default('Y-m-d g:i:s A')) }}
+            </div>
+            <div class="table-cell">
+                {% if comment.approved %}
+                    <i title="Yes" class="fa fa-check blog-comment-approved"></i>
+                {% else %}
+                    <i title="No" class="fa fa-close blog-comment-not-approved"></i>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div id="bridge_blog_pagination">
+    {% include cargo("bridge_blog_pagination") %}
+</div>

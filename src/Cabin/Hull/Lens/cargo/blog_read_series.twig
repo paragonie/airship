@@ -1,0 +1,45 @@
+{% if blogpost.series %}
+    <div id="blog_read_series_wrapper">
+    {% for key, series in blogpost.series %}
+        <div class="blog_read_series">
+            <div class="blog_read_series_left">
+                {% if series.prev_link %}{#
+                    #}<a href="{{ series.prev_link|e('html_attr') }}">{#
+                    #}{% if series.config.leftlink %}{#
+                        #}{{ series.config.leftlink|e('html') }}{#
+                    #}{% else %}{#
+                        #}&laquo; {{ __("Prev")|e('html') }}{#
+                    #}{% endif %}{#
+                    #}</a>{#
+                #}{% else %}{#
+                    #}{% if series.config.leftlink %}{#
+                        #}{{ series.config.leftlink|e('html') }}{#
+                    #}{% else %}{#
+                        #}&laquo; {{ __("Prev")|e('html') }}{#
+                    #}{% endif %}{#
+                #}{% endif %}
+            </div>
+            <div class="blog_read_series_name">
+                <a href="/blog/series/{{ series.slug|e('url') }}">{{ series.name }}</a>
+            </div>
+            <div class="blog_read_series_right">
+                {% if series.next_link %}{#
+                    #}<a href="{{ series.next_link|e('html_attr') }}">{#
+                    #}{% if series.config.rightlink %}{#
+                        #}{{ series.config.rightlink|e('html') }}{#
+                    #}{% else %}{#
+                        #}{{ __("Next")|e('html') }} &raquo;{#
+                    #}{% endif %}{#
+                    #}</a>{#
+                #}{% else %}
+                    {% if series.config.rightlink %}{#
+                        #}{{ series.config.rightlink|e('html') }}{#
+                    #}{% else %}{#
+                        #}{{ __("Next")|e('html') }} &raquo;{#
+                    #}{% endif %}{#
+                #}{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{%  endif %}

@@ -1,0 +1,68 @@
+<div class="toolbar" id="rich_text_{{ name|e('html_attr') }}_toolbar" style="display: none;">
+    <a data-wysihtml5-command="bold" title="CTRL+B">{#
+        #}<i class="fa fa-bold"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="italic" title="CTRL+I">{#
+        #}<i class="fa fa-italic"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="createLink">{#
+        #}<i class="fa fa-link"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="removeLink">{#
+        #}<i class="fa fa-unlink"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="insertImage">{#
+        #}<i class="fa fa-file-image-o"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">{#
+        #}<i title="&lt;h1&gt;" class="fa fa-header"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">{#
+        #}<i title="&lt;h2&gt;" class="fa fa-header icon-small"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">{#
+        #}<i title="&lt;h3&gt;" class="fa fa-header icon-small-2"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="formatBlock" data-wysihtml5-command-blank-value="true">{#
+        #}<i title="&lt;pre&gt;" class="fa fa-code"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="insertUnorderedList">{#
+        #}<i title="&lt;ul&gt;" class="fa fa-list-ul"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="insertOrderedList">{#
+        #}<i title="Insert Ordered List" class="fa fa-list-ol"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="undo">{#
+        #}<i title="Undo" class="fa fa-undo"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-command="redo">{#
+        #}<i title="Redo" class="fa fa-repeat"></i>{#
+    #}</a>{#
+    #}<a data-wysihtml5-action="change_view">{#
+        #}<i title="Redo" class="fa fa-file-code-o"></i>{#
+    #}</a>
+
+    <div id="rich_text_{{ name|e('html_attr') }}_link_bar" data-wysihtml5-dialog="createLink" style="display: none;">
+        <label>
+            Link:
+            <input data-wysihtml5-dialog-field="href" value="http://">
+        </label>
+        <a data-wysihtml5-dialog-action="save">OK</a>&nbsp;<a data-wysihtml5-dialog-action="cancel">Cancel</a>
+    </div>
+
+    <div id="rich_text_{{ name|e('html_attr') }}_image_bar" data-wysihtml5-dialog="insertImage" style="display: none;">
+        <label>
+            Image:
+            <input data-wysihtml5-dialog-field="src" value="http://">
+        </label>
+        <label>
+            Align:
+            <select data-wysihtml5-dialog-field="className">
+                <option value="">default</option>
+                <option value="wysiwyg-float-left">left</option>
+                <option value="wysiwyg-float-right">right</option>
+            </select>
+        </label>
+        <a data-wysihtml5-dialog-action="save">OK</a>&nbsp;<a data-wysihtml5-dialog-action="cancel">Cancel</a>
+    </div>
+</div>

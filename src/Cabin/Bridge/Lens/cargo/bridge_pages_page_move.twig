@@ -1,0 +1,42 @@
+
+<form method="post" data-currentcabin="{{ pageinfo.cabin|e('html_attr') }}" id="move-page-form">{{ form_token() }}
+    <div class="form-table">
+        <div class="table-row">
+            <label class="table-cell table-label">
+                {{ __("Move/Rename") }}:
+            </label>
+            <div class="table-cell">
+                <select id="directory" name="directory">{% spaceless %}
+                    {% for cab in cabins %}
+                        <option value="{{ cab|e('html_attr') }}" class="depth0"{% if pageinfo.cabin == cab and not pageinfo.directory %} selected="selected"{% endif %} data-cabin="{{ cab|e('html_attr') }}">{{ cab|e('html') }}</option>
+                        {% for subdir in custom_dir_tree[cab] %}
+                            {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                        {% endfor %}
+                    {% endfor %}
+                {% endspaceless %}</select>/<input type="text" required="required" name="url" value="{{ pageinfo.url|e('url') }}" />
+            </div>
+        </div>
+
+        <div class="table-row" id="create_redirect_row" data-checked="0">
+            <div class="table-cell table-label"></div>
+            <div class="table-cell ypad-0-5 large_checkbox">
+                <input type="checkbox" name="create_redirect" value="1" id="create_redirect" />
+                <label for="create_redirect">
+                    {{  __("Create a redirect from the old page to the new page? Only available for moves within the same Cabin.") }}
+                </label>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="table-cell table-label"></div>
+            <div class="table-cell">
+                <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
+                    {{  __("Save Changes") }}
+                </button>
+                <button data-href="{{ SETTINGS.link_prefix ~ "/pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

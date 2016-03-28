@@ -1,0 +1,36 @@
+{% spaceless %}
+    <tr>
+        <td class="perm_row_user" id="perm_username_{{ user.username|e('html_attr') }}">{{ user.username|e('html') }}</td>
+        {% for k, act in actions %}
+            <td class="permlist_perm permtable_{% if perms[act] %}on{% else %}off{% endif %}">
+                <input
+                    class="perms_user_checkbox"
+                    type="checkbox"
+                    name="user_perms[{{ user.userid|e }}][{{ act|e }}]" value="1"
+                    {% if perms[act] %}
+                        checked="checked"
+                    {% endif %}
+                    id="user_{{ user.userid }}_{{ act|e }}_cbox"
+                    data-action="{{ act|e }}"
+                    data-id="{{ user.userid|e }}"
+                />
+                <label
+                    class="perms_user_label"
+                    id="user_{{ user.userid }}_{{ act|e }}_indicator"
+                    for="user_{{ user.userid }}_{{ act|e }}_cbox"
+                    {% if perms[act] %}
+                        data-default="on" data-state="on"
+                    {% else %}
+                        data-default="off" data-state="off"
+                {% endif %}
+                >
+                    {% if perms[act] %}
+                        <i class="fa fa-check perm-on"></i>
+                    {% else %}
+                        <i class="fa fa-close perm-off"></i>
+                    {% endif %}
+                </label>
+            </td>
+        {% endfor %}
+    </tr>
+{% endspaceless %}

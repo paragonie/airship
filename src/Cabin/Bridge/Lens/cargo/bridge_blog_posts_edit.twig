@@ -1,0 +1,93 @@
+<h3>{{ __("Edit Blog Post") }}</h3>
+<form method="post">{{ form_token( SETTINGS.link_prefix ~ "/blog/post/edit/" ~ blogpost.postid) }}
+    <div class="table">
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_title">{{ __("Post Title") }}:</label>
+            <div class="table-cell">
+                <input type="text" name="title" value="{{ _POST.title|default(blogpost.title)|e('html_attr') }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
+            <div class="table-cell">
+                <select name="category" id="blog_post_category" class="treeselect">
+                    <option value="0"> -None- </option>
+                    {% for category in categories %}
+                        {{ bcatmac.selectBox(category, _POST.category|default(blogpost.category)) }}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
+            <div class="table-cell">
+            {% if is_admin() %}
+                <select name="author" id="blog_post_author" required="required" pattern="^\d+$">
+                    <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
+                    {% for auth in authors %}
+                        <option{#
+                            #} value="{{ auth.authorid }}"{#
+                            #}{% if _POST.author %}{#
+                                #}{% if auth.authorid == _POST.author %}{#
+                                    #} selected="selected"{#
+                                #}{% endif %}{#
+                            #}{% elseif auth.authorid == blogpost.author %}{#
+                                #} selected="selected"{#
+                            #}{% endif %}>{{ auth.name|e('html') }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                {{ __("To change the authorship of an existing blog post, please contact an administrator.") }}
+            {% endif %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="format">{{ __("Post Format") }}:</label>
+            <div class="table-cell">
+                {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default(latest.format)} %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="format">{{ __("Tags") }}:</label>
+            <div class="table-cell bridge_blog_post_tags">
+                {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default(blogpost.tags)} %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_description">{{ __("Description") }}:</label>
+            <div class="table-cell">
+                <input type="text" name="description" placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}" value="{{ _POST.description|default(blogpost.description)|e('html_attr') }}" />
+            </div>
+        </div>
+
+        {% include cargo("bridge_blog_post_extra_fields") ignore missing %}
+    </div>
+    <div class="bridge_blog_rich_text_wrapper">
+        {% include cargo("rich_text_editor") with {"name": "blog_post_body", "placeholder": "", "contents": _POST.blog_post_body|default(latest.body)} %}
+    </div>
+
+    <fieldset class="form-button-group">
+        {% if can('publish') %}
+            <button type="submit" name="save_btn" value="publish" class="pure-button pure-button-secondary">
+                <i class="fa fa-check"></i>
+                {{  __("Publish") }}
+            </button>
+            <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-tertiary">
+                <i class="fa fa-save"></i>
+                {{  __("Save Draft") }}
+            </button>
+        {% else %}
+            <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-tertiary">
+                <i class="fa fa-save"></i>
+                {{  __("Save Draft") }}
+            </button>
+        {% endif %}
+    </fieldset>
+
+</form>

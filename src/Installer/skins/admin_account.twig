@@ -1,0 +1,46 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<div class="rwidth66 center">
+    <form
+        id="dbForm"
+        action="/"
+        method="post"
+    >{{ form_token() }}
+            
+    <h1>Set Up Your Administrator Account</h1>
+    
+    <p>
+        This account will have the keys to the kingdom. Using a password manager
+        such as <a href="https://www.keepassx.org/">KeePassX</a> to generate and
+        remember your credentials is highly recommended.
+    </p>
+    
+    <div class="pure-form pure-form-stacked">
+        <label for="username">
+            Administrator Username:
+        </label>
+        <input class="pure-input-1" type="text" name="username" placeholder="captain" />
+        
+        <label for="passphrase">
+            Administrator Passphrase:
+        </label>
+        <input class="pure-input-1" type="password" name="passphrase" id="passphrase" />
+        
+        <div class="continue-btn-wrapper">
+            <button class='pure-button pure-button-primary'>Save and Continue &raquo;</button>
+        </div>
+    </div>
+    
+    </form>
+</div>
+{% endblock %}
+
+{# Style definitions are stored in other Twig templates #}
+{% block js %}
+    {% include "js/admin_account.js.twig" %}
+{% endblock %}
+{% block css %}
+    {% include "css/main.css.twig" %}
+    {% include "css/admin_account.css.twig" %}
+{% endblock %}

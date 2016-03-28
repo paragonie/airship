@@ -1,0 +1,14 @@
+<ul class="inline-list">{#
+#}{% for tag in tags %}{#
+    #}<li>{#
+        #}<input{#
+            #} class="blog_tag_checkbox"{#
+            #} id="blog_post_tag_{{ tag.tagid|e('html_attr') }}"{#
+            #} name="tags[]"{#
+            #} type="checkbox"{#
+            #} value="{{ tag.tagid|e('html_attr') }}"{#
+            #}{% if tag.tagid in checked %} checked="checked"{% endif %}{#
+        #} /><label for="blog_post_tag_{{ tag.tagid|e('html_attr') }}">{{ tag.name|e('html') }}</label>{#
+    #}</li>{#
+#}{% endfor %}{#
+#}</ul>

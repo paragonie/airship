@@ -1,0 +1,124 @@
+<div id="bridge_author_header">
+    <a class="pure-button pure-button-secondary" href="{{ SETTINGS.link_prefix }}/author/new">
+        <i class="fa fa-user-plus"></i>
+        {{ __("Create a New Author Profile") }}
+    </a>
+</div>
+{% set author_base = SETTINGS.link_prefix ~ "/author" %}
+<div class="table" id="bridge_author_list">
+    <div class="table-row table-header">
+        <div class="table-cell">
+            {{ __("Actions") }}
+        </div>
+        <div class="table-cell">
+            {% if sort == "name" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("Author Name") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("Author Name") }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="table-cell">
+            {% if sort == "created" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=created&dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("Date Created") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=created">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("Date Created") }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="table-cell text-center">
+            {% if sort == "blog_posts" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=blog_posts&dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("# Blog Posts") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=blog_posts">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("# Blog Posts") }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="table-cell text-center">
+            {% if sort == "comments" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=comments&dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("# Blog Comments") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=comments">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("# Blog Comments") }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="table-cell text-center">
+            {% if sort == "files" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=files&dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("# Files") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=files">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("# Files") }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="table-cell text-center">
+            {% if sort == "users" and dir == "ASC" %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=users&dir=DESC">
+                    <i class="fa fa-sort-desc icon-pad-right"></i>{{ __("# Users") }}
+                </a>
+            {% else %}
+                <a class="sortheadlink" href="{{ author_base }}?sort=users">
+                    <i class="fa fa-sort-asc icon-pad-right"></i>{{ __("# Users") }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    {% for auth in authors %}
+        <div class="table-row">
+            <div class="table-cell table-btn-left">
+                <a{#
+                    #} href="{{ SETTINGS.link_prefix }}/author/edit/{{ auth.authorid|e('html_attr') }}"{#
+                    #} class="pure-button pure-button-secondary"{#
+                    #} title="{{ __("Edit Author Profile")|e('html_attr') }}"{#
+                #}><i class="fa fa-pencil"></i></a>{#
+                #}<a{#
+                    #} href="{{ SETTINGS.link_prefix }}/author/users/{{ auth.authorid|e('html_attr') }}"{#
+                    #} class="pure-button pure-button-primary"{#
+                    #} title="{{ __("Manage Members")|e('html_attr') }}"{#
+                #}><i class="fa fa-users"></i></a>{#
+                #}<a{#
+                    #} href="{{ SETTINGS.link_prefix }}/author/photos/{{ auth.authorid|e('html_attr') }}"{#
+                    #} class="pure-button pure-button-secondary"{#
+                    #} title="{{ __("Author Photos")|e('html_attr') }}"{#
+                #}><i class="fa fa-photo"></i></a>{#
+                #}<a{#
+                    #} href="{{ SETTINGS.link_prefix }}/author/files/{{ auth.authorid|e('html_attr') }}"{#
+                    #} class="pure-button pure-button-primary"{#
+                    #} title="{{ __("Author Files")|e('html_attr') }}"{#
+                #}><i class="fa fa-folder-open-o"></i></a>
+            </div>
+            <div class="table-cell">
+                {{ auth.name|e('html') }}
+            </div>
+            <div class="table-cell">
+                {{ auth.created|date('Y-m-d g:i:s A') }}
+            </div>
+            <div class="table-cell text-center">
+                {{ auth.num_blog_posts|number_format }}
+            </div>
+            <div class="table-cell text-center">
+                {{ auth.num_comments|number_format }}
+            </div>
+            <div class="table-cell text-center">
+                {{ auth.num_files|number_format }}
+            </div>
+            <div class="table-cell text-center">
+                {{ auth.num_users|number_format }}
+            </div>
+        </div>
+    {% endfor %}
+</div>

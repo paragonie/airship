@@ -1,0 +1,12 @@
+<h2>Cabins</h2>
+{{ __(
+    "Cabins are separate compartments in your Airship. By default, we provide two: " ~
+    "Hull, which is the public-facing blog, and " ~
+    "Bridge, which is the backend you're currently using. "
+) }}
+
+<ul>
+    {% for cabin in cabins %}
+    <li><a href="{{ SETTINGS.link_prefix }}/cabins/manage/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a></li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,42 @@
+<div class="table-row">
+    <label class="table-cell metadata-label">
+        Page Title:
+    </label>
+    <div class="table-cell bridge_page_metadata_value">
+        <input
+                class="metadata-input"
+                type="text"
+                name="metadata[title]"
+                value="{{ metadata.title|e('html') }}"
+                placeholder="{{ __("Text for the title bar of the browser when viewing this page.")|e('html_attr') }}"
+        />
+    </div>
+</div>
+<div class="table-row">
+    <label class="table-cell metadata-label">
+        Keywords:
+    </label>
+    <div class="table-cell bridge_page_metadata_value">
+        <input
+                class="metadata-input"
+                type="text"
+                name="metadata[keywords]"
+                value="{{ metadata.keywords|e('html') }}"
+                placeholder="{{ __("Keywords for the document's meta tags.")|e('html_attr') }}"
+        />
+    </div>
+</div>
+<div class="table-row">
+    <label class="table-cell metadata-label">
+        Description:
+    </label>
+    <div class="table-cell bridge_page_metadata_value">
+        <input
+                class="metadata-input"
+                type="text"
+                name="metadata[description]"
+                value="{{ metadata.description|e('html') }}"
+                placeholder="{{ __("Description for the RSS reader and meta tags.")|e('html_attr') }}"
+        />
+    </div>
+</div>

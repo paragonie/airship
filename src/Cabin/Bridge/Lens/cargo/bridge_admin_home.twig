@@ -1,0 +1,37 @@
+<h2>{{ __("Administrative Features") }}</h2>
+<p>
+{{ __(
+    "This section of the Bridge can only accessed by high-ranking users, such as Administrators."
+) }}
+</p>
+<h3>{{ __("Sections") }}</h3>
+
+<ul>
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/crew">
+            {{ __("Crew") }}
+        </a>
+        <ul>
+            <li>
+                <a href="{{ SETTINGS.link_prefix }}/crew/groups">
+                    {{ __("Groups") }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ SETTINGS.link_prefix }}/crew/permissions">
+                    {{ __("Permissions") }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ SETTINGS.link_prefix }}/crew/users">
+                    {{ __("Users") }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/admin/settings">
+            {{ __("Airship Settings") }}
+        </a>
+    </li>
+</ul>

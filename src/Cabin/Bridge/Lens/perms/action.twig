@@ -1,0 +1,12 @@
+{% extends base_template() %}
+
+{% block main %}
+    <form method="post">{{ form_token(_REQUEST_URI) }}
+        <label>{{ __("Action Name") }}</label>:
+        <input type="text" name="label" value="{{ action.label|e('html_attr') }}" />
+        <button type="submit" class="pure-button pure-button-secondary">
+            {{ __("Change Action's Label") }}
+        </button>
+        <a class="pure-button pure-button-tertiary" href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('html_attr') }}">{{ __("Cancel") }}</a>
+    </form>
+{% endblock %}

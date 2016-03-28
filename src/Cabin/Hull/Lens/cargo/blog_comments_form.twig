@@ -1,0 +1,83 @@
+{% if config.blog.comments.enabled %}
+    <h3>{{ __("Leave a Comment") }}</h3>
+    <div id="blog_comments_form">
+    {% if userid() or config.blog.comments.guests %}
+        {% if blog_success %}{#
+            #}<p class="blog-comment-success">{{ __(blog_success) }}</p>{#
+        #}{% elseif blog_error %}{#
+            #}<p class="blog-comment-error">{{ __(blog_error) }}</p>{#
+        #}{% endif %}
+        <form method="post" class="comment-form">{{ form_token(_REQUEST_URI) }}
+            <div class="form-row" id="reply-to"></div>
+            {% if userid() %}
+                <div class="form-row">
+                    <div class="form-column blog-comment-label">
+                        <label for="author">{{ __("Pen Name") }}:</label>
+                    </div>
+                    <div class="form-column blog-comment-author-wrapper">
+                        <select name="author">
+                            <option value="">Name / URL</option>
+                            <optgroup label="{{ __("Pen Names") }}">
+                            {% for author in user_authors() %}
+                                <option{#
+                                    #} class="select-author-name"{#
+                                    #}{% if author.default_author_for_user %} selected="true"{% endif %}{#
+                                    #} value="{{ author.authorid|e('html_attr') }}">{{ author.name|e('html') }}</option>
+                            {% endfor %}
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-row">
+                <div class="form-column blog-comment-label">
+                    <label for="name"{% if not userid() %} class="required-form"{% endif %}>{{ __("Your Name") }}</label>:
+                </div>
+                <div class="form-colum blog-comment-name-wrapper">
+                    <input type="text" name="name" placeholder="Public Name" {% if not userid() %} required="required"{% endif %} value="{{ _POST.name|e('html_attr') }}" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column blog-comment-label">
+                    <label for="email"{% if not userid() %} class="required-form"{% endif %}>{{ __("Email Address") }}</label>:
+                </div>
+                <div class="form-column blog-comment-email-wrapper">
+                    <input type="text" name="email" placeholder="test@example.com" {% if not userid() %} required="required"{% endif %} value="{{ _POST.email|e('html_attr') }}" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column blog-comment-label">
+                    <label for="url">{{ __("Your Website") }}</label>:
+                </div>
+                <div class="form-column blog-comment-url-wrapper">
+                    <input type="text" name="url" placeholder="https://yourdomain.com" value="{{ _POST.url|e('html_attr') }}" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column blog-comment-label">
+                    <label for="url">{{ __("Your Message") }}</label>:
+                </div>
+                <div class="form-column blog-comment-textarea-wrapper">
+                    <textarea required="required" name="message" class="blog-comment-textarea">{{ _POST.message|e('html') }}</textarea>
+                </div>
+            </div>
+
+            {% if not can('publish') %}
+                <div class="form-column blog-comment-label">
+                    <label for="g-recaptcha">{{ __("CAPTCHA") }}:</label>
+                </div>
+                <div class="form-column blog-comment-captcha-wrapper">
+                    <div class="g-recaptcha" data-sitekey="{{ config.recaptcha["site-key"]|e('html_attr') }}"></div>
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-column"></div>
+                <div class="form-column">
+                    <button style="submit">{{  __("Submit Comment") }}</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    </div>
+{% endif %}

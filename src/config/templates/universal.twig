@@ -1,0 +1,34 @@
+{
+    /* Universal Configuration for an Airship deployment */
+    "airship": {
+        "trusted-supplier": {{ universal.airship["trusted-supplier"]|je }}
+    },
+    "auto-update": {
+        "check": {{ universal["auto-update"]["check"]|round }},
+        "major": {{ universal["auto-update"]["major"] ? 'true' : 'false'}},
+        "minor": {{ universal["auto-update"]["minor"] ? 'true' : 'false'}},
+        "patch": {{ universal["auto-update"]["patch"] ? 'true' : 'false'}},
+        "test":  {{ universal["auto-update"]["test"] ? 'true' : 'false'}}
+    },
+    "cookie_index": {
+        "auth_token": {{ universal["cookie_index"]["auth_token"]|je }}
+    },
+    "debug": {{ universal.debug ? 'true' : 'false' }},
+    "guest_groups": {{ universal["guest_groups"]|je(1) }},
+    "ledger": {
+    {% if universal.ledger.driver == "file" %}{#
+    #}    "driver": "file",
+        "path":   {{ universal.ledger.path|je }}{#
+    #}{% elseif universal.ledger.driver == "database" %}{#
+    #}    "driver": "database",
+        "table": {{ universal.ledger.table|je }}{#
+    #}{% endif %}
+
+    },
+    "guzzle": {{ universal.guzzle|default([])|je }},
+    "session_index": {
+        "user_id": {{ universal["session_index"]["user_id"]|je }},
+        "logout_token": {{ universal["session_index"]["logout_token"]|je }}
+    },
+    "tor-only": {{ universal["tor-only"] ? 'true' : 'false' }}
+}

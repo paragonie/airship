@@ -1,0 +1,84 @@
+<div id="page_history_header">
+    {% include cargo("bridge_pages_page_history_header") %}
+</div>
+<ul id="page_history_nav">
+    {% if prev_url %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/view/{{ prev_url|e('html_attr') }}">{{ __("Previous") }}</a>
+            (<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/diff/{{ prev_url|e('html_attr') }}/{{ version.uniqueid|e('html_attr') }}">{{ __("Diff") }}</a>)
+        </li>
+    {% else %}
+        <li>
+            ({{ __("Earliest Version") }})
+        </li>
+    {% endif %}{% if next_url %}
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/view/{{ next_url|e('html_attr') }}">{{ __("Next") }}</a>
+            (<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/diff/{{ version.uniqueid|e('html_attr') }}/{{ next_url|e('html_attr') }}">{{ __("Diff") }}</a>)
+        </li>
+    {% else %}
+        <li>
+            ({{ __("Latest Version") }})
+        </li>
+    {% endif %}
+</ul>
+
+<div class="form-table">
+    <div class="table-row">
+        <label class="table-cell">
+            {{ __("Page Options") }}:
+        </label>
+        <div class="table-cell bridge_page_options">
+            <fieldset class="form-button-group">
+                <input type="checkbox" disabled="disabled" id="page_cache_checkbox" name="cache" value="1"{% if pageinfo.cache %} checked="checked"{% endif %} />
+                <label for="page_cache_checkbox">{{ __("Cache this page?") }}</label>
+                {% if is_admin() %}
+                    <br />
+                    <input type="checkbox" disabled="disabled" id="page_raw_checkbox" name="view_raw" value="1"{% if version.raw %} checked="checked"{% endif %} />
+                    <label for="page_raw_checkbox">{{ __("View raw? (Don't run through HTMLPurifier - Doesn't affect preview  - Increases risk of XSS)") }}</label>
+                {% endif %}
+            </fieldset>
+        </div>
+    </div>
+    <div class="table-row">
+        <label class="table-cell">
+            {{ __("Page Format") }}:
+        </label>
+        <div class="table-cell">
+            {% include cargo("bridge_pages_select_format") with {"format": version.formatting|default('HTML'), "readonly": true} %}
+        </div>
+    </div>
+</div>
+
+<div class="bridge_page_rich_text_wrapper">
+    {% include cargo("rich_text_editor") with {"name": "page_body", "placeholder": "", "contents": version.body|default(''), "readonly" : true} %}
+</div>
+
+<fieldset class="form-metadata-wrapper">
+    <legend>
+        <input type="checkbox" id="show_metadata" />
+        <label for="show_metadata">Show Metadata Fields?</label>
+    </legend>
+    <div class="form-table" id="pages_metadata">
+        {% include cargo("bridge_pages_metadata") with {"metadata": version.metadata} %}
+    </div>
+</fieldset>
+
+{% if can('publish') %}
+{% if version.versionid != latestId or not version.published %}
+<form method="post">{{ form_token() }}
+    <fieldset class="form-button-group">
+        {% if not version.published %}
+            <button type="submit" name="save_btn" value="publish" class="pure-button pure-button-secondary">
+                {{  __("Publish") }}
+            </button>
+        {% endif %}
+        {% if version.versionid != latestId %}
+            <button type="submit" name="save_btn" value="rollback" class="pure-button pure-button-secondary">
+                {{  __("Rollback") }}
+            </button>
+        {% endif %}
+    </fieldset>
+</form>
+{% endif %}
+{% endif %}

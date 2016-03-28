@@ -1,0 +1,30 @@
+<p>
+    {{ __("Both fields must be valid JSON in order for this form to save") }}
+</p>
+<div class="table table-pad-1 full-width">
+    {# TODO: Make this more user-friendly #}
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="bridge_path">
+                {{ __("Configuration") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <textarea name="config_extra" class="full-textarea monospace">{#
+                #}{{ config_extra|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+            #}</textarea>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="bridge_path">
+                {{ __("Template Variables") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <textarea name="twig_vars" class="full-textarea monospace">{#
+                #}{{ twig_vars|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+            #}</textarea>
+        </div>
+    </div>
+</div>

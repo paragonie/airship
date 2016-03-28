@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+
+hangarbase=$( dirname $( readlink -f ${BASH_SOURCE[0]} ) )
+
+php -dphar.readonly=0 $hangarbase/src/hangar.php $*

@@ -1,0 +1,13 @@
+{% macro blogComments(data, cargo_display, depth = 0) %}
+    <li>
+        {% include cargo_display ignore missing %}
+
+        {% if data.children %}
+            <ol class="blog_comment_child">
+                {% for child in data.children %}
+                    {{ _self.blogComments(child, cargo_display, depth|default(0) + 1) }}
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </li>
+{% endmacro %}

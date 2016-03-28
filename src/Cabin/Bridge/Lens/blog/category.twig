@@ -1,0 +1,7 @@
+{% extends base_template() %}
+{% set title = __("Blog Categories") %}
+{% import "macros/blog_categories.twig" as bcatmac %}
+
+{% block main %}
+    {% include cargo("bridge_blog_categories") ignore missing %}
+{% endblock %}

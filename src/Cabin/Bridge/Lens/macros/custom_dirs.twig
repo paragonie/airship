@@ -1,0 +1,14 @@
+{% macro dirTree(data, fullpath = "", cabin = "", depth = 0) %}
+    <option {#
+        #}{% if data.selected %}selected="selected"{% endif %} {#
+        #}class="depth{{ depth|e('html_attr') }}" {#
+        #}data-fullpath="{{ fullpath ~ "/" ~ data.url|e('url') }}" {#
+        #}data-cabin="{{ cabin|e('url') }}" {#
+        #}value="{{ data.directoryid }}"{#
+        #}>{{ data.url|e('html') }}</option>
+    {% if data.children %}
+        {% for child in data.children %}
+            {{ _self.dirTree(child, fullpath ~ "/" ~ data.url|e('url'), cabin, depth + 1) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

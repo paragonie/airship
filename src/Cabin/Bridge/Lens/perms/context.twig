@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    <div id="custom_files_index">
+        {% include cargo("bridge_perms_context") ignore missing %}
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/perm_context.js"|cachebust }}"></script>
+{% endblock %}

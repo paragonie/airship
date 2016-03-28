@@ -1,0 +1,14 @@
+<h2 class="nomargin">{{ series.name }}</h2>
+{% if series.preamble %}
+    <div class="series-preamble">
+        {% if series.format == "Markdown" %}
+            {{ series.preamble|CleanMarkdown }}
+        {% elseif series.format == "RST" %}
+            {{ series.preamble|CleanRST }}
+        {% else %}
+            {{ series.preamble|purify }}
+        {% endif %}
+    </div>
+{% endif %}
+
+{% include cargo("blog_series_list") ignore missing %}

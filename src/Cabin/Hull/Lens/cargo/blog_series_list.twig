@@ -1,0 +1,19 @@
+{% set div = false %}
+
+<ul class="series-list">
+{% for i, ser in series_items %}
+    {% if div %}<hr class="blog-hr" />{% endif %}
+    {% set div = true %}
+    {% if ser.type == 'blogpost' %}
+    <li class="series-blog">
+        <a class="blog-post-title" href="/blog/{{ ser.blogyear|e('url') }}/{{ ser.blogmonth|e('url') }}/{{ ser.slug|e('url') }}">{#
+            #}{{ ser.title|e }}</a> ({{ ser.published|date("F j, Y") }} by <a href="/blog/author/{{ ser.authorslug|e('url') }}">{{ ser.authorname|e }}</a>)
+    </li>
+    {% else %}
+    <li class="series-series">
+        <a class="series-title" href="/blog/series/{{ ser.slug|e('url') }}">{#
+            #}<i class="fa fa-folder-o"></i>{{ ser.name|e }}</a>
+    </li>
+    {% endif %}
+{% endfor %}
+</ul>

@@ -1,0 +1,29 @@
+<form method="post">{{ form_token() }}
+    <h3>Confirm Deletion</h3>
+    <p>
+        {{ __("Are you sure you want to delete this page? There is no undo.") }}
+    </p>
+    <fieldset class="form-metadata-wrapper">
+        <legend>
+            <input id="create_redirect" name="create_redirect" type="checkbox" value="1" />
+            <label for="create_redirect">{{ __("Redirect users to a different location?") }}</label>
+        </legend>
+        <div id="redirect_box">
+            <label for="redirect_to">{{ __("Redirect destination") }}:</label>
+            <input type="text" id="redirect_to" placeholder="/example/path" />
+        </div>
+    </fieldset>
+
+    <label>{{ __("Please prove that you are human:") }}</label>
+    <div class="g-recaptcha" data-sitekey="{{ config.recaptcha["site-key"]|e('html_attr') }}"></div>
+
+    <hr />
+
+    <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
+        {{  __("Save Changes") }}
+    </button>
+    <button data-href="{{ SETTINGS.link_prefix ~ "/pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+        Cancel
+    </button>
+
+</form>

@@ -1,0 +1,7 @@
+{% extends "blog/wrapper.twig" %}
+
+{% block blog_contents %}
+    {% include cargo("blog_read") ignore missing %}
+
+    {% include cargo("blog_comments") ignore missing %}
+{% endblock %}

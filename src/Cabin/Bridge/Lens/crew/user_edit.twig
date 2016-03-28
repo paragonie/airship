@@ -1,0 +1,11 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_crew_user_edit") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/crew_user_edit.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/zxcvbn.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/passwords.js"|cachebust }}"></script>
+{% endblock %}

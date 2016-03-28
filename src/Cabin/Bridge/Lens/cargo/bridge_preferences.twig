@@ -1,0 +1,14 @@
+<h3>{{ __("My Preferences") }}</h3>
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    {% include cargo("bridge_preferences_motif") %}
+
+    {# Gadget developers: Feel free to add to this one: #}
+    {% include cargo("bridge_preferences_extra") ignore missing %}
+
+    <fieldset class="form-button-group">
+        <button type="submit" class="pure-button pure-button-primary">
+            <i class="fa fa-save"></i>
+            {{ __("Save Preferences") }}
+        </button>
+    </fieldset>
+</form>

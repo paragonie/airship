@@ -1,0 +1,23 @@
+{% extends base_template() %}
+
+{% block main %}
+    <h1>{{  __("Bad Configuration") }}</h1>
+    <p>
+        {{ __("You need to set a recaptcha secret key and site key to use this feature.") }}
+        {{ __("Just follow these steps to correct this behavior:") }}
+    </p>
+    <ol>
+        <li>
+            <a href="https://www.google.com/recaptcha/admin#list">{{  __("Generate a key pair for your website") }}</a>
+        </li>
+        <li>
+            <a href="{{ SETTINGS.link_prefix }}/manage/Bridge">{{ __("Manage your Bridge Settings") }}</a>
+        </li>
+        <li>
+            {{ __("Add your reCAPTCHA secret key and site key to the configuration") }}
+        </li>
+    </ol>
+    <p>
+        {{ __("It's as easy as 1-2-3!") }}
+    </p>
+{% endblock %}

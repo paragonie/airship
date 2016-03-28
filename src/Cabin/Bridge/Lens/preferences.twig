@@ -1,0 +1,6 @@
+{% extends base_template() %}
+{% set title = __("User Preferences") %}
+
+{% block main %}
+    {% include cargo("bridge_preferences") ignore missing %}
+{% endblock %}

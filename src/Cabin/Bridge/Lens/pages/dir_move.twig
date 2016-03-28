@@ -1,0 +1,10 @@
+{% extends base_template() %}
+{% import "macros/custom_dirs.twig" as cdir %}
+
+{% block main %}
+    {% include cargo("bridge_pages_dir_move") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/dir_move.js"|cachebust }}"></script>
+{% endblock %}

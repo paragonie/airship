@@ -1,0 +1,107 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<div class="rwidth66 center">
+    <form
+        id="dbForm"
+        action="/"
+        method="post"
+    >{{ form_token() }}
+            
+    <h1>Cabin Configuration</h1>
+    
+    <p>
+       Cabins are (more-or-less standalone) applications built into your 
+       Airship. By default, we ship with two:
+    </p>
+    <ol>
+        <li>Bridge: The admin control panel</li>
+        <li>Hull: The public-facing website</li>
+    </ol>
+    <p>
+        For each cabin, you can use a <code>*</code> in place of the domain name
+        if you wish to catch any domain name.
+    </p>
+    
+    <fieldset class="cabin bridge">
+        <legend>Bridge Settings</legend>
+        <div class="pure-form pure-form-stacked">
+            
+            <label for="bridge_path">
+                Hostname and Path:
+            </label>
+            <input class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
+
+            <label for="bridge_path">
+                Canon URL (for hyperlinks from other Cabins):
+            </label>
+            <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
+            
+            <div>
+                <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" checked="checked" />
+                <label for="bridge_https" class="inblock">
+                    Only allow HTTPS connections? (Recommended)
+                </label>
+            </div>
+            
+            <label for="brige_lang">
+                Language:
+            </label>
+            <select class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
+                <option value="en-us">English (U.S.)</option>
+            </select>
+            
+        </div>
+    </fieldset>
+    
+    <hr />
+    
+    <fieldset class="cabin hull">
+        <legend>Hull Settings</legend>
+        <div class="pure-form pure-form-stacked">
+            
+            <label for="bridge_path">
+                Hostname and Path:
+            </label>
+            <input class="pure-input-1" type="text" name="cabin[Hull][path]" value="*" />
+
+            <label for="bridge_path">
+                Canon URL (for hyperlinks from other Cabins):
+            </label>
+            <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
+            
+            <div>
+                <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" checked="checked" />
+                <label for="hull_https" class="inblock">
+                    Only allow HTTPS connections? (Recommended)
+                </label>
+            </div>
+            
+            <label for="brige_lang">
+                Language:
+            </label>
+            <select class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
+                <option value="en-us">English (U.S.)</option>
+            </select>
+            
+        </div>
+    </fieldset>
+    
+    <hr />
+    
+    <div class="continue-btn-wrapper">
+        <button class='pure-button pure-button-primary'>Save and Continue &raquo;</button>
+    </div>
+    
+    </form>
+</div>
+{% endblock %}
+
+{# Style definitions are stored in other Twig templates #}
+{% block js %}
+    {% include "js/cabins.js.twig" %}
+{% endblock %}
+{% block css %}
+    {% include "css/main.css.twig" %}
+    {% include "css/cabins.css.twig" %}
+{% endblock %}

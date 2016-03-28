@@ -1,0 +1,54 @@
+<h2>My Account</h2>
+<form method="post" id="my_account_form">{{ form_token(SETTINGS.link_prefix ~ "/my/account") }}
+    {%  if post_response %}
+        <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
+    {% endif %}
+    <fieldset>
+        <label>General Information</label>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="real_name">{{ __("Real Name") }}:</label>
+            </div>
+            <div class="form-column">
+                <input type="text" id="real_name" name="real_name" value="{{ account.real_name|e('html_attr') }}" placeholder="Optional" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="email">{{ __("Email Address") }}:</label>
+            </div>
+            <div class="form-column">
+                <input type="text" id="email" name="email" value="{{ account.email|e('html_attr') }}" placeholder="Optional" />
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <label>Security Information</label>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="username">{{ __("Userame") }}:</label>
+            </div>
+            <div class="form-column">
+                {{ account.username|e('html') }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="password">{{ __("Change Passphrase") }}:</label>
+            </div>
+            <div class="form-column">
+                <input type="password" id="password" name="passphrase" placeholder="Optional" />
+                <div id="password_feedback"></div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <label>Custom Profile Fields</label>
+        {% include cargo("bridge_account_custom_fields") ignore missing %}
+    </fieldset>
+    <hr class="bridge-hr" />
+    <button type="submit" class="pure-button pure-button-primary">
+        <i class="fa fa-save"></i>
+        {{ __("Update Account Information") }}
+    </button>
+</form>

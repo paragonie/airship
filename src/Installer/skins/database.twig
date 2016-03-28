@@ -1,0 +1,127 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    {% if drivers %}
+        <div class="rwidth66 center">
+        <form
+            id="dbForm"
+            action="/"
+            method="post"
+        >{{ form_token() }}
+            <h2>Database Configuration</h2>
+            <p>
+                Before you can launch your Airship, you'll need to have your own
+                MySQL or PostgreSQL database. If you're not sure what this is,
+                contact your hosting provider and ask for details.
+            </p>
+            <div id="databases">
+                <fieldset>
+                    <legend>Primary Database</legend>
+                    <div class="pure-form pure-form-stacked">
+
+                        <label for="database_0_driver">Database Driver:</label>
+                        <select class="pure-input-1 db_driver" name="database[0][driver]" id="database_0_driver" required="required">
+                            {% for key, val in drivers %}<option {#
+                                #}{% if database[0] %}{#
+                                    #}{% if database[0][driver] == val %}{#
+                                       #} selected="selected" {#
+                                    #}{% endif %}
+                                {% elseif key == "pgsql" %}{#
+                                    #} selected="selected" {#
+                                 #}{% endif %}{#
+                                #} value="{{ key|e('html_attr') }}" {#
+                            #}>{{ val|e('html') }}</option>
+                        {% endfor %}</select>
+                        
+                        <label for="database_0_host">Host:</label>
+                        <input class="pure-input-1" type="text" name="database[0][host]" id="database_0_host" placeholder="localhost" />
+                        
+                        <label for="database_0_port">Port (optional):</label>
+                        <input class="pure-input-1" type="text" name="database[0][port]" id="database_0_port" />
+                        
+                        <label for="database_0_username">Username:</label>
+                        <input class="pure-input-1" type="text" name="database[0][username]" id="database_0_username" required="required" placeholder="username" />
+                        
+                        <label for="database_0_password">Password:</label>
+                        <input class="pure-input-1" type="text" name="database[0][password]" id="database_0_password" placeholder="password" />
+                        
+                        <label for="database_0_dbname">Database:</label>
+                        <input class="pure-input-1" type="text" name="database[0][dbname]" id="database_0_dbname" placeholder="database" />
+
+                    </div>
+                </fieldset>
+            <hr />
+                <fieldset>
+                    <legend>Secondary Databases (Optional)</legend>
+                    <div id="secondary_databases" class="pure-form pure-form-stacked"></div>
+                    <a class='pure-button pure-button-tertiary' id='add_db'>Add Secondary Database</a>
+                </fieldset>
+            </div>
+            <hr />
+            <div class="continue-btn-wrapper">
+                <button class='pure-button pure-button-primary'>Save and Continue &raquo;</button>
+            </div>
+        </form>
+        </div>
+    {% else %}
+        <h1 class="error_header">Critical Error: No Supported Database Drivers Detected</h1>
+        <p>
+            To install Airship, you need to have the PHP extension for the
+            appropriate Relational DataBase Management Software (RDMBS) installed
+            and enabled.
+        </p>
+        <p>
+            Currently supported RDBMS platforms:
+        </p>
+        <ul>
+            <li>MySQL / MariaDB</li>
+            <li>PostgreSQL</li>
+        </ul>
+        <p>
+            PHP Extensions loaded:
+        </p>
+        <ol>
+        {% for ext in get_loaded_extensions() %}
+            <li><code class="php">{{ ext }}</code></li>
+        {% endfor %}
+        </ol>
+        
+        <h2>How to Fix this Error</h2>
+        <p>
+            Make sure you install the necessary PHP extension to interface with
+            your chosen RDMBS. Instructions for this will vary depending on your
+            operating system.
+        </p>
+        <p>
+            If you have the extension installed but it's not enabled, you will
+            need to edit your php.ini file to enable it manually.
+        </p>
+        
+        <h3>MySQL</h3>
+        <p>
+            Add these lines to your php.ini:
+        </p>
+        <blockquote><pre>extension=mysql.so
+extension=pdo_mysql.so</pre></blockquote>
+        
+        <h3>PostgreSQL</h3>
+        <p>
+            Add these lines to your php.ini:
+        </p>
+        <blockquote><pre>extension=pgsql.so
+extension=pdo_pgsql.so</pre></blockquote>
+        
+        <p>
+            Then restart your webserver.
+        </p>
+    {% endif %}
+{% endblock %}
+
+{# Style definitions are stored in other Twig templates #}
+{% block js %}
+    {% include "js/database.js.twig" %}
+{% endblock %}
+{% block css %}
+    {% include "css/main.css.twig" %}
+    {% include "css/database.css.twig" %}
+{% endblock %}

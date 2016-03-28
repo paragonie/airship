@@ -1,0 +1,25 @@
+{
+  "name": "paragonie/airship-hangar",
+  "description": "Command Line Interface for updating the Airship core",
+  "keywords": [
+    "airship", "blog", "CMS", "development"
+  ],
+  "license": "LGPL",
+  "authors": [
+    {
+      "name":     "Paragon Initiative Enterprises",
+      "email":    "security@paragonie.com",
+      "homepage": "https://paragonie.com"
+    }
+  ],
+  "support": {
+    "issues":   "https://github.com/paragonie/airship/issues",
+    "email":    "info@paragonie.com",
+    "source":   "https://github.com/paragonie/airship"
+  },
+  "require": {
+    "php": "^7.0.0",
+    "paragonie/constant_time_encoding": "^0.5",
+    "paragonie/halite": "^2.0"
+  }
+}

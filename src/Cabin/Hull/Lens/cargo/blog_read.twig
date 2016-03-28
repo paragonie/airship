@@ -1,0 +1,41 @@
+    {% if blogpost %}
+        <div class="blog-post blog-read-post">
+            <div class="blogpost_header">
+                <h2 class="blog-post-title">{{ blogpost.title|e }} </h2>
+                <p class="blog-post-meta">
+                    <time datetime="{{ blogpost.published|date('Y-m-d H:i:s') }}">
+                        {{ blogpost.published|date("F j, Y g:i a") }}
+                    </time> by
+                    <a href="/blog/author/{{ blogpost.authorslug|e('url') }}">{{ blogpost.authorname|e }}</a>
+                </p>
+            </div>
+            <div class="blogpost_subhead">
+                <div class="blogpost_category">
+                    <a href="/blog/category/{{ blogpost.categoryslug|e('url') }}"><i class="fa fa-folder-open"></i>{{ blogpost.categoryname|e }}</a>
+                </div>
+                {% if blogpost.tags %}
+                    <ul class="blogpost_tags">
+                        {% for t in blogpost.tags %}
+                            <li><a href="/blog/tag/{{ t.slug|e('url') }}"><i class="fa fa-tag"></i>{{ t.name|e }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="blog-post-body">
+                {% include cargo("blog_read_body") %}
+            </div>
+            {% spaceless %}
+                <div id="blogpost_authorbox">
+                    {% include cargo("blog_read_author") ignore missing %}
+                </div>
+            {% endspaceless %}
+            <div class="blogpost_footer">
+                {% include cargo("blog_read_footer") ignore missing %}
+            </div>
+        </div>
+    {% endif %}
+    {% block page_js %}
+        {% if not can('publish') %}
+            <script src="{{ csp_hash("https://www.google.com/recaptcha/api.js", "script-src", "sha384") }}"></script>
+        {% endif %}
+    {% endblock %}

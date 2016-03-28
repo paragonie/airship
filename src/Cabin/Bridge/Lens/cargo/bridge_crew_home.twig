@@ -1,0 +1,21 @@
+<h2>{{ __("Crew") }}</h2>
+<p>{{ __(
+    "This part of the Bridge allows you to manage your users, user groups, and the permissions for various parts of the Airship."
+) }}</p>
+<ol>
+<li>{{ __(
+    "Users can belong to any number of groups."
+    ) }}</li>
+<li>{{ __(
+    "Groups can inherit their permissions from other groups."
+    ) }}</li>
+<li>{{ __(
+    "Permission can be granted to either a group or to a specific user."
+    ) }}</li>
+</ol>
+<h3>{{ __("Sections") }}</h3>
+<ul>
+    <li><a href="{{ SETTINGS.link_prefix }}/crew/groups">{{ __("Manage Groups") }}</a></li>
+    <li><a href="{{ SETTINGS.link_prefix }}/crew/permissions">{{ __("Manage Permissions") }}</a></li>
+    <li><a href="{{ SETTINGS.link_prefix }}/crew/users">{{ __("Manage Users") }}</a></li>
+</ul>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>{% block head %}
+        <title>{% block title %}Airship Set Up{% endblock %}</title>
+        {% block page_css %}{% endblock %}
+        <style>{% block css %}{% include "css/main.css.twig" %}{% endblock %}</style>
+        <link rel="stylesheet" href="{{ "/css/font-awesome.min.css"|cachebust }}" type="text/css" />
+        <link rel='stylesheet' href='/css/pure-0.6.0.css' />
+        <link rel='stylesheet' href='/static/Hull/base.css' />
+        <link rel='stylesheet' href='/static/Hull/motif/airship-classic/style.css' />
+        <script src="/js/jquery.min.js"></script>
+    {% endblock %}</head>
+    <body>{% block body %}
+        <div id="site-wrapper">
+            <header>{% block header %}
+                <h1>Airship</h1>
+                <nav>
+                    <ul class="navigation">
+                        <li><a href="/">Setup</a></li>
+                    </ul>
+                </nav>
+            {% endblock %}</header>
+            <div id="content">{% block content %}
+            {% endblock %}</div>
+        </div>
+        <footer>{% block footer %}
+            Footer
+        {% endblock %}</footer>
+    {% endblock %}
+    {% block page_js %}{% endblock %}
+    <script>{% block js %}{% endblock %}</script>
+        </body>
+</html>

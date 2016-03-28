@@ -1,0 +1,206 @@
+<h3>Databases</h3>
+<div id="databases">
+{% for i,db in database %}
+    <fieldset>
+        <legend>{% if i == 0 %}Primary Database {% else %}Database #{{ i }} {% endif %}</legend>
+        <div class="pure-form pure-form-stacked">
+            <label for="database_{{ i }}_driver">Database Driver:</label>
+            <select class="pure-input-1 db_driver" name="database[{{ i }}][driver]" id="database_{{ i }}_driver" required="required">
+                {% for key, val in drivers %}<option {#
+                    #}{% if db.driver == val %}{#
+                       #} selected="selected" {#
+                    #}{% endif %} value="{{ key|e('html_attr') }}" {#
+                #}>{{ val|e('html') }}</option>
+            {% endfor %}</select>
+
+            <label for="database_{{ i }}_host">Host:</label>
+            <input class="pure-input-1" type="text" name="database[{{ i }}][host]" value="{{ db.host|e('html_attr') }}" id="database_{{ i }}_host" placeholder="localhost" />
+
+            <label for="database_{{ i }}_port">Port (optional):</label>
+            <input class="pure-input-1" type="text" name="database[{{ i }}][port]" value="{{ db.port|e('html_attr') }}" id="database_{{ i }}_port" />
+
+            <label for="database_{{ i }}_username">Username:</label>
+            <input class="pure-input-1" type="text" name="database[{{ i }}][username]" value="{{ db.username|e('html_attr') }}" id="database_{{ i }}_username" required="required" placeholder="username" />
+
+            <label for="database_{{ i }}_password">Password:</label>
+            <input class="pure-input-1" type="text" name="database[{{ i }}][password]" value="{{ db.password|e('html_attr') }}" id="database_{{ i }}_password" placeholder="password" />
+
+            <label for="database_{{ i }}_dbname">Database:</label>
+            <input class="pure-input-1" type="text" name="database[{{ i }}][dbname]" value="{{ db.dbname|e('html_attr') }}" id="database_{{ i }}_dbname" placeholder="database" />
+        </div>
+    </fieldset>
+{% endfor %}
+</div>
+
+<h3>Admin Account</h3>
+
+<fieldset>
+    <legend>The password you provided was already hashed and encrypted.</legend>
+        <div class="pure-form pure-form-stacked">
+            <label for="username">
+                Administrator Username:
+            </label>
+            <input class="pure-input-1" type="text" name="username" value="{{ admin.username|e('html_attr') }}" />
+
+            <label for="passphrase">
+                Administrator Passphrase:
+            </label>
+            <input class="pure-input-1" type="password" name="passphrase" id="passphrase" placeholder="Leave blank to not change your password." />
+        </div>
+</fieldset>
+
+<h3>Cabin Settings</h3>
+
+<fieldset class="cabin bridge">
+    <legend>Bridge Settings</legend>
+    <div class="pure-form pure-form-stacked">
+
+        <label for="bridge_path">
+            Hostname and Path:
+        </label>
+        <input class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ cabins.Bridge.path|e('html_attr') }}" />
+
+        <div>
+            <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" {% if cabins.Bridge.https %} checked="checked"{% endif %} />
+            <label for="bridge_https" class="inblock">
+                Only allow HTTPS connections? (Recommended)
+            </label>
+        </div>
+
+        <label for="bridge_path">
+            Canon URL (for hyperlinks from other Cabins):
+        </label>
+        <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Bridge.canon_url|e('html_attr') }}" />
+
+        <label for="brige_lang">
+            Language:
+        </label>
+        <select class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
+            <option {% if cabins.Bridge.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
+        </select>
+
+
+    </div>
+</fieldset>
+
+<fieldset class="cabin hull">
+    <legend>Hull Settings</legend>
+    <div class="pure-form pure-form-stacked">
+
+        <label for="bridge_path">
+            Hostname and Path:
+        </label>
+        <input class="pure-input-1" type="text" name="cabin[Hull][path]" value="{{ cabins.Hull.path|e('html_attr') }}" />
+
+        <div>
+            <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" {% if cabins.Hull.https %} checked="checked"{% endif %} />
+            <label for="bridge_https" class="inblock">
+                Only allow HTTPS connections? (Recommended)
+            </label>
+        </div>
+
+        <label for="bridge_path">
+            Canon URL (for hyperlinks from other Cabins):
+        </label>
+        <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Hull.canon_url|e('html_attr') }}" />
+
+        <label for="brige_lang">
+            Language:
+        </label>
+        <select class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
+            <option {% if cabins.Hull.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
+        </select>
+
+    </div>
+</fieldset>
+
+<h3>Advanced Configuration</h3>
+
+<fieldset class="general">
+    <legend class="fieldset">General Settings</legend>
+    <div class="pure-form pure-form-stacked">
+        <label for="ledger_driver">
+            Application Logs:
+        </label>
+        <select class="pure-input-1" id="ledger_driver" name="config[ledger][driver]">
+            <option {% if config.ledger.driver == "file" %} selected="selected"{% endif %} value="file">Store logs in the filesystem</option>
+            <option {% if config.ledger.driver == "database" %} selected="selected"{% endif %} value="database">Store logs in a database table</option>
+        </select>
+
+        <label for="ledger_details" id="ledger_details_label">
+            {% if config.ledger.driver == "file" %}
+                Log Directory:
+            {% elseif config.ledger.driver == "database" %}
+                Database Table:
+            {% endif %}
+        </label>
+        <input class="pure-input-1" id="ledger_details" type="text" name="config[ledger][path]" value="{{ config.ledger.path|e('html_attr') }}" />
+        <hr />
+
+        <label for="cookie_auth_token">
+            Long-Term Authentication Cookie Name:
+        </label>
+        <input class="pure-input-1" id="cookie_auth_token" type="text" name="config[cookie_index][auth_token]" value="{{ config.cookie_index.auth_token|e('html_attr') }}" />
+
+        <label for="session_userid">
+            Session Index for User ID:
+        </label>
+        <input class="pure-input-1" id="session_userid" type="text" name="config[session_index][user_id]" value="{{ config.session_index.user_id|e('html_attr') }}" />
+
+        <label for="session_userid">
+            Session Index for Logout Tokens:
+        </label>
+        <input class="pure-input-1" id="session_userid" type="text" name="config[session_index][logout_token]" value="{{ config.session_index.logout_token|default('logout_token')|e('html_attr') }}" />
+
+    </div>
+</fieldset>
+
+<fieldset class="network">
+    <legend class="fieldset">Network Configuration</legend>
+
+    {% if tor_installed %}
+        <input {% if config["tor-only"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="config[tor-only]" value="1" />
+        <label for="network-tor">
+            Proxy all requests over <a href="https://www.torproject.org/about/overview">Tor</a>?
+        </label>
+    {% else %}
+        <strong class="bold_failure"><i class="fa fa-close"></i> Tor is not available.</strong>
+        If you had <a href="https://www.torproject.org/about/overview">Tor</a>
+        installed, you could anonymize all of your Airship's outgoing traffic
+        through the Tor network.
+    {% endif %}
+    <br />
+
+</fieldset>
+
+<fieldset class="updates">
+    <legend class="fieldset">Automatic Updates</legend>
+    <div class="pure-form pure-form-stacked">
+        <label for="update_frequency">
+            Check For Updates Every:
+        </label>
+        <select class="pure-input-1" id="update_frequency" name="config[auto-update][check]">
+            <option {% if config["auto-update"].check == 900 %} selected="selected"{% endif %} value="900">15 Minutes</option>
+            <option {% if config["auto-update"].check == 1800 %} selected="selected"{% endif %} value="1800">30 Minutes</option>
+            <option {% if config["auto-update"].check == 3600 %} selected="selected"{% endif %} value="3600">1 Hour (60 Minutes) - Recommended</option>
+            <option {% if config["auto-update"].check == 21600 %} selected="selected"{% endif %} value="21600">6 Hours</option>
+            <option {% if config["auto-update"].check == 43200 %} selected="selected"{% endif %} value="43200">12 Hours</option>
+            <option {% if config["auto-update"].check == 86400 %} selected="selected"{% endif %} value="86400">24 Hours (1 Day)</option>
+            <option {% if config["auto-update"].check == 604800 %} selected="selected"{% endif %} value="604800">7 Days (1 Week)</option>
+        </select>
+    </div>
+
+    <fieldset class="updates_auto">
+        <legend>Automatically apply changes to:</legend>
+
+            <input {% if config["auto-update"].major %} checked="checked"{% endif %} id="update_major" type="checkbox" name="config[auto-update][major]" value="1" />
+            <label for="update_major">Major version changes (e.g. <code>1.5.2 -> 2.0.0</code>)</label><br />
+
+            <input {% if config["auto-update"].minor %} checked="checked"{% endif %} id="update_minor" type="checkbox" name="config[auto-update][minor]" value="1" />
+            <label for="update_minor">Minor version changes (e.g. <code>1.5.2 -> 1.6.0</code>)</label><br />
+
+            <input {% if config["auto-update"].patch %} checked="checked"{% endif %} id="update_patch" type="checkbox" name="config[auto-update][patch]" value="1" checked="checked" />
+            <label for="update_patch">Patch version changes (e.g. <code>1.5.2 -> 1.5.3</code>)</label><br />
+    </fieldset>
+
+</fieldset>

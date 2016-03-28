@@ -1,0 +1,101 @@
+{#<pre>{{ comment|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>#}
+
+<div class="table full-width">
+    <div class="table-row">
+        {% if comment.author %}
+            <div class="table-cell">Author:</div>
+            <div class="table-cell">{#
+                #}<a href="{{ SETTINGS.link_prefix }}/author/edit/{{ comment.author }}">{#
+                    #}{{ comment.authorname|e('html_attr') }}{#
+                #}</a>{#
+            #}</div>
+        {% elseif comment.metadata.name %}
+        <div class="table-cell">Name:</div>
+        <div class="table-cell">
+            {{ comment.metadata.name|e('html_attr') }}{#
+        #}</div>{% endif %}
+    </div>
+    {% if comment.metadata.email %}
+        <div class="table-row">
+            <div class="table-cell">Email:</div>
+            <div class="table-cell">{#
+            #}{{ comment.metadata.email|e('html_attr') }}{#
+        #}</div>
+        </div>
+    {% endif %}
+    {% if comment.metadata.url %}
+        <div class="table-row">
+            <div class="table-cell">URL:</div>
+            <div class="table-cell">{#
+            #}{{ comment.metadata.url|e('html_attr') }}{#
+        #}</div>
+        </div>
+    {% endif %}
+
+    {% if comment.author %}
+        <div class="table-row">
+            <div class="table-cell">Avatar:</div>
+            <div class="table-cell">{#
+                #}<img src="{{ get_avatar(comment.author, 'comment') }}" alt="{{ comment.authorname|e('html_attr') }}" title="{{ comment.authorname|e('html_attr') }}" />{#
+            #}</div>
+        </div>
+    {% elseif comment.metadata.email %}
+        <div class="table-row">
+            <div class="table-cell">Avatar:</div>
+            <div class="table-cell">{#
+                #}<img src="{{ comment.metadata.email|gravatar }}" alt="{{ comment.metadata.name|e('html_attr') }}" title="{{ comment.metadata.name|e('html_attr') }}" />{#
+            #}</div>
+        </div>
+    {% endif %}
+
+    <div class="table-row">
+        <div class="table-cell">Blog Post:</div>
+        <div class="table-cell">
+            <a href="{{ SETTINGS.link_prefix }}/blog/post/edit/{{ comment.blogpost|e('html_attr') }}">{{ comment.blog.title|e('html') }}</a>
+        </div>
+    </div>
+    {% if comment.replyto %}
+        <div class="table-row">
+            <div class="table-cell">Reply to:</div>
+            <div class="table-cell">
+                <a href="{{ SETTINGS.link_prefix }}/blog/comments/view/{{ comment.replyto|e('html_attr') }}">Comment #{{ comment.replyto|number_format }}</a>
+                {% if comment.parent.author %}{#
+                    #}by <a href="{{ SETTINGS.link_prefix }}/author/edit/{{ comment.parent.author }}">{#
+                        #}{{ comment.parent.authorname|e('html_attr') }}{#
+                    #}</a>{#
+                #}{% elseif comment.parent.metadata.name %}{#
+                    #}by {{ comment.parent.metadata.name|e('html_attr') }}{#
+                #}{% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<input type="hidden" name="format" id="format" value="Markdown" />
+<div class="bridge_page_rich_text_wrapper">
+    {% include cargo("rich_text_editor") with {"name": "page_body", "placeholder": "", "contents": comment.body|default(''), "readonly" : true} %}
+</div>
+
+{% if can('publish') %}
+<form method="post">{{ form_token(SETTINGS.link_prefix ~ "/blog/comments/view/" ~ comment.commentid) }}
+
+    <fieldset class="form-button-group">
+        <legend>Administrative Actions</legend>
+    {% if comment.approved %}
+        <button type="submit" name="comment_btn" value="hide" class="pure-button pure-button-secondary">
+            <i class="fa fa-thumbs-down"></i>
+            {{  __("Hide Comment") }}
+        </button>
+    {% else %}
+        <button type="submit" name="comment_btn" value="publish" class="pure-button pure-button-secondary">
+            <i class="fa fa-thumbs-up"></i>
+            {{  __("Approve Comment") }}
+        </button>
+        <button type="submit" name="comment_btn" value="delete" class="pure-button pure-button-tertiary">
+            <i class="fa fa-trash"></i>
+            {{  __("Delete Comment") }}
+        </button>
+    {% endif %}
+    </fieldset>
+</form>
+{% endif %}

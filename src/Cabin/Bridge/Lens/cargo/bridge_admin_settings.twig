@@ -1,0 +1,27 @@
+<form method="post">{{ form_token(_REQUEST_URI) }}
+    <div id="admin_settings_accordion">
+        <h3>{{ __("Universal Configuration Settings") }}</h3>
+        <div id="universal">
+            {% include cargo("bridge_admin_settings_universal") with {
+                "universal": config.universal,
+                "suppliers": config.suppliers
+            } %}
+        </div>
+        <h3>{{ __("Universal Content Security Policy") }}</h3>
+        <div id="content-security-policy">
+            {% include cargo("bridge_csp") with {
+                "csp": config.content_security_policy
+            } %}
+        </div>
+        {#
+        <h3>{{ __("Suppliers") }}</h3>
+        <div id="suppliers">
+        </div>
+        #}
+    </div>
+    <div class="form-button-group">
+        <button type="submit" class="pure-button pure-button-secondary">
+            <i class="fa fa-bolt"></i> {{ __("Save Settings") }}
+        </button>
+    </div>
+</form>

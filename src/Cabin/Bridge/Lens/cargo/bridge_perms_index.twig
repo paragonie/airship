@@ -1,0 +1,31 @@
+<h2>{{ __("Permissions") }}</h2>
+
+<p>
+    {{ __("Select a cabin to manage") }}:
+</p>
+<ul id="bridge_perms_list">
+{% for cabin in cabins %}
+    <li>
+        <a href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+<fieldset id="perms-test">
+    <legend>{{ __("View the Permissions for a URL") }}</legend>
+    <div class="table full-width table-pad-1">
+        <div class="table-row">
+            <div class="table-cell">
+                <input type="text" id="test_url" class="full-width" placeholder="{{ cabin_url('Bridge') }}crew/permissions" />
+            </div>
+            <div class="table-cell table-btn-right">
+                <button type="button" class="pure-button pure-button-secondary" id="test_url_btn">
+                    <i class="fa fa-flask"></i>{{ __("Test URL") }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="perms-test-results"></div>
+</fieldset>
+
+{% include cargo("bridge_perms_index_explain") %}

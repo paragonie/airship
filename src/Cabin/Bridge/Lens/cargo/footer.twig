@@ -1,0 +1,7 @@
+{% set hull_config = cabin_config("Hull") %}<p class="footer-bridge">
+    <a href="{{ cabin_url('Hull')|e('html_attr') }}">Return to the Hull</a>
+    &bull;
+    Powered by <a href="https://airship.paragonie.com">Airship</a>
+    &copy; 2016{% if now|date("Y") != 2016 %} - {{ now|date("Y") }}{% endif %}
+    <a href="https://paragonie.com">Paragon Initiative Enterprises</a>
+</p>

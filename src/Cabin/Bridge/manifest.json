@@ -1,0 +1,201 @@
+{
+    "name": "bridge",
+    "route_fallback":
+        ["CustomPages", "routeNotFound"],
+    "routes": {
+        "files/(.*)":
+            ["PublicFiles", "download"],
+
+        "admin/database":
+            ["Admin", "manageDatabase"],
+        "admin/settings":
+            ["Admin", "manageSettings"],
+        "admin/skyport":
+            ["Skyport", "index"],
+        "admin":
+            ["Admin", "index"],
+
+        "ajax/authors_blog_series":
+            ["Ajax", "getSeriesForAuthor"],
+        "ajax/authors_blog_posts":
+            ["Ajax", "getBlogPostsForAuthor"],
+        "ajax/get_perms_user":
+            ["Ajax", "getPermsForUser"],
+        "ajax/perm_test":
+            ["Ajax", "permissionTest"],
+        "ajax/rich_text_preview":
+            ["Ajax", "richTextPreview"],
+
+        "author/files/{id}/{string}/info":
+            ["AuthorFiles", "getFileInfo"],
+        "author/files/{id}/{string}/move":
+            ["AuthorFiles", "moveFile"],
+        "author/files/{id}/{string}/delete":
+            ["AuthorFiles", "confirmDeleteFile"],
+        "author/files/{id}/{string}":
+            ["AuthorFiles", "index"],
+        "author/files/{id}":
+            ["AuthorFiles", "selectCabin"],
+
+        "author/users/{id}":
+            ["Author", "users"],
+        "author/edit/{id}":
+            ["Author", "edit"],
+        "author/new":
+            ["Author", "create"],
+        "author{_page}":
+            ["Author", "index"],
+
+        "blog/category/edit/{slug}":
+            ["Blog", "editCategory"],
+        "blog/category/new":
+            ["Blog", "newCategory"],
+        "blog/category{_page}":
+            ["Blog", "listCategories"],
+
+        "blog/comments/view/{id}":
+            ["Blog", "viewComment"],
+        "blog/comments{_page}":
+            ["Blog", "listComments"],
+
+        "blog/post/edit/{id}":
+            ["Blog", "editPost"],
+        "blog/post/new":
+            ["Blog", "newPost"],
+        "blog/post{_page}":
+            ["Blog", "listPosts"],
+
+        "blog/series/edit/{id}":
+            ["Blog", "editSeries"],
+        "blog/series/new":
+            ["Blog", "newSeries"],
+        "blog/series{_page}":
+            ["Blog", "listSeries"],
+
+        "blog/tag/edit/{id}":
+            ["Blog", "editTag"],
+        "blog/tag{_page}":
+            ["Blog", "listTags"],
+
+        "blog":
+            ["Blog", "index"],
+
+        "board/checkUsername":
+            ["Account", "checkUsername"],
+        "board":
+            ["Account", "board"],
+
+        "cabins/manage{_string}":
+            ["Cabins", "manage"],
+        "cabins":
+            ["Cabins", "index"],
+
+        "crew/groups/edit/{id}":
+            ["Crew", "editGroup"],
+        "crew/groups/new":
+            ["Crew", "createGroup"],
+        "crew/groups":
+            ["Crew", "groups"],
+        "crew/permissions/{string}/action/{id}":
+            ["Permissions", "editAction"],
+        "crew/permissions/{string}/context/{id}":
+            ["Permissions", "editContext"],
+        "crew/permissions/{string}":
+            ["Permissions", "cabinSubMenu"],
+        "crew/permissions":
+            ["Permissions", "index"],
+        "crew/users/edit/{id}":
+            ["Crew", "editUser"],
+        "crew/users":
+            ["Crew", "users"],
+        "crew":
+            ["Crew", "index"],
+
+        "file_manager/{string}/info":
+            ["Files", "getFileInfo"],
+        "file_manager/{string}/move":
+            ["Files", "moveFile"],
+        "file_manager/{string}/delete":
+            ["Files", "confirmDeleteFile"],
+        "file_manager/{string}":
+            ["Files", "index"],
+        "file_manager":
+            ["Files", "selectCabin"],
+
+        "forgot\\-password":
+            ["Account", "recoverAccount"],
+
+        "gadgets":
+            ["Gadgets", "index"],
+
+        "gears":
+            ["Gears", "index"],
+
+        "login":
+            ["Account", "login"],
+        "logout/(.*)":
+            ["Account", "logout"],
+
+        "motifs/manage/{string}":
+            ["Motifs", "manage"],
+        "motifs":
+            ["Motifs"],
+
+        "my/account":
+            ["Account", "my"],
+        "my/files/{string}/info":
+            ["MyFiles", "getFileInfo"],
+        "my/files/{string}/move":
+            ["MyFiles", "moveFile"],
+        "my/files/{string}/delete":
+            ["MyFiles", "confirmDeleteFile"],
+        "my/files/{string}":
+            ["MyFiles", "index"],
+        "my/files":
+            ["MyFiles", "selectCabin"],
+        "my/preferences":
+            ["Account", "preferences"],
+        "my":
+            ["Account", "myIndex"],
+
+        "pages/{string}/deleteDir":
+            ["PageManager", "deleteDir"],
+        "pages/{string}/deletePage":
+            ["PageManager", "deletePage"],
+        "pages/{string}/edit":
+            ["PageManager", "editPage"],
+        "pages/{string}/history/diff/{string}/{string}":
+            ["PageManager", "pageHistoryDiff"],
+        "pages/{string}/history/view/{string}":
+            ["PageManager", "pageHistoryView"],
+        "pages/{string}/history":
+            ["PageManager", "pageHistory"],
+        "pages/{string}/newDir":
+            ["PageManager", "newDir"],
+        "pages/{string}/newPage":
+            ["PageManager", "newPage"],
+        "pages/{string}/renameDir":
+            ["PageManager", "renameDir"],
+        "pages/{string}/renamePage":
+            ["PageManager", "renamePage"],
+        "pages/{string}":
+            ["PageManager", "forCabin"],
+        "pages":
+            ["PageManager", "index"],
+
+        "redirects/{string}/edit/{id}":
+            ["Redirects", "editRedirect"],
+        "redirects/{string}/delete/{id}":
+            ["Redirects", "deleteRedirect"],
+        "redirects/{string}/new":
+            ["Redirects", "newRedirect"],
+        "redirects/{string}":
+            ["Redirects", "forCabin"],
+        "redirects":
+            ["Redirects", "index"],
+
+        "":
+            ["IndexPage", "index"]
+    },
+    "supplier": "paragonie"
+}

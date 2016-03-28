@@ -1,0 +1,13 @@
+{% extends base_template() %}
+
+{% import "macros/blog_categories.twig" as bcat %}
+
+{% block content %}
+    <div class="blog-header">
+        {% include cargo("blog_header") ignore missing %}
+    </div>
+    <div id="blog-wrapper" class="blog-wrapper">
+        <div class="blog-main">{% block blog_contents %}{% endblock %}</div>
+        <div class="blog-sidebar">{% include cargo("blog_sidebar") ignore missing %}</div>
+    </div>
+{% endblock %}
