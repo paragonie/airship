@@ -180,21 +180,35 @@
     display: inline-block;
 }
 @media screen and (min-width: 1051px) and (max-width: 1250px) {
+    .full-textarea {
+        height: 16em;
+    }
     .table-label {
         max-width: 180px;
         width: 180px;
     }
 }
 @media screen and (min-width: 1251px) and (max-width: 1450px) {
+    .full-textarea {
+        height: 20em;
+    }
     .table-label {
         max-width: 200px;
         width: 200px;
     }
 }
 @media screen and (min-width: 1451px) and (max-width: 2150px) {
+    .full-textarea {
+        height: 24em;
+    }
     .table-label {
         max-width: 220px;
         width: 220px;
+    }
+}
+@media screen and (min-width: 2151px) {
+    .full-textarea {
+        height: 40em;
     }
 }
 .table-label {

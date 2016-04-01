@@ -50,6 +50,15 @@ $(document).ready(function() {
             $("#rich_text_" + _name + "_preview").hide();
         });
 
+        $("#rich_text_" + name +"_preview_tab").click(function(e) {
+            var _name = $(this).parent().parent().data('name');
+            $(this).parent().each(function () {
+                $("a").removeClass("active_tab");
+            });
+            $(this).addClass("active_tab");
+            richTextUpdate(_name, true);
+        });
+
         $("#"+format_name).on('change', function(e) {
             for (k in richTextLookups) {
                 if ($(this).attr('id') == richTextLookups[k]) {
@@ -68,15 +77,6 @@ $(document).ready(function() {
                     return;
                 }
             }
-        });
-
-        $("#rich_text_" + name +"_preview_tab").click(function(e) {
-            var _name = $(this).parent().parent().data('name');
-            $(this).parent().each(function () {
-                $("a").removeClass("active_tab");
-            });
-            $(this).addClass("active_tab");
-            richTextUpdate(_name, true);
         });
 
 
