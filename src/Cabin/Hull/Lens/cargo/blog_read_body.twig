@@ -7,7 +7,7 @@
     #}<span id="after-fold"></span>{#
     #}{{ blogpost.after_fold|default("")|CleanMarkdown }}{#
 #}{% else %}{#
-    #}{{ blogpost.snippet|e('html') }}{#
+    #}{{ blogpost.snippet|purify|raw }}{#
     #}<span id="after-fold"></span>{#
-    #}{{ blogpost.after_fold|e('html') }}{#
+    #}{{ blogpost.after_fold|purify|raw }}{#
 #}{% endif %}

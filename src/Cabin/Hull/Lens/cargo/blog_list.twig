@@ -11,7 +11,7 @@
             #}{% elseif latest.format == 'Markdown' %}{#
                 #}{{ latest.snippet|default("")|CleanMarkdown }}{#
             #}{% else %}{#
-                #}{{ latest.snippet|e('html') }}{#
+                #}{{ latest.snippet|purify|raw }}{#
             #}{% endif %}
         {% if latest.snippet != latest.body %}
             <p class="readmore-wrapper">
