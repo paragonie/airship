@@ -1,6 +1,8 @@
+<div id="blog_header_inner">
 <h2>{{ blogTitle | default(
         SETTINGS.blog.title | default('Airship Blog')
     ) }}</h2>
 <h4>{{ blogTagline | default(
         SETTINGS.blog.tagline | default('Even the sky shall not limit you.')
     ) }}</h4>
+</div>

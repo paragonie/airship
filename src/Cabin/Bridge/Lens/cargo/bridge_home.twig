@@ -4,7 +4,7 @@
 {{ __("Welcome, %s", "default",
     ("<strong>" ~ user_display_name()|e('html') ~ "</strong>")|raw
 ) }}
-    <a href="{{ SETTINGS.link_prefix }}/my/account" title="Change Display Name"><i class="fa fa-pencil-square"></i></a>
+    <a href="{{ cabin_url() }}my/account" title="Change Display Name"><i class="fa fa-pencil-square"></i></a>
 </div>
 <div class="table full-width table-pad-1">
     <div class="table-row">

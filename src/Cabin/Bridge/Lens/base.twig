@@ -4,7 +4,7 @@
         {% include cargo("base_head") %}
         {% block page_css %}{% endblock %}
     {% endblock %}</head>
-    <body>{% block body %}
+    <body cabin="Bridge">{% block body %}
         <div id="site-wrapper">
             <header>{% block header %}
                 {% include cargo("header") %}
@@ -16,7 +16,7 @@
                     {% endblock %}</div>
                     <div id="rightside">
             {% endif %}
-                        <div id="content">{% block content %}
+                        <div id="content">{% block content %}<div id="bridge_content">
                             <div id="bridge_table">
                                 {% if announcement %}<div id="announcement">{{ announcement }}</div>{% endif %}
                                 <div id="bridge_left">
@@ -24,13 +24,13 @@
                                 </div>
                                 <div id="bridge_main">{% block main %}{% endblock %}</div>
                             </div>
-                        {% endblock %}</div>
+                        </div>{% endblock %}</div>
             {% if showmenu %}
                     </div>
                 </div>
             {% endif %}
         </div>
-        <footer>{% block footer %}
+        <footer id="bridge_footer">{% block footer %}
             {% include cargo("footer") %}
         {% endblock %}</footer>
     {% endblock %}

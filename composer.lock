@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8e268c9db7578deae70fdc0cb2976417",
-    "content-hash": "0dc427a80289b6e992af5178bde08237",
+    "hash": "454fe91c69bd51cb8ec34e8e764a80bd",
+    "content-hash": "a7887dd32b04a7d1daa0d86b76eee078",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -313,16 +313,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "0.13.1",
+            "version": "0.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "2c10de455649e3a544d45016d9df457248bcd37f"
+                "reference": "35ac362082ca983a8123df2ee2cdfcf456ab6295"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/2c10de455649e3a544d45016d9df457248bcd37f",
-                "reference": "2c10de455649e3a544d45016d9df457248bcd37f",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/35ac362082ca983a8123df2ee2cdfcf456ab6295",
+                "reference": "35ac362082ca983a8123df2ee2cdfcf456ab6295",
                 "shasum": ""
             },
             "require": {
@@ -334,7 +334,7 @@
             },
             "require-dev": {
                 "erusev/parsedown": "~1.0",
-                "jgm/commonmark": "0.24",
+                "jgm/commonmark": "0.25",
                 "michelf/php-markdown": "~1.4",
                 "mikehaertl/php-shellcommand": "~1.2.0",
                 "phpunit/phpunit": "~4.3|~5.0",
@@ -366,7 +366,7 @@
                 {
                     "name": "Colin O'Dell",
                     "email": "colinodell@gmail.com",
-                    "homepage": "http://www.colinodell.com",
+                    "homepage": "https://www.colinodell.com",
                     "role": "Lead Developer"
                 }
             ],
@@ -377,7 +377,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2016-03-09 15:20:24"
+            "time": "2016-03-27 19:10:13"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -484,16 +484,16 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "dev-master",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "9736c0ba57160203f4b9e699001681e5db5023d4"
+                "reference": "ded7b7d977d350a6a0959e7ca34b6367c863b13e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/9736c0ba57160203f4b9e699001681e5db5023d4",
-                "reference": "9736c0ba57160203f4b9e699001681e5db5023d4",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/ded7b7d977d350a6a0959e7ca34b6367c863b13e",
+                "reference": "ded7b7d977d350a6a0959e7ca34b6367c863b13e",
                 "shasum": ""
             },
             "require": {
@@ -517,7 +517,7 @@
                 }
             ],
             "description": "High-level cryptography interface powered by libsodium",
-            "time": "2016-03-11 00:14:40"
+            "time": "2016-04-04 20:33:42"
         },
         {
             "name": "paragonie/random_compat",
@@ -765,9 +765,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "paragonie/halite": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

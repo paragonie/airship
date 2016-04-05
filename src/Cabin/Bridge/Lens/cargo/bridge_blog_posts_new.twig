@@ -1,5 +1,5 @@
 <h3>{{ __("New Blog Post") }}</h3>
-<form method="post">{{ form_token( SETTINGS.link_prefix ~ "/blog/post/new") }}
+<form method="post">{{ form_token( cabin_url() ~ "/blog/post/new") }}
     <div class="table">
 
         <div class="table-row">
@@ -38,7 +38,7 @@
                             #}{% endif %}>{{ auth.name|e('html') }}</option>
                     {% endfor %}
                 </select>
-                <a href="{{ SETTINGS.link_prefix }}/author/new" target="_blank" title="{{ __("Create an Author Profile")|e('html_attr') }}">{#
+                <a href="{{ cabin_url() }}author/new" target="_blank" title="{{ __("Create an Author Profile")|e('html_attr') }}">{#
                     #}<i class="fa fa-user-plus"></i>{% if not authors %}Create an Author Profile Now{% endif %}{#
                 #}</a>
             </div>

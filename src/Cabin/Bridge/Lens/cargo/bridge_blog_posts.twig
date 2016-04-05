@@ -25,14 +25,14 @@
             {% if can_edit or post.author in my_author_ids %}
             <a{#
                 #} title="{{ __("Edit Blog Post")|e('html_attr') }}"{#
-                #} href="{{ SETTINGS.link_prefix }}/blog/post/edit/{{ post.postid|e('html_attr') }}"{#
+                #} href="{{ cabin_url() }}blog/post/edit/{{ post.postid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-pencil"></i>{#
             #}</a>
             {% endif %}
             <a{#
                 #} title="{{ __("Blog Post Revision History")|e('html_attr') }}"{#
-                #} href="{{ SETTINGS.link_prefix }}/blog/post/history/{{ post.postid|e('html_attr') }}"{#
+                #} href="{{ cabin_url() }}blog/post/history/{{ post.postid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-history"></i>{#
             #}</a>
@@ -42,7 +42,7 @@
         </div>
         <div class="table-cell">
             {% if can_update("blog/authors") or post.author in my_author_ids %}
-            <a href="{{ SETTINGS.link_prefix }}/author/edit/{{ post.author|e('html_attr') }}">{{
+            <a href="{{ cabin_url() }}author/edit/{{ post.author|e('html_attr') }}">{{
                 post.authorname|e('html')
             }}</a>
             {% else %}
@@ -51,7 +51,7 @@
         </div>
         <div class="table-cell">
             {% if post.categoryid %}
-            <a href="{{ SETTINGS.link_prefix }}/blog/category/edit/{{ post.categoryid|e('html_attr') }}">{{
+            <a href="{{ cabin_url() }}blog/category/edit/{{ post.categoryid|e('html_attr') }}">{{
                 post.categoryname|e('html')
             }}</a>
             {% else %}

@@ -5,7 +5,7 @@
                 Cabin:
             </label>
             <div class="table-cell">
-                <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}" target="_blank">{{ cabin|e('html') }}</a>
+                <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}" target="_blank">{{ cabin|e('html') }}</a>
             </div>
         </div>
         <div class="table-row">

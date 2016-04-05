@@ -1,10 +1,10 @@
 <div id="bridge_author_header">
-    <a class="pure-button pure-button-secondary" href="{{ SETTINGS.link_prefix }}/author/new">
+    <a class="pure-button pure-button-secondary" href="{{ cabin_url() }}author/new">
         <i class="fa fa-user-plus"></i>
         {{ __("Create a New Author Profile") }}
     </a>
 </div>
-{% set author_base = SETTINGS.link_prefix ~ "/author" %}
+{% set author_base = cabin_url() ~ "/author" %}
 <div class="table" id="bridge_author_list">
     <div class="table-row table-header">
         <div class="table-cell">
@@ -81,22 +81,22 @@
         <div class="table-row">
             <div class="table-cell table-btn-left">
                 <a{#
-                    #} href="{{ SETTINGS.link_prefix }}/author/edit/{{ auth.authorid|e('html_attr') }}"{#
+                    #} href="{{ cabin_url() }}author/edit/{{ auth.authorid|e('html_attr') }}"{#
                     #} class="pure-button pure-button-secondary"{#
                     #} title="{{ __("Edit Author Profile")|e('html_attr') }}"{#
                 #}><i class="fa fa-pencil"></i></a>{#
                 #}<a{#
-                    #} href="{{ SETTINGS.link_prefix }}/author/users/{{ auth.authorid|e('html_attr') }}"{#
+                    #} href="{{ cabin_url() }}author/users/{{ auth.authorid|e('html_attr') }}"{#
                     #} class="pure-button pure-button-primary"{#
                     #} title="{{ __("Manage Members")|e('html_attr') }}"{#
                 #}><i class="fa fa-users"></i></a>{#
                 #}<a{#
-                    #} href="{{ SETTINGS.link_prefix }}/author/photos/{{ auth.authorid|e('html_attr') }}"{#
+                    #} href="{{ cabin_url() }}author/photos/{{ auth.authorid|e('html_attr') }}"{#
                     #} class="pure-button pure-button-secondary"{#
                     #} title="{{ __("Author Photos")|e('html_attr') }}"{#
                 #}><i class="fa fa-photo"></i></a>{#
                 #}<a{#
-                    #} href="{{ SETTINGS.link_prefix }}/author/files/{{ auth.authorid|e('html_attr') }}"{#
+                    #} href="{{ cabin_url() }}author/files/{{ auth.authorid|e('html_attr') }}"{#
                     #} class="pure-button pure-button-primary"{#
                     #} title="{{ __("Author Files")|e('html_attr') }}"{#
                 #}><i class="fa fa-folder-open-o"></i></a>

@@ -1,5 +1,5 @@
 <h3>{{ __("Edit Blog Post") }}</h3>
-<form method="post">{{ form_token( SETTINGS.link_prefix ~ "/blog/post/edit/" ~ blogpost.postid) }}
+<form method="post">{{ form_token( cabin_url() ~ "/blog/post/edit/" ~ blogpost.postid) }}
     <div class="table">
 
         <div class="table-row">

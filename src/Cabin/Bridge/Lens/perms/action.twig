@@ -7,6 +7,6 @@
         <button type="submit" class="pure-button pure-button-secondary">
             {{ __("Change Action's Label") }}
         </button>
-        <a class="pure-button pure-button-tertiary" href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('html_attr') }}">{{ __("Cancel") }}</a>
+        <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}">{{ __("Cancel") }}</a>
     </form>
 {% endblock %}

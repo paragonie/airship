@@ -1,7 +1,7 @@
 {% import "macros/groups.twig" as grpmac %}
 <h2>{{ __("Edit User Account") }}</h2>
 <form method="post">{{ form_token(
-    SETTINGS.link_prefix ~ "/crew/users/edit/" ~ user.userid
+    cabin_url() ~ "/crew/users/edit/" ~ user.userid
 ) }}
     <div class="table full-width table-pad-1">
 

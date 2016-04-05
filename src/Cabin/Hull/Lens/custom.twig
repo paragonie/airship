@@ -4,7 +4,7 @@
     {% set pageTitle = title %}
 {% endif %}
 
-{% block content %}{{ rendered_content|raw }}{% endblock %}
+{% block content %}<div id="custom-page">{{ rendered_content|raw }}</div>{% endblock %}
 
 {% block head_extra %}
     {% include cargo("custom_head_extra") ignore missing %}

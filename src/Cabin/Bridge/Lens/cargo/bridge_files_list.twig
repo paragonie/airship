@@ -19,7 +19,7 @@
                  data-dir="{{ dir.url|e('url') }}"
             >
                 <div class="monospace">
-                    <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}?dir={% if current %}{#
+                    <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}?dir={% if current %}{#
                         #}{{ current ~ "/" ~ dir.name|e('url') }}{#
                     #}{% else %}{#
                         #}{{ dir.name|e('url') }}{#
@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     {% if can_update %}{% spaceless %}
-                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/move?{#
+                        <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}/move?{#
                                 #}{% if current %}{#
                                     #}dir={{ current|e('url') }}/{{ dir.name|e('url') }}{#
                                 #}{% else %}{#
@@ -45,7 +45,7 @@
                         </a>
                     {% endspaceless %}{% endif %}
                     {% if can_delete %}
-                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/delete?{#
+                        <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}/delete?{#
                             #}{% if current %}{#
                                 #}dir={{ current|e('url') }}/{{ dir.name|e('url') }}{#
                             #}{% else %}{#
@@ -73,20 +73,20 @@
                     {{ f.modified|date("Y-m-d H:i:s") }}
                 </div>
                 <div>{% spaceless %}
-                    <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/info?{% if current %}{#
+                    <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}/info?{% if current %}{#
                         #}dir={{ current|e('url') }}&{#
                     #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
                         {{ __("File Info") }}
                     </a>
                     {% if can_publish %}
-                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/move?{% if current %}{#
+                        <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}/move?{% if current %}{#
                             #}dir={{ current|e('url') }}&{#
                         #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
                             {{ __("Move / Rename") }}
                         </a>
                     {% endif %}
                     {% if can_delete %}
-                        <a href="{{ SETTINGS.link_prefix }}/{{ path_middle }}/{{ cabin|e('url') }}/delete?{% if current %}{#
+                        <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}/delete?{% if current %}{#
                             #}dir={{ current|e('url') }}&{#
                         #}{% endif %}file={{ f.filename|e('url') }}" class="pure-button pure-button-primary file-button">
                             {{ __("Delete") }}

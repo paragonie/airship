@@ -10,7 +10,7 @@
         <ul>
             {% for ctx in contexts %}
                 <li>
-                    {% if can_update %}<a href="{{ SETTINGS.link_prefix }}/crew/permissions/{#
+                    {% if can_update %}<a href="{{ cabin_url() }}crew/permissions/{#
                         #}{{ cabin|e('html_attr') }}/context/{#
                         #}{{ ctx.contextid|e('html_attr') }}"{#
                     #}>{#
@@ -47,7 +47,7 @@
         <ul>
             {% for act in actions %}
                 <li>
-                    {% if can_update %}<a href="{{ SETTINGS.link_prefix }}/crew/permissions/{#
+                    {% if can_update %}<a href="{{ cabin_url() }}crew/permissions/{#
                         #}{{ cabin|e('html_attr') }}/action/{#
                         #}{{ act.actionid|e('html_attr') }}"{#
                     #}>{#

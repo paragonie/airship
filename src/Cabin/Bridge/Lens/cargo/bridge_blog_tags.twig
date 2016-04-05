@@ -11,7 +11,7 @@
 </form>
 {% endif %}
 
-{% set tag_base = SETTINGS.link_prefix ~ "/blog/tag/" ~ pagination.page|e('html_attr') %}
+{% set tag_base = cabin_url() ~ "/blog/tag/" ~ pagination.page|e('html_attr') %}
 <div class="table" id="bridge_tag_list">
     <div class="table-row table-header">
         <div class="table-cell"></div>
@@ -44,7 +44,7 @@
             <div class="table-cell icons-1">
                 {% if can_edit %}<a{#
                 #} title="{{ __("Edit Tag")|e('html_attr') }}"{#
-                #} href="{{ SETTINGS.link_prefix }}/blog/tag/edit/{{ tag.tagid|e('html_attr') }}"{#
+                #} href="{{ cabin_url() }}blog/tag/edit/{{ tag.tagid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-pencil"></i>{#
             #}</a>{% endif %}

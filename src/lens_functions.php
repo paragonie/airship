@@ -35,13 +35,20 @@ function base_template()
  */
 function cabin_url(string $cabin = \CABIN_NAME): string
 {
+    static $lookup = [];
+    if (!empty($lookup[$cabin])) {
+        // It was cached
+        return $lookup[$cabin];
+    }
     $state = State::instance();
     foreach ($state->cabins as $c) {
         if ($c['name'] === $cabin) {
             if (isset($c['canon_url'])) {
-                return \rtrim($c['canon_url'], '/').'/';
+                $lookup[$cabin] = \rtrim($c['canon_url'], '/').'/';
+                return $lookup[$cabin];
             }
-            return '/';
+            $lookup[$cabin] = '/';
+            return $lookup[$cabin];
         }
     }
     return '';

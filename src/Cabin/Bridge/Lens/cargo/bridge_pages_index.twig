@@ -1,5 +1,5 @@
 <ul>
 {% for cabin in cabins %}
-    <li><a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}">{{ cabin }}</a></li>
+    <li><a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}">{{ cabin }}</a></li>
 {% endfor %}
 </ul>

@@ -13,7 +13,7 @@
         {{ __("Delete everything") }}
     </button>
 
-    <a class="pure-button pure-button-tertiary" href="{{ SETTINGS.link_prefix ~ "/" ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ parent_dir|e('url') }}">
+    <a class="pure-button pure-button-tertiary" href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ parent_dir|e('url') }}">
         {{ __("No") }}
     </a>
 </form>

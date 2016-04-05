@@ -1,4 +1,4 @@
-CREATE TABLE bridge_announcments (
+CREATE TABLE bridge_announcements (
   announcementid BIGSERIAL PRIMARY KEY,
   title TEXT,
   contents TEXT,

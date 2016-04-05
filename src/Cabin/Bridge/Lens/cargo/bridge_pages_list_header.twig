@@ -8,7 +8,7 @@
     {% endspaceless %}</select>
 <ul class="bridge_page_list_header_pathinfo">
     <li{% if current == "" %} class="current_dir"{% endif %}>
-        <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}">
+        <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}">
             <i class="fa fa-home"></i> {{ __("Home") }}
         </a>
     </li>
@@ -21,7 +21,7 @@
             {% set acc_path = piece %}
         {% endif %}
         <li{% if acc_path == current %} class="current_dir"{% endif %}>
-            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}?dir={{ acc_path|e('url') }}">
+            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={{ acc_path|e('url') }}">
                 {{ piece|e('html') }}
             </a>
         </li>

@@ -21,7 +21,7 @@
             <div class="table-cell icons-1">
                 <a{#
                 #} title="{{ __("View Comment")|e('html_attr') }}"{#
-                #} href="{{ SETTINGS.link_prefix }}/blog/comments/view/{{ comment.commentid|e('html_attr') }}"{#
+                #} href="{{ cabin_url() }}blog/comments/view/{{ comment.commentid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-search"></i>{#
             #}</a>
@@ -34,7 +34,7 @@
                 {% if comment.replyto %}
                     <a{#
                         #} title="{{ __("View Comment")|e('html_attr') }}"{#
-                        #} href="{{ SETTINGS.link_prefix }}/blog/comments/view/{{ comment.replyto|e('html_attr') }}"{#
+                        #} href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}"{#
                     #}>{#
                         #}#{{ comment.replyto|e('html') }}{#
                     #}</a>

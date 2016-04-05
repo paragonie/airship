@@ -19,7 +19,7 @@
          data-dir="{{ dir.url|e('url') }}"
     >
         <div class="monospace">
-            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}?dir={% if current %}{{ current ~ "/" ~ dir.url|e('url') }}{% else %}{{ dir.url|e('url') }}{% endif %}">
+            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={% if current %}{{ current ~ "/" ~ dir.url|e('url') }}{% else %}{{ dir.url|e('url') }}{% endif %}">
                 <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.url|e('html') }}
             </a>
         </div>

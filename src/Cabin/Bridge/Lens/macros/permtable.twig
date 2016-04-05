@@ -60,7 +60,7 @@
         #} id="group_{{ groupdata.groupid }}"{#
     #}>
     <td class="permtable_name depth_{{ depth|default(0) }}">
-        <div class="perm_groupname"><a href="{{ SETTINGS.link_prefix }}/crew/groups/edit/{{ groupdata.groupid|e('html') }}">{#
+        <div class="perm_groupname"><a href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid|e('html') }}">{#
             #}{{ groupdata.name|e }}{#
         #}</div>
     </td>

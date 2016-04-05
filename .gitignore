@@ -1,6 +1,8 @@
 /.idea/
 /nbproject/
 /files/*
+/src/public/static/Bridge
+/src/public/static/Hull
 /src/public/launch.php
 /src/config/cabins.json
 /src/config/gears.json

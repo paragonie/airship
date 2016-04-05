@@ -7,6 +7,6 @@
 
 <ul>
     {% for cabin in cabins %}
-    <li><a href="{{ SETTINGS.link_prefix }}/cabins/manage/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a></li>
+    <li><a href="{{ cabin_url() }}cabins/manage/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a></li>
     {% endfor %}
 </ul>

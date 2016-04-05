@@ -1,19 +1,19 @@
 <h2>{{ __("Revision History") }}</h2>
 <div class="page_history_header_nav">{#
 #}{% set acc = "" %}{#
-#}<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}">{#
+#}<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}">{#
     #}<i class="fa fa-home"></i>{{ __("Home") }}{#
 #}</a>{#
 #}{% for piece in pathinfo %}{#
     #}{% if piece != "" %}{#
         #}{% set acc = acc ~ "/" ~ piece  %}{#
             #}/{#
-        #}<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}?dir={{ acc|e('html_attr') }}">{{ piece|default('(Home)')|e('html') }}</a>{#
+        #}<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={{ acc|e('html_attr') }}">{{ piece|default('(Home)')|e('html') }}</a>{#
     #}{% endif %}{#
 #}{% endfor %}{#
     #}/{#
-#}<strong><a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{{ pageinfo.url|e('html_attr') }}</a></strong>
-    <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/editPage?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{#
+#}<strong><a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{{ pageinfo.url|e('html_attr') }}</a></strong>
+    <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/editPage?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{#
         #}<i class="fa fa-pencil" title="{{ __("Edit")|e('html_attr') }}"></i>{#
     #}</a>
 </div>

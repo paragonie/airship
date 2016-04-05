@@ -79,7 +79,7 @@
             <i class="fa fa-save"></i>
             {{ __("Save Changes") }}
         </button>
-        <a href="{{ SETTINGS.link_prefix }}/crew/permissions/{{ cabin|e('url') }}" class="pure-button pure-button-tertiary">
+        <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('url') }}" class="pure-button pure-button-tertiary">
             <i class="fa fa-close"></i>
             {{ __("Cancel") }}
         </a>

@@ -34,7 +34,7 @@
 
 {% macro groupTree(groupdata, depth) %}
     <li>
-        <a href="{{ SETTINGS.link_prefix }}/crew/groups/edit/{{ groupdata.groupid }}">{#
+        <a href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid }}">{#
             #}<i class="fa fa-pencil"></i>{#
         #}</a>{#
         #}{{ groupdata.name|e }}

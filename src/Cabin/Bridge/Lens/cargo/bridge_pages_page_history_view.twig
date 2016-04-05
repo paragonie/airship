@@ -4,8 +4,8 @@
 <ul id="page_history_nav">
     {% if prev_url %}
         <li>
-            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/view/{{ prev_url|e('html_attr') }}">{{ __("Previous") }}</a>
-            (<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/diff/{{ prev_url|e('html_attr') }}/{{ version.uniqueid|e('html_attr') }}">{{ __("Diff") }}</a>)
+            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/view/{{ prev_url|e('html_attr') }}">{{ __("Previous") }}</a>
+            (<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/diff/{{ prev_url|e('html_attr') }}/{{ version.uniqueid|e('html_attr') }}">{{ __("Diff") }}</a>)
         </li>
     {% else %}
         <li>
@@ -13,8 +13,8 @@
         </li>
     {% endif %}{% if next_url %}
         <li>
-            <a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/view/{{ next_url|e('html_attr') }}">{{ __("Next") }}</a>
-            (<a href="{{ SETTINGS.link_prefix }}/pages/{{ cabin|e('url') }}/history/diff/{{ version.uniqueid|e('html_attr') }}/{{ next_url|e('html_attr') }}">{{ __("Diff") }}</a>)
+            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/view/{{ next_url|e('html_attr') }}">{{ __("Next") }}</a>
+            (<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/diff/{{ version.uniqueid|e('html_attr') }}/{{ next_url|e('html_attr') }}">{{ __("Diff") }}</a>)
         </li>
     {% else %}
         <li>

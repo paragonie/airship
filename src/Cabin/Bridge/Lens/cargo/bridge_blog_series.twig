@@ -1,5 +1,5 @@
 {% if can_create() %}
-<a href="{{ SETTINGS.link_prefix }}/blog/series/new" class="pure-button pure-button-secondary">
+<a href="{{ cabin_url() }}blog/series/new" class="pure-button pure-button-secondary">
     <i class="fa fa-list-alt"></i>
     {{ __("New Series") }}
 </a>
@@ -22,7 +22,7 @@
     {% for ser in series %}
         <div class="table-row">
             <div class="table-cell table-1-btn-left">
-                <a class="pure-button pure-button-primary" href="{{ SETTINGS.link_prefix }}/blog/series/edit/{{ ser.seriesid }}">{#
+                <a class="pure-button pure-button-primary" href="{{ cabin_url() }}blog/series/edit/{{ ser.seriesid }}">{#
                     #}<i class="fa fa-pencil"></i>{#
                 #}</a>
             </div>
@@ -30,7 +30,7 @@
                 {{ ser.name|e('html') }}
             </div>
             <div class="table-cell">
-                <a href="{{ SETTINGS.link_prefix }}/author/edit/{{ ser.author_data.authorid|e('html_attr') }}">{#
+                <a href="{{ cabin_url() }}author/edit/{{ ser.author_data.authorid|e('html_attr') }}">{#
                     #}{{ ser.author_data.name|e('html') }}{#
                 #}</a>
             </div>
