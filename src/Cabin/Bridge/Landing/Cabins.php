@@ -212,12 +212,16 @@ class Cabins extends LoggedInUsersOnly
             'csp.' . $cabinName . '.json'
         );
 
-        // Save universal config
+        // Save cabins.json
         \file_put_contents(
             ROOT . $ds . 'config' . $ds . 'cabins.json',
             $twigEnv->render('cabins.twig', ['cabins' => $saveCabins])
         );
-        
+
+        // Delete the cabin cache
+        if (\file_exists(ROOT . 'tmp' . $ds . 'cache' . $ds . 'cabin_data.json')) {
+            \unlink(ROOT . 'tmp' . $ds . 'cache' . $ds . 'cabin_data.json');
+        }
         return true;
     }
 }
