@@ -1,6 +1,6 @@
 <h2>{{ __("Rename File?") }}</h2>
 
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
     <fieldset class="form-move-fieldset">
         <legend>{% if root_dir %}
             {{ cabin_url(cabin) ~ "files/" ~ root_dir ~ "/" ~ dir|e('html') ~ "/" ~ file.filename|e('html') }}

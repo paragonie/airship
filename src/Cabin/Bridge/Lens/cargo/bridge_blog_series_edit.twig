@@ -1,5 +1,5 @@
 <h3 class="nomargin">{{ __("Update Series") }}</h3>
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
     <input type="hidden" name="series_id" id="series_id" value="{{ series.seriesid|e('html_attr') }}" />
     <div id="blog_series_metadata" class="form-table full-width table-pad-1">
         <div class="table-row">

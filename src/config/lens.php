@@ -105,6 +105,7 @@ $lens->func('csp_hash_str');
 $lens->func('csp_nonce');
 $lens->func('get_avatar');
 $lens->func('get_languages');
+$lens->func('get_url_path');
 $lens->func('global_config');
 $lens->func('is_admin');
 $lens->func('logout_token');

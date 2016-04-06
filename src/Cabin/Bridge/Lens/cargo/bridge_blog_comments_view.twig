@@ -77,7 +77,7 @@
 </div>
 
 {% if can('publish') %}
-<form method="post">{{ form_token(cabin_url() ~ "/blog/comments/view/" ~ comment.commentid) }}
+<form method="post">{{ form_token() }}
 
     <fieldset class="form-button-group">
         <legend>Administrative Actions</legend>

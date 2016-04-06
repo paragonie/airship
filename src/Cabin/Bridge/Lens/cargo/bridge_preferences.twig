@@ -1,5 +1,5 @@
 <h3>{{ __("My Preferences") }}</h3>
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
     {% include cargo("bridge_preferences_motif") %}
 
     {# Gadget developers: Feel free to add to this one: #}

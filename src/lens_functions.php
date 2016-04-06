@@ -28,6 +28,23 @@ function base_template()
 }
 
 /**
+ * READ-ONLY access to the state global
+ *
+ * @param string $name
+ * @return array
+ */
+function cabin_config(string $name): array
+{
+    $state = State::instance();
+    foreach ($state->cabins as $route => $cabin) {
+        if ($cabin['name'] === $name) {
+            return $cabin;
+        }
+    }
+    return [];
+}
+
+/**
  * Get the canon URL for a given Cabin
  *
  * @param string $cabin
@@ -233,6 +250,28 @@ function form_token($lockTo = '')
 }
 
 /**
+ * Given a URL, only grab the path component (and, optionally, the query)
+ *
+ * @param string $url
+ * @param bool $includeQuery
+ * @return string
+ */
+function get_path_url(string $url, bool $includeQuery = false): string
+{
+    $path = \parse_url($url, PHP_URL_PATH);
+    if ($path) {
+        if ($includeQuery) {
+            $query = \parse_url($url, PHP_URL_QUERY);
+            if ($query) {
+                return $url . '?' . $query;
+            }
+        }
+        return $path;
+    }
+    return '';
+}
+
+/**
  * Get supported languages.
  *
  * @todo separate this out
@@ -254,23 +293,6 @@ function get_languages(): array
 function get_avatar(int $authorId, string $which): string
 {
     return '';
-}
-
-/**
- * READ-ONLY access to the state global
- *
- * @param string $name
- * @return array
- */
-function cabin_config(string $name): array
-{
-    $state = State::instance();
-    foreach ($state->cabins as $route => $cabin) {
-        if ($cabin['name'] === $name) {
-            return $cabin;
-        }
-    }
-    return [];
 }
 
 /**

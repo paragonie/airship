@@ -13,7 +13,7 @@
                 class="board-form pure-form pure-form-stacked"
                 action="/bridge/board"
                 method="post"
-            >{{ form_token("/bridge/board") }}
+            >{{ form_token() }}
                 <label for="username">{{ __("Username") }}:</label>
                 <input type="text" id="username" name="username" placeholder="{{ __("Enter your Username") }}" required="required" class="pure-input-1" />
                 <div id="username_feedback">

@@ -15,7 +15,7 @@
                     class="login-form pure-form pure-form-stacked"
                     action="/bridge/login"
                     method="post"
-                >{{ form_token("/bridge/login") }}
+                >{{ form_token() }}
                     {% include cargo("form_before_login") ignore missing %}
                     <label for="username">{{ __("Username") }}:</label>
                     <input type="text" id="username" name="username" placeholder="{{ __("Enter your Username") }}" class="pure-input-1" />

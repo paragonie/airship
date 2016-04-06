@@ -2,7 +2,7 @@
 {% set can_create = can_create() %}
 <h2>{{ __("Permissions") }} - {{ cabin|e('html') }}</h2>
 
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
 
     <h3>{{ __("Contexts") }}</h3>
 

@@ -1,5 +1,5 @@
 <h2 class="nomargin">{{ name|e('html') }}</h2>
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
     <div id="cabin_accordion">
         <h3>{{ __("Routing Information") }}</h3>
         <div id="routing">

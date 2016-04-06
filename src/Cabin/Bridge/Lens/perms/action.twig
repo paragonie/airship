@@ -1,7 +1,7 @@
 {% extends base_template() %}
 
 {% block main %}
-    <form method="post">{{ form_token(_REQUEST_URI) }}
+    <form method="post">{{ form_token() }}
         <label>{{ __("Action Name") }}</label>:
         <input type="text" name="label" value="{{ action.label|e('html_attr') }}" />
         <button type="submit" class="pure-button pure-button-secondary">

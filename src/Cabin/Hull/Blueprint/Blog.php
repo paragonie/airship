@@ -876,6 +876,13 @@ class Blog extends BlueprintGear
         if (empty($post['body'])) {
             return $post;
         }
+        if ($post['format'] === 'Rich Text') {
+            $post['body'] = \str_replace(
+                '><',
+                '>' . "\n" . '<',
+                $post['body']
+            );
+        }
         $lines = \explode("\n", $post['body']);
         if (count($lines) < 4 || \strlen($post['body']) < 200) {
             $post['snippet'] = $post['body'];
@@ -899,19 +906,33 @@ class Blog extends BlueprintGear
                     $cutoff = $i;
                     break;
                 }
+            } elseif ($post['format'] === 'HTML' || $post['format'] === 'Rich Text') {
+                if (\preg_match('#^<h[1-7]>#', $line[0], $m)) {
+                    $cutoff = $i;
+                    break;
+                }
             }
         }
         if ($cutoff !== null) {
-            $post['snippet'] = \implode("\n", \array_slice($lines, 0, $i - 1));
+            $post['snippet'] = \implode(
+                "\n",
+                \array_slice($lines, 0, $i - 1)
+            );
             if ($after) {
-                $post['after_fold'] = \implode("\n", \array_slice($lines, $i - 1));
+                $post['after_fold'] = \implode(
+                    "\n",
+                    \array_slice($lines, $i - 1)
+                );
             }
             return $post;
         }
 
         // Next, let's find the 37% mark for breaks
 
-        $sects = \explode("\n\n", $post['body']);
+        $split = ($post['format'] === 'Rich Text' || $post['format'] === 'HTML')
+            ? "\n"
+            : "\n\n";
+        $sects = \explode($split, $post['body']);
         $cut = (int) \ceil(0.37 * \count($sects));
         if ($sects < 2) {
             $post['snippet'] = $post['body'];
@@ -921,9 +942,12 @@ class Blog extends BlueprintGear
         if (\preg_match('#^\.\. #', $sects[ $cut - 1 ])) {
             --$cut;
         }
-        $post['snippet'] = \implode("\n\n", \array_slice($sects, 0, $cut - 1))."\n";
+        $post['snippet'] = \implode(
+            "\n\n",
+            \array_slice($sects, 0, $cut - 1)
+        )."\n";
         if ($after) {
-            $post['after_fold'] = "\n".\implode("\n\n", \array_slice($sects, 0, $cut - 1));
+            $post['after_fold'] = "\n".\implode($split, \array_slice($sects, $cut - 1));
         }
         return $post;
     }

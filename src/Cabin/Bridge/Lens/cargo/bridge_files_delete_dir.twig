@@ -8,7 +8,7 @@
     {% endfor %}
 </ul>
 
-<form method="post">{{ form_token(_REQUEST_URI) }}
+<form method="post">{{ form_token() }}
     <button type="submit" name="submit_btn" value="Confirm Delete" class="pure-button pure-button-secondary">
         {{ __("Delete everything") }}
     </button>

@@ -1,5 +1,5 @@
 <h2>My Account</h2>
-<form method="post" id="my_account_form">{{ form_token(cabin_url() ~ "/my/account") }}
+<form method="post" id="my_account_form">{{ form_token() }}
     {%  if post_response %}
         <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
     {% endif %}
