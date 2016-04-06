@@ -1,6 +1,8 @@
 /.idea/
 /nbproject/
 /files/*
+/src/Cabin/*/Lens/motif/*
+/src/Cabin/*/public/motif/*
 /src/public/static/Bridge
 /src/public/static/Hull
 /src/public/launch.php
