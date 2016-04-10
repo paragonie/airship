@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use \Airship\Engine\Bolt\Log as LogBolt;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 
 /**
@@ -9,7 +10,7 @@ use \ParagonIE\CSPBuilder\CSPBuilder;
  */
 class Lens
 {
-    use \Airship\Engine\Bolt\Log;
+    use LogBolt;
 
     private $twigEnv;
     private $stored = [];
@@ -200,7 +201,7 @@ class Lens
         if (empty($func)) {
             $func = '\\Airship\\LensFunctions\\'.$name;
         }
-        return $this->twigEnv->addFunction(
+        $this->twigEnv->addFunction(
             new \Twig_SimpleFunction(
                 $name,
                 $func,
@@ -235,10 +236,9 @@ class Lens
         if (empty($func)) {
             $func = '\\Airship\\LensFunctions\\'.$name;
         }
-        $res = $this->twigEnv->addFilter(
+        $this->twigEnv->addFilter(
             new \Twig_SimpleFilter($name, $func)
         );
-        return $res;
     }
     
     /**
@@ -251,7 +251,7 @@ class Lens
         string $key,
         $value
     ) {
-        return $this->twigEnv->addGlobal($key, $value);
+        $this->twigEnv->addGlobal($key, $value);
     }
     
     /**
@@ -265,6 +265,12 @@ class Lens
         return \array_keys($filters);
     }
 
+    /**
+     * Set the active motif
+     *
+     * @param string $name
+     * @return bool
+     */
     public function setActiveMotif(string $name): bool
     {
         $state = State::instance();
@@ -276,12 +282,20 @@ class Lens
         return false;
     }
 
+    /**
+     * Reset the base template
+     */
     public function resetBaseTemplate()
     {
         $state = State::instance();
         $state->base_template = 'base.twig';;
     }
 
+    /**
+     * Override the base template
+     *
+     * @param string $name
+     */
     public function setBaseTemplate(string $name)
     {
         $state = State::instance();

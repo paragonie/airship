@@ -16,12 +16,15 @@ class Translation
      * 
      * @param string $key
      * @param string $lang
-     * @param mixed ...$params
+     * @param mixed[] ...$params
      * @return string
      * @throws TranslationKeyNotFound
      */
-    public function lookup(string $key, string $lang = 'en-us', ...$params)
-    {
+    public function lookup(
+        string $key,
+        string $lang = 'en-us',
+        ...$params
+    ): string {
         if (!\array_key_exists($lang, $this->phrases)) {
             $this->phrases[$lang] = \Airship\loadJSON(ROOT.'/lang/'.$lang.'.json');
         }
@@ -40,12 +43,20 @@ class Translation
         }
         return $str;
     }
-    
-    public function literal(string $message, string $domain = 'default')
-    {
+
+    /**
+     * @param string $message
+     * @param string $domain
+     * @return string
+     */
+    public function literal(
+        string $message,
+        string $domain = 'default'
+    ): string {
         static $cacheDomain = '';
         if ($cacheDomain !== $domain) {
             \textdomain($domain);
+            $cacheDomain = $domain;
         }
         return \gettext($message);
     }
@@ -54,6 +65,7 @@ class Translation
      * Translate a string with gettext(), then format the output
      * 
      * @param string $text
+     * @param mixed[] ...$params
      * @return string
      */
     public function format(string $text, ...$params)

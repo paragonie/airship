@@ -2,21 +2,23 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use \Airship\Alerts\Continuum\NoSupplier;
 use \Airship\Engine\Continuum\{
     Supplier,
     Airship as AirshipUpdater,
     Cabin as CabinUpdater,
     Gadget as GadgetUpdater,
-    Gear as GearUpdater
+    Motif as MotifUpdater
 };
 
 class Continuum
 {
     protected $hail;
+    protected $supplierCache;
     
     public function __construct(Hail $hail = null)
     {
-        $config = \Airship\Engine\State::instance();
+        $config = State::instance();
         if (empty($hail)) {
             $this->hail = $config->hail;
         } else {
@@ -31,7 +33,7 @@ class Continuum
      */
     public function needsUpdate(): bool
     {
-        $config = \Airship\Engine\State::instance();
+        $config = State::instance();
         
         if (\is_readable(ROOT.'/tmp/last_update_check.txt')) {
             $last = \file_get_contents(ROOT.'/tmp/last_update_check.txt');
@@ -71,7 +73,7 @@ class Continuum
      */
     public function doUpdateCheck()
     {
-        $config = \Airship\Engine\State::instance();
+        $config = State::instance();
         // First, update each cabin
         foreach ($this->getCabins() as $cabin) {
             if ($cabin instanceof CabinUpdater) {
@@ -82,6 +84,12 @@ class Continuum
         foreach ($this->getGadgets() as $gadget) {
             if ($gadget instanceof GadgetUpdater) {
                 $gadget->autoUpdate();
+            }
+        }
+        // Also, motifs:
+        foreach ($this->getMotifs() as $motif) {
+            if ($motif instanceof MotifUpdater) {
+                $motif->autoUpdate();
             }
         }
         // Finally, let's update the core
@@ -106,9 +114,9 @@ class Continuum
         foreach (\Airship\list_all_files(ROOT.'/Cabin/') as $file) {
             if (\is_dir($file) && \is_readable($file.'/manifest.json')) {
                 $manifest = \Airship\loadJSON($file.'/manifest.json');
-                $dirname = \preg_replace('#^.+?/([^\/]+)$#', '$1', $file);
+                $dirName = \preg_replace('#^.+?/([^\/]+)$#', '$1', $file);
                 if (!empty($manifest['supplier'])) {
-                    $cabins[$dirname] = new CabinUpdater(
+                    $cabins[$dirName] = new CabinUpdater(
                         $this->hail,
                         $manifest,
                         $this->getSupplier($manifest['supplier'])
@@ -133,11 +141,10 @@ class Continuum
                 foreach (\Airship\list_all_files($dir.'/Gadgets/', 'phar') as $file) {
                     $manifest = $this->getPharManifest($file);
                     $name = \preg_replace('#^.+?/([^\/]+)\.phar$#', '$1', $file);
-                    list($supplier, $pkg) = explode('--', $name);
                     $gadgets[$name] = new GadgetUpdater(
                         $this->hail,
                         $manifest,
-                        $this->getSupplier($supplier),
+                        $this->getSupplier($manifest['supplier']),
                         $file
                     );
                 }
@@ -147,7 +154,6 @@ class Continuum
         foreach (\Airship\list_all_files(ROOT.'/Gadgets/', 'phar') as $file) {
             $manifest = $this->getPharManifest($file);
             $name = \preg_replace('#^.+?/([^\/]+)\.phar$#', '$1', $file);
-            list($supplier, $pkg) = explode('--', $name);
             $orig = ''.$name;
             // Handle name collisions
             while (isset($gadgets[$name])) {
@@ -155,9 +161,9 @@ class Continuum
                 $name = $orig . '-' . $i;
             }
             $gadgets[$name] = new GadgetUpdater(
-                $this,
+                $this->hail,
                 $manifest,
-                $this->getSupplier($supplier),
+                $this->getSupplier($manifest['supplier']),
                 $file
             );
         }
@@ -185,24 +191,25 @@ class Continuum
      * 
      * @param string $supplier
      * @param boolean $force_flush
-     * @return array|null
+     * @return Supplier
+     * @throws NoSupplier
      */
     public function getSupplier(
         string $supplier = '',
         bool $force_flush = false
     ) {
-        if ($force_flush || empty($this->keyCache)) {
-            $keyCache = \Airship\loadJSON(ROOT.'/config/supplier_keys.json');
-            foreach ($keyCache as $v => $data) {
-                $keyCache[$v] = new Supplier($v, $data);
+        if ($force_flush || empty($this->supplierCache)) {
+            $supplierCache = \Airship\loadJSON(ROOT.'/config/supplier_keys.json');
+            foreach ($supplierCache as $v => $data) {
+                $supplierCache[$v] = new Supplier($v, $data);
             }
-            $this->keyCache = $keyCache;
+            $this->supplierCache = $supplierCache;
         }
         if (empty($supplier)) {
-            return $this->keyCache;
-        } elseif(isset($this->keyCache[$supplier])) {
-            return $this->keyCache[$supplier];
+            return $this->supplierCache;
+        } elseif(isset($this->supplierCache[$supplier])) {
+            return $this->supplierCache[$supplier];
         }
-        return [];
+        throw new NoSupplier();
     }
 }

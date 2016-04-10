@@ -8,11 +8,10 @@ use \GuzzleHttp\ClientInterface;
 class Hail
 {
     protected $client;
-    protected $keyCache;
+    protected $supplierCache;
     
     /**
-     * 
-     * \GuzzleHttp\Client $client
+     * @param \GuzzleHttp\ClientInterface $client
      */
     public function __construct(ClientInterface $client)
     {
@@ -26,7 +25,7 @@ class Hail
      * @param array $params
      * @return ResponseInterface
      */
-    public function get(string $url, array $params = [])
+    public function get(string $url, array $params = []): ResponseInterface
     {
         return $this->client->get(
             $url,
@@ -41,7 +40,7 @@ class Hail
      * @param array $params
      * @return ResponseInterface
      */
-    public function getAsync(string $url, array $params = [])
+    public function getAsync(string $url, array $params = []): ResponseInterface
     {
         return $this->client->getAsync(
             $url,
@@ -57,7 +56,7 @@ class Hail
      *
      * @return ResponseInterface
      */
-    public function post(string $url, array $params = [])
+    public function post(string $url, array $params = []): ResponseInterface
     {
         return $this->client->post(
             $url,
@@ -74,8 +73,11 @@ class Hail
      * 
      * @return ResponseInterface
      */
-    public function downloadFile(string $url, string $filename, array $params = [])
-    {
+    public function downloadFile(
+        string $url,
+        string $filename,
+        array $params = []
+    ): ResponseInterface {
         $fp = \fopen($filename, 'wb');
         $opts = $this->params($params, $url);
         
@@ -95,7 +97,7 @@ class Hail
      * @param array $params
      * @return ResponseInterface
      */
-    public function postAsync(string $url, array $params = [])
+    public function postAsync(string $url, array $params = []): ResponseInterface
     {
         return $this->client->postAsync(
             $url,
@@ -111,8 +113,10 @@ class Hail
      * 
      * @return array
      */
-    public function params(array $params = [], string $url = '') : array
-    {
+    public function params(
+        array $params = [],
+        string $url = ''
+    ): array {
         $config = State::instance();
         $defaults = [
             'curl' => [

@@ -76,7 +76,7 @@ interface DBInterface
      * @param array $params
      * @return mixed
      */
-    public function single(string $statement, $params = []);
+    public function single(string $statement, array $params = []);
     
     /**
      * Update a row in a database table.

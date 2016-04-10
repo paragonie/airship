@@ -7,6 +7,10 @@ use \Airship\Engine\Contract\{
     LedgerStorageInterface
 };
 
+/**
+ * Class DBStore
+ * @package Airship\Engine\LedgerStorage
+ */
 class DBStore implements LedgerStorageInterface
 {
     const DEFAULT_TABLE = 'airship_logs';
@@ -19,9 +23,16 @@ class DBStore implements LedgerStorageInterface
         'message' => 'message',
         'context' => 'context'
     ];
-    
-    public function __construct(DBInterface $db = null, string $table = self::DEFAULT_TABLE)
-    {
+
+    /**
+     * DBStore constructor.
+     * @param DBInterface|null $db
+     * @param string $table
+     */
+    public function __construct(
+        DBInterface $db = null,
+        string $table = self::DEFAULT_TABLE
+    ) {
         $this->db = $db ?? \Airship\get_database();
         $this->table = $table;
     }
@@ -34,8 +45,11 @@ class DBStore implements LedgerStorageInterface
      * @param string $context (JSON encoded)
      * @return mixed
      */
-    public function store(string $level, string $message, string $context)
-    {
+    public function store(
+        string $level,
+        string $message,
+        string $context
+    ) {
         return $this->db->insert(
             $this->table, [
                 $this->columns['level'] => $level,
@@ -52,8 +66,10 @@ class DBStore implements LedgerStorageInterface
      * @param string $value
      * @return DBStore ($this)
      */
-    public function setColumn(string $key, string $value)
-    {
+    public function setColumn(
+        string $key,
+        string $value
+    ): self {
         $this->columns[$key] = $value;
         return $this;
     }

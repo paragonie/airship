@@ -5,11 +5,6 @@ namespace Airship\Engine;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\Alerts\InvalidType;
 use \Airship\Engine\Contract\DBInterface;
-use \Airship\Engine\{
-    Gears,
-    Lens,
-    State
-};
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
     FileCache as FileCacheBolt,
@@ -18,6 +13,9 @@ use \Airship\Engine\Bolt\{
 };
 
 /**
+ * Class Landing
+ * @package Airship\Engine
+ *
  * For MVC developers, this is analogous to a Controller
  */
 class Landing
@@ -149,7 +147,7 @@ class Landing
      * Grab a blueprint
      *
      * @param string $name
-     * @param mixed ...$cargs Constructor arguments
+     * @param mixed[] ...$cargs Constructor arguments
      * @return Blueprint
      * @throws InvalidType
      */
@@ -235,20 +233,22 @@ class Landing
      * Grab a lens
      *
      * @param string $name
-     * @param mixed ...$cargs Constructor arguments
+     * @param mixed[] ...$cargs Constructor arguments
+     * @return bool
      */
-    protected function lens(string $name, ...$cargs)
+    protected function lens(string $name, ...$cargs): bool
     {
         return $this->airship_lens_object->display($name, ...$cargs);
     }
 
     /**
-     * Grab a lens
+     * Render a Lens as text, return a string
      *
      * @param string $name
-     * @param mixed ...$cargs Constructor arguments
+     * @param mixed[] ...$cargs Constructor arguments
+     * @return string
      */
-    protected function getLensAsText(string $name, ...$cargs)
+    protected function getLensAsText(string $name, ...$cargs): string
     {
         return $this->airship_lens_object->render($name, ...$cargs);
     }

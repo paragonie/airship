@@ -7,7 +7,7 @@ use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\Hail;
 use \Psr\Log\LogLevel;
 
-class Gadget extends AutoUpdater implements ContinuumInterface
+class Motif extends AutoUpdater implements ContinuumInterface
 {
     private $hail;
     private $name;
@@ -68,6 +68,6 @@ class Gadget extends AutoUpdater implements ContinuumInterface
 
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
-        // @todo - replace the old .phar with a new one
+        // @todo - extract the .zip over the old Motif
     }
 }

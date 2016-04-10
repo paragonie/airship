@@ -7,18 +7,19 @@ use \Airship\Alerts\Hail\{
     NoAPIResponse,
     PeerVerificationFailure
 };
-use \Airship\Engine\Continuum\{
-    UpdateFile,
-    UpdateInfo
+use \Airship\Engine\{
+    Hail,
+    State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \Psr\Log\LogLevel;
 
 class Airship extends AutoUpdater implements ContinuumInterface
 {
     protected $pharAlias = 'airship-update.phar';
     protected $name = 'airship'; // Package name
     
-    public function __construct(\Airship\Engine\Hail $hail, Supplier $sup)
+    public function __construct(Hail $hail, Supplier $sup)
     {
         $this->supplier = $sup;
         $this->hail = $hail;
@@ -34,7 +35,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
      */
     public function autoUpdate()
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         try {
             $updates = $this->updateCheck(
                 $state->universal['airship']['trusted-supplier'],
@@ -46,7 +47,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 if (!$this->checkVersionSettings($updateInfo, \AIRSHIP_VERSION)) {
                     $this->log(
                         'Skipping update',
-                        \Psr\Log\LogLevel::INFO,
+                        LogLevel::INFO,
                         [
                             'info' => $updateInfo->getResponse(),
                             'new_version' => $updateInfo->getVersion(),
@@ -70,7 +71,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
             // We should log this.
             $this->log(
                 'Automatic update failure.',
-                \Psr\Log\LogLevel::CRITICAL,
+                LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
             );
         }
@@ -80,6 +81,8 @@ class Airship extends AutoUpdater implements ContinuumInterface
      * Let's install the automatic update.
      *
      * @param UpdateInfo $info
+     * @param UpdateFile $file
+     * @throws PeerVerificationFailure
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
@@ -102,6 +105,8 @@ class Airship extends AutoUpdater implements ContinuumInterface
         );
         $updater->setAlias($this->pharAlias);
         $metadata = \json_decode($updater->getMetadata(), true);
+
+        // We need to do this while we're replacing files.
         $this->bringSiteDown();
 
         if (isset($metadata['files'])) {
@@ -121,7 +126,8 @@ class Airship extends AutoUpdater implements ContinuumInterface
         $updater->setAlias($garbageAlias);
         unset($updater);
 
-        $this->bringSiteBackUp();
+        // Now bring it back up.
+        return $this->bringSiteBackUp();
     }
 
     /**

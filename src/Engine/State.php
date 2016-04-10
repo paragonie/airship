@@ -3,7 +3,13 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 /**
+ * Class State
+ * @package Airship\Engine
+ *
  * Registry Singleton for keeping track of application state
+ *
+ * The main purpose of this is to enable the Gears system to function, which lets us dynamically
+ * swap out classes for upgraded versions at runtime.
  */
 class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
@@ -15,7 +21,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * 
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->engine_state_registry);
     }
@@ -34,7 +40,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
     /**
      * @return \Iterator
      */
-    public function getIterator()
+    public function getIterator(): \Iterator
     {
         return $this->engine_state_registry->getIterator();
     }
@@ -59,7 +65,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
     public function offsetGet($key)
     {
         return $this->offsetExists($key)
-            ? $this->registy[$key]
+            ? $this->engine_state_registry[$key]
             : null;
     }
 
@@ -81,7 +87,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
     /**
      * Delete an entry from the registry
      * 
-     * @param type $key
+     * @param mixed $key
      */
     public function offsetUnset($key)
     {
@@ -102,10 +108,16 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
             JSON_PRETTY_PRINT
         );
     }
-    
+
+    /**
+     * Proxy method
+     *
+     * @param mixed $key
+     * @param mixed $value
+     */
     public function set($key = null, $value = null)
     {
-        return self::__set($key, $value);
+        self::__set($key, $value);
     }
     
     /**
@@ -133,6 +145,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
 
         return self::$instance;
     }
+
     /**
      * Create an array object
      */
@@ -140,6 +153,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
     {
         $this->engine_state_registry = new \ArrayObject();
     }
+
     /**
      * NOP - no cloning allowed
      */
@@ -176,11 +190,10 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * 
      * @param string $key
      * @param mixed $value
-     * @return mixed
      */
     public function __set($key, $value)
     {
-        return $this->engine_state_registry[$key] = $value;
+        $this->engine_state_registry[$key] = $value;
     }
 
     /**
@@ -189,7 +202,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * @param mixed $key
      * @return boolean
      */
-    public function __isset($key)
+    public function __isset($key): bool
     {
         return isset($this->engine_state_registry[$key]);
     }
@@ -205,8 +218,11 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
             unset($this->engine_state_registry[$key]);
         }
     }
-    
-    public function __toString()
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->serialize();
     }

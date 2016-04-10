@@ -2,6 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+/**
+ * Class UpdateFile
+ * @package Airship\Engine\Continuum
+ */
 class UpdateFile
 {
     protected $path;
@@ -9,6 +13,10 @@ class UpdateFile
     protected $hash;
     protected $version;
 
+    /**
+     * UpdateFile constructor.
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->path = $data['path'];

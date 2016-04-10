@@ -3,16 +3,21 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 /**
+ * Class Gadgets
+ * @package Airship\Engine
+ *
  * This abstract class simply contains some methods useful for Gadget development
  */
 abstract class Gadgets
 {
     /**
      * Set the base template
+     *
+     * @param string
      */
     public static function setBaseTemplate(string $path)
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         $state->base_template = $path;
     }
 
@@ -39,7 +44,7 @@ abstract class Gadgets
      */
     public static function loadCargo(string $name, string $source)
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         $cargo = isset($state->cargo)
             ? $state->cargo
             : [];
@@ -69,7 +74,7 @@ abstract class Gadgets
      */
     public static function unloadNextCargo(string $name)
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         $iter = $state->cargoIterator;
         if (isset($iter[$name])) {
             $cargo = self::unloadCargo($name, $iter[$name]);
@@ -89,10 +94,11 @@ abstract class Gadgets
      */
     public static function unloadCargo(string $name, int $offset = 0)
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         if (isset($state->cargo[$name])) {
             if (isset($state->cargo[$name][$offset])) {
-                return $state->cargo[$name][$offset];
+                // Return an entire slice; Twig will use the first valid result
+                return \array_slice($state->cargo[$name], $offset);
             }
             return $state->cargo[$name];
         }

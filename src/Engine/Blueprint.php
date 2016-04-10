@@ -8,6 +8,9 @@ use \Airship\Engine\Bolt\{
 };
 
 /**
+ * Class Blueprint
+ * @package Airship\Engine
+ *
  * For MVC developers, this is analogous to a Model
  */
 class Blueprint
@@ -16,7 +19,7 @@ class Blueprint
     use SecurityBolt;
 
     public $db;
-    
+
     public function __construct(Database $db = null)
     {
         $this->db = $db;
@@ -24,6 +27,8 @@ class Blueprint
     
     /**
      * Shorthand for $this->db->escapeIdentifier()
+     *
+     * Feel free to use for table/column names, but DO NOT use this for values!
      * 
      * @param string $identifier
      * @return string

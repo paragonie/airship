@@ -4,24 +4,24 @@ $dbgear = \Airship\Engine\Gears::getName('Database');
 $databases = \Airship\loadJSON(ROOT.'/config/databases.json');
 foreach ($databases as $label => $dbs) {
     $db[$label] = [];
-    foreach ($dbs as $dbconf) {
-        if (isset($dbconf['driver']) || isset($dbconf['dsn'])) {
+    foreach ($dbs as $dbConf) {
+        if (isset($dbConf['driver']) || isset($dbConf['dsn'])) {
             $conf = [
-                isset($dbconf['dsn'])
-                    ? $dbconf['dsn']
-                    : $dbconf
+                isset($dbConf['dsn'])
+                    ? $dbConf['dsn']
+                    : $dbConf
             ];
             
-            if (isset($dbconf['username']) && isset($dbconf['password'])) {
-                $conf[] = $dbconf['username'];
-                $conf[] = $dbconf['password'];
-                if (isset($dbconf['options'])) {
-                    $conf[] = $dbconf['options'];
+            if (isset($dbConf['username']) && isset($dbConf['password'])) {
+                $conf[] = $dbConf['username'];
+                $conf[] = $dbConf['password'];
+                if (isset($dbConf['options'])) {
+                    $conf[] = $dbConf['options'];
                 }
-            } elseif (isset($dbconf['options'])) {
+            } elseif (isset($dbConf['options'])) {
                 $conf[1] = null;
                 $conf[2] = null;
-                $conf[3] = $dbconf['options'];
+                $conf[3] = $dbConf['options'];
             }
             
             try {

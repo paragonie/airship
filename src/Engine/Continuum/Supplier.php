@@ -49,7 +49,7 @@ class Supplier
     /**
      * Get an array SignaturePublicKey objects
      *
-     * @return array
+     * @return SignaturePublicKey[]
      */
     public function getSigningKeys(): array
     {

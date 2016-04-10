@@ -32,6 +32,29 @@ $state->lang = isset($active['lang'])
     ? $active['lang']
     : 'en-us';
 
+if (!\ISCLI) {
+    $cabinFile = ROOT . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cabin.' . $active['name'] . '.offline.txt';
+    if (\file_exists($cabinFile)) {
+        // There might be an automatic update in progress!
+        // Let's give it up to 15 seconds, but only as much time as is needed.
+        $iter = 0;
+        do {
+            if (!\file_exists($cabinFile)) {
+                break;
+            }
+            \usleep(100);
+            ++$iter;
+        } while($iter < 15000);
+
+        \clearstatcache();
+        // If we're still in the middle of that process, let's not load anything else:
+        if (\file_exists($cabinFile)) {
+            echo 'This Airship is currently being repaired. Please try again later.', "\n";
+            exit(255);
+        }
+    }
+}
+
 // Let's start our session:
 require_once ROOT.'/session.php';
 

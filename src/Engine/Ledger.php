@@ -3,14 +3,27 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use \Airship\Engine\Contract\LedgerStorageInterface;
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LogLevel;
 
-class Ledger implements \Psr\Log\LoggerInterface
+/**
+ * Class Ledger
+ * @package Airship\Engine
+ */
+class Ledger implements LoggerInterface
 {
     protected $storage;
-    
+
+    /**
+     * Ledger constructor.
+     * @param LedgerStorageInterface|null $storage
+     * @param mixed[] ...$args
+     */
     public function __construct(LedgerStorageInterface $storage = null, ...$args)
     {
         $this->storage = $storage;
+
+        // We don't use $args, but a Gear can.
     }
 
     /**
@@ -18,7 +31,7 @@ class Ledger implements \Psr\Log\LoggerInterface
      *
      * @return array
      */
-    public function defaultContext()
+    public function defaultContext(): array
     {
         if (ISCLI) {
             return [
@@ -47,7 +60,7 @@ class Ledger implements \Psr\Log\LoggerInterface
      * @param string $level
      * @param string $message
      * @param array $context
-     * @return type
+     * @return mixed
      */
     public function log($level, $message, array $context = [])
     {
@@ -58,50 +71,100 @@ class Ledger implements \Psr\Log\LoggerInterface
             \json_encode($context)
         );
     }
-    
+
     /**
-     * 
-     * @param type $message
+     * Store an EMERGENCY message
+     *
+     * @param string $message
      * @param array $context
-     * @return type
+     * @return mixed
      */
     public function emergency($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::EMERGENCY, $message, $context);
+        return $this->log(LogLevel::EMERGENCY, $message, $context);
     }
-    
+
+    /**
+     * Store a CRITICAL message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function critical($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::CRITICAL, $message, $context);
+        return $this->log(LogLevel::CRITICAL, $message, $context);
     }
-    
+
+    /**
+     * Store an ALERT message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function alert($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::ALERT, $message, $context);
+        return $this->log(LogLevel::ALERT, $message, $context);
     }
-    
+
+    /**
+     * Store an ERROR message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function error($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::ERROR, $message, $context);
+        return $this->log(LogLevel::ERROR, $message, $context);
     }
-    
+
+    /**
+     * Store a WARNING message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function warning($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::WARNING, $message, $context);
+        return $this->log(LogLevel::WARNING, $message, $context);
     }
-    
+
+    /**
+     * Store a NOTICE message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function notice($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::NOTICE, $message, $context);
+        return $this->log(LogLevel::NOTICE, $message, $context);
     }
-    
+
+    /**
+     * Store a INFO message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function info($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::INFO, $message, $context);
+        return $this->log(LogLevel::INFO, $message, $context);
     }
-    
+
+    /**
+     * Store a DEBUG message
+     *
+     * @param string $message
+     * @param array $context
+     * @return mixed
+     */
     public function debug($message, array $context = [])
     {
-        return $this->log(\Psr\Log\LogLevel::DEBUG, $message, $context);
+        return $this->log(LogLevel::DEBUG, $message, $context);
     }
 }

@@ -6,9 +6,6 @@ if (PHP_VERSION_ID < 70000) {
 if (!extension_loaded('libsodium')) {
     die("Airship requires Libsodium.");
 }
-if (\Sodium\library_version_major() < 8) {
-    die("Airship requires libsodium 1.0.5 or newer (with a stable version of the PHP bindings).");
-}
 define('IDE_HACKS', false);
 
 /**
@@ -46,6 +43,7 @@ if (ISCLI) {
         ++$iter;
     } while($iter < 15000);
 
+    \clearstatcache();
     // If we're still in the middle of that process, let's not load anything else:
     if (\file_exists(ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt')) {
         echo 'This Airship is currently being repaired. Please try again later.', "\n";
@@ -65,6 +63,11 @@ require_once ROOT.'/Airship.php';
  * 3. Let's autoload the composer packages
  */
 require_once \dirname(ROOT).'/vendor/autoload.php';
+
+// Let's also make sure we're using a good version of libsodium
+if (!\ParagonIE\Halite\Halite::isLibsodiumSetupCorrectly()) {
+    die("Airship requires libsodium 1.0.9 or newer (with a stable version of the PHP bindings).");
+}
 
 /**
  * 4. Autoload the Engine files

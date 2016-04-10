@@ -22,7 +22,7 @@ class Version
      * @param string $nextVersion
      * @return bool
      */
-    public function isUpgrade(string $nextVersion) : bool
+    public function isUpgrade(string $nextVersion): bool
     {
         $curr = \Airship\expand_version($this->currentVersion);
         $next = \Airship\expand_version($nextVersion);
@@ -36,7 +36,7 @@ class Version
      * @param string $nextVersion
      * @return bool
      */
-    public function isMajorUpgrade(string $nextVersion) : bool
+    public function isMajorUpgrade(string $nextVersion): bool
     {
         $curr = \Airship\expand_version($this->currentVersion);
         $next = \Airship\expand_version($nextVersion);
@@ -54,7 +54,7 @@ class Version
      * @param string $nextVersion
      * @return bool
      */
-    public function isMinorUpgrade(string $nextVersion) : bool
+    public function isMinorUpgrade(string $nextVersion): bool
     {
         $curr = \Airship\expand_version($this->currentVersion);
         $next = \Airship\expand_version($nextVersion);
@@ -73,7 +73,7 @@ class Version
      * @param string $nextVersion
      * @return bool
      */
-    public function isPatchUpgrade(string $nextVersion) : bool
+    public function isPatchUpgrade(string $nextVersion): bool
     {
         $curr = \Airship\expand_version($this->currentVersion);
         $next = \Airship\expand_version($nextVersion);
@@ -91,9 +91,10 @@ class Version
      * Get the value within a group (i.e. 1.0.3 => 1000300)
      * 
      * @param int $value An expanded version
-     * @param int $group 
+     * @param int $group
+     * @return int
      */
-    public static function getGroup(int $value, int $group = self::GROUP_INCREMENT) : int
+    public static function getGroup(int $value, int $group = self::GROUP_INCREMENT): int
     {
         switch ($group) {
             // [W...W]XXYYZZ

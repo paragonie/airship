@@ -53,15 +53,15 @@ class Database implements DBInterface
         // Let's grab the DB engine
         
         if (\is_array($dsn)) {
-            list ($dsn, $dbengine, $username, $password) = self::flattenDSN($dsn, $username, $password);
+            list ($dsn, $dbEngine, $username, $password) = self::flattenDSN($dsn, $username, $password);
         } elseif (!\is_string($dsn)) {
             throw new \TypeError('DSN must be string or array');
         } elseif (strpos($dsn, ':') !== false) {
-            $dbengine = explode(':', $dsn)[0];
+            $dbEngine = explode(':', $dsn)[0];
         }
 
         // If no charset is specified, default to UTF-8
-        switch ($dbengine) {
+        switch ($dbEngine) {
             case 'mysql':
                 if (strpos($dsn, ';charset=') === false) {
                     $dsn .= ';charset=utf8';
@@ -85,63 +85,63 @@ class Database implements DBInterface
             $pdo->query($post_query);
         }
         
-        return new Database($pdo, $dbengine);
+        return new Database($pdo, $dbEngine);
     }
     
     /**
      * Flatten an array into a DSN string and driver
      * 
-     * @param array $dbconf
+     * @param array $dbConf
      * @return array [$dsn, $driver]
      * @throws DBAlert\DBException
      */
-    public static function flattenDSN(array $dbconf, string $username = '', string $password = ''): array
+    public static function flattenDSN(array $dbConf, string $username = '', string $password = ''): array
     {
-        switch ($dbconf['driver']) {
+        switch ($dbConf['driver']) {
             case 'mysql':
-                $dsn = $dbconf['driver'].':';
-                if (isset($dbconf['host'])) {
-                    $dsn .= 'host='.$dbconf['host'].';';
+                $dsn = $dbConf['driver'].':';
+                if (isset($dbConf['host'])) {
+                    $dsn .= 'host='.$dbConf['host'].';';
                 }
-                if (isset($dbconf['port'])) {
-                    $dsn .= 'port='.$dbconf['port'].';';
+                if (isset($dbConf['port'])) {
+                    $dsn .= 'port='.$dbConf['port'].';';
                 }
-                $dsn .= 'dbname='.$dbconf['database'];
+                $dsn .= 'dbname='.$dbConf['database'];
                 return [
                     $dsn,
-                    $dbconf['driver'],
-                    $dbconf['username'] ?? $username,
-                    $dbconf['password'] ?? $password
+                    $dbConf['driver'],
+                    $dbConf['username'] ?? $username,
+                    $dbConf['password'] ?? $password
                 ];
 
             case 'pgsql':
-                $dsn = $dbconf['driver'].':';
-                if (isset($dbconf['host'])) {
-                    $dsn .= 'host='.$dbconf['host'].';';
+                $dsn = $dbConf['driver'].':';
+                if (isset($dbConf['host'])) {
+                    $dsn .= 'host='.$dbConf['host'].';';
                 }
-                if (isset($dbconf['port'])) {
-                    $dsn .= 'port='.$dbconf['port'].';';
+                if (isset($dbConf['port'])) {
+                    $dsn .= 'port='.$dbConf['port'].';';
                 }
-                $dsn .= 'dbname='.$dbconf['database'];
+                $dsn .= 'dbname='.$dbConf['database'];
                 return [
                     $dsn,
-                    $dbconf['driver'],
-                    $dbconf['username'] ?? $username,
-                    $dbconf['password'] ?? $password
+                    $dbConf['driver'],
+                    $dbConf['username'] ?? $username,
+                    $dbConf['password'] ?? $password
                 ];
 
             case 'sqlite':
-                $dsn = $dbconf['driver'].':';
-                if (isset($dbconf['path'])) {
-                    $dsn .= $dbconf['path'];
+                $dsn = $dbConf['driver'].':';
+                if (isset($dbConf['path'])) {
+                    $dsn .= $dbConf['path'];
                 } else {
                     $dsn .= ':memory:';
                 }
-                return [$dsn, $dbconf['driver'], null, null];
+                return [$dsn, $dbConf['driver'], null, null];
 
             default:
                 throw new DBAlert\DBException(
-                    \trk('errors.database.not_implemented', (string) $dbconf['driver'])
+                    \trk('errors.database.not_implemented', (string) $dbConf['driver'])
                 );
         }
     }
@@ -313,7 +313,7 @@ class Database implements DBInterface
                     if (!\is_int($v)) {
                         throw new \TypeError($v . ' is not an integer');
                     }
-                    $join[] = $v + 0;
+                    $join[] = (int) $v + 0;
                     break;
                 case 'float':
                 case 'decimal':
@@ -322,9 +322,12 @@ class Database implements DBInterface
                     if (!\is_numeric($v)) {
                         throw new \TypeError($v . ' is not a number');
                     }
-                    $join[] = $v + 0.0;
+                    $join[] = (float) $v + 0.0;
                     break;
                 case 'string':
+                    if (\is_numeric($v)) {
+                        $v = (string) $v;
+                    }
                     if (!\is_string($v)) {
                         throw new \TypeError($v . ' is not a string');
                     }
@@ -333,6 +336,9 @@ class Database implements DBInterface
                 default:
                     break 2;
             }
+        }
+        if (empty($join)) {
+            return '(SELECT 1 WHERE FALSE)';
         }
         return '(' . \implode(', ', $join) . ')';
     }
@@ -386,7 +392,7 @@ class Database implements DBInterface
         // Begin query string
         $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
 
-        $phold = [];
+        $placeholder = [];
         $_keys = [];
         $params = [];
         foreach ($map as $k => $v) {
@@ -396,7 +402,7 @@ class Database implements DBInterface
                     switch ($this->dbengine) {
                         case 'pgsql':
                         case 'mysql':
-                            $phold [] = $v ? 'TRUE' : 'FALSE';
+                            $placeholder [] = $v ? 'TRUE' : 'FALSE';
                             break;
                     }
                 } elseif (\is_array($v)) {
@@ -404,7 +410,7 @@ class Database implements DBInterface
                         \trk('errors.database.array_passed')
                     );
                 } else {
-                    $phold[] = '?';
+                    $placeholder[] = '?';
                     $params[] = $v;
                 }
             }
@@ -423,7 +429,7 @@ class Database implements DBInterface
         $queryString .= ") VALUES (";
 
         // Now let's concatenate the ? placeholders
-        $queryString .= \implode(', ', $phold);
+        $queryString .= \implode(', ', $placeholder);
 
         // Necessary to close the open ( above
         $queryString .= ");";
@@ -450,6 +456,7 @@ class Database implements DBInterface
             $params = [];
 
             foreach ($map as $i => $v) {
+                // Escape the identifier to prevent stupidity
                 $i = $this->escapeIdentifier($i);
                 if ($v === null) {
                     $post []= " {$i} IS NULL ";
@@ -462,12 +469,13 @@ class Database implements DBInterface
                         \trk('errors.database.array_passed')
                     );
                 } else {
+                    // We use prepared statements for handling the users' data
                     $post []= " {$i} = ? ";
                     $params[] = $v;
                 }
             }
 
-            $conds = \implode(' AND ', $post);
+            $conditions = \implode(' AND ', $post);
 
             // We want the latest value:
             switch ($this->dbengine) {
@@ -490,7 +498,7 @@ class Database implements DBInterface
                 $this->escapeIdentifier($field).
                 ' FROM '.
                 $this->escapeIdentifier($table).
-                ' WHERE '.$conds.$limiter;
+                ' WHERE ' . $conditions . $limiter;
 
             return $this->single($query, $params);
         } else {
@@ -498,7 +506,6 @@ class Database implements DBInterface
                 \trk('errors.database.insert_failed', $table, $this->db->errorInfo()[2])
             );
         }
-        return null;
     }
     
     /**
@@ -590,12 +597,12 @@ class Database implements DBInterface
             );
         }
     }
-    
+
     /**
      * PHP 5.6 variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed[] ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)
@@ -613,8 +620,11 @@ class Database implements DBInterface
      *
      * @throws DBAlert\QueryError
      */
-    public function safeQuery(string $statement, array $params = [], int $fetch_style = \PDO::FETCH_ASSOC)
-    {
+    public function safeQuery(
+        string $statement,
+        array $params = [],
+        int $fetch_style = \PDO::FETCH_ASSOC
+    ) {
         try {
             if (empty($params)) {
                 $stmt = $this->pdo->query($statement);
@@ -639,7 +649,8 @@ class Database implements DBInterface
             return $stmt->fetchAll($fetch_style);
         } catch (\PDOException $e) {
             throw new DBAlert\QueryError(
-                $e->getMessage()
+                $e->getMessage(),
+                (int) $e->getCode()
             );
         }
     }
@@ -653,7 +664,7 @@ class Database implements DBInterface
      * @throws DBAlert\QueryError
      * @throws \TypeError
      */
-    public function single(string $statement, $params = [])
+    public function single(string $statement, array $params = [])
     {
         if (!\is1DArray($params)) {
             throw new \TypeError(
@@ -691,6 +702,7 @@ class Database implements DBInterface
         if (empty($changes) || empty($conditions)) {
             return null;
         }
+        $params = [];
         $queryString = "UPDATE ".$this->escapeIdentifier($table)." SET ";
         
         // The first set (pre WHERE)

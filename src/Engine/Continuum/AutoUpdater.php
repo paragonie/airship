@@ -4,15 +4,18 @@ namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\State;
+use \Airship\Engine\Bolt\Log;
 use \ParagonIE\Halite\File;
 use \ParagonIE\ConstantTime\Base64;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
+use \Psr\Log\LogLevel;
 
 abstract class AutoUpdater
 {
-    use \Airship\Engine\Bolt\Log;
+    use Log;
 
+    protected $pharAlias;
     protected $name;
     protected $supplier;
     protected $hail;
@@ -26,9 +29,12 @@ abstract class AutoUpdater
     protected function autorunScript(array $autorun)
     {
         $ret = null;
+        // Get a unique temporary file
         do {
             $script = \tempnam(ROOT . DIRECTORY_SEPARATOR . 'tmp', 'update-script-');
         } while (\file_exists($script));
+
+        // What kind of autorun script is it?
         switch ($autorun['type']) {
             case 'php':
                 \file_put_contents($script.'.php', Base64::decode($autorun['data']));
@@ -80,11 +86,15 @@ abstract class AutoUpdater
      * @param string $currentVersion
      * @return bool
      */
-    protected function checkVersionSettings(UpdateInfo $info, string $currentVersion): bool
-    {
+    protected function checkVersionSettings(
+        UpdateInfo $info,
+        string $currentVersion
+    ): bool {
         $state = State::instance();
         $nextVersion = $info->getVersion();
         $version = new Version($currentVersion);
+
+        // If this isn't an upgrade at all, don't apply it.
         if (!$version->isUpgrade($nextVersion)) {
             return false;
         }
@@ -105,10 +115,12 @@ abstract class AutoUpdater
      *
      * @param UpdateInfo $update
      * @param string $apiEndpoint
-     * @return array
+     * @return UpdateFile
      */
-    public function downloadUpdateFile(UpdateInfo $update, string $apiEndpoint = 'download'): UpdateFile
-    {
+    public function downloadUpdateFile(
+        UpdateInfo $update,
+        string $apiEndpoint = 'download'
+    ): UpdateFile {
         try {
             $version = $update->getVersion();
             $response = $this->hail->post(
@@ -138,15 +150,16 @@ abstract class AutoUpdater
                 }
             }
         } catch (TransferException $ex) {
-            // Log? Definitely suppress, however.
             $this->log(
                 'Automatic update failure.',
-                \Psr\Log\LogLevel::WARNING,
+                LogLevel::WARNING,
                 [
                     'exception' => \Airship\throwableToArray($ex),
                     'channel' => $update->getChannel()
                 ]
             );
+            // Rethrow it to prevent errors on return type
+            throw $ex;
         }
     }
     
@@ -156,6 +169,7 @@ abstract class AutoUpdater
      * @param string $supplier
      * @param string $packageName
      * @param string $minVersion
+     * @param string $apiEndpoint
      * 
      * @return UpdateInfo[]
      * 
@@ -202,7 +216,7 @@ abstract class AutoUpdater
                 // Log? Definitely suppress, however.
                 $this->log(
                     'Automatic update failure. (' . \get_class($ex) . ')',
-                    \Psr\Log\LogLevel::WARNING,
+                    LogLevel::WARNING,
                     [
                         'exception' => \Airship\throwableToArray($ex),
                         'channel' => $ch
@@ -236,7 +250,7 @@ abstract class AutoUpdater
      * Verify the Ed25519 signature of the update file against the
      * supplier's public key.
      *
-     * @param UpdateInfo $update
+     * @param UpdateInfo $info
      * @param UpdateFile $file
      * @return bool
      */

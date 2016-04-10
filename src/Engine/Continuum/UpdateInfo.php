@@ -2,14 +2,23 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+/**
+ * Class UpdateInfo
+ * @package Airship\Engine\Continuum
+ */
 class UpdateInfo
 {
     protected $channel;
     protected $releaseInfo;
     protected $checksum;
-    protected $publickey;
     protected $response;
 
+    /**
+     * UpdateInfo constructor.
+     * @param array $json
+     * @param string $channel
+     * @param string $version
+     */
     public function __construct(array $json, string $channel, string $version = '')
     {
         $this->response = $json;

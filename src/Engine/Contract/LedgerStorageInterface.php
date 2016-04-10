@@ -10,6 +10,7 @@ interface LedgerStorageInterface
      * @param string $level
      * @param string $message
      * @param string $context (JSON encoded)
+     * @return mixed
      */
     public function store(string $level, string $message, string $context);
 }

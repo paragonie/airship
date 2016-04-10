@@ -35,11 +35,9 @@ abstract class API
     /**
      * Get the entire API for a specific version
      * 
-     * @string $version
-     * 
+     * @param string $version
      * @return array
-     * 
-     * @throws \Airship\Alerts\Continuum\InvaliConfig
+     * @throws InvalidConfig
      */
     public static function getAll(string $version = self::API_VERSION): array
     {

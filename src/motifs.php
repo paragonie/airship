@@ -24,6 +24,7 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
     if (\is_dir(CABIN_DIR.'/Lens/motif') && \is_readable($motifsJSONFile)) {
         $motifs = [];
         $motifsJSONData = \Airship\loadJSON($motifsJSONFile);
+
         foreach ($motifsJSONData as $motif => $motifConfig) {
             if (isset($motifConfig['path'])) {
                 $motifStart = CABIN_DIR.'/Lens/motif/'.$motif;
@@ -39,7 +40,7 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
                         ]
                     );
 
-                    // SKIP! We have a potential directory trasversal
+                    // SKIP! We have a potential directory traversal
                     continue;
                 }
                 if (\strpos($motifEnd, ROOT.'/Motifs') === false) {
@@ -52,7 +53,7 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
                         ]
                     );
 
-                    // SKIP! We have a potential directory trasversal
+                    // SKIP! We have a potential directory traversal
                     continue;
                 }
                 
@@ -75,6 +76,8 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
                 $motifs[$motif] = $motifConfig;
             }
         }
+
+        // Let's save the cache file
         \file_put_contents(
             ROOT.'/tmp/cache/' . CABIN_NAME . '.motifs.json',
             \json_encode($motifs, JSON_PRETTY_PRINT)

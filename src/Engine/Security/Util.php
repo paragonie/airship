@@ -22,7 +22,7 @@ abstract class Util
      * @param string $untrusted
      * @return string
      */
-    public static function noHTML(string $untrusted) : string
+    public static function noHTML(string $untrusted): string
     {
         return \htmlspecialchars(
             $untrusted,
@@ -39,10 +39,13 @@ abstract class Util
      * @param int|null $length
      * @return string
      */
-    public static function subString(string $str, int $start, $length = null) : string
+    public static function subString(string $str, int $start, $length = null): string
     {
         if (\function_exists('\\mb_substr')) {
             return \mb_substr($str, $start, $length, '8bit');
+        }
+        if ($length === null) {
+            return \substr($str, $start);
         }
         return \substr($str, $start, $length);
     }
@@ -51,7 +54,7 @@ abstract class Util
      * Binary-safe strlen() implementation
      *
      * @param string $str
-     * @return string
+     * @return int
      */
     public static function stringLength(string $str) : int
     {
@@ -68,16 +71,16 @@ abstract class Util
      * @param string $characters Which characters to choose from
      * 
      * @return string
-     * 
-     * @throws Exception (via random_int())
      */
-    public function randomString(int $len = 64, string $chars = self::PRINTABLE_ASCII) : string
-    {
+    public function randomString(
+        int $length = 64,
+        string $characters = self::PRINTABLE_ASCII
+    ): string {
         $str = '';
-        $l = self::stringLength($chars) - 1;
-        for ($i = 0; $i < $len; ++$i) {
+        $l = self::stringLength($characters) - 1;
+        for ($i = 0; $i < $length; ++$i) {
             $r = \random_int(0, $l);
-            $str .= $chars[$r];
+            $str .= $characters[$r];
         }
         return $str;
     }

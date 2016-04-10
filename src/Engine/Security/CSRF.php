@@ -4,6 +4,7 @@ namespace Airship\Engine\Security;
 
 use \Airship\Alerts\Security\CSRF\InvalidConfig;
 use \ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class CSRF
 {
@@ -70,10 +71,10 @@ class CSRF
 
         if ($this->hmacIP) {
             // Use HMAC to only allow this particular IP to send this request
-            $token = $this->encode(
+            $token = Base64UrlSafe::encode(
                 \Sodium\crypto_generichash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
-                    Base64::decode($token),
+                    Base64UrlSafe::decode($token),
                     \Sodium\CRYPTO_GENERICHASH_BYTES
                 )
             );
@@ -137,10 +138,10 @@ class CSRF
             $expected = $stored['token'];
         } else {
             // We mixed in the client IP address to generate the output
-            $expected = $this->encode(
+            $expected = Base64UrlSafe::encode(
                 \Sodium\crypto_generichash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
-                    Base64::decode($stored['token']),
+                    Base64UrlSafe::decode($stored['token']),
                     \Sodium\CRYPTO_GENERICHASH_BYTES
                 )
             );
@@ -181,8 +182,8 @@ class CSRF
      */
     protected function generateToken(string $lockTo = ''): array
     {
-        $index = $this->encode(\random_bytes(18));
-        $token = $this->encode(\random_bytes(32));
+        $index = Base64UrlSafe::encode(\random_bytes(18));
+        $token = Base64UrlSafe::encode(\random_bytes(32));
 
         $_SESSION[$this->sessionIndex][$index] = [
             'created' => \intval(\date('YmdHis')),
@@ -226,19 +227,5 @@ class CSRF
             // Let's knock off the oldest one
             \array_shift($_SESSION[$this->sessionIndex]);
         }
-    }
-
-    /**
-     * Encode string with base64, but strip padding.
-     *
-     * @param string $s
-     * @return string
-     */
-    protected function encode(string $s) : string
-    {
-        return \rtrim(
-            Base64::encode($s),
-            '='
-        );
     }
 }

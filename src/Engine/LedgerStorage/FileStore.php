@@ -3,10 +3,14 @@ declare(strict_types=1);
 namespace Airship\Engine\LedgerStorage;
 
 use \Airship\Engine\Contract\{
-    DBInterface,
     LedgerStorageInterface
 };
+use \Airship\Alerts\FileSystem\AccessDenied as FileAccessDenied;
 
+/**
+ * Class FileStore
+ * @package Airship\Engine\LedgerStorage
+ */
 class FileStore implements LedgerStorageInterface
 {
     const FILE_FORMAT = 'Y-m-d.\l\o\g';
@@ -39,6 +43,8 @@ class FileStore implements LedgerStorageInterface
      * @param string $level
      * @param string $message
      * @param string $context (JSON encoded)
+     * @return mixed
+     * @throws FileAccessDenied
      */
     public function store(string $level, string $message, string $context)
     {
@@ -48,13 +54,13 @@ class FileStore implements LedgerStorageInterface
         \touch($this->basedir . DIRECTORY_SEPARATOR . $filename);
         $file = \realpath($this->basedir . DIRECTORY_SEPARATOR . $filename);
         if ($file === false) {
-            throw new \Airship\Alerts\FileSystem\AccessDenied(
+            throw new FileAccessDenied(
                 \trk('errors.file.lfi')
             );
         }
         if (\strpos($file, $this->basedir) === false) {
             header('Content-Type: text/plain');
-            throw new \Airship\Alerts\FileSystem\AccessDenied(
+            throw new FileAccessDenied(
                 \trk('errors.file.lfi')
             );
         }

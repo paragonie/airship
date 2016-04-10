@@ -19,17 +19,19 @@ abstract class Gears
      * 
      * @param string $index    Index
      * @param string $new_type New type
-     * @param string $ns       Namespace
+     * @param string $namespace       Namespace
      * @return bool
      * @throws GearNotFound
      * @throws GearWrongType
      */
-    public static function attach(string $index, string $new_type, string $ns = '')
+    public static function attach(string $index, string $new_type, string $namespace = '')
     {
         $state = State::instance();
         $gears = $state->gears;
         
-        $type = empty($ns) ? $new_type : $ns.'\\'.$new_type;
+        $type = empty($namespace)
+            ? $new_type
+            : $namespace . '\\' . $new_type;
         
         if (!\class_exists($type)) {
             throw new GearNotFound($new_type);
@@ -52,16 +54,16 @@ abstract class Gears
      * 
      * @param string $code
      * @param boolean $cache
-     * @param boolean $dont_eval
+     * @param boolean $do_not_eval
      * @return mixed
      */
     protected static function coreEval(
         string $code,
         bool $cache = false,
-        bool $dont_eval = false
+        bool $do_not_eval = false
     ) {
         \clearstatcache();
-        if ($dont_eval || \Airship\is_disabled('eval')) {
+        if ($do_not_eval || \Airship\is_disabled('eval')) {
             if ($cache) {
                 if (!\file_exists(ROOT."/tmp/cache/gear")) {
                     \mkdir(ROOT."/tmp/cache/gear", 0777);
@@ -82,7 +84,7 @@ abstract class Gears
                     \mkdir(ROOT.'/tmp/gear', 0777);
                     \clearstatcache();
                 }
-                $file = \tempnam(ROOT.'/tmp/gear');
+                $file = \tempnam(ROOT.'/tmp/gear', 'gear');
                 \file_put_contents(
                     $file,
                     '<?php'."\n".$code
@@ -103,33 +105,38 @@ abstract class Gears
      * 
      * @param string $index
      * @param string $desired_name
-     * @throws \Airship\Alerts\GearNotFound
+     * @param string $namespace Namespace
      * @return string
+     * @throws GearNotFound
      */
     public static function extract(
         string $index,
         string $desired_name, 
-        string $ns = ''
+        string $namespace = ''
     ) {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         if (!isset($state->gears[$index])) {
-            throw new \Airship\Alerts\GearNotFound();
+            throw new GearNotFound($index);
         }
         $latest = $state->gears[$index];
         
         $class_name = $desired_name;
-        $testName = empty($ns) ? $class_name : $ns.'\\'.$class_name;
+        $testName = empty($namespace)
+            ? $class_name
+            : $namespace . '\\' . $class_name;
         
         $i = 0;
         while (\class_exists($testName, false)) {
             $class_name = $desired_name . '_' . \bin2hex('' . ++$i);
-            $testName = empty($ns) ? $class_name : $ns.'\\'.$class_name;
+            $testName = empty($namespace)
+                ? $class_name
+                : $namespace . '\\' . $class_name;
         }
         
         // Create the shim
-        if (!empty($ns)) {
+        if (!empty($namespace)) {
             self::coreEval(
-                'namespace '.$ns.';'.
+                'namespace '.$namespace.';'.
                 "\n\n".
                 'class '.$class_name.' extends '.$latest.' { }'
             );
@@ -146,10 +153,11 @@ abstract class Gears
      * 
      * @param string $index
      * @param string $type
+     * @return bool
      */
-    public static function forge(string $index, string $type)
+    public static function forge(string $index, string $type): bool
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         if (!isset($state->gears[$index])) {
             $gears = $state->gears;
             if (\class_exists($type)) {
@@ -166,13 +174,13 @@ abstract class Gears
      * its constructor)
      * 
      * @param string $name - Gear identifier
-     * @params $args - constructor parameters
+     * @param mixed[] $args - constructor parameters
      * @return object
      */
     public static function get(string $name, ...$args)
     {
-        $classname = self::getName($name);
-        $obj = new $classname(...$args);
+        $className = self::getName($name);
+        $obj = new $className(...$args);
         return $obj;
     }
     
@@ -181,13 +189,13 @@ abstract class Gears
      * 
      * @param string $name
      * @return string
-     * @throws \Airship\Alerts\GearNotFound
+     * @throws GearNotFound
      */
     public static function getName(string $name)
     {
-        $state = \Airship\Engine\State::instance();
+        $state = State::instance();
         if (!isset($state->gears[$name])) {
-            throw new \Airship\Alerts\GearNotFound($name);
+            throw new GearNotFound($name);
         }
         $gears = $state->gears;
         return $gears[$name];
@@ -197,7 +205,6 @@ abstract class Gears
      * Set up initial classes
      * 
      * @param array $gears
-     * @throws \Airship\Alerts\GearNotFound
      */
     public static function init(array $gears = [])
     {
