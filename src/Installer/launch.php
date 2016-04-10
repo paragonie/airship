@@ -38,6 +38,7 @@ if (ISCLI) {
  * 2. Load the Airship functions
  */
 require_once ROOT.'/Airship.php';
+require_once __DIR__ . '/motifs.php';
 
 /**
  * 3. Let's autoload the composer packages
@@ -147,7 +148,6 @@ try {
         die("Cannot create " . ROOT . '/tmp/installing.json');
     }
 }
-require_once ROOT.'/motifs.php';
 
 $installer = new \Airship\Installer\Install(
     $twigEnv,
