@@ -17,7 +17,7 @@
     "phpunit/phpunit": "*"
   },
   "require": {
-    "php": "^7.0.4",
+    "php": "^7.0.5",
     "ext-openssl": "*",
     "ext-libsodium": "^1.0.3",
 
