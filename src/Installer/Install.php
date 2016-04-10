@@ -604,6 +604,9 @@ class Install
         $this->autoSave = false;
         $this->finalDefaultPages();
         \unlink(ROOT.'/tmp/installing.json');
+        foreach (\glob(ROOT.'/tmp/cache/*.json') as $f) {
+            \unlink($f);
+        }
         \Airship\redirect('/');
     }
 }

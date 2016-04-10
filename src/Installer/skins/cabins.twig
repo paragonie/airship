@@ -35,7 +35,7 @@
             <label for="bridge_path">
                 Canon URL (for hyperlinks from other Cabins):
             </label>
-            <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
+            <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
             
             <div>
                 <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" checked="checked" />

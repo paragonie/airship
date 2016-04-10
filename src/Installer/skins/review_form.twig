@@ -70,7 +70,7 @@
         <label for="bridge_path">
             Canon URL (for hyperlinks from other Cabins):
         </label>
-        <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Bridge.canon_url|e('html_attr') }}" />
+        <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="{{ cabins.Bridge.canon_url|e('html_attr') }}" />
 
         <label for="brige_lang">
             Language:
@@ -87,19 +87,19 @@
     <legend>Hull Settings</legend>
     <div class="pure-form pure-form-stacked">
 
-        <label for="bridge_path">
+        <label for="hull_path">
             Hostname and Path:
         </label>
         <input class="pure-input-1" type="text" name="cabin[Hull][path]" value="{{ cabins.Hull.path|e('html_attr') }}" />
 
         <div>
-            <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" {% if cabins.Hull.https %} checked="checked"{% endif %} />
-            <label for="bridge_https" class="inblock">
+            <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" {% if cabins.Hull.https %} checked="checked"{% endif %} />
+            <label for="hull_https" class="inblock">
                 Only allow HTTPS connections? (Recommended)
             </label>
         </div>
 
-        <label for="bridge_path">
+        <label for="hull_path">
             Canon URL (for hyperlinks from other Cabins):
         </label>
         <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Hull.canon_url|e('html_attr') }}" />
@@ -107,7 +107,7 @@
         <label for="brige_lang">
             Language:
         </label>
-        <select class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
+        <select class="pure-input-1" id="hull_lang" name="cabin[Hull][lang]">
             <option {% if cabins.Hull.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
         </select>
 
