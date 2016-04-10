@@ -147,6 +147,7 @@ try {
         die("Cannot create " . ROOT . '/tmp/installing.json');
     }
 }
+require_once ROOT.'/motifs.php';
 
 $installer = new \Airship\Installer\Install(
     $twigEnv,
