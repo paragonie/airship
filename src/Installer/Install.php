@@ -11,6 +11,10 @@ use \ParagonIE\Halite\Password;
 use \GuzzleHttp\Client;
 use \ParagonIE\ConstantTime\Base64;
 
+/**
+ * Class Install
+ * @package Airship\Installer
+ */
 class Install
 {
     const GROUP_ADMIN = 7;
@@ -220,6 +224,7 @@ class Install
         if ($this->csrf->check()) {
             return $_POST;
         }
+        return false;
     }
     
     /**
@@ -311,6 +316,7 @@ class Install
             $cabins[$conf['path']] = [
                 'https' => !empty($conf['https']),
                 'language' => $conf['lang'],
+                'canon_url' => $conf['canon_url'],
                 'name' => $name
             ];
         }
@@ -432,23 +438,23 @@ class Install
     protected function finalDatabasePrimary(): Database
     {
         $databases = \Airship\loadJSON(ROOT.'/config/databases.json');
-        $dbconf = $databases['default'][0];
+        $dbConf = $databases['default'][0];
         $conf = [
-            isset($dbconf['dsn'])
-                ? $dbconf['dsn']
-                : $dbconf
+            isset($dbConf['dsn'])
+                ? $dbConf['dsn']
+                : $dbConf
         ];
 
-        if (isset($dbconf['username']) && isset($dbconf['password'])) {
-            $conf[] = $dbconf['username'];
-            $conf[] = $dbconf['password'];
-            if (isset($dbconf['options'])) {
-                $conf[] = $dbconf['options'];
+        if (isset($dbConf['username']) && isset($dbConf['password'])) {
+            $conf[] = $dbConf['username'];
+            $conf[] = $dbConf['password'];
+            if (isset($dbConf['options'])) {
+                $conf[] = $dbConf['options'];
             }
-        } elseif (isset($dbconf['options'])) {
+        } elseif (isset($dbConf['options'])) {
             $conf[1] = '';
             $conf[2] = '';
-            $conf[3] = $dbconf['options'];
+            $conf[3] = $dbConf['options'];
         }
         if (empty($conf)) {
 
