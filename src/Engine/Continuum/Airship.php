@@ -71,7 +71,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
-                'Automatic update failure.',
+                'Automatic update failure: NO API Response.',
                 LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
             );

@@ -2,14 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Alerts\Hail\{
+    NoAPIResponse,
+    PeerVerificationFailure
+};
 use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\Hail;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
 class Gadget extends AutoUpdater implements ContinuumInterface
 {
     private $hail;
+    private $cabin;
     private $name;
     private $supplier;
     private $filePath;
@@ -60,7 +65,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
-                'Automatic update failure.',
+                'Automatic update failure: NO API Response.',
                 LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
             );
@@ -84,13 +89,13 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                 \trk(
                     'errors.hail.peer_checksum_failed',
                     $info->getVersion(),
-                    'Airship Core'
+                    'Gadget: ' . $this->name
                 )
             );
         }
 
-        \move($this->filePath, $this->filePath.'.backup');
-        \move($file->getPath(), $this->filePath);
+        \rename($this->filePath, $this->filePath.'.backup');
+        \rename($file->getPath(), $this->filePath);
 
 
         // Let's open the update package:
@@ -103,20 +108,29 @@ class Gadget extends AutoUpdater implements ContinuumInterface
 
         // We need to do this while we're replacing files.
         $this->bringSiteDown();
-        
+
         Sandbox::safeRequire(
             'phar://' . $this->pharAlias . '/update_trigger.php',
             $metadata
         );
 
         // Free up the updater alias
-        $garbageAlias =
-            Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
+        $garbageAlias = Base64UrlSafe::encode(\random_bytes(48)) . '.phar';
         $newGadget->setAlias($garbageAlias);
-        unset($updater);
+        unset($newGadget);
 
         // Now bring it back up.
         $this->bringSiteBackUp();
     }
 
+    /**
+     * @param string $supplier
+     * @param string $name
+     * @return Gadget
+     */
+    public function setCabin(string $supplier, string $name): self
+    {
+        $this->cabin = [$supplier, $name];
+        return $this;
+    }
 }

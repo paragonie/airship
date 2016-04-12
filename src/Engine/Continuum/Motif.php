@@ -14,6 +14,7 @@ use \Psr\Log\LogLevel;
 class Motif extends AutoUpdater implements ContinuumInterface
 {
     private $hail;
+    private $cabin;
     private $name;
     private $supplier;
     private $filePath;
@@ -64,7 +65,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
-                'Automatic update failure.',
+                'Automatic update failure: NO API Response.',
                 LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
             );
@@ -102,5 +103,16 @@ class Motif extends AutoUpdater implements ContinuumInterface
         if (!$zip->extractTo($dir)) {
             throw new CouldNotUpdate();
         }
+    }
+
+    /**
+     * @param string $supplier
+     * @param string $name
+     * @return Motif
+     */
+    public function setCabin(string $supplier, string $name): self
+    {
+        $this->cabin = [$supplier, $name];
+        return $this;
     }
 }

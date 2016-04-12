@@ -60,7 +60,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
-                'Automatic update failure.',
+                'Automatic update failure: NO API Response.',
                 LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
             );
@@ -147,7 +147,14 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     protected function bringCabinBackUp()
     {
         \unlink(
-            ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'cabin.'.$this->name.'.offline.txt'
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cabin.'.$this->name.'.offline.txt'
+                ]
+            )
         );
         \clearstatcache();
     }
@@ -158,7 +165,14 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     protected function bringCabinDown()
     {
         \file_put_contents(
-            ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'cabin.'.$this->name.'.offline.txt',
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cabin.'.$this->name.'.offline.txt'
+                ]
+            ),
             \date('Y-m-d\TH:i:s')
         );
         \clearstatcache();

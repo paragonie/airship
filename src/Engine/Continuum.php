@@ -11,6 +11,13 @@ use \Airship\Engine\Continuum\{
     Motif as MotifUpdater
 };
 
+/**
+ * Class Continuum
+ *
+ * This class controls the Continuum update process.
+ *
+ * @package Airship\Engine
+ */
 class Continuum
 {
     protected $hail;
@@ -34,13 +41,20 @@ class Continuum
     public function needsUpdate(): bool
     {
         $config = State::instance();
-        
-        if (\is_readable(ROOT.'/tmp/last_update_check.txt')) {
-            $last = \file_get_contents(ROOT.'/tmp/last_update_check.txt');
+
+        $path = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'tmp',
+                'last_update_check.txt'
+            ]
+        );
+        if (\is_readable($path)) {
+            $last = \file_get_contents($path);
             return (time() - $last) > $config->universal['auto-update']['check'];
-        } else {
-            return true;
         }
+        return true;
     }
     
     /**
@@ -106,9 +120,9 @@ class Continuum
     /**
      * Get an array of CabinUpdater objects
      * 
-     * @return array [CabinUpdater, CabinUpdater, ...]
+     * @return CabinUpdater[]
      */
-    public function getCabins() : array
+    public function getCabins(): array
     {
         $cabins = [];
         foreach (\Airship\list_all_files(ROOT.'/Cabin/') as $file) {
@@ -130,13 +144,14 @@ class Continuum
     /**
      * Get an array of GadgetUpdater objects
      * 
-     * @return array [GadgetUpdater, GadgetUpdater, ...]
+     * @return GadgetUpdater[]
      */
-    public function getGadgets() : array
+    public function getGadgets(): array
     {
         $gadgets = [];
         // First, each cabin's gadgets:
         foreach (\Airship\list_all_files(ROOT.'/Cabin/') as $dir) {
+            $cabinInfo = \Airship\loadJSON($dir . '/manifest.json');
             if (\is_dir($dir.'/Gadgets')) {
                 foreach (\Airship\list_all_files($dir.'/Gadgets/', 'phar') as $file) {
                     $manifest = $this->getPharManifest($file);
@@ -147,10 +162,14 @@ class Continuum
                         $this->getSupplier($manifest['supplier']),
                         $file
                     );
+                    $gadgets[$name]->setCabin(
+                        $cabinInfo['supplier'],
+                        $cabinInfo['name']
+                    );
                 }
             }
         }
-        // First the universal gadgets:
+        //  Then, the universal gadgets:
         foreach (\Airship\list_all_files(ROOT.'/Gadgets/', 'phar') as $file) {
             $manifest = $this->getPharManifest($file);
             $name = \preg_replace('#^.+?/([^\/]+)\.phar$#', '$1', $file);
@@ -169,6 +188,34 @@ class Continuum
         }
         return $gadgets;
     }
+
+    /**
+     * Get an array of GadgetUpdater objects
+     *
+     * @return MotifUpdater[]
+     */
+    public function getMotifs(): array
+    {
+        $motifs = [];
+        // First the universal gadgets:
+        foreach (\glob(ROOT . DIRECTORY_SEPARATOR . 'Motifs/*') as $supplierPath) {
+            if (!\is_dir($supplierPath)) {
+                continue;
+            }
+            $supplier = $this->getEndPiece($supplierPath);
+            foreach (\glob($supplierPath . DIRECTORY_SEPARATOR. '*') as $motifDir) {
+                $motifName = $this->getEndPiece($motifDir);
+                $manifest = \Airship\loadJSON($motifDir . DIRECTORY_SEPARATOR . 'motif.json');
+                $name = $supplier . '.' . $motifName;
+                $motifs[$name] = new MotifUpdater(
+                    $this->hail,
+                    $manifest,
+                    $this->getSupplier($manifest['supplier'])
+                );
+            }
+        }
+        return $motifs;
+    }
     
     /**
      * Get metadata from the Phar
@@ -176,12 +223,13 @@ class Continuum
      * @param string $file
      * @return array
      */
-    public function getPharManifest(string $file) : array
+    public function getPharManifest(string $file): array
     {
         $phar = new \Phar($file);
         $meta = $phar->getMetadata();
         if (empty($meta)) {
             /** @todo handle edge cases here if people neglect to use barge */
+            return [];
         }
         return $meta;
     }
@@ -211,5 +259,17 @@ class Continuum
             return $this->supplierCache[$supplier];
         }
         throw new NoSupplier();
+    }
+
+    /**
+     * Get the last piece of a path
+     *
+     * @param string $fullPath
+     * @return string
+     */
+    private function getEndPiece(string $fullPath): string
+    {
+        $arr = \explode('/', \trim('/', $fullPath));
+        return \array_pop($arr);
     }
 }
