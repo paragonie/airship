@@ -22,11 +22,11 @@ $state->logger->info('Automatic update started');
 try {
     $autoUpdater->doUpdateCheck(true);
 } catch (\Throwable $ex) {
-    $i = $ex->getCode();
     $state->logger->critical(
         'Automatic update failed: ' . \get_class($ex),
         \Airship\throwableToArray($ex)
     );
+    exit(255);
 }
 $state->logger->info('Automatic update concluded');
 

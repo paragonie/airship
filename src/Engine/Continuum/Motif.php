@@ -2,6 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\Continuum\{
+    CouldNotUpdate,
+    MotifZipFailed
+};
 use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\Hail;
@@ -26,6 +30,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
         $this->manifest = $manifest;
         $this->supplier = $supplier;
         $this->filePath = $filePath;
+        $this->type = self::TYPE_MOTIF;
     }
 
     /**
@@ -52,7 +57,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
                      * Don't proceed unless we've verified the signatures
                      */
                     if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        return $this->install($updateInfo, $updateFile);
+                        $this->install($updateInfo, $updateFile);
                     }
                 }
             }
@@ -66,8 +71,36 @@ class Motif extends AutoUpdater implements ContinuumInterface
         }
     }
 
+    /**
+     * Install the new version
+     *
+     * @param UpdateInfo $info (part of definition but not used here)
+     * @param UpdateFile $file
+     * @throws CouldNotUpdate
+     * @throws MotifZipFailed
+     */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
-        // @todo - extract the .zip over the old Motif
+        // Let's open the update package:
+        $path = $file->getPath();
+        $zip = new \ZipArchive();
+        $res = $zip->open($path);
+        if ($res !== true) {
+            throw new MotifZipFailed($res);
+        }
+        $dir = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'Motifs',
+                $this->supplier->getName(),
+                $this->name
+            ]
+        );
+
+        // Extract the new files to the current directory
+        if (!$zip->extractTo($dir)) {
+            throw new CouldNotUpdate();
+        }
     }
 }

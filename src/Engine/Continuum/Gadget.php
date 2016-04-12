@@ -26,6 +26,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         $this->manifest = $manifest;
         $this->supplier = $supplier;
         $this->filePath = $filePath;
+        $this->type = self::TYPE_GADGET;
     }
 
     /**
@@ -52,7 +53,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                      * Don't proceed unless we've verified the signatures
                      */
                     if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        return $this->install($updateInfo, $updateFile);
+                        $this->install($updateInfo, $updateFile);
                     }
                 }
             }
@@ -66,8 +67,56 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         }
     }
 
+    /**
+     * We just need to replace the Phar
+     *
+     * @param UpdateInfo $info
+     * @param UpdateFile $file
+     * @throws PeerVerificationFailure
+     */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
-        // @todo - replace the old .phar with a new one
+        /**
+         * If peer verification is implemented, we'll block updates here.
+         */
+        if (!$this->verifyChecksumWithPeers($info, $file)) {
+            throw new PeerVerificationFailure(
+                \trk(
+                    'errors.hail.peer_checksum_failed',
+                    $info->getVersion(),
+                    'Airship Core'
+                )
+            );
+        }
+
+        \move($this->filePath, $this->filePath.'.backup');
+        \move($file->getPath(), $this->filePath);
+
+
+        // Let's open the update package:
+        $newGadget = new \Phar(
+            $this->filePath,
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
+        );
+        $newGadget->setAlias($this->pharAlias);
+        $metadata = \json_decode($newGadget->getMetadata(), true);
+
+        // We need to do this while we're replacing files.
+        $this->bringSiteDown();
+        
+        Sandbox::safeRequire(
+            'phar://' . $this->pharAlias . '/update_trigger.php',
+            $metadata
+        );
+
+        // Free up the updater alias
+        $garbageAlias =
+            Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
+        $newGadget->setAlias($garbageAlias);
+        unset($updater);
+
+        // Now bring it back up.
+        $this->bringSiteBackUp();
     }
+
 }

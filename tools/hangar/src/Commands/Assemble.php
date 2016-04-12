@@ -48,7 +48,7 @@ class Assemble extends SessionCommand
     }
 
     /**
-     * Add an autorun entry.
+     * Add an autoRun entry.
      *
      * @param array $run
      * @param string $workspace
@@ -56,7 +56,7 @@ class Assemble extends SessionCommand
      * @return bool
      * @throws \Error
      */
-    protected function addAutorun(array $run, string $workspace, string $file): bool
+    protected function addautoRun(array $run, string $workspace, string $file): bool
     {
         static $db_tpl = null;
         if ($db_tpl === null) {
@@ -72,12 +72,12 @@ class Assemble extends SessionCommand
         switch ($run['type']) {
             case 'php':
                 \file_put_contents(
-                    $workspace . DIRECTORY_SEPARATOR . 'autorun' . DIRECTORY_SEPARATOR . $hash . '.php',
+                    $workspace . DIRECTORY_SEPARATOR . 'autoRun' . DIRECTORY_SEPARATOR . $hash . '.php',
                     Base64::decode($run['data'])
                 );
                 \file_put_contents(
-                    $workspace . DIRECTORY_SEPARATOR . 'autorun.php',
-                    'require_once __DIR__ . DIRECTORY_SEPARATOR . "autorun" . DIRECTORY_SEPARATOR . "'. $hash . '.php";' . "\n",
+                    $workspace . DIRECTORY_SEPARATOR . 'autoRun.php',
+                    'require_once __DIR__ . DIRECTORY_SEPARATOR . "autoRun" . DIRECTORY_SEPARATOR . "'. $hash . '.php";' . "\n",
                     FILE_APPEND
                 );
                 return true;
@@ -94,14 +94,14 @@ class Assemble extends SessionCommand
 
                 // Save the template file:
                 \file_put_contents(
-                    $workspace . DIRECTORY_SEPARATOR . 'autorun' . DIRECTORY_SEPARATOR . $hash . '.php',
+                    $workspace . DIRECTORY_SEPARATOR . 'autoRun' . DIRECTORY_SEPARATOR . $hash . '.php',
                     $exec
                 );
 
-                // Add the autorun script to the autorun list:
+                // Add the autoRun script to the autoRun list:
                 \file_put_contents(
-                    $workspace . DIRECTORY_SEPARATOR . 'autorun.php',
-                    'require_once __DIR__ . DIRECTORY_SEPARATOR . "autorun" . DIRECTORY_SEPARATOR . $hash . ".php";' . "\n",
+                    $workspace . DIRECTORY_SEPARATOR . 'autoRun.php',
+                    'require_once __DIR__ . DIRECTORY_SEPARATOR . "autoRun" . DIRECTORY_SEPARATOR . $hash . ".php";' . "\n",
                     FILE_APPEND
                 );
                 return true;
@@ -236,10 +236,10 @@ class Assemble extends SessionCommand
             $this->pharStub
         );
 
-        // Let's make sure our autorun directory exists
-        \mkdir($workspace . DIRECTORY_SEPARATOR . 'autorun', 0755);
+        // Let's make sure our autoRun directory exists
+        \mkdir($workspace . DIRECTORY_SEPARATOR . 'autoRun', 0755);
         \file_put_contents(
-            $workspace. DIRECTORY_SEPARATOR . 'autorun.php',
+            $workspace. DIRECTORY_SEPARATOR . 'autoRun.php',
             '<?php' . "\n" . 'declare(strict_types=1);' . "\n"
         );
         if (\array_key_exists('add', $this->session)) {
@@ -248,9 +248,9 @@ class Assemble extends SessionCommand
                 $this->metadata['files'][] = $file;
             }
         }
-        if (\array_key_exists('autorun', $this->session)) {
-            foreach ($this->session['autorun'] as $f => $run) {
-                $this->addAutorun($run, $workspace, $f);
+        if (\array_key_exists('autoRun', $this->session)) {
+            foreach ($this->session['autoRun'] as $f => $run) {
+                $this->addautoRun($run, $workspace, $f);
             }
         }
     }

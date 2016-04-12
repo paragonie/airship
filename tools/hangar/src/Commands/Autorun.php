@@ -5,11 +5,11 @@ namespace Airship\Hangar\Commands;
 use Airship\Engine\Continuum\Airship;
 use Airship\Hangar\SessionCommand;
 
-class Autorun extends SessionCommand
+class autoRun extends SessionCommand
 {
     public $essential = false;
     public $display = 4;
-    public $name = 'Add Autorun Script';
+    public $name = 'Add autoRun Script';
     public $description = 'Add scripts to run after the update has complete.';
 
     /**
@@ -32,9 +32,9 @@ class Autorun extends SessionCommand
             echo 'No file passed.', "\n";
             return false;
         }
-        if (!\array_key_exists('autorun', $this->session)) {
+        if (!\array_key_exists('autoRun', $this->session)) {
             // echo 'Creating session data', "\n";
-            $this->session['autorun'] = [];
+            $this->session['autoRun'] = [];
         }
 
         $added = 0;
@@ -43,9 +43,9 @@ class Autorun extends SessionCommand
             if ($file[$l] === DIRECTORY_SEPARATOR) {
                 $file = substr($file, 0, -1);
             }
-            $added += $this->addAutorun($file, $dir);
+            $added += $this->addautoRun($file, $dir);
         }
-        echo $added, ' autorun script', ($added === 1 ? '' : 's'), ' registered.', "\n";
+        echo $added, ' autoRun script', ($added === 1 ? '' : 's'), ' registered.', "\n";
         return true;
     }
 
@@ -56,7 +56,7 @@ class Autorun extends SessionCommand
      * @param string $dir
      * @return int
      */
-    protected function addAutorun(string $filename, string $dir): int
+    protected function addautoRun(string $filename, string $dir): int
     {
         if (!empty($dir)) {
             if ($dir[\strlen($dir) - 1] !== DIRECTORY_SEPARATOR) {
@@ -75,21 +75,21 @@ class Autorun extends SessionCommand
             return 0;
         }
 
-        if (\array_key_exists($path, $this->session['autorun'])) {
-            echo $this->c['yellow'], 'Autorun script already registered: ', $this->c[''], $path, "\n";
+        if (\array_key_exists($path, $this->session['autoRun'])) {
+            echo $this->c['yellow'], 'autoRun script already registered: ', $this->c[''], $path, "\n";
             return 0;
         }
 
         // Recursive adding
         if (\is_dir($path)) {
-            echo $this->c['red'], 'You cannot add a directory to an autorun script: ', $this->c[''], $path, "\n";
+            echo $this->c['red'], 'You cannot add a directory to an autoRun script: ', $this->c[''], $path, "\n";
             return 0;
         }
-        $this->session['autorun'][$path] = [
+        $this->session['autoRun'][$path] = [
             'type' => $this->getType($path),
             'data' => Base64::_encode(\file_get_contents($path))
         ];
-        echo $this->c['green'], 'Autorun script registered: ', $this->c[''], $path, "\n";
+        echo $this->c['green'], 'autoRun script registered: ', $this->c[''], $path, "\n";
         return 1;
     }
 

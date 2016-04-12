@@ -77,4 +77,14 @@ class UpdateInfo
         return $this->version;
     }
 
+
+    /**
+     * Get the expanded version for this particular update
+     *
+     * @return int
+     */
+    public function getVersionExpanded(): int
+    {
+        return \Airship\expand_version($this->version);
+    }
 }

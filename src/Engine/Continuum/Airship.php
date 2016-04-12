@@ -23,6 +23,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
     {
         $this->supplier = $sup;
         $this->hail = $hail;
+        $this->type = self::TYPE_ENGINE;
     }
     
     /**
@@ -98,6 +99,8 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 )
             );
         }
+
+        // Let's open the update package:
         $path = $file->getPath();
         $updater = new \Phar(
             $path,
@@ -110,24 +113,24 @@ class Airship extends AutoUpdater implements ContinuumInterface
         $this->bringSiteDown();
 
         if (isset($metadata['files'])) {
-            foreach ($metadata['files'] as $filename) {
-                $this->replaceFile($filename);
+            foreach ($metadata['files'] as $fileName) {
+                $this->replaceFile($fileName);
             }
         }
-        if (isset($metadata['autorun'])) {
-            foreach ($metadata['autorun'] as $autorun) {
-                $this->autorunScript($autorun);
+        if (isset($metadata['autoRun'])) {
+            foreach ($metadata['autoRun'] as $autoRun) {
+                $this->autoRunScript($autoRun);
             }
         }
 
         // Free up the updater alias
         $garbageAlias =
-            Base64UrlSafe::encode(\random_bytes(33)) . '.phar';
+            Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
         $updater->setAlias($garbageAlias);
         unset($updater);
 
         // Now bring it back up.
-        return $this->bringSiteBackUp();
+        $this->bringSiteBackUp();
     }
 
     /**

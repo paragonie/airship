@@ -26,6 +26,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         $this->supplier = $supplier;
         $this->hail = $hail;
         $this->pharAlias = 'cabin.' . $this->name . '.phar';
+        $this->type = self::TYPE_CABIN;
     }
     
     /**
@@ -52,7 +53,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                      * Don't proceed unless we've verified the signatures
                      */
                     if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        return $this->install($updateInfo, $updateFile);
+                        $this->install($updateInfo, $updateFile);
                     }
                 }
             }
@@ -105,7 +106,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         }
         if (isset($metadata['autorun'])) {
             foreach ($metadata['autorun'] as $autoRun) {
-                $this->autorunScript($autoRun);
+                $this->autoRunScript($autoRun);
             }
         }
 

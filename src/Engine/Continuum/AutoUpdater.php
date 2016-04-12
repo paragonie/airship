@@ -15,18 +15,24 @@ abstract class AutoUpdater
 {
     use Log;
 
+    const TYPE_ENGINE = 'engine';
+    const TYPE_CABIN = 'cabin';
+    const TYPE_GADGET = 'gadget';
+    const TYPE_MOTIF = 'motif';
+
     protected $pharAlias;
     protected $name;
     protected $supplier;
     protected $hail;
+    protected $type = '';
 
     /**
      * Automatic script execution
      *
-     * @param array $autorun
+     * @param array $autoRun
      * @return mixed
      */
-    protected function autorunScript(array $autorun)
+    protected function autoRunScript(array $autoRun)
     {
         $ret = null;
         // Get a unique temporary file
@@ -34,23 +40,23 @@ abstract class AutoUpdater
             $script = \tempnam(ROOT . DIRECTORY_SEPARATOR . 'tmp', 'update-script-');
         } while (\file_exists($script));
 
-        // What kind of autorun script is it?
-        switch ($autorun['type']) {
+        // What kind of autoRun script is it?
+        switch ($autoRun['type']) {
             case 'php':
-                \file_put_contents($script.'.php', Base64::decode($autorun['data']));
+                \file_put_contents($script.'.php', Base64::decode($autoRun['data']));
                 $ret = Sandbox::safeRequire($script.'.php');
                 \unlink($script.'.php');
                 break;
             case 'sh':
-                \file_put_contents($script.'.sh', Base64::decode($autorun['data']));
+                \file_put_contents($script.'.sh', Base64::decode($autoRun['data']));
                 $ret = \shell_exec($script.'.sh');
                 \unlink($script.'.sh');
                 break;
             case 'pgsql':
             case 'mysql':
-                \file_put_contents($script.'.'.$autorun['type'], Base64::decode($autorun['data']));
-                $ret = Sandbox::runSQLFile($script.'.'.$autorun['type'], $autorun['type']);
-                \unlink($script.'.'.$autorun['type']);
+                \file_put_contents($script.'.'.$autoRun['type'], Base64::decode($autoRun['data']));
+                $ret = Sandbox::runSQLFile($script.'.'.$autoRun['type'], $autoRun['type']);
+                \unlink($script.'.'.$autoRun['type']);
                 break;
         }
         return $ret;
@@ -162,10 +168,24 @@ abstract class AutoUpdater
             throw $ex;
         }
     }
+
+    /**
+     * Sort updates by version (newest to latest)
+     *
+     * @param UpdateInfo[] ...$updates
+     * @return UpdateInfo[]
+     */
+    protected function sortUpdatesByVersion(UpdateInfo ...$updates): array
+    {
+        \uasort($updates, function(UpdateInfo $a, UpdateInfo $b) {
+            return $a->getVersionExpanded() <=> $b->getVersionExpanded();
+        });
+        return $updates;
+    }
     
     /**
      * Are any updates available?
-     * 
+     *
      * @param string $supplier
      * @param string $packageName
      * @param string $minVersion
@@ -176,11 +196,14 @@ abstract class AutoUpdater
      * @throws \Airship\Alerts\Hail\NoAPIResponse
      */
     public function updateCheck(
-        string $supplier,
-        string $packageName,
+        string $supplier = '',
+        string $packageName = '',
         string $minVersion = '',
         string $apiEndpoint = 'version'
     ): array {
+        if (empty($supplier)) {
+            $supplier = $this->supplier->getName();
+        }
         $channels = $this->supplier->getChannels();
         if (empty($channels)) {
             throw new NoAPIResponse(
@@ -193,9 +216,10 @@ abstract class AutoUpdater
                 $response = $this->hail->post(
                     $ch . API::get($apiEndpoint),
                     [
+                        'type'     => $this->type,
                         'supplier' => $supplier,
-                        'package' => $packageName,
-                        'minimum' => $minVersion
+                        'package'  => $packageName,
+                        'minimum'  => $minVersion
                     ]
                 );
                 if ($response instanceof Response) {
@@ -209,7 +233,7 @@ abstract class AutoUpdater
                                 $ch
                             );
                         }
-                        return $updates;
+                        return $this->sortUpdatesByVersion($updates);
                     }
                 }
             } catch (TransferException $ex) {
@@ -230,7 +254,9 @@ abstract class AutoUpdater
     }
 
     /**
-     * @todo In a future release (possibly 1.0.0) we should allow developers to
+     * @todo - Verify Checksum with Peers
+     *
+     * In a future release (possibly 1.0.0) we should allow developers to
      * add "peers" whom they trust to attest for the authenticity of each core
      * software update to prevent targeted attacks. For now, let's just return
      * true knowing this can be built later.
