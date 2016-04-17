@@ -22,6 +22,9 @@ declare(strict_types=1);
     
     'Hail' =>
         '\\Airship\\Engine\\Hail',
+
+    'KeyUpdater' =>
+        '\\Airship\\Engine\\Continuum\\Keygdrassil',
     
     'Landing' =>
         '\\Airship\\Engine\\Landing',

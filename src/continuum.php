@@ -1,15 +1,9 @@
 <?php
-declare(strict_types=1);
-/**
- * Automatic update processing -- either throw this in a cronjob or let it get
- * triggered every time a page loads after enough time has elapsed
- */
-\ignore_user_abort(true);
-\set_time_limit(0);
-
-require_once __DIR__.'/bootstrap.php';
+// Always check for changes to channel keys before initiating update
+require_once __DIR__.'/channel.php';
 
 $state = \Airship\Engine\State::instance();
+
 /**
  * Initialize the automatic updater service
  */

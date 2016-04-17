@@ -48,7 +48,7 @@ class Channel
      */
     public function getName(): string
     {
-
+        return $this->name;
     }
 
     /**
