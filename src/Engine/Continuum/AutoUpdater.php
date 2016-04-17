@@ -5,10 +5,11 @@ namespace Airship\Engine\Continuum;
 use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\State;
 use \Airship\Engine\Bolt\Log;
-use \ParagonIE\Halite\File;
-use \ParagonIE\ConstantTime\Base64;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
+use \ParagonIE\ConstantTime\Base64;
+use \ParagonIE\Halite\File;
+use \ParagonIE\Halite\Util;
 use \Psr\Log\LogLevel;
 
 abstract class AutoUpdater
@@ -25,6 +26,7 @@ abstract class AutoUpdater
     protected $supplier;
     protected $hail;
     protected $type = '';
+    protected static $channels = [];
 
     /**
      * Automatic script execution
@@ -143,9 +145,10 @@ abstract class AutoUpdater
                     $saved = \file_put_contents($outFile, $body);
                     if ($saved !== false) {
                         // To prevent TOCTOU issues down the line
-                        $hash = \Sodium\bin2hex(\Sodium\crypto_generichash($body));
+                        $hash = Util::hash($body);
                         $body = null;
                         \clearstatcache();
+
                         return new UpdateFile([
                             'path' => $outFile,
                             'version' => $version,
@@ -155,6 +158,8 @@ abstract class AutoUpdater
                     }
                 }
             }
+            // If we're still here...
+            throw new TransferException();
         } catch (TransferException $ex) {
             $this->log(
                 'Automatic update failure.',
@@ -167,6 +172,29 @@ abstract class AutoUpdater
             // Rethrow it to prevent errors on return type
             throw $ex;
         }
+    }
+
+    /**
+     * Get the channels
+     *
+     * @param string $name
+     * @return Channel
+     * @throws NoAPIResponse
+     */
+    protected function getChannel(string $name): Channel
+    {
+        if (empty(self::$channels)) {
+            $config = \Airship\loadJSON(ROOT . '/config/channels.json');
+            foreach ($config as $chName => $chUrls) {
+                self::$channels[$chName] = new Channel($chName, $chUrls);
+            }
+        }
+        if (isset(self::$channels[$name])) {
+            return self::$channels[$name];
+        }
+        throw new NoAPIResponse(
+            \trk('errors.hail.no_channel_configured')
+        );
     }
 
     /**
@@ -204,48 +232,51 @@ abstract class AutoUpdater
         if (empty($supplier)) {
             $supplier = $this->supplier->getName();
         }
-        $channels = $this->supplier->getChannels();
-        if (empty($channels)) {
+        $channelsConfigured = $this->supplier->getChannels();
+        if (empty($channelsConfigured)) {
             throw new NoAPIResponse(
                 \trk('errors.hail.no_channel_configured')
             );
         }
-
-        foreach ($channels as $ch) {
-            try {
-                $response = $this->hail->post(
-                    $ch . API::get($apiEndpoint),
-                    [
-                        'type'     => $this->type,
-                        'supplier' => $supplier,
-                        'package'  => $packageName,
-                        'minimum'  => $minVersion
-                    ]
-                );
-                if ($response instanceof Response) {
-                    $code = $response->getStatusCode();
-                    if ($code >= 200 && $code < 300) {
-                        $body = \json_decode((string) $response->getBody(), true);
-                        $updates = [];
-                        foreach ($body['versions'] as $update) {
-                            $updates []= new UpdateInfo(
-                                $update,
-                                $ch
-                            );
+        foreach ($channelsConfigured as $channelName) {
+            $channel = $this->getChannel($channelName);
+            foreach ($channel->getAllURLs() as $ch) {
+                try {
+                    $response = $this->hail->post(
+                        $ch . API::get($apiEndpoint),
+                        [
+                            'type' => $this->type,
+                            'supplier' => $supplier,
+                            'package' => $packageName,
+                            'minimum' => $minVersion
+                        ]
+                    );
+                    if ($response instanceof Response) {
+                        $code = $response->getStatusCode();
+                        if ($code >= 200 && $code < 300) {
+                            $body = \json_decode((string)$response->getBody(), true);
+                            $updates = [];
+                            foreach ($body['versions'] as $update) {
+                                $updates [] = new UpdateInfo(
+                                    $update,
+                                    $ch
+                                );
+                            }
+                            return $this->sortUpdatesByVersion($updates);
                         }
-                        return $this->sortUpdatesByVersion($updates);
                     }
+                } catch (TransferException $ex) {
+                    // Log? Definitely suppress, however.
+                    $this->log(
+                        'Automatic update failure. (' . \get_class($ex) . ')',
+                        LogLevel::WARNING,
+                        [
+                            'exception' => \Airship\throwableToArray($ex),
+                            'channelName' => $channelName,
+                            'channel' => $ch
+                        ]
+                    );
                 }
-            } catch (TransferException $ex) {
-                // Log? Definitely suppress, however.
-                $this->log(
-                    'Automatic update failure. (' . \get_class($ex) . ')',
-                    LogLevel::WARNING,
-                    [
-                        'exception' => \Airship\throwableToArray($ex),
-                        'channel' => $ch
-                    ]
-                );
             }
         }
         throw new NoAPIResponse(

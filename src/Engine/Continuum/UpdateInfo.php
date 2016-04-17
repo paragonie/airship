@@ -16,13 +16,13 @@ class UpdateInfo
     /**
      * UpdateInfo constructor.
      * @param array $json
-     * @param string $channel
+     * @param string $channelURL
      * @param string $version
      */
-    public function __construct(array $json, string $channel, string $version = '')
+    public function __construct(array $json, string $channelURL, string $version = '')
     {
         $this->response = $json;
-        $this->channel = $channel;
+        $this->channel = $channelURL;
         $this->checksum = $json['checksum'];
         $this->releaseInfo = $json['release_info'];
         if (empty($version)) {

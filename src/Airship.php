@@ -16,9 +16,9 @@ use \Airship\Engine\{
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ReCaptcha\ReCaptcha;
-use ReCaptcha\RequestMethod\CurlPost;
+use \ReCaptcha\RequestMethod\CurlPost;
 
-\define('AIRSHIP_VERSION', '0.1.0');
+\define('AIRSHIP_VERSION', '0.2.0');
 
 /**
  * Do all of these keys exist in the target array
@@ -51,6 +51,8 @@ function array_from_http_query(string $queryString = ''): array
 }
 
 /**
+ * Diff multidimensional arrays
+ *
  * @param array $new
  * @param array $old
  * @return array
@@ -157,7 +159,7 @@ function configWriter(string $rootDir)
     $twigEnv = new \Twig_Environment($twigLoader);
     $twigEnv->addFilter(
         new \Twig_SimpleFilter('je', function ($data, int $indents = 0) {
-            return \Airship\LensFunctions\je($data, $indents);
+            \Airship\LensFunctions\je($data, $indents);
         })
     );
     return $twigEnv;
@@ -182,9 +184,11 @@ function csp_merge(array ...$policies): array
                 } elseif ($k === 'inherit') {
                     continue;
                 }
-                $return[$k]['allow'] = \array_merge(
-                    $return[$k]['allow'] ?? [],
-                    $data['allow'] ?? []
+                $return[$k]['allow'] = \array_unique(
+                    \array_merge(
+                        $return[$k]['allow'] ?? [],
+                        $data['allow'] ?? []
+                    )
                 );
                 $return[$k]['data'] =
                     ($return[$k]['data'] ?? false) || !empty($data['data']);
@@ -207,12 +211,12 @@ function csp_merge(array ...$policies): array
  * Expand a version string:
  *      5.4.19-RC1 => 5041901
  * 
- * @param string $strver
+ * @param string $version
  * @return int
  */
-function expand_version(string $strver): int
+function expand_version(string $version): int
 {
-    if (\preg_match('#^([0-9]+)\.([0-9]+)\.([0-9]+)(?:[^0-9]*)([0-9]+)?$#', $strver, $m)) {
+    if (\preg_match('#^([0-9]+)\.([0-9]+)\.([0-9]+)(?:[^0-9]*)([0-9]+)?$#', $version, $m)) {
         if (!isset($m[4])) {
             return (
                 (100 * $m[3]) +
@@ -567,19 +571,23 @@ function slugFromTitle(string $title): string
 }
 
 /**
- * Convert an
+ * Convert an Exception or Error into an array (for logging)
  *
  * @param \Throwable $ex
  * @return array
  */
 function throwableToArray(\Throwable $ex): array
 {
+    $prev = $ex->getPrevious();
     return [
         'line' => $ex->getLine(),
         'file' => $ex->getFile(),
         'message' => $ex->getMessage(),
         'code' => $ex->getCode(),
-        'trace' => $ex->getTrace()
+        'trace' => $ex->getTrace(),
+        'previous' => $prev
+            ? throwableToArray($prev)
+            : null
     ];
 }
 

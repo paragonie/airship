@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use \Airship\Alerts\Continuum\NoSupplier;
+use Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Engine\Continuum\{
     Supplier,
     Airship as AirshipUpdater,
@@ -198,14 +199,14 @@ class Continuum
     {
         $motifs = [];
         // First the universal gadgets:
-        foreach (\glob(ROOT . DIRECTORY_SEPARATOR . 'Motifs/*') as $supplierPath) {
+        foreach (\glob(ROOT . '/Motifs/*') as $supplierPath) {
             if (!\is_dir($supplierPath)) {
                 continue;
             }
             $supplier = $this->getEndPiece($supplierPath);
-            foreach (\glob($supplierPath . DIRECTORY_SEPARATOR. '*') as $motifDir) {
+            foreach (\glob($supplierPath . '/*') as $motifDir) {
                 $motifName = $this->getEndPiece($motifDir);
-                $manifest = \Airship\loadJSON($motifDir . DIRECTORY_SEPARATOR . 'motif.json');
+                $manifest = \Airship\loadJSON($motifDir . '/motif.json');
                 $name = $supplier . '.' . $motifName;
                 $motifs[$name] = new MotifUpdater(
                     $this->hail,
@@ -239,23 +240,38 @@ class Continuum
      * 
      * @param string $supplier
      * @param boolean $force_flush
-     * @return Supplier
+     * @return Supplier|Supplier[]
      * @throws NoSupplier
      */
     public function getSupplier(
         string $supplier = '',
         bool $force_flush = false
     ) {
-        if ($force_flush || empty($this->supplierCache)) {
-            $supplierCache = \Airship\loadJSON(ROOT.'/config/supplier_keys.json');
-            foreach ($supplierCache as $v => $data) {
-                $supplierCache[$v] = new Supplier($v, $data);
-            }
-            $this->supplierCache = $supplierCache;
-        }
         if (empty($supplier)) {
+            // Fetch all suppliers
+            if ($force_flush || empty($this->supplierCache)) {
+                $supplierCache = [];
+                foreach (\Airship\list_all_files(ROOT . '/config/supplier_keys', 'json') as $supplierKeyFile) {
+                    // We want everything except the .json
+                    $supplier = \substr($this->getEndPiece($supplierKeyFile), 0, -5);
+
+                    $data = \Airship\loadJSON($supplierKeyFile);
+                    $supplierCache[$supplier] = new Supplier($supplier, $data);
+                }
+                $this->supplierCache = $supplierCache;
+            }
             return $this->supplierCache;
-        } elseif(isset($this->supplierCache[$supplier])) {
+        }
+        // Otherwise, we're just fetching one supplier's keys
+        if ($force_flush || empty($this->supplierCache[$supplier])) {
+            try {
+                $data = \Airship\loadJSON(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+            } catch (FileNotFound $ex) {
+                throw new NoSupplier($supplier, 0, $ex);
+            }
+            $this->supplierCache[$supplier] = new Supplier($supplier, $data);
+        }
+        if (isset($this->supplierCache[$supplier])) {
             return $this->supplierCache[$supplier];
         }
         throw new NoSupplier();
