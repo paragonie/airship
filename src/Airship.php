@@ -559,6 +559,30 @@ function queryString(string $index, array $params = [], string $cabin = \CABIN_N
 }
 
 /**
+* Shuffle an array using a CSPRNG
+*
+ * @link https://paragonie.com/b/JvICXzh_jhLyt4y3
+ *
+ * @param array &$array reference to an array
+ */
+function secure_shuffle(array &$array)
+{
+    $size = \count($array);
+    $keys = \array_keys($array);
+
+    for ($i = $size - 1; $i > 0; --$i) {
+        $r = \random_int(0, $i);
+        if ($r !== $i) {
+            $temp = $array[$keys[$r]];
+            $array[$keys[$r]] = $array[$keys[$i]];
+            $array[$keys[$i]] = $temp;
+        }
+    }
+    // Reset indices:
+    $array = array_values($array);
+}
+
+/**
  * Determine the valid slug for a given title, before de-duplication
  *
  * @param string $title

@@ -14,6 +14,7 @@ use \Airship\Engine\State;
 class Channel
 {
     protected $name = '';
+    protected $peers = [];
     protected $urls = [];
 
     /**
@@ -54,9 +55,10 @@ class Channel
     /**
      * Get all URLs
      *
+     * @param bool $doNotShuffle
      * @return string[]
      */
-    public function getAllURLs(): array
+    public function getAllURLs(bool $doNotShuffle = false): array
     {
         $state = State::instance();
         $candidates = [];
@@ -70,13 +72,49 @@ class Channel
                     $after[] = $url;
                 }
             }
+
+            if (!$doNotShuffle) {
+                \Airship\secure_shuffle($candidates);
+                \Airship\secure_shuffle($after);
+            }
+
             foreach ($after as $url) {
                 $candidates[] = $url;
             }
         } else {
             $candidates = $this->urls;
+            if (!$doNotShuffle) {
+                \Airship\secure_shuffle($candidates);
+            }
         }
         return $candidates;
+    }
+
+    /**
+     * Get a list of peers for a given channel
+     *
+     * @param bool $forceFlush
+     * @return Peer[]
+     */
+    protected function getPeerList(bool $forceFlush = false): array
+    {
+        if (!empty($this->peers) && !$forceFlush) {
+            return $this->peers;
+        }
+        $filePath = ROOT . '/config/channel_peers/' . $this->name . '.json';
+        $peer = [];
+
+        if (!\file_exists($filePath)) {
+            \file_put_contents($filePath, '[]');
+            return $peer;
+        }
+
+        $json = \Airship\loadJSON($filePath);
+        foreach ($json as $data) {
+            $peer[] = new Peer($data);
+        }
+        $this->peers = $peer;
+        return $this->peers;
     }
 
     /**

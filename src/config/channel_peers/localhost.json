@@ -4,6 +4,6 @@
     "urls": [
       "http://localhost/bridge/channel_peer"
     ],
-    "publickey": ""
+    "public_key": ""
   }
 ]

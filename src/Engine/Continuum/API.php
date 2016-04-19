@@ -46,6 +46,7 @@ abstract class API
                 return [
                     'airship_download' => '/airship_download',
                     'airship_version' => '/airship_version',
+                    'fetch_keys' => '/keyggdrasil',
                     'version' => '/version',
                     'download' => '/download'
                 ];
