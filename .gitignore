@@ -19,3 +19,4 @@
 /test/phpunit.phar.asc
 /vendor/*
 /vendor/
+/composer.lock
