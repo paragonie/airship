@@ -46,7 +46,12 @@ class PublicFiles extends LandingGear
             if (substr($filedata['type'], 0, 5) === 'text/' || \strpos($filedata['type'], 'application') !== false) {
                 $p = \strpos($filedata['type'], ';');
                 if ($p !== false) {
-                    $filedata['type'] = 'text/plain;' . \substr($filedata['type'], $p);
+                    $filedata['type'] = 'text/plain; ' .
+                        \preg_replace(
+                            '#[^A-Za-z0-9/]#',
+                            '',
+                            \substr($filedata['type'], $p)
+                        );
                 } else {
                     $filedata['type'] = 'text/plain';
                 }

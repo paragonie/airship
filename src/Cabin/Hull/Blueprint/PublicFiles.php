@@ -65,6 +65,8 @@ class PublicFiles extends BlueprintGear
         if (empty($fileInfo)) {
             throw new FileNotFound();
         }
+        // Only printable ASCII characters are permitted in this header:
+        $fileInfo['type'] = \preg_replace('#[^\x20-\x7e/]#', '', $fileInfo['type']);
         return $fileInfo;
     }
 }
