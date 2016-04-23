@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Airship\Engine\Continuum;
 
-use Airship\Engine\{
+use \Airship\Alerts\Continuum\ChannelSignatureFailed;
+use \Airship\Alerts\Continuum\CouldNotUpdate;
+use \Airship\Engine\{
+    Bolt\Supplier as SupplierBolt,
     Bolt\Log,
     Contract\DBInterface,
     Hail,
@@ -11,9 +14,12 @@ use Airship\Engine\{
 };
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\Halite\Structure\{
-    MerkleTree,
-    Node
+use \ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\{
+    Asymmetric\Crypto as AsymmetricCrypto,
+    Structure\MerkleTree,
+    Structure\Node
 };
 use \Psr\Log\LogLevel;
 
@@ -29,6 +35,7 @@ use \Psr\Log\LogLevel;
  */
 class Keyggdrasil
 {
+    use SupplierBolt;
     use Log;
 
     protected $db;
@@ -57,8 +64,8 @@ class Keyggdrasil
         }
         $this->db = $db;
 
-        foreach ($channels as $ch => $urls) {
-            $this->channelCache[$ch] = new Channel($ch, $urls);
+        foreach ($channels as $ch => $config) {
+            $this->channelCache[$ch] = new Channel($this, $ch, $config);
         }
     }
 
@@ -80,11 +87,12 @@ class Keyggdrasil
     /**
      * Fetch all of the updates from the remote server.
      *
+     * @param Channel $chan
      * @param string $url
-     * @return array
+     * @return KeyUpdate[]
      * @throws TransferException
      */
-    protected function fetchKeyUpdates(string $url): array
+    protected function fetchKeyUpdates(Channel $chan, string $url): array
     {
         $response = $this->hail->post($url . API::get('fetch_keys'));
         if ($response instanceof Response) {
@@ -92,8 +100,12 @@ class Keyggdrasil
             if ($code >= 200 && $code < 300) {
                 $body = (string) $response->getBody();
 
+                // This should return an array of KeyUpdate objects:
+                return $this->parseKeyUpdateResponse($chan, $body);
             }
         }
+        // When all else fails, TransferException
+        throw new TransferException();
     }
 
     /**
@@ -113,12 +125,73 @@ class Keyggdrasil
     }
 
     /**
-     * Insert/delete entries in supplier_keys, while updating the database.
+     * Interpret the KeyUpdate objects from the API response. OR verify the signature
+     * of the "no updates" message to prevent a DoS.
      *
      * @param Channel $chan
-     * @param array $updates
+     * @param string $body
+     * @return KeyUpdate[]
+     * @throws ChannelSignatureFailed
+     * @throws CouldNotUpdate
      */
-    protected function processKeyUpdates(Channel $chan, array $updates = [])
+    protected function parseKeyUpdateResponse(Channel $chan, string $body): array
+    {
+        $response = \Airship\parseJSON($body);
+        if (empty($response['updates'])) {
+            // The "no updates" message should be authenticated.
+            if (!AsymmetricCrypto::verify($response['no_updates'], $chan->getPublicKey(), $response['signature'])) {
+                throw new ChannelSignatureFailed();
+            }
+            $datetime = new \DateTime($response['no_updates']);
+
+            // One hour ago:
+            $stale = (new \DateTime('now'))
+                ->sub(new \DateInterval('PT01H'));
+
+            if ($datetime < $stale) {
+                throw new CouldNotUpdate('Stale response.');
+            }
+
+            // We got nothing to do:
+            return [];
+        }
+
+        /**
+         * $response['updates'] should look like this:
+         * [
+         *    {
+         *        "id" 10,
+         *        "data": "base64urlSafeEncoded_JSON_Blob",
+         *        "signature": "blahblahblah"
+         *    },
+         *    {
+         *        ...
+         *    },
+         *    ...
+         * ]
+         */
+        $keyUpdateArray = [];
+        foreach ($response['updates'] as $update) {
+            $data = Base64UrlSafe::decode($update['data']);
+            // Verify the signature of each update.
+            if (!AsymmetricCrypto::verify($data, $chan->getPublicKey(), $update['signature'])) {
+                // Invalid signature
+                throw new ChannelSignatureFailed();
+            }
+            $keyUpdateArray[] = new KeyUpdate($chan, \json_decode($data, true));
+        }
+        return $keyUpdateArray;
+    }
+
+    /**
+     * Insert/delete entries in supplier_keys, while updating the database.
+     *
+     * Return the updated Merkle Tree if all is well
+     *
+     * @param Channel $chan)
+     * @param KeyUpdate[] $updates
+     */
+    protected function processKeyUpdates(Channel $chan, KeyUpdate ...$updates)
     {
 
     }
@@ -140,19 +213,24 @@ class Keyggdrasil
         $originalTree = $this->getMerkleTree($chan);
         foreach ($chan->getAllURLs() as $url) {
             try {
-                $response = $this->fetchKeyUpdates($url);
-                if (!empty($response['status'])) {
-                    if ($response['status'] === 'OK' && !empty($response['updates'])) {
-                        if ($this->verifyResponseWithPeers($chan, $originalTree, $response)) {
-                            $this->processKeyUpdates($chan, $response['updates']);
-                            return;
-                        }
+                $updates = $this->fetchKeyUpdates($chan, $url); // KeyUpdate[]
+                while (!empty($updates)) {
+                    $merkleTree = $originalTree;
+                    if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
+                        $this->processKeyUpdates($chan, ...$updates);
+                        return;
                     }
-                    // Received a successful API response.
-                    return;
+                    \array_pop($updates);
                 }
+                // Received a successful API response.
+                return;
+            } catch (ChannelSignatureFailed $ex) {
+                $this->log(
+                    'Invalid Channel Signature for ' . $chan->getName(),
+                    LogLevel::ALERT,
+                    \Airship\throwableToArray($ex)
+                );
             } catch (TransferException $ex) {
-                // Should we log here?
                 $this->log(
                     'Channel update error',
                     LogLevel::NOTICE,
@@ -173,14 +251,14 @@ class Keyggdrasil
      *
      * @param Channel $channel
      * @param MerkleTree $originalTree
-     * @param array $response
+     * @param KeyUpdate[] ...$updates
      * @return bool
      */
     protected function verifyResponseWithPeers(
         Channel $channel,
         MerkleTree $originalTree,
-        array $response = []
+        KeyUpdate ...$updates
     ): bool {
-
+        
     }
 }

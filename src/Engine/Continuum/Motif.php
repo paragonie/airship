@@ -11,6 +11,13 @@ use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\Hail;
 use \Psr\Log\LogLevel;
 
+/**
+ * Class Motif
+ *
+ * This updates a Motif.
+ *
+ * @package Airship\Engine\Continuum
+ */
 class Motif extends AutoUpdater implements ContinuumInterface
 {
     private $hail;

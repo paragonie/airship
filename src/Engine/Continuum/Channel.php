@@ -2,7 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\Continuum\NoSupplier;
+use \Airship\Engine\Continuum;
 use \Airship\Engine\State;
+use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
  * Class Channel
@@ -14,7 +17,9 @@ use \Airship\Engine\State;
 class Channel
 {
     protected $name = '';
+    protected $parent;
     protected $peers = [];
+    protected $publicKey;
     protected $urls = [];
 
     /**
@@ -22,19 +27,27 @@ class Channel
      *
      * @todo \trk() these exception messages
      *
+     * @param object $parent (Continuum or Keyggdrasil)
      * @param string $name
-     * @param string[] $urls
+     * @param array $config
      * @throws \TypeError
      */
-    public function __construct(string $name, array $urls = [])
+    public function __construct($parent, string $name, array $config = [])
     {
-        if (!\is1DArray($urls)) {
+        if ($parent instanceof Keyggdrasil || $parent instanceof Continuum) {
+            $this->parent = $parent;
+        }
+        if (!\is1DArray($config['urls'])) {
             throw new \TypeError(
-                'Expected a 1-dimensional array of strings'
+                'Expected a 1-dimensional array of strings for the URLs'
             );
         }
+        // The channel should be signing responses at the application layer:
+        $this->publicKey = new SignaturePublicKey(
+            \Sodium\bin2hex($config['publickey'])
+        );
         $this->name = $name;
-        foreach (\array_values($urls) as $index => $url) {
+        foreach (\array_values($config['urls']) as $index => $url) {
             if (\is_string($url)) {
                 throw new \TypeError(
                     'Expected an array of strings; ' . \gettype($url) . ' given at index ' . $index .'.'
@@ -43,6 +56,17 @@ class Channel
             $this->urls[] = $url;
         }
     }
+    /**
+     * Create a new supplier.
+     *
+     * @param array $data
+     * @return Supplier
+     * @throws NoSupplier
+     */
+    public function createSupplier(array $data)
+    {
+        return $this->parent->createSupplier($this->name, $data);
+    }
 
     /**
      * @return string
@@ -50,6 +74,37 @@ class Channel
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return SignaturePublicKey
+     */
+    public function getPublicKey(): SignaturePublicKey
+    {
+        return $this->publicKey;
+    }
+
+    /**
+     * Get all suppliers for a particular channel
+     *
+     * @return Supplier[]
+     * @throws
+     */
+    public function getAllSuppliers()
+    {
+        return $this->parent->getSupplier('');
+    }
+
+    /**
+     * Get a supplier
+     *
+     * @param string $name
+     * @return Supplier
+     * @throws NoSupplier
+     */
+    public function getSupplier(string $name)
+    {
+        return $this->parent->getSupplier($name);
     }
 
     /**
@@ -73,6 +128,7 @@ class Channel
                 }
             }
 
+            // Shuffle each array separately, to maintain priority;
             if (!$doNotShuffle) {
                 \Airship\secure_shuffle($candidates);
                 \Airship\secure_shuffle($after);

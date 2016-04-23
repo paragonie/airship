@@ -185,8 +185,8 @@ abstract class AutoUpdater
     {
         if (empty(self::$channels)) {
             $config = \Airship\loadJSON(ROOT . '/config/channels.json');
-            foreach ($config as $chName => $chUrls) {
-                self::$channels[$chName] = new Channel($chName, $chUrls);
+            foreach ($config as $chName => $chConfig) {
+                self::$channels[$chName] = new Channel($this, $chName, $chConfig);
             }
         }
         if (isset(self::$channels[$name])) {
@@ -316,6 +316,10 @@ abstract class AutoUpdater
         UpdateFile $file
     ): bool {
         $ret = false;
+        if (IDE_HACKS) {
+            $this->supplier = new Supplier([]);
+        }
+
         foreach ($this->supplier->getSigningKeys() as $key) {
             $ret = $ret || File::verify(
                 $file->getPath(),

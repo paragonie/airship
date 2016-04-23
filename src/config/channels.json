@@ -1,5 +1,8 @@
 {
-  "localhost": [
-    "http://localhost:88/hail"
-  ]
+  "localhost": {
+    "publickey": "",
+    "urls": [
+      "http://localhost:88/hail"
+    ]
+  }
 }
