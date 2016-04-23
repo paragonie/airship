@@ -12,7 +12,7 @@ interface DBInterface
      *
      * @param string $statement SQL query without user data
      * @param int $offset - How many columns from the left are we grabbing from each row?
-     * @params ... $params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      */
     public function col(string $statement, int $offset = 0, ...$params);
@@ -31,7 +31,7 @@ interface DBInterface
      * Variadic version of $this->single()
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      */
     public function cell(string $statement, ...$params);
@@ -43,6 +43,29 @@ interface DBInterface
      * @param array $conditions - WHERE clause
      */
     public function delete(string $table, array $conditions);
+
+    /**
+     * Variadic version of $this->column(), with an offset of 0
+     *
+     * @param string $statement SQL query without user data
+     * @param mixed ...$params Parameters
+     * @return mixed
+     */
+    public function first(string $statement, ...$params);
+
+    /**
+     * Which database driver are we operating on?
+     *
+     * @return string
+     */
+    public function getDriver(): string;
+
+    /**
+     * Return the PDO object directly
+     *
+     * @return \PDO
+     */
+    public function getPdo(): \PDO;
     
     /**
      * Insert a new row to a table in a database.
@@ -56,7 +79,7 @@ interface DBInterface
      * Similar to $this->run() except it only returns a single row
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed ...$params Parameters
      */
     public function row(string $statement, ...$params);
     
@@ -64,7 +87,7 @@ interface DBInterface
      * Run a query, get a 2D array with all the results
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params);

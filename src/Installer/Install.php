@@ -23,12 +23,22 @@ class Install
     protected $autoSave = true;
     protected $twig;
     protected $data;
-    
+
+    /**
+     * Install constructor.
+     *
+     * @param \Twig_Environment $twig
+     * @param array $data
+     */
     public function __construct(\Twig_Environment $twig, array $data = [])
     {
         $this->twig = $twig;
         $this->data = $data;
         $this->csrf = new CSRF();
+        if (IDE_HACKS) {
+            // Just so IDEs know what class this is without tracing execution paths:
+            $this->db = new Database(new \PDO('dsfargeg'));
+        }
         
         // We do this to prevent someone from coming along and reading your
         // half-finished configuration settings (e.g. database passwords):
@@ -42,11 +52,15 @@ class Install
             echo 'No installer authorization token found.', "\n";
             exit(255);
         } elseif (!\hash_equals($this->data['token'], $_COOKIE['installer'])) {
+            // This effectively locks unauthorized users out of the system while installing
             echo 'Invalid installer authorization token.', "\n";
             exit(255);
         }
     }
-    
+
+    /**
+     * Save configuration on destruct
+     */
     public function __destruct()
     {
         if ($this->autoSave) {
@@ -67,29 +81,34 @@ class Install
         switch ($this->data['step']) {
             case 1:
                 if (!empty($post)) {
-                    return $this->processDatabase($post);
+                    $this->processDatabase($post);
+                    return null;
                 }
                 $this->data['drivers'] = $this->enumerateDrivers();
                 return $this->display('database.twig');
             case 2:
                 if (!empty($post)) {
-                    return $this->processAdminAccount($post);
+                    $this->processAdminAccount($post);
+                    return null;
                 }
                 return $this->display('admin_account.twig');
             case 3:
                 if (!empty($post)) {
-                    return $this->processCabins($post);
+                    $this->processCabins($post);
+                    return null;
                 }
                 return $this->display('cabins.twig');
             case 4:
                 $this->testForTor();
                 if (!empty($post)) {
-                    return $this->processConfig($post);
+                    $this->processConfig($post);
+                    return null;
                 }
                 return $this->display('config.twig');
             case 5:
                 if (!empty($post)) {
-                    return $this->finalize($post);
+                    $this->finalize($post);
+                    return null;
                 }
                 return $this->display('review.twig');
         }
@@ -116,7 +135,7 @@ class Install
      * 
      * @return array
      */
-    protected function enumerateDrivers() : array
+    protected function enumerateDrivers(): array
     {
         $drivers = [];
         if (\extension_loaded('pgsql') && \extension_loaded('pdo_pgsql')) {
@@ -190,7 +209,7 @@ class Install
     {
         $this->data['cabins'] = $post['cabin'];
         $this->data['step'] = 4;
-        return \Airship\redirect('/');
+        \Airship\redirect('/');
     }
     
     /**
@@ -203,7 +222,7 @@ class Install
         $this->data['config'] = $post['config'];
         
         $this->data['step'] = 5;
-        return \Airship\redirect('/');
+        \Airship\redirect('/');
     }
     
     /**
@@ -279,7 +298,10 @@ class Install
             $this->data['tor_installed'] = false;
         }
     }
-    
+
+    /**
+     * Save all of the necessary configuration files
+     */
     protected function finalConfiguration()
     {
         $twigEnv = \Airship\configWriter(ROOT.'/config/templates');
@@ -404,7 +426,10 @@ class Install
             ]
         ]);
     }
-    
+
+    /**
+     *
+     */
     protected function finalDatabaseSetup()
     {
         $this->db = $this->finalDatabasePrimary();
@@ -428,7 +453,10 @@ class Install
         }
         switch ($driver) {
             case 'pgsql':
-                return $this->databaseFinalPgsql();
+                $this->databaseFinalPgsql();
+                break;
+            default:
+                die('Unsupported primary database driver');
         }
     }
     

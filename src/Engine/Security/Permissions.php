@@ -2,11 +2,22 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use \Airship\Engine\AutoPilot;
-use \Airship\Engine\State;
-use \Airship\Engine\Contract\DBInterface;
+use \Airship\Engine\{
+    AutoPilot,
+    State,
+    Contract\DBInterface
+};
 use \Airship\Alerts\Database\NotImplementedException;
 
+/**
+ * Class Permissions
+ *
+ * Manages user-based and role-based access controls with overlapping
+ * pattern-based contexts and a multi-site architecture, with a simple
+ * interface. i.e. $this->can('read') // bool(false)
+ *
+ * @package Airship\Engine\Security
+ */
 class Permissions
 {
     const MAX_RECURSE_DEPTH = 100;
@@ -19,6 +30,9 @@ class Permissions
     public function __construct(DBInterface $db)
     {
         $this->db = $db;
+        if (IDE_HACKS) {
+            define('CABIN_NAME', '');
+        }
     }
 
     /**
@@ -35,7 +49,7 @@ class Permissions
         string $context_path = '',
         string $cabin = \CABIN_NAME,
         int $user_id = 0
-    ) {
+    ): bool {
         $state = State::instance();
         if (empty($cabin)) {
             $cabin = \CABIN_NAME;
@@ -50,6 +64,8 @@ class Permissions
                 $user_id = $_SESSION[$idx];
             }
         }
+
+        // If you're a super-user, the answer is "yes, yes you can".
         if ($this->isSuperUser($user_id)) {
             return true;
         }
@@ -63,6 +79,7 @@ class Permissions
             return false;
         }
         if ($user_id > 0) {
+            // You need to be allowed in every relevant context.
             foreach ($contexts as $c_id) {
                 if (
                     self::checkUser($action, $c_id, $user_id) ||
@@ -74,6 +91,7 @@ class Permissions
                 }
             }
         } else {
+            // Guests can be assigned to groups. This fails closed if they aren't given any.
             foreach ($contexts as $c_id) {
                 $ctx_res = false;
                 foreach ($state->universal['guest_groups'] as $grp) {
@@ -108,12 +126,11 @@ class Permissions
         if (empty($context)) {
             $context = AutoPilot::$path;
         }
-        $ctx = $this->db->col(
+        $ctx = $this->db->first(
             \Airship\queryStringRoot(
                 'security.permissions.get_overlap',
                 $this->db->getDriver()
             ),
-            0,
             $cabin,
             $context
         );
@@ -133,7 +150,7 @@ class Permissions
     public function isSuperUser(
         int $user_id = 0,
         bool $ignore_groups = false
-    ) {
+    ): bool {
         if (empty($user_id)) {
             // We can short-circuit this for guests...
             return false;
@@ -180,7 +197,7 @@ class Permissions
                 return true;
             }
         }
-        return 0 < $this->db->single(
+        $check = $this->db->single(
             \Airship\queryStringRoot(
                 'security.permissions.check_user',
                 $this->db->getDriver()
@@ -191,6 +208,7 @@ class Permissions
                 'user' => $user_id
             ]
         );
+        return $check > 0;
     }
 
     /**

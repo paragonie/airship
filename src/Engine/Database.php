@@ -49,6 +49,7 @@ class Database implements DBInterface
         $options = []
     ): Database {
         $post_query = null;
+        $dbEngine = '';
 
         // Let's grab the DB engine
         
@@ -151,7 +152,7 @@ class Database implements DBInterface
      *
      * @param string $statement SQL query without user data
      * @param int $offset - How many columns from the left are we grabbing from each row?
-     * @params ... $params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      */
     public function col(string $statement, int $offset = 0, ...$params)
@@ -344,10 +345,10 @@ class Database implements DBInterface
     }
 
     /**
-     * Variadic version of $this->column()
+     * Variadic version of $this->column(), with an offset of 0
      *
      * @param string $statement SQL query without user data
-     * @params ... $params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      */
     public function first(string $statement, ...$params)
@@ -360,7 +361,7 @@ class Database implements DBInterface
      * 
      * @return string
      */
-    public function getDriver()
+    public function getDriver(): string
     {
         return $this->dbengine;
     }
@@ -370,7 +371,7 @@ class Database implements DBInterface
      * 
      * @return \PDO
      */
-    public function getPdo()
+    public function getPdo(): \PDO
     {
         return $this->pdo;
     }
@@ -479,7 +480,6 @@ class Database implements DBInterface
 
             // We want the latest value:
             switch ($this->dbengine) {
-                /** @todo Fill in more DB drivers' query structures */
                 case 'mysql':
                     $limiter = ' ORDER BY '.
                         $this->escapeIdentifier($field).
@@ -503,7 +503,7 @@ class Database implements DBInterface
             return $this->single($query, $params);
         } else {
             throw new DBAlert\DBException(
-                \trk('errors.database.insert_failed', $table, $this->db->errorInfo()[2])
+                \trk('errors.database.insert_failed', $table, $this->pdo->errorInfo()[2])
             );
         }
     }
@@ -568,7 +568,7 @@ class Database implements DBInterface
      * Similar to $this->row() except it only returns a single row
      *
      * @param string $statement SQL query without user data
-     * @params mixed ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed
      * @throws DBAlert\QueryError
      */
@@ -650,7 +650,8 @@ class Database implements DBInterface
         } catch (\PDOException $e) {
             throw new DBAlert\QueryError(
                 $e->getMessage(),
-                (int) $e->getCode()
+                (int) $e->getCode(),
+                $e
             );
         }
     }
@@ -865,7 +866,7 @@ class Database implements DBInterface
      * @param mixed $arg3
      * @return \PDOStatement|bool
      */
-    public function query(string $statement, int $mode = PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null)
+    public function query(string $statement, int $mode = \PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null)
     {
         if ($arg3) {
             return $this->pdo->query($statement, $mode, $arg3);
