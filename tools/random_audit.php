@@ -4,7 +4,11 @@
  */
 require_once \dirname(__DIR__).'/src/bootstrap.php';
 
-$extensions = ['php', 'twig'];
+if ($argc > 1) {
+    $extensions = \array_slice($argv, 1);
+} else {
+    $extensions = ['php', 'twig'];
+}
 $fileList = [];
 foreach ($extensions as $ex) {
     foreach (\Airship\list_all_files(\dirname(__DIR__) . '/src/', $ex) as $file) {

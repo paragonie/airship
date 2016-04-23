@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Engine\State;
 
 require_once __DIR__.'/gear.php';
@@ -22,6 +23,7 @@ class Cabins extends LoggedInUsersOnly
     }
 
     /**
+     * Update Cabin configuration
      *
      * @route cabins/manage{_string}
      * @param string $cabinName
@@ -29,9 +31,11 @@ class Cabins extends LoggedInUsersOnly
     public function manage(string $cabinName = '')
     {
         if (!$this->isSuperUser()) {
+            // Admins only!
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (!\in_array($cabinName, $this->getCabinNames())) {
+            // Invalid cabin name
             \Airship\redirect($this->airship_cabin_prefix . '/cabins');
         }
         $cabin = \Airship\loadJSON(
@@ -46,6 +50,8 @@ class Cabins extends LoggedInUsersOnly
                         'Your changes have been made successfully.'
                     )
                 ]);
+
+                // Reload configuration for page render
                 $cabin = \Airship\loadJSON(
                     ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'cabins.json'
                 );
@@ -75,6 +81,8 @@ class Cabins extends LoggedInUsersOnly
             DIRECTORY_SEPARATOR . 'config.json'
         );
         /*
+        @todo Implement these before second beta
+
         $settings['gadgets'] = \Airship\loadJSON(
             ROOT . DIRECTORY_SEPARATOR . 'config' .
             DIRECTORY_SEPARATOR . 'Cabin'.
@@ -129,15 +137,22 @@ class Cabins extends LoggedInUsersOnly
     }
 
     /**
+     * Attempt to save the user-provided cabin configuration
+     *
      * @param string $cabinName
      * @param array $cabins
      * @param array $post
      * @return bool
      */
-    protected function saveSettings(string $cabinName, array $cabins = [], array $post = []): bool
-    {
+    protected function saveSettings(
+        string $cabinName,
+        array $cabins = [],
+        array $post = []
+    ): bool {
         $ds = DIRECTORY_SEPARATOR;
         $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
+
+        // Content-Security-Policy
         $csp = [];
         foreach ($post['content_security_policy'] as $dir => $rules) {
             if ($dir === 'upgrade-insecure-requests' || $dir === 'inherit') {
@@ -172,7 +187,7 @@ class Cabins extends LoggedInUsersOnly
         $saveCabins = [];
         foreach ($cabins as $cab => $cab_data) {
             if ($cab_data['name'] !== $cabinName) {
-                // Passthrough
+                // Pass-through
                 $saveCabins[$cab] = $cab_data;
             } else {
                 $saveCabins[$post['config']['path']] = $post['config'];
@@ -184,6 +199,8 @@ class Cabins extends LoggedInUsersOnly
             ROOT . $ds . 'config' . $ds . $cabinName . $ds . 'content_security_policy.json',
             \json_encode($csp, JSON_PRETTY_PRINT)
         );
+
+        // Configuration
         $config_extra = \json_decode($post['config_extra'], true);
         if (!empty($config_extra)) {
             \file_put_contents(
@@ -206,6 +223,7 @@ class Cabins extends LoggedInUsersOnly
             );
         }
 
+        // Clear the cache
         \unlink(ROOT . DIRECTORY_SEPARATOR .
             'tmp' . DIRECTORY_SEPARATOR .
             'cache' . DIRECTORY_SEPARATOR .
