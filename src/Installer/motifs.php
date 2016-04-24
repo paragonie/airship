@@ -15,7 +15,7 @@ foreach (['Hull', 'Bridge'] as $cabinName) {
         \chmod($cabinDir.'/public/motif', 0775);
     }
 
-    // Now let's go set this up...
+    // Now let's set up our Motifs:
     $motifsJSONFile = ROOT . '/config/Cabin/' . $cabinName . '/motifs.json';
     if (\is_dir($cabinDir.'/Lens/motif') && \is_readable($motifsJSONFile)) {
         $motifs = [];

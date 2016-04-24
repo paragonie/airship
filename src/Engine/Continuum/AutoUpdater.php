@@ -3,13 +3,19 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\State;
-use \Airship\Engine\Bolt\Log;
+use Airship\Engine\{
+    Bolt\Log,
+    Hail,
+    State
+};
+use \GuzzleHttp\Client;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\ConstantTime\Base64;
-use \ParagonIE\Halite\File;
-use \ParagonIE\Halite\Util;
+use \ParagonIE\Halite\{
+    File,
+    Util
+};
 use \Psr\Log\LogLevel;
 
 abstract class AutoUpdater
@@ -129,6 +135,10 @@ abstract class AutoUpdater
         UpdateInfo $update,
         string $apiEndpoint = 'download'
     ): UpdateFile {
+        if (IDE_HACKS) {
+            $this->hail = new Hail(new Client);
+        }
+
         try {
             $version = $update->getVersion();
             $response = $this->hail->post(
@@ -282,25 +292,6 @@ abstract class AutoUpdater
         throw new NoAPIResponse(
             \trk('errors.hail.no_channel_responded')
         );
-    }
-
-    /**
-     * @todo - Verify Checksum with Peers
-     *
-     * In a future release (possibly 1.0.0) we should allow developers to
-     * add "peers" whom they trust to attest for the authenticity of each core
-     * software update to prevent targeted attacks. For now, let's just return
-     * true knowing this can be built later.
-     *
-     * @param UpdateInfo $info
-     * @param UpdateFile $file
-     * @return bool
-     */
-    public function verifyChecksumWithPeers(
-        UpdateInfo $info,
-        UpdateFile $file
-    ): bool {
-        return true;
     }
 
     /**

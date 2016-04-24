@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 // Always check for changes to channel keys before initiating update
 require_once __DIR__.'/channel.php';
 

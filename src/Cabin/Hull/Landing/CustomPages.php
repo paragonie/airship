@@ -2,8 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
-use \Airship\Cabin\Hull\Exceptions\RedirectException;
+use \Airship\Cabin\Hull\Exceptions\{
+    CustomPageNotFoundException,
+    RedirectException
+};
+use \Airship\Cabin\Hull\Blueprint\CustomPages as PagesBlueprint;
 use \Airship\Engine\State;
 use \Gregwar\RST\Parser as RSTParser;
 use \League\CommonMark\CommonMarkConverter;
@@ -13,7 +16,15 @@ require_once __DIR__.'/gear.php';
 
 class CustomPages extends LandingGear
 {
+    protected $pages;
     protected $cabin = 'Hull';
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $this->pages = new PagesBlueprint;
+        }
+    }
 
     public function airshipLand()
     {
@@ -24,9 +35,16 @@ class CustomPages extends LandingGear
     /**
      * This interrupts requests if all else fails.
      * @param string[] ...$args
+     * @return void
+     * @throws CustomPageNotFoundException
      */
     public function routeNotFound(...$args)
     {
+        if (!\is1DArray($args)) {
+            throw new CustomPageNotFoundException(
+                'Invalid arguments'
+            );
+        }
         $dirs = $args;
         $file = \array_pop($dirs);
 
@@ -62,7 +80,8 @@ class CustomPages extends LandingGear
         }
 
         // Finally: Return a 4o4
-        return $this->lens('404');
+        $this->lens('404');
+        return;
     }
 
     /**

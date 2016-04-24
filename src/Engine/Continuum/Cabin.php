@@ -76,18 +76,6 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
-        /**
-         * If peer verification is implemented, we'll block updates here.
-         */
-        if (!$this->verifyChecksumWithPeers($info, $file)) {
-            throw new PeerVerificationFailure(
-                \trk(
-                    'errors.hail.peer_checksum_failed',
-                    $info->getVersion(),
-                    'Airship Core'
-                )
-            );
-        }
         $path = $file->getPath();
         $updater = new \Phar(
             $path,

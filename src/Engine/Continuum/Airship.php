@@ -87,19 +87,6 @@ class Airship extends AutoUpdater implements ContinuumInterface
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
-        /**
-         * If peer verification is implemented, we'll block updates here.
-         */
-        if (!$this->verifyChecksumWithPeers($info, $file)) {
-            throw new PeerVerificationFailure(
-                \trk(
-                    'errors.hail.peer_checksum_failed',
-                    $info->getVersion(),
-                    'Airship Core'
-                )
-            );
-        }
-
         // Let's open the update package:
         $path = $file->getPath();
         $updater = new \Phar(

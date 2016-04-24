@@ -6,6 +6,7 @@ if (PHP_VERSION_ID < 70000) {
 if (!extension_loaded('libsodium')) {
     die("Airship requires Libsodium.");
 }
+// This is set to FALSE. It allows us to give IDEs hints that should never be executed.
 define('IDE_HACKS', false);
 
 /**
