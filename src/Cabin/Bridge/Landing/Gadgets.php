@@ -6,6 +6,10 @@ use \Airship\Engine\State;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Gadgets
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Gadgets extends LoggedInUsersOnly
 {
     /**

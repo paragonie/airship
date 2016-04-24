@@ -15,6 +15,9 @@ require_once __DIR__.'/gear.php';
 
 /**
  * Class Files
+ *
+ * Manage user-provided files.
+ *
  * @package Airship\Cabin\Bridge\Blueprint
  */
 class Files extends BlueprintGear
@@ -38,11 +41,20 @@ class Files extends BlueprintGear
         'py',
         'sh'
     ];
+    protected $finfo;
 
+    /**
+     * Files constructor.
+     * @param Database $db
+     */
     public function __construct(Database $db)
     {
         parent::__construct($db);
         $this->finfo = new \finfo(FILEINFO_MIME);
+
+        if (IDE_HACKS) {
+            define('AIRSHIP_UPLOADS', ROOT . '/files/uploaded/');
+        }
     }
 
     /**
@@ -54,8 +66,11 @@ class Files extends BlueprintGear
      * @return bool
      * @throws \TypeError
      */
-    public function createDirectory($parent = null, string $cabin = '', string $dirName = ''): bool
-    {
+    public function createDirectory(
+        $parent = null,
+        string $cabin = '',
+        string $dirName = ''
+    ): bool {
         $this->db->beginTransaction();
         $this->db->insert(
             'airship_dirs',
@@ -71,27 +86,33 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Delete a directory
+     *
      * @param string $cabin
      * @param string $root
-     * @param string $subdir
+     * @param string $subdirectory
      */
-    public function deleteDir(string $cabin, string $root, string $subdir)
+    public function deleteDir(string $cabin, string $root, string $subdirectory)
     {
         $dir = empty($root)
-            ? $subdir
-            : $root . '/' . $subdir;
+            ? $subdirectory
+            : $root . '/' . $subdirectory;
         $pieces = \Airship\chunk($dir);
         $dirId = $this->getDirectoryId($pieces, $cabin);
         return $this->recursiveDelete($dirId, $cabin);
     }
 
     /**
+     * Delete a file
+     *
      * @param array $fileInfo
+     * @return bool
      */
-    public function deleteFile(array $fileInfo)
+    public function deleteFile(array $fileInfo): bool
     {
-        if (\file_exists(AIRSHIP_UPLOADS . $fileInfo['realname'])) {
-            \unlink(AIRSHIP_UPLOADS . $fileInfo['realname']);
+        $this->db->beginTransaction();
+        if (\file_exists(\AIRSHIP_UPLOADS . $fileInfo['realname'])) {
+            \unlink(\AIRSHIP_UPLOADS . $fileInfo['realname']);
         }
         $this->db->delete(
             'airship_files',
@@ -99,6 +120,7 @@ class Files extends BlueprintGear
                 'fileid' => $fileInfo['fileid']
             ]
         );
+        return $this->db->commit();
     }
 
     /**
@@ -109,8 +131,11 @@ class Files extends BlueprintGear
      * @param string $dirName
      * @return bool
      */
-    public function dirExists($parent = null, string $cabin = '', string $dirName = ''): bool
-    {
+    public function dirExists(
+        $parent = null,
+        string $cabin = '',
+        string $dirName = ''
+    ): bool {
         if (empty($parent)) {
             return 0 < $this->db->cell(
                 'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND name = ? AND cabin = ?',
@@ -133,8 +158,11 @@ class Files extends BlueprintGear
      * @param string $cabin
      * @return bool
      */
-    public function ensureDirExists(string $absolutePath, string $cabin = 'Hull'): bool
-    {
+    public function ensureDirExists(
+        string $absolutePath,
+        string $cabin = 'Hull'
+    ): bool {
+        $this->db->beginTransaction();
         $parent = null;
         $pieces = \Airship\chunk($absolutePath, '/');
         while (!empty($pieces)) {
@@ -170,14 +198,14 @@ class Files extends BlueprintGear
                 $parent = $dir['directoryid'];
             }
         }
-        return true;
+        return $this->db->commit();
     }
 
     /**
      * Get all of the directories beneath the current one
      *
      * @param mixed $directoryId (usually an integer, sometimes null)
-     * @oaran string $cabin
+     * @param string $cabin
      * @return array
      */
     public function getChildrenOf($directoryId = null, string $cabin = ''): array
@@ -221,6 +249,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Get a list of all the files in a directory.
+     *
      * @param int $parent
      * @param string $path
      * @param string $cabin
@@ -246,6 +276,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Get a directory ID, should it exist.
+     *
      * @param array $parts
      * @param string $cabin
      * @return int
@@ -395,12 +427,12 @@ class Files extends BlueprintGear
     }
 
     /**
-     * @param string $filepath
+     * @param string $filePath
      * @return string
      */
-    public function getMimeType(string $filepath): string
+    public function getMimeType(string $filePath): string
     {
-        return $this->finfo->file($filepath);
+        return $this->finfo->file($filePath);
     }
 
     /**
@@ -424,7 +456,7 @@ class Files extends BlueprintGear
         }
         if (\mb_strlen($name, '8bit') === 1) {
             // Single byte directory/file names must be a printable ASCII character.
-            // Preferably: one that is legible and semantically meaninful.
+            // Preferably: one that is legible and semantically meaningful.
             return 0 < \preg_match('#^[A-Za-z0-9\-_~=\+]$#', $name[0]);
         }
         // No other rules yet.
@@ -436,17 +468,21 @@ class Files extends BlueprintGear
      *
      * @param string $cabin
      * @param string $root
-     * @param string $subdir
+     * @param string $subdirectory
      * @param array $post
      * @return bool
      */
-    public function moveDir(string $cabin, string $root, string $subdir, array $post = []): bool
-    {
+    public function moveDir(
+        string $cabin,
+        string $root,
+        string $subdirectory,
+        array $post = []
+    ): bool {
         $this->db->beginTransaction();
         // Get the directory IDs...
         $dir = empty($root)
-            ? $subdir
-            : $root . '/' . $subdir;
+            ? $subdirectory
+            : $root . '/' . $subdirectory;
         $nc = empty($root)
             ? $post['new_dir']
             : $root . '/' . $post['new_dir'];
@@ -570,6 +606,7 @@ class Files extends BlueprintGear
      *
      * @param array $fileInfo
      * @param array $post
+     * @param string $cabin
      * @return bool
      */
     public function moveFile(array $fileInfo, array $post, string $cabin): bool
@@ -636,7 +673,6 @@ class Files extends BlueprintGear
             ]
         );
         return $this->db->commit();
-
     }
 
     /**
@@ -655,7 +691,6 @@ class Files extends BlueprintGear
         array $file = [],
         array $attribution = []
     ): array {
-
         // First step: Validate our file data
         switch ($file['error']) {
             case UPLOAD_ERR_INI_SIZE:
@@ -809,7 +844,7 @@ class Files extends BlueprintGear
      */
     private function moveUploadedFile(string $tmp_name, string $ext): string
     {
-        if (\in_array($ext, $this->badFileExtensions)) {
+        if (\in_array(\strtolower($ext), $this->badFileExtensions)) {
             // Just to be extra cautious. The internal filename isn't that important anyway.
             $ext = 'txt';
         }
@@ -839,20 +874,22 @@ class Files extends BlueprintGear
      *
      * @param int $directory
      * @param string $cabin
+     * @return bool
      */
-    private function recursiveDelete(int $directory, string $cabin)
+    private function recursiveDelete(int $directory, string $cabin): bool
     {
+        $this->db->beginTransaction();
         foreach ($this->getFilesInDirectory($directory) as $file) {
             $this->deleteFile($file);
         }
         foreach ($this->getChildrenOf($directory, $cabin) as $dir) {
             $this->recursiveDelete($dir['directoryid'], $cabin);
         }
-        \var_dump('deleting '.$directory);
         $this->db->delete(
             'airship_dirs', [
                 'directoryid' => $directory
             ]
         );
+        return $this->db->commit();
     }
 }

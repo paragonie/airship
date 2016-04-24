@@ -2,15 +2,29 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Bridge\Blueprint\Author;
 use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class AuthorFiles
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class AuthorFiles extends FileManager
 {
     protected $author;
     protected $authorId = 0;
     protected $authorSlug = '';
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (IDE_HACKS) {
+            $this->author = new Author(\Airship\get_database());
+        }
+    }
+
     public function airshipLand()
     {
         parent::airshipLand();
@@ -111,7 +125,7 @@ class AuthorFiles extends FileManager
         if ($this->isSuperUser()) {
             return true;
         }
-        $authorsForUser = $this->authors->getAuthorIdsForUser(
+        $authorsForUser = $this->author->getAuthorIdsForUser(
             $this->getActiveUserId()
         );
         // Check

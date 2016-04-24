@@ -10,6 +10,10 @@ use \ReCaptcha\ReCaptcha;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Redirects
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Redirects extends LoggedInUsersOnly
 {
     public function airshipLand()

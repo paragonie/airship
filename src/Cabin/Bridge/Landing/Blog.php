@@ -7,6 +7,10 @@ use \Airship\Engine\Bolt\Orderable;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Blog
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Blog extends LoggedInUsersOnly
 {
     use Orderable;
@@ -14,17 +18,20 @@ class Blog extends LoggedInUsersOnly
     protected $author;
     protected $blog;
 
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->author = new BP\Author($db);
+            $this->blog = new BP\Blog($db);
+        }
+    }
+
     public function airshipLand()
     {
         parent::airshipLand();
         $this->blog = $this->blueprint('Blog');
         $this->author = $this->blueprint('Author');
-
-        // IDE hacks
-        if (false) {
-            $this->author = new BP\Author();
-            $this->blog = new BP\Blog();
-        }
     }
 
     /**
@@ -119,6 +126,7 @@ class Blog extends LoggedInUsersOnly
      */
     public function editSeries(string $seriesId)
     {
+        $author = null;
         $seriesId += 0;
         $series = $this->blog->getSeries($seriesId);
         if (!empty($series['config'])) {
@@ -499,12 +507,16 @@ class Blog extends LoggedInUsersOnly
         array $authorsAllowed = [],
         array $oldPost = []
     ): bool {
-        if (!\Airship\all_keys_exist(['blog_post_body', 'format', 'save_btn', 'title'], $post)) {
+        $required = [
+            'blog_post_body',
+            'format',
+            'save_btn',
+            'title'
+        ];
+        if (!\Airship\all_keys_exist($required, $post)) {
             return false;
         }
-        if ($this->isSuperUser()) {
-
-        } else {
+        if (!$this->isSuperUser()) {
             if (!empty($post['author'])) {
                 // Only administrators can transfer ownership; block this request
                 return false;
@@ -524,10 +536,8 @@ class Blog extends LoggedInUsersOnly
      * @param array $post
      * @return bool
      */
-    protected function processEditTag(
-        int $tagId,
-        array $post
-    ): bool {
+    protected function processEditTag(int $tagId, array $post): bool
+    {
         return $this->blog->editTag($tagId, $post);
     }
 
@@ -542,7 +552,14 @@ class Blog extends LoggedInUsersOnly
         array $post,
         array $authorsAllowed = []
     ): bool {
-        if (!\Airship\all_keys_exist(['author', 'blog_post_body', 'format', 'save_btn', 'title'], $post)) {
+        $required = [
+            'author',
+            'blog_post_body',
+            'format',
+            'save_btn',
+            'title'
+        ];
+        if (!\Airship\all_keys_exist($required, $post)) {
             return false;
         }
         if (!\in_array($post['author'], $authorsAllowed)) {
@@ -606,8 +623,10 @@ class Blog extends LoggedInUsersOnly
      * @param array $authorsAllowed
      * @return bool
      */
-    protected function processNewSeries(array $post = [], array $authorsAllowed = []): bool
-    {
+    protected function processNewSeries(
+        array $post = [],
+        array $authorsAllowed = []
+    ): bool {
         if (!\Airship\all_keys_exist(['author', 'items'], $post)) {
             return false;
         }

@@ -2,9 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use \Airship\Engine\{
-    Gears,
-    State
+use Airship\Engine\{
+    Gears, Security\Authentication, Security\Permissions, State
 };
 use \ParagonIE\Halite\Cookie;
 use \Airship\Alerts\Security\LongTermAuthAlert;
@@ -14,6 +13,10 @@ use \Psr\Log\LogLevel;
 
 trait Security
 {
+    public $airship_auth;
+    public $airship_cookie;
+    public $airship_perms;
+
     /**
      * After loading the Security bolt in place, configure it
      * 

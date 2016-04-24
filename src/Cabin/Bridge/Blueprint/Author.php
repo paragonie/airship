@@ -9,6 +9,15 @@ use \Airship\Engine\Bolt\{
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Author
+ *
+ * This contains all of the methods used for managing authors.
+ * It's mostly used by the Author landing, although some methods
+ * are used in Airship\Cabin\Bridge\Landing\Blog as well.
+ *
+ * @package Airship\Cabin\Bridge\Blueprint
+ */
 class Author extends BlueprintGear
 {
     use Orderable;

@@ -2,11 +2,27 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Bridge\Blueprint as BP;
+
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Permissions
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Permissions extends AdminOnly
 {
     private $perms;
+    private $users;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->perms = new BP\Permissions($db);
+            $this->users = new BP\UserAccounts($db);
+        }
+    }
 
     public function airshipLand()
     {
@@ -94,7 +110,13 @@ class Permissions extends AdminOnly
         $post = $this->post();
         if (!empty($post)) {
             if ($this->perms->saveContext($cabin, $contextId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions/' . $cabin . '/context/' . $contextId);
+                \Airship\redirect(
+                    $this->airship_cabin_prefix .
+                        '/crew/permissions/' .
+                        $cabin .
+                        '/context/' .
+                        $contextId
+                );
             }
         }
 
@@ -152,9 +174,15 @@ class Permissions extends AdminOnly
     protected function processCabinSubmenu(string $cabin, array $post): bool
     {
         if (!empty($post['create_context']) && !empty($post['new_context'])) {
-            return $this->perms->createContext($cabin, $post['new_context']);
+            return $this->perms->createContext(
+                $cabin,
+                $post['new_context']
+            );
         } elseif (!empty($post['create_action']) && !empty($post['new_action'])) {
-            return $this->perms->createAction($cabin, $post['new_action']);
+            return $this->perms->createAction(
+                $cabin,
+                $post['new_action']
+            );
         }
         return false;
     }

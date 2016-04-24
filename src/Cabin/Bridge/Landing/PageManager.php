@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Bridge\Blueprint\CustomPages;
 use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
+use Airship\Engine\AutoPilot;
 use \Airship\Engine\Gears;
 use \Airship\Engine\State;
 use \Airship\Engine\Bolt\Get;
@@ -10,9 +12,22 @@ use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class PageManager
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class PageManager extends LoggedInUsersOnly
 {
     use Get;
+    protected $pg;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->pg = new CustomPages($db);
+        }
+    }
 
     public function airshipLand()
     {
@@ -23,12 +38,16 @@ class PageManager extends LoggedInUsersOnly
     /**
      *
      * @route pages/{string}/deleteDir
+     * @param string $cabin
      */
     public function deleteDir(string $cabin = '')
     {
+        $page = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+        if (!\is1DArray($_GET)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
+            );
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -47,7 +66,8 @@ class PageManager extends LoggedInUsersOnly
         }
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
-            return $this->lens('pages/bad_config');
+            $this->lens('pages/bad_config');
+            exit;
         }
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
@@ -77,8 +97,6 @@ class PageManager extends LoggedInUsersOnly
             'cabin' => $cabin,
             'pathinfo' => \Airship\chunk($path)
         ]);
-
-
     }
 
     /**
@@ -87,9 +105,12 @@ class PageManager extends LoggedInUsersOnly
      */
     public function deletePage(string $cabin = '')
     {
+        $page = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+        if (\is1DArray($_GET)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
+            );
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -109,7 +130,8 @@ class PageManager extends LoggedInUsersOnly
 
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
-            return $this->lens('pages/bad_config');
+            $this->lens('pages/bad_config');
+            exit;
         }
         $post = $this->post();
         if (!empty($post)) {
@@ -150,9 +172,12 @@ class PageManager extends LoggedInUsersOnly
      */
     public function editPage(string $cabin = '')
     {
+        $page = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+        if (!\is1DArray($_GET)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
+            );
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -210,7 +235,9 @@ class PageManager extends LoggedInUsersOnly
             $dirs = $this->pg->listSubDirectories($path, $cabin);
         } catch (CustomPageNotFoundException $ex) {
             if (!empty($path)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+                \Airship\redirect(
+                    $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                );
             }
             $dirs = [];
         }
@@ -247,6 +274,7 @@ class PageManager extends LoggedInUsersOnly
      * We're going to create a directory
      *
      * @route pages/{string}/newDir
+     * @param string $cabin
      */
     public function newDir(string $cabin = '')
     {
@@ -330,6 +358,7 @@ class PageManager extends LoggedInUsersOnly
      */
     public function renamePage(string $cabin)
     {
+        $page = [];
         $path = $this->determinePath($cabin);
         if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
             \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
@@ -385,6 +414,8 @@ class PageManager extends LoggedInUsersOnly
      */
     public function pageHistory(string $cabin = '')
     {
+        $page = [];
+        $history = [];
         $path = $this->determinePath($cabin);
         if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
             \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
@@ -457,9 +488,13 @@ class PageManager extends LoggedInUsersOnly
      */
     public function pageHistoryView(string $cabin, string $uniqueId)
     {
+        $page = [];
+        $version = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+        if (\is1DArray($_GET)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+            );
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -560,9 +595,19 @@ class PageManager extends LoggedInUsersOnly
      * @param string $dir
      * @return mixed
      */
-    protected function processEditPage(int $pageId, array $post = [], string $cabin = '', string $dir = ''): bool
-    {
-        if (!\Airship\all_keys_exist(['format', 'page_body', 'save_btn', 'metadata'], $post)) {
+    protected function processEditPage(
+        int $pageId,
+        array $post = [],
+        string $cabin = '',
+        string $dir = ''
+    ): bool {
+        $required = [
+            'format',
+            'page_body',
+            'save_btn',
+            'metadata'
+        ];
+        if (!\Airship\all_keys_exist($required, $post)) {
             return false;
         }
         if ($this->isSuperUser()) {
@@ -602,8 +647,11 @@ class PageManager extends LoggedInUsersOnly
      * @param string $dir
      * @return bool
      */
-    protected function processMovePage(array $page, array $post, string $cabin, string $dir): bool
-    {
+    protected function processMovePage(
+        array $page,
+        array $post,
+        string $cabin, string $dir
+    ): bool {
         if (\is_numeric($post['directory'])) {
             $post['cabin'] = $this->pg->getCabinForDirectory($post['directory']);
         } else {
@@ -640,12 +688,14 @@ class PageManager extends LoggedInUsersOnly
      * @param array $post
      * @return bool
      */
-    protected function processNewDir(string $cabin, string $parent, array $post = []): bool
-    {
+    protected function processNewDir(
+        string $cabin,
+        string $parent,
+        array $post = []
+    ): bool {
         if (!\Airship\all_keys_exist(['url', 'save_btn'], $post)) {
             return false;
         }
-
         if ($this->pg->createDir($cabin, $parent, $post)) {
             \Airship\redirect($this->airship_cabin_prefix.'/pages/'.$cabin, [
                 'dir' => $parent
@@ -662,8 +712,11 @@ class PageManager extends LoggedInUsersOnly
      * @param array $post
      * @return mixed
      */
-    protected function processNewPage(string $cabin, string $path, array $post = []): bool
-    {
+    protected function processNewPage(
+        string $cabin,
+        string $path,
+        array $post = []
+    ): bool {
         if (!\Airship\all_keys_exist(['url', 'format', 'page_body', 'save_btn', 'metadata'], $post)) {
             return false;
         }
@@ -718,35 +771,37 @@ class PageManager extends LoggedInUsersOnly
     {
         $state = State::instance();
         $ap = Gears::getName('AutoPilot');
+        if (IDE_HACKS) {
+            $ap = new AutoPilot();
+        }
         $nop = [];
         foreach ($state->cabins as $pattern => $cab) {
             if ($cab === $cabin) {
                 // Let's check each existing route in the current cabin for a collision
                 foreach ($cab['data']['routes'] as $route => $landing) {
-                    if (
-                    $ap::testLanding(
+                    $test = $ap::testLanding(
                         $ap::$patternPrefix . $route . '$',
                         $uri,
                         $nop,
                         true
-                    )
-                    ) {
+                    );
+                    if ($test) {
                         return true;
                     }
                 }
-            } elseif (
+            } else {
                 // Let's check each cabin route for a pattern
-            $ap::testLanding(
-                $ap::$patternPrefix . $pattern,
-                $uri,
-                $nop,
-                true
-            )
-            ) {
-                return true;
+                $test = $ap::testLanding(
+                    $ap::$patternPrefix . $pattern,
+                    $uri,
+                    $nop,
+                    true
+                );
+                if ($test) {
+                    return true;
+                }
             }
         }
-        //
-        return \preg_match('#^(static|js|img|fonts|css)/#', $pattern) === 0;
+        return \preg_match('#^(static|js|img|fonts|css)/#', $uri) === 0;
     }
 }

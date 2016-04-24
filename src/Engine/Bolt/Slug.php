@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+use Airship\Engine\Database;
+
 trait Slug
 {
     /**
@@ -14,6 +16,9 @@ trait Slug
      */
     protected function makeGenericSlug(string $title, string $table, string $column = 'slug'): string
     {
+        if (IDE_HACKS) {
+            $this->db = new Database(new \PDO('sqlite::memory:'));
+        }
         $query = 'SELECT count(*) FROM '.$this->db->escapeIdentifier($table).' WHERE '.$this->db->escapeIdentifier($column).' = ?';
         $slug = $base_slug = \Airship\slugFromTitle($title);
         $i = 1;

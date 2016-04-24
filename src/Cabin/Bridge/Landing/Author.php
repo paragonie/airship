@@ -7,11 +7,28 @@ use \Airship\Engine\Bolt\Orderable as OrderableBolt;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Author
+ *
+ * Manager personas.
+ *
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Author extends LoggedInUsersOnly
 {
     use OrderableBolt;
 
     private $author;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->author = new BP\Author($db);
+        }
+    }
+
+
     public function airshipLand()
     {
         parent::airshipLand();
@@ -91,10 +108,18 @@ class Author extends LoggedInUsersOnly
             );
         }
         foreach ($authors as $idx => $auth) {
-            $authors[$idx]['num_users'] = $this->author->getNumUsersForAuthor($auth['authorid']);
-            $authors[$idx]['num_comments'] = $this->author->getNumCommentsForAuthor($auth['authorid']);
-            $authors[$idx]['num_files'] = $this->author->getNumFilesForAuthor($auth['authorid']);
-            $authors[$idx]['num_blog_posts'] = $this->author->getNumBlogPostsForAuthor($auth['authorid']);
+            $authors[$idx]['num_users'] = $this->author->getNumUsersForAuthor(
+                $auth['authorid']
+            );
+            $authors[$idx]['num_comments'] = $this->author->getNumCommentsForAuthor(
+                $auth['authorid']
+            );
+            $authors[$idx]['num_files'] = $this->author->getNumFilesForAuthor(
+                $auth['authorid']
+            );
+            $authors[$idx]['num_blog_posts'] = $this->author->getNumBlogPostsForAuthor(
+                $auth['authorid']
+            );
         }
 
         switch ($sort) {
@@ -130,7 +155,7 @@ class Author extends LoggedInUsersOnly
         $authorId += 0; // Coerce to int
 
         if (!$this->isSuperUser()) {
-            $authorsForUser = $this->authors->getAuthorIdsForUser(
+            $authorsForUser = $this->author->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             // Check

@@ -2,8 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing\Proto;
 
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Engine\State;
+use \Airship\Alerts\FileSystem\{
+    FileNotFound,
+    UploadError
+};
+use \Airship\Cabin\Bridge\Blueprint\Files;
 use \Airship\Engine\Bolt\Get;
 use \Airship\Cabin\Bridge\Landing\LoggedInUsersOnly;
 use \Psr\Log\LogLevel;
@@ -12,7 +15,7 @@ use \Psr\Log\LogLevel;
  * Implements <most> of the file manager. Several Landings will exist that are
  * customized for different use-cases.
  */
-abstract class FileManager extends LoggedInUsersOnly
+class FileManager extends LoggedInUsersOnly
 {
     use Get;
 
@@ -20,6 +23,14 @@ abstract class FileManager extends LoggedInUsersOnly
     protected $root_dir = '';
     protected $path_middle = '';
     protected $files;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->files = new Files($db);
+        }
+    }
 
     public function airshipLand()
     {
@@ -31,8 +42,12 @@ abstract class FileManager extends LoggedInUsersOnly
      * Permissions check -- override this in base classes
      *
      * @return bool
+     * @throws \Error
      */
-    abstract protected function permCheck(): bool;
+    protected function permCheck(): bool
+    {
+        throw new \Error('NOT IMPLEMENTED IN DERIVED CLASS!');
+    }
 
     /**
      *
@@ -164,7 +179,11 @@ abstract class FileManager extends LoggedInUsersOnly
         $dir_name = \array_pop($forParent);
         $parent = \implode('/', $forParent);
 
-        $contents = $this->files->getContentsTree($cabin, $this->root_dir, $path);
+        $contents = $this->files->getContentsTree(
+            $cabin,
+            $this->root_dir,
+            $path
+        );
 
         $post = $this->post();
         if (!empty($post)) {
@@ -376,12 +395,11 @@ abstract class FileManager extends LoggedInUsersOnly
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $root = null;
         $publicPath = \Airship\chunk($path);
-        $pathInfo = $this->getPath($path, $cabin);
+        $pathInfo = $this->getPath($path);
 
-        if (empty($pathInfo)) {
-            $root = null;
-        } else {
+        if (!empty($pathInfo)) {
             try {
                 $root = $this->files->getDirectoryId($pathInfo, $cabin);
             } catch (FileNotFound $ex) {

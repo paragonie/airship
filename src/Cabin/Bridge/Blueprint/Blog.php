@@ -7,13 +7,19 @@ use \Airship\Engine\Bolt\{
     Slug
 };
 use \Airship\Cabin\Hull\Exceptions\{
-    CustomPageCollisionException,
     CustomPageNotFoundException
 };
 use Airship\Engine\Bolt\FileCache;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Blog
+ *
+ * Blog posts, categories, series, tags.
+ *
+ * @package Airship\Cabin\Bridge\Blueprint
+ */
 class Blog extends BlueprintGear
 {
     use Orderable;
@@ -30,7 +36,10 @@ class Blog extends BlueprintGear
      */
     public function categoryDescendsFrom(int $newParent, int $categoryId): bool
     {
-        return \in_array($categoryId, $this->getCategoryParents($newParent));
+        return \in_array(
+            $categoryId,
+            $this->getCategoryParents($newParent)
+        );
     }
 
     /**
@@ -51,19 +60,21 @@ class Blog extends BlueprintGear
                 \unlink($f);
             }
         }
+        \clearstatcache();
         return true;
     }
 
     /**
-     * Create a new tag
+     * Create a new category
      *
      * @param array $post
-     * @return mixed
+     * @return bool
      */
-    public function createCategory(array $post)
+    public function createCategory(array $post): bool
     {
+        $this->db->beginTransaction();
         $slug = $this->makeGenericSlug($post['name'], 'hull_blog_categories');
-        return $this->db->insert(
+        $this->db->insert(
             'hull_blog_categories',
             [
                 'name' =>
@@ -78,6 +89,7 @@ class Blog extends BlueprintGear
                     $post['preamble']
             ]
         );
+        return $this->db->commit();
     }
 
     /**
@@ -187,19 +199,19 @@ class Blog extends BlueprintGear
             'parent' => $series
         ];
 
-        $listorder = 0;
+        $listOrder = 0;
         foreach (\explode(',', $post['items']) as $item) {
-            list ($type, $itemid) = \explode('_', $item);
+            list ($type, $itemId) = \explode('_', $item);
             if ($type === 'series') {
                 $_insert = $insert;
-                $_insert['series'] = (int) $itemid;
+                $_insert['series'] = (int) $itemId;
             } elseif ($type === 'blogpost') {
                 $_insert = $insert;
-                $_insert['post'] = (int) $itemid;
+                $_insert['post'] = (int) $itemId;
             } else {
                 continue;
             }
-            $_insert['listorder'] = ++$listorder;
+            $_insert['listorder'] = ++$listOrder;
 
             $this->db->insert('hull_blog_series_items', $_insert);
         }
@@ -210,18 +222,20 @@ class Blog extends BlueprintGear
      * Create a new tag
      *
      * @param array $post
-     * @return mixed
+     * @return bool
      */
-    public function createTag(array $post)
+    public function createTag(array $post): bool
     {
+        $this->db->beginTransaction();
         $slug = $this->makeGenericSlug($post['name'], 'hull_blog_tags');
-        return $this->db->insert(
+        $this->db->insert(
             'hull_blog_tags',
             [
                 'name' => $post['name'],
                 'slug' => $slug
             ]
         );
+        return $this->db->commit();
     }
 
 
@@ -254,10 +268,7 @@ class Blog extends BlueprintGear
      * @param array $post
      * @return bool
      */
-    public function editTag(
-        int $tagId,
-        array $post
-    ): bool
+    public function editTag(int $tagId, array $post): bool
     {
         $this->db->beginTransaction();
         $this->db->update(
@@ -272,6 +283,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get all of the series (paginated)
+     *
      * @param int $offset
      * @param int $limit
      * @return array
@@ -291,7 +304,10 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get all of the series that this series belongs to, recursively.
      *
+     * This is mostly used for generating the appropriate "prev/next"
+     * links on the View Blog Post page.
      *
      * @param array $seriesIds
      * @param int $depth
@@ -352,16 +368,20 @@ class Blog extends BlueprintGear
      * Get all of a category's parents
      *
      * @param int $categoryId
+     * @param int $depth
      * @return array
      */
-    public function getCategoryParents(int $categoryId): array
+    public function getCategoryParents(int $categoryId, int $depth = 0): array
     {
+        if ($depth > 100) {
+            return [];
+        }
         $parent = $this->db->cell('SELECT parent FROM hull_blog_categories WHERE categoryid = ?', $categoryId);
         if (empty($parent)) {
             return [];
         }
-        $recursion = $this->getCategoryParents($parent);
-        \array_unshift($parent);
+        $recursion = $this->getCategoryParents($parent, $depth + 1);
+        \array_unshift($recursion, $parent);
         return $recursion;
     }
 
@@ -375,13 +395,22 @@ class Blog extends BlueprintGear
      *
      * @return array
      */
-    public function getCategoryTree($parent = null, string $col = 'children', array $seen = [], int $depth = 0): array
-    {
+    public function getCategoryTree(
+        $parent = null,
+        string $col = 'children',
+        array $seen = [],
+        int $depth = 0
+    ): array {
         if ($parent > 0) {
             $ids = $this->db->escapeValueSet($seen, 'int');
-            $rows = $this->db->run("SELECT * FROM hull_blog_categories WHERE categoryid NOT IN {$ids} AND parent = ? ORDER BY name ASC", $parent);
+            $rows = $this->db->run(
+                "SELECT * FROM hull_blog_categories WHERE categoryid NOT IN {$ids} AND parent = ? ORDER BY name ASC",
+                $parent
+            );
         } else {
-            $rows = $this->db->run("SELECT * FROM hull_blog_categories WHERE parent IS NULL OR parent = '0' ORDER BY name ASC");
+            $rows = $this->db->run(
+                "SELECT * FROM hull_blog_categories WHERE parent IS NULL OR parent = '0' ORDER BY name ASC"
+            );
         }
         if (empty($rows)) {
             return [];
@@ -390,7 +419,12 @@ class Blog extends BlueprintGear
             $_seen = $seen;
             $rows[$i]['ancestors'] = $seen;
             $_seen[] = $row['categoryid'];
-            $rows[$i][$col] = $this->getCategoryTree($row['categoryid'], $col, $_seen, $depth + 1);
+            $rows[$i][$col] = $this->getCategoryTree(
+                $row['categoryid'],
+                $col,
+                $_seen,
+                $depth + 1
+            );
         }
         return $rows;
     }
@@ -564,8 +598,15 @@ class Blog extends BlueprintGear
      *
      * @return array
      */
-    public function getSeriesTree($current = null, string $col = 'children', array $encountered = [], int $depth = 0): array
-    {
+    public function getSeriesTree(
+        $current = null,
+        string $col = 'children',
+        array $encountered = [],
+        int $depth = 0
+    ): array {
+        if ($depth > 100) {
+            return [];
+        }
         $this->db->run(
             \Airship\queryString('blog.series.tree', [
                 'valueset' => $this->db->escapeValueSet($encountered, 'int')
@@ -582,6 +623,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get all of the tags in the database
+     *
      * @return array
      */
     public function getTags(): array
@@ -616,10 +659,15 @@ class Blog extends BlueprintGear
      */
     public function getTagsForPost(int $postId): array
     {
-        return $this->db->col("SELECT tagid FROM hull_blog_post_tags WHERE postid = ?", 0, $postId);
+        return $this->db->first(
+            "SELECT tagid FROM hull_blog_post_tags WHERE postid = ?",
+            $postId
+        );
     }
 
     /**
+     * Make a comment invisible on blog posts.
+     *
      * @param int $commentId
      * @return bool
      */
@@ -772,7 +820,10 @@ class Blog extends BlueprintGear
      */
     public function numItemsInSeries(int $seriesId): int
     {
-        return $this->db->cell('SELECT count(itemid) FROM hull_blog_series_items WHERE parent = ?', $seriesId);
+        return $this->db->cell(
+            'SELECT count(itemid) FROM hull_blog_series_items WHERE parent = ?',
+            $seriesId
+        );
     }
 
     /**
@@ -1069,9 +1120,9 @@ class Blog extends BlueprintGear
             ]
         );
 
-        $listorder = 0;
+        $listOrder = 0;
         foreach ($newItems as $new) {
-            list ($type, $itemid) = \explode('_', $new);
+            list ($type, $itemId) = \explode('_', $new);
             if (\in_array($new, $inserts)) {
                 switch ($type) {
                     case 'series':
@@ -1079,8 +1130,8 @@ class Blog extends BlueprintGear
                             'hull_blog_series_items',
                             [
                                 'parent' => $seriesId,
-                                'series' => $itemid,
-                                'listorder' => ++$listorder
+                                'series' => $itemId,
+                                'listorder' => ++$listOrder
                             ]
                         );
                         break;
@@ -1089,8 +1140,8 @@ class Blog extends BlueprintGear
                             'hull_blog_series_items',
                             [
                                 'parent' => $seriesId,
-                                'post' => $itemid,
-                                'listorder' => ++$listorder
+                                'post' => $itemId,
+                                'listorder' => ++$listOrder
                             ]
                         );
                         break;
@@ -1101,11 +1152,11 @@ class Blog extends BlueprintGear
                         $this->db->update(
                             'hull_blog_series_items',
                             [
-                                'listorder' => ++$listorder
+                                'listorder' => ++$listOrder
                             ],
                             [
                                 'parent' => $seriesId,
-                                'series' => $itemid
+                                'series' => $itemId
                             ]
                         );
                         break;
@@ -1113,11 +1164,11 @@ class Blog extends BlueprintGear
                         $this->db->update(
                             'hull_blog_series_items',
                             [
-                                'listorder' => ++$listorder
+                                'listorder' => ++$listOrder
                             ],
                             [
                                 'parent' => $seriesId,
-                                'post' => $itemid
+                                'post' => $itemId
                             ]
                         );
                         break;
@@ -1138,8 +1189,11 @@ class Blog extends BlueprintGear
      * @param string $month
      * @return string
      */
-    protected function makeBlogPostSlug(string $title, string $year = '', string $month =''): string
-    {
+    protected function makeBlogPostSlug(
+        string $title,
+        string $year = '',
+        string $month =''
+    ): string {
         if (empty($year)) {
             $year = \date('Y');
         }

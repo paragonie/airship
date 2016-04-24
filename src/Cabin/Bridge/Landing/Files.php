@@ -6,6 +6,10 @@ use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Files
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Files extends FileManager
 {
     /**
@@ -38,9 +42,10 @@ class Files extends FileManager
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
-            return $this->commonConfirmDeleteDir($dir, $cabin);
+            $this->commonConfirmDeleteDir($dir, $cabin);
+            return;
         }
-        return $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
+        $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -61,7 +66,7 @@ class Files extends FileManager
                 ]
             );
         }
-        return $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
+        $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -74,7 +79,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNames())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        return $this->commonIndex($dir, $cabin);
+        $this->commonIndex($dir, $cabin);
     }
 
     /**
@@ -88,9 +93,10 @@ class Files extends FileManager
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
-            return $this->commonMoveDir($dir, $cabin);
+            $this->commonMoveDir($dir, $cabin);
+            return;
         }
-        return $this->commonMoveFile($_GET['file'], $dir, $cabin);
+        $this->commonMoveFile($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -109,6 +115,6 @@ class Files extends FileManager
      */
     protected function permCheck(): bool
     {
-        return true; // You're an admin!
+        return $this->isSuperUser(); // You're an admin!
     }
 }

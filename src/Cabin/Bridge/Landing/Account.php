@@ -2,15 +2,50 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Engine\State;
+use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use \Airship\Engine\{
+    Bolt\Security,
+    Security\Authentication,
+    State
+};
 use \ParagonIE\Halite\Alerts\InvalidMessage;
+use \ParagonIE\Halite\{
+    Cookie,
+    Symmetric\EncryptionKey
+};
 use \Psr\Log\LogLevel;
-use \ReCaptcha\ReCaptcha;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Account
+ *
+ * Landing for user account stuff. Also contains the login and registration forms.
+ *
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Account extends LandingGear
 {
+    use Security;
+
+    protected $acct;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->acct = new UserAccounts($db);
+            $this->airship_cookie = new Cookie(
+                new EncryptionKey(\random_bytes(32))
+            );
+            $this->airship_auth = new Authentication(
+                new EncryptionKey(\random_bytes(32)),
+                $db
+            );
+            $this->airship_perms = new Permissions($db);
+        }
+    }
+
     /**
      * We initialize this after the constructor is done.
      */
@@ -28,7 +63,8 @@ class Account extends LandingGear
     public function board()
     {
         if ($this->isLoggedIn())  {
-            return \Airship\redirect($this->airship_cabin_prefix);
+            // You're already logged in!
+            \Airship\redirect($this->airship_cabin_prefix);
         }
 
         $p = $this->post();
@@ -42,19 +78,22 @@ class Account extends LandingGear
                     );
                     $resp = $rc->verify($p['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
                     if ($resp->isSuccess()) {
-                        return $this->processBoard($p);
+                        $this->processBoard($p);
+                        exit;
                     } else {
-                        return $this->lens('board', [
+                        $this->lens('board', [
                             'config' => $this->config(),
                             'title' => 'All Aboard!'
                         ]);
+                        exit;
                     }
                 }
             } else {
-                return $this->processBoard($p);
+                $this->processBoard($p);
+                exit;
             }
         }
-        return $this->lens('board', [
+        $this->lens('board', [
             'config' => $this->config(),
             'title' => 'All Aboard!'
         ]);
@@ -62,6 +101,8 @@ class Account extends LandingGear
 
     /**
      * AJAX + JSON API to see if a username is taken or invalid.
+     *
+     * @todo move to PublicAjax
      */
     public function checkUsername()
     {
@@ -106,9 +147,9 @@ class Account extends LandingGear
     }
 
     /**
-     * @route login
-     *
      * Handle login requests
+     *
+     * @route login
      */
     public function login()
     {
@@ -129,7 +170,7 @@ class Account extends LandingGear
     public function logout(string $token)
     {
         if (!$this->isLoggedIn())  {
-            return \Airship\redirect($this->airship_cabin_prefix);
+            \Airship\redirect($this->airship_cabin_prefix);
         }
 
         $state = State::instance();
@@ -150,9 +191,11 @@ class Account extends LandingGear
     public function preferences()
     {
         if (!$this->isLoggedIn())  {
-            return \Airship\redirect($this->airship_cabin_prefix);
+            \Airship\redirect($this->airship_cabin_prefix);
         }
-        $prefs = $this->acct->getUserPreferences($this->getActiveUserId());
+        $prefs = $this->acct->getUserPreferences(
+            $this->getActiveUserId()
+        );
         $cabins = [];
         $motifs = [];
         foreach ($this->getCabinNames() as $cabin) {
@@ -187,12 +230,13 @@ class Account extends LandingGear
     public function my()
     {
         if (!$this->isLoggedIn())  {
-            return \Airship\redirect($this->airship_cabin_prefix);
+            \Airship\redirect($this->airship_cabin_prefix);
         }
         $account = $this->acct->getUserAccount($this->getActiveUserId());
         $p = $this->post();
         if (!empty($p)) {
-            return $this->processAccountUpdate($p, $account);
+            $this->processAccountUpdate($p, $account);
+            exit;
         }
         $this->lens('my_account', ['account' => $account]);
     }
@@ -202,7 +246,7 @@ class Account extends LandingGear
      */
     public function myIndex()
     {
-        return \Airship\redirect($this->airship_cabin_prefix . '/my/account');
+        \Airship\redirect($this->airship_cabin_prefix . '/my/account');
     }
 
     /**
@@ -211,7 +255,7 @@ class Account extends LandingGear
     public function recoverAccount()
     {
         if ($this->isLoggedIn())  {
-            return \Airship\redirect($this->airship_cabin_prefix);
+            \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->lens('recover_account');
     }
@@ -231,12 +275,13 @@ class Account extends LandingGear
             // Lazy hack
             $post['username'] = $account['username'];
             if ($this->acct->isPasswordWeak($post)) {
-                return $this->lens('my_account', [
+                $this->lens('my_account', [
                     'post_response' => [
                         'message' => \__('Supplied password is too weak.'),
                         'status' => 'error'
                     ]
                 ]);
+                exit;
             }
 
             // Log password changes as a WARNING
@@ -249,15 +294,16 @@ class Account extends LandingGear
         }
 
         if ($this->acct->updateAccountInfo($post, $account)) {
-            return $this->lens('my_account', [
+            $this->lens('my_account', [
                 'account' => $post,
                 'post_response' => [
                     'message' => \__('Account was saved successfully.'),
                     'status' => 'success'
                 ]
             ]);
+            exit;
         }
-        return $this->lens('my_account', [
+        $this->lens('my_account', [
             'account' => $post,
             'post_response' => [
                 'message' => \__('Account was not saved successfully.'),
@@ -274,33 +320,36 @@ class Account extends LandingGear
     protected function processBoard(array $post = [])
     {
         if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
-            return $this->lens('board', [
+            $this->lens('board', [
                 'post_response' => [
                     'message' => \__('Please fill out the form entirely'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
 
         if ($this->acct->isUsernameTaken($post['username'])) {
-            return $this->lens('board', [
+            $this->lens('board', [
                 'post_response' => [
                     'message' => \__('Username is not available'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
 
         if ($this->acct->isPasswordWeak($post)) {
-            return $this->lens('board', [
+            $this->lens('board', [
                 'post_response' => [
                     'message' => \__('Supplied password is too weak.'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
-        
-        $userid = $this->acct->createUser($post);
+
+        $this->acct->createUser($post);
         \Airship\redirect($this->airship_cabin_prefix);
     }
     
@@ -314,12 +363,13 @@ class Account extends LandingGear
         $state = State::instance();
 
         if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
-            return $this->lens('login', [
+            $this->lens('login', [
                 'post_response' => [
                     'message' => \__('Please fill out the form entirely'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
         try {
             $userid = $this->airship_auth->login($post['username'], $post['passphrase']);
@@ -331,12 +381,13 @@ class Account extends LandingGear
                     'exception' => \Airship\throwableToArray($e)
                 ]
             );
-            return $this->lens('login', [
+            $this->lens('login', [
                 'post_response' => [
                     'message' => \__('Incorrect username or passphrase. Please try again.'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
 
         if (!empty($userid)) {
@@ -356,12 +407,13 @@ class Account extends LandingGear
             }
             \Airship\redirect($this->airship_cabin_prefix);
         } else {
-            return $this->lens('login', [
+            $this->lens('login', [
                 'post_response' => [
                     'message' => \__('Incorrect username or passphrase. Please try again.'),
                     'status' => 'error'
                 ]
             ]);
+            exit;
         }
     }
 
@@ -413,8 +465,11 @@ class Account extends LandingGear
      * @param string $motifName
      * @return bool
      */
-    protected function findMotif(array $motifs, string $supplier, string $motifName): bool
-    {
+    protected function findMotif(
+        array $motifs,
+        string $supplier,
+        string $motifName
+    ): bool {
         foreach ($motifs as $id => $data) {
             if (
                 $data['config']['supplier'] === $supplier

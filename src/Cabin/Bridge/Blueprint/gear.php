@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Engine\Blueprint;
-use \Airship\Engine\Gears;
+use \Airship\Engine\{
+    Blueprint,
+    Gears
+};
 
 if (!\class_exists('BlueprintGear')) {
     Gears::extract('Blueprint', 'BlueprintGear', __NAMESPACE__);

@@ -2,8 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
+use \Airship\Engine\AutoPilot;
+
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Permissions
+ *
+ * This is used by administrative users to manage access controls throughout various cabins.
+ *
+ * @package Airship\Cabin\Bridge\Blueprint
+ */
 class Permissions extends BlueprintGear
 {
     const MAX_RECURSE_DEPTH = 100;
@@ -14,7 +23,7 @@ class Permissions extends BlueprintGear
      * @param string $cabin Which cabin does this apply to?
      * @param int $contextId Context IDs (see permissions sql)
      * @param array $actions Actions in Scope [ [id => label], [id2 => label2]  ]
-     * @param int $parentid The group whose children we are evaluating
+     * @param int $parentId The group whose children we are evaluating
      * @param array $inherited
      * @param int $depth the depth of our recursive search
      * @return array
@@ -23,7 +32,7 @@ class Permissions extends BlueprintGear
         string $cabin,
         int $contextId,
         array $actions = [],
-        int $parentid = 0,
+        int $parentId = 0,
         array $inherited = [],
         int $depth = 0
     ): array {
@@ -38,14 +47,14 @@ class Permissions extends BlueprintGear
         $tree = [];
 
         // Let's grab all the groups with a specific ancestor
-        if (empty($parentid)) {
+        if (empty($parentId)) {
             $groups = $this->db->run(
                 \Airship\queryStringRoot('security.permissions.groups_null', $this->db->getDriver())
             );
         } else {
             $groups = $this->db->run(
                 \Airship\queryStringRoot('security.permissions.groups_inherits', $this->db->getDriver()),
-                $parentid
+                $parentId
             );
         }
 
@@ -162,7 +171,7 @@ class Permissions extends BlueprintGear
     }
 
     /**
-     * Build a heirarchal tree conataining all of the groups' permissions
+     * Build a heirarchal tree containing all of the groups' permissions
      *
      * @param string $cabin Which cabin does this apply to?
      * @param int $contextId Context IDs (see permissions sql)
@@ -181,17 +190,17 @@ class Permissions extends BlueprintGear
         $users = [];
 
         // Let's grab all the user IDs with relevant bits
-        $userids = $this->db->run(
+        $userIDs = $this->db->run(
             \Airship\queryStringRoot(
                 'security.permissions.users_list_userids',
                 $this->db->getDriver()
             ),
             $contextId
         );
-        if (empty($userids)) {
+        if (empty($userIDs)) {
             return [];
         }
-        foreach ($userids as $u) {
+        foreach ($userIDs as $u) {
             $users[] = (int) $u['userid'];
         }
 
@@ -217,6 +226,8 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Create a new database action for a specific Cabin.
+     *
      * @param string $cabin
      * @param string $label
      * @return bool
@@ -243,6 +254,8 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Create a new context for a specific cabin.
+     *
      * @param string $cabin
      * @param string $locator
      * @return bool
@@ -272,6 +285,8 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Get information about an action.
+     *
      * @param string $cabin
      * @param string $actionId
      * @return array
@@ -286,8 +301,10 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * List all actions for a cabin.
+     *
      * @param string $cabin
-     * @return array
+     * @return array[]
      */
     public function getActions(string $cabin): array
     {
@@ -299,13 +316,15 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Get all action labels for a particular cabin.
+     *
      * @param string $cabin
      * @return array
      */
     public function getActionNames(string $cabin): array
     {
         $return = [];
-        $actions = $this->db->run('SELECT * FROM airship_perm_actions WHERE cabin = ?', $cabin);
+        $actions = $this->db->run('SELECT actionid, label FROM airship_perm_actions WHERE cabin = ?', $cabin);
         foreach ($actions as $act) {
             $return[$act['actionid']] = $act['label'];
         }
@@ -472,6 +491,8 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Saves a permission context. This affects the context itself as well as the whitelist.
+     *
      * @param string $cabin
      * @param int $contextId
      * @param array $post
@@ -494,11 +515,13 @@ class Permissions extends BlueprintGear
         $groupPerms = $this->getGroupRulesForContextSave($actions, $contextId);
         $userPerms = $this->getUserRulesForContextSave($actions, $contextId);
 
+        // Sort then diff group permissions:
         \ksort($groupPerms);
         \ksort($post['group_perms']);
         $groupInsert = \Airship\array_multi_diff($post['group_perms'], $groupPerms);
         $groupDelete = \Airship\array_multi_diff($groupPerms, $post['group_perms']);
 
+        // Sort the ndiff user permissions:
         \ksort($userPerms);
         \ksort($post['user_perms']);
         $userInsert = \Airship\array_multi_diff($post['user_perms'], $userPerms);
@@ -593,7 +616,6 @@ class Permissions extends BlueprintGear
         array $perms,
         array $actions = []
     ): array {
-
         foreach ($perms as $i => $per) {
             // Combine with AND logic
             foreach ($actions as $l) {
@@ -630,6 +652,8 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Flatten multiple context lists.
+     *
      * @param array $return
      * @param array $contexts
      * @param array $actions
@@ -678,8 +702,10 @@ class Permissions extends BlueprintGear
      * @param int $contextId
      * @return array
      */
-    protected function getGroupRulesForContextSave(array $actions, int $contextId): array
-    {
+    protected function getGroupRulesForContextSave(
+        array $actions,
+        int $contextId
+    ): array {
         $perms = [];
         $groupIds = $this->db->col(
             'SELECT DISTINCT groupid FROM airship_perm_rules WHERE context = ? AND groupid IS NOT NULL',
@@ -700,8 +726,10 @@ class Permissions extends BlueprintGear
      * @param int $contextId
      * @return array
      */
-    protected function getUserRulesForContextSave(array $actions, int $contextId): array
-    {
+    protected function getUserRulesForContextSave(
+        array $actions,
+        int $contextId
+    ): array {
         $perms = [];
         $userIds = $this->db->col(
             'SELECT DISTINCT userid FROM airship_perm_rules WHERE context = ? AND userid IS NOT NULL',
@@ -722,8 +750,10 @@ class Permissions extends BlueprintGear
      * @param array $keys
      * @return array
      */
-    protected function permBoolean(array $postValue = [], array $keys = []): array
-    {
+    protected function permBoolean(
+        array $postValue = [],
+        array $keys = []
+    ): array {
         if (empty($postValue)) {
             return [];
         }

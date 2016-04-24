@@ -2,6 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use Airship\Cabin\Bridge\Blueprint\{
+    Author,
+    Blog,
+    Permissions,
+    UserAccounts
+};
 use \Airship\Engine\State;
 
 require_once __DIR__.'/gear.php';
@@ -16,9 +22,14 @@ class Ajax extends LoggedInUsersOnly
     {
         $auth_bp = $this->blueprint('Author');
         $blog_bp = $this->blueprint('Blog');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $auth_bp = new Author($db);
+            $blog_bp = new Blog($db);
+        }
 
         if (empty($_POST['author'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No author selected.')
             ]);
@@ -29,7 +40,7 @@ class Ajax extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
-                return \Airship\json_response([
+                \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
                 ]);
@@ -37,7 +48,7 @@ class Ajax extends LoggedInUsersOnly
         }
         $existing = $_POST['existing'] ?? [];
         if (!\is1DArray($existing)) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('One-dimensional array expected')
             ]);
@@ -85,30 +96,30 @@ class Ajax extends LoggedInUsersOnly
     public function getPermsForUser()
     {
         if (!$this->isSuperUser()) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('You are not an administrator.')
             ]);
         }
         if (empty($_POST['username'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('You must enter a username.')
             ]);
         }
         if (empty($_POST['context'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No context provided.')
             ]);
         }
         if (empty($_POST['cabin'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No cabin provided.')
             ]);
         }
-        return $this->getPermissionsDataForUser(
+        $this->getPermissionsDataForUser(
             $_POST['context'] + 0,
             $_POST['username'],
             $_POST['cabin']
@@ -122,9 +133,14 @@ class Ajax extends LoggedInUsersOnly
     {
         $auth_bp = $this->blueprint('Author');
         $blog_bp = $this->blueprint('Blog');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $auth_bp = new Author($db);
+            $blog_bp = new Blog($db);
+        }
 
         if (empty($_POST['author'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No author selected.')
             ]);
@@ -135,7 +151,7 @@ class Ajax extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
-                return \Airship\json_response([
+                \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
                 ]);
@@ -143,7 +159,7 @@ class Ajax extends LoggedInUsersOnly
         }
         $existing = $_POST['existing'] ?? [];
         if (!\is1DArray($existing)) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('One-dimensional array expected')
             ]);
@@ -193,13 +209,13 @@ class Ajax extends LoggedInUsersOnly
     public function permissionTest()
     {
         if (!$this->isSuperUser()) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('You are not an administrator.')
             ]);
         }
         if (empty($_POST['url'])) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('You must enter a URL.')
             ]);
@@ -208,12 +224,12 @@ class Ajax extends LoggedInUsersOnly
         $ap = $state->autoPilot;
         $cabin = $ap->testCabinForUrl($_POST['url']);
         if (empty($cabin)) {
-            return \Airship\json_response([
+            \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('URL does not resolve to an existing Cabin.')
             ]);
         }
-        return $this->getPermissionDataForURL($_POST['url'], $cabin);
+        $this->getPermissionDataForURL($_POST['url'], $cabin);
     }
 
     /**
@@ -227,32 +243,35 @@ class Ajax extends LoggedInUsersOnly
             switch ($_POST['format']) {
                 case 'HTML':
                 case 'Rich Text':
-                    return \Airship\json_response([
+                    \Airship\json_response([
                         'status' => 'OK',
                         'body' => \Airship\LensFunctions\purify($_POST['body'] ?? '')
                     ]);
+                    break;
                 case 'Markdown':
-                    return \Airship\json_response([
+                    \Airship\json_response([
                         'status' => 'OK',
                         'body' => \Airship\LensFunctions\purify(
                             \Airship\LensFunctions\render_markdown($_POST['body'] ?? '', true)
                         )
                     ]);
+                    break;
                 case 'RST':
-                    return \Airship\json_response([
+                    \Airship\json_response([
                         'status' => 'OK',
                         'body' => \Airship\LensFunctions\purify(
                             \Airship\LensFunctions\render_rst($_POST['body'] ?? '', true)
                         )
                     ]);
+                    break;
                 default:
-                    return \Airship\json_response([
+                    \Airship\json_response([
                         'status' => 'ERROR',
                         'message' => 'Unknown format: ' . $_POST['format']
                     ]);
             }
         }
-        return \Airship\json_response([
+        \Airship\json_response([
             'status' => 'ERROR',
             'message' => \__('Incomplete request')
         ]);
@@ -265,6 +284,10 @@ class Ajax extends LoggedInUsersOnly
     protected function getPermissionDataForURL(string $url, string $cabin)
     {
         $perm_bp = $this->blueprint('Permissions');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $perm_bp = new Permissions($db);
+        }
 
         $actions = $perm_bp->getActionNames($cabin);
         $contexts = $perm_bp->getContextsForURI($url, $cabin);
@@ -280,7 +303,7 @@ class Ajax extends LoggedInUsersOnly
             $actions
         );
 
-        return $this->lens(
+        $this->lens(
             'perms/test',
             [
                 'cabin' =>
@@ -306,6 +329,11 @@ class Ajax extends LoggedInUsersOnly
     {
         $perm_bp = $this->blueprint('Permissions');
         $user_bp = $this->blueprint('UserAccounts');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $perm_bp = new Permissions($db);
+            $user_bp = new UserAccounts($db);
+        }
 
         $user = $user_bp->getUserByUsername($username, true);
         if (empty($user)) {

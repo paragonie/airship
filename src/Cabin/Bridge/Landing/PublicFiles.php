@@ -4,6 +4,10 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Hull\Landing\PublicFiles as HullPublicFiles;
 
+/**
+ * Class PublicFiles
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class PublicFiles extends HullPublicFiles
 {
     protected $cabin = 'Bridge';

@@ -10,6 +10,13 @@ use \Airship\Cabin\Hull\Exceptions\{
 use \Airship\Engine\Bolt\FileCache;
 use \Psr\Log\LogLevel;
 
+/**
+ * Class CustomPages
+ *
+ * Create and manage custom web pages.
+ *
+ * @package Airship\Cabin\Bridge\Blueprint
+ */
 class CustomPages extends HullCustomPages
 {
     use FileCache;
@@ -32,6 +39,7 @@ class CustomPages extends HullCustomPages
                 \unlink($f);
             }
         }
+        \clearstatcache();
         return true;
     }
 
@@ -153,21 +161,23 @@ class CustomPages extends HullCustomPages
         string $newURL,
         string $cabin
     ): bool {
-        $id = $this->db->insertGet(
+        $this->db->beginTransaction();
+        $this->db->insert(
             'airship_custom_redirect',
             [
                 'oldpath' => $oldURL,
                 'newpath' => $newURL,
                 'cabin' => $cabin,
                 'same_cabin' => true
-            ],
-            'redirectid'
+            ]
         );
-        return !empty($id);
+        return $this->db->commit();
     }
 
     /**
      * Redirect a directory, and all of its pages.
+     *
+     * @todo Implement
      *
      * @param array $old
      * @param array $new
@@ -269,16 +279,26 @@ class CustomPages extends HullCustomPages
      * @return array
      * @throws CustomPageNotFoundException
      */
-    public function getCustomDirChildren(string $cabin, int $directoryId = 0, int $selected = 0, int $depth = 0): array
-    {
+    public function getCustomDirChildren(
+        string $cabin,
+        int $directoryId = 0,
+        int $selected = 0,
+        int $depth = 0
+    ): array {
         $level = [];
         if ($directoryId === 0) {
-            $branches = $this->db->run('SELECT * FROM airship_custom_dir WHERE cabin = ? AND parent IS NULL', $cabin);
+            $branches = $this->db->run(
+                'SELECT * FROM airship_custom_dir WHERE cabin = ? AND parent IS NULL',
+                $cabin
+            );
             if (empty($branches)) {
                 return [];
             }
         } else {
-            $branches = $this->db->run('SELECT * FROM airship_custom_dir WHERE parent = ?', $directoryId);
+            $branches = $this->db->run(
+                'SELECT * FROM airship_custom_dir WHERE parent = ?',
+                $directoryId
+            );
             if (empty($branches)) {
                 throw new CustomPageNotFoundException('No branches');
             }
@@ -409,7 +429,10 @@ class CustomPages extends HullCustomPages
      */
     public function getPathByPageId(int $pageId, string $cabin = ''): array
     {
-        $page = $this->db->row('SELECT url, directory FROM airship_custom_page WHERE pageid = ?', $pageId);
+        $page = $this->db->row(
+            'SELECT url, directory FROM airship_custom_page WHERE pageid = ?',
+            $pageId
+        );
         if (empty($page)) {
             throw new CustomPageNotFoundException(
                 \trk('errors.pages.page_does_not_exist')
@@ -419,7 +442,7 @@ class CustomPages extends HullCustomPages
             return [];
         }
         try {
-            $path = \implode('/', $this->getPathFromDirectoryId($page['directory']), $cabin);
+            $path = \implode('/', $this->getPathFromDirectoryId($page['directory'], $cabin));
             return \trim($path, '/') . '/' . $page['url'];
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
@@ -574,6 +597,7 @@ class CustomPages extends HullCustomPages
      */
     public function movePage(int $pageId, string $url = '', int $destinationDir = 0): bool
     {
+        $this->db->beginTransaction();
         if ($destinationDir > 0) {
             $collision = $this->db->cell(
                 'SELECT COUNT(pageid) FROM airship_custom_page WHERE directory = ? AND url = ? AND pageid != ?',
@@ -606,16 +630,17 @@ class CustomPages extends HullCustomPages
                 'pageid' => $pageId
             ]
         );
-        return true;
+        return $this->db->commit();
     }
 
     /**
+     * Get the number of custom pages.
+     *
      * @param null $published
      * @return int
      */
     public function numCustomPages($published = null): int
     {
-
         if ($published === null) {
             return $this->db->cell('SELECT count(pageid) FROM airship_custom_page');
         }
@@ -634,8 +659,13 @@ class CustomPages extends HullCustomPages
      * @param bool|null $raw
      * @return bool
      */
-    public function updatePage(int $pageId, array $post = [], bool $publish = false, $raw = null)
-    {
+    public function updatePage(
+        int $pageId,
+        array $post = [],
+        bool $publish = false,
+        $raw = null
+    ): bool {
+        $this->db->beginTransaction();
         if ($publish) {
             $this->db->update(
                 'airship_custom_page',
@@ -697,9 +727,9 @@ class CustomPages extends HullCustomPages
         );
         if ($publish) {
             // Nuke the page cache
-            return $this->clearPageCache();
+            $this->clearPageCache();
         }
-        return true;
+        return $this->db->commit();
     }
 
     /**

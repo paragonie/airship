@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
 require_once __DIR__.'/gear.php';
@@ -10,6 +11,15 @@ class MyFiles extends FileManager
 {
     protected $users;
     protected $userUniqueId;
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->users = new UserAccounts($db);
+        }
+    }
 
     public function airshipLand()
     {
@@ -39,9 +49,10 @@ class MyFiles extends FileManager
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
-            return $this->commonConfirmDeleteDir($dir, $cabin);
+            $this->commonConfirmDeleteDir($dir, $cabin);
+            return;
         }
-        return $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
+        $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -63,7 +74,7 @@ class MyFiles extends FileManager
         if (!\in_array($cabin, $this->getCabinNames())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        return $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
+        $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -77,7 +88,7 @@ class MyFiles extends FileManager
         if (!\in_array($cabin, $this->getCabinNames())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        return $this->commonIndex($dir, $cabin);
+        $this->commonIndex($dir, $cabin);
     }
 
     /**
@@ -91,9 +102,10 @@ class MyFiles extends FileManager
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
-            return $this->commonMoveDir($dir, $cabin);
+            $this->commonMoveDir($dir, $cabin);
+            return;
         }
-        return $this->commonMoveFile($_GET['file'], $dir, $cabin);
+        $this->commonMoveFile($_GET['file'], $dir, $cabin);
     }
 
     /**

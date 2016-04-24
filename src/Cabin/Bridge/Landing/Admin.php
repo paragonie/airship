@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Engine\State;
 
@@ -14,6 +15,14 @@ require_once __DIR__.'/gear.php';
 class Admin extends AdminOnly
 {
     private $acct;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->acct = new UserAccounts($db);
+        }
+    }
 
     public function airshipLand()
     {
@@ -84,8 +93,10 @@ class Admin extends AdminOnly
      * @param string $ds
      * @return array
      */
-    protected function loadJSONConfigFile(string $name, string $ds = DIRECTORY_SEPARATOR): array
-    {
+    protected function loadJSONConfigFile(
+        string $name,
+        string $ds = DIRECTORY_SEPARATOR
+    ): array {
         try {
             return \Airship\loadJSON(ROOT . $ds . 'config' . $ds . $name);
         } catch (FileNotFound $ex) {
@@ -95,7 +106,7 @@ class Admin extends AdminOnly
     }
 
     /**
-     * Save
+     * Save universal settings
      *
      * @param array $post
      * @return bool

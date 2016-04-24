@@ -2,14 +2,29 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Engine\State;
+use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Engine\Bolt\Get;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Crew
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Crew extends AdminOnly
 {
     use Get;
+
+    protected $account;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $this->account = new UserAccounts($db);
+        }
+    }
+
 
     public function airshipLand()
     {

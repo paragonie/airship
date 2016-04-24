@@ -4,16 +4,29 @@ namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Alerts\Database\QueryError;
 use \Airship\Alerts\Security\UserNotFound;
-use \Airship\Engine\{
+use Airship\Engine\{
+    Bolt\Security as SecurityBolt,
+    Database,
+    Security\Authentication,
     State
 };
+use ParagonIE\Halite\KeyFactory;
 use \Psr\Log\LogLevel;
 use \ZxcvbnPhp\Zxcvbn;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class UserAccounts
+ *
+ * Manage user accounts
+ *
+ * @package Airship\Cabin\Bridge\Blueprint
+ */
 class UserAccounts extends BlueprintGear
 {
+    use SecurityBolt;
+
     const DEFAULT_MIN_SCORE = 3; // for Zxcvbn
 
     protected $table = 'airship_users';
@@ -23,7 +36,6 @@ class UserAccounts extends BlueprintGear
         'username' => 'username',
         'uniqueid' => 'uniqueid',
         'password' => 'password',
-        'uniqueid' => 'uniqueid',
         'display_name' => 'display_name',
         'real_name' => 'real_name',
         'email' => 'email',
@@ -34,7 +46,20 @@ class UserAccounts extends BlueprintGear
         'modified' => 'modified'
     ];
 
+    public function __construct(Database $db)
+    {
+        parent::__construct($db);
+        if (IDE_HACKS) {
+            $this->airship_auth = new Authentication(
+                KeyFactory::generateEncryptionKey(),
+                $db
+            );
+        }
+    }
+
     /**
+     * Create a new user group
+     *
      * @param array $post
      * @return bool
      */
@@ -101,6 +126,8 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * Edit a group.
+     *
      * @param int $groupId
      * @param array $post
      * @return bool
@@ -271,11 +298,11 @@ class UserAccounts extends BlueprintGear
     {
         $unique = $this->db->cell(
             'SELECT '.
-            $this->e($this->f['uniqueid']).
+                $this->e($this->f['uniqueid']).
             ' FROM '.
-            $this->e($this->table).
+                $this->e($this->table).
             ' WHERE '.
-            $this->e($this->f['userid']).
+                $this->e($this->f['userid']).
             ' = ?',
             $userId
         );
@@ -316,6 +343,8 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * Get a user account, given a username
+     *
      * @param string $username
      * @param bool $includeExtra
      * @return array
@@ -338,7 +367,7 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
-     * Get all the groups that a user belongs to
+     * Get all the groups that a user belongs to.
      *
      * @param int $userId
      * @return array
@@ -451,8 +480,12 @@ class UserAccounts extends BlueprintGear
      * @param string $dir
      * @return array
      */
-    public function listUsers(int $offset, int $limit, string $sortBy = 'userid', string $dir = 'ASC'): array
-    {
+    public function listUsers(
+        int $offset,
+        int $limit,
+        string $sortBy = 'userid',
+        string $dir = 'ASC'
+    ): array {
         $users =  $this->db->run(
             'SELECT ' .
                 '* ' .
@@ -470,11 +503,15 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * How many users exist?
+     *
      * @return int
      */
     public function numUsers(): int
     {
-        return $this->db->cell('SELECT count(*) FROM ' . $this->e($this->table));
+        return $this->db->cell(
+            'SELECT count(*) FROM ' . $this->e($this->table)
+        );
     }
 
     /**
