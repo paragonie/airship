@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
+use \Airship\Cabin\Hull\Blueprint as BP;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Alerts\Router\EmulatePageNotFound;
 
@@ -14,7 +15,20 @@ require_once __DIR__.'/gear.php';
 class PublicFiles extends LandingGear
 {
     protected $cabin = 'Hull';
+    protected $files;
 
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $this->files = new BP\PublicFiles(
+                \Airship\get_database()
+            );
+        }
+    }
+
+    /**
+     *
+     */
     public function airshipLand()
     {
         parent::airshipLand();
@@ -36,24 +50,28 @@ class PublicFiles extends LandingGear
         $pieces = \Airship\chunk($path);
         $filename = \array_pop($pieces);
         try {
-            $filedata = $this->files->getFileInfo($this->cabin, $pieces, \urldecode($filename));
-            $realpath = AIRSHIP_UPLOADS  . $filedata['realname'];
+            $fileData = $this->files->getFileInfo(
+                $this->cabin,
+                $pieces,
+                \urldecode($filename)
+            );
+            $realPath = AIRSHIP_UPLOADS  . $fileData['realname'];
 
-            if (!\file_exists($realpath)) {
+            if (!\file_exists($realPath)) {
                 throw new FileNotFound();
             }
             // All text/whatever needs to be text/plain; no HTML or JS payloads allowed
-            if (substr($filedata['type'], 0, 5) === 'text/' || \strpos($filedata['type'], 'application') !== false) {
-                $p = \strpos($filedata['type'], ';');
+            if (substr($fileData['type'], 0, 5) === 'text/' || \strpos($fileData['type'], 'application') !== false) {
+                $p = \strpos($fileData['type'], ';');
                 if ($p !== false) {
-                    $filedata['type'] = 'text/plain; ' .
+                    $fileData['type'] = 'text/plain; ' .
                         \preg_replace(
                             '#[^A-Za-z0-9/=]#',
                             '',
-                            \substr($filedata['type'], $p)
+                            \substr($fileData['type'], $p)
                         );
                 } else {
-                    $filedata['type'] = 'text/plain';
+                    $fileData['type'] = 'text/plain';
                 }
             }
 
@@ -65,8 +83,8 @@ class PublicFiles extends LandingGear
             }
 
             // Serve the file
-            \header('Content-Type: ' . $filedata['type']);
-            \readfile($realpath);
+            \header('Content-Type: ' . $fileData['type']);
+            \readfile($realPath);
             exit;
         } catch (FileNotFound $ex) {
             // When all else fails, 404 not found

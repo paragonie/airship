@@ -6,9 +6,17 @@ use \Airship\Alerts\FileSystem\FileNotFound;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class PublicFiles
+ *
+ * Read-only access to the virtual filesystem
+ *
+ * @package Airship\Cabin\Hull\Blueprint
+ */
 class PublicFiles extends BlueprintGear
 {
     /**
+     * Get a virtual directory ID
      *
      * @param string $cabin
      * @param array $parts
@@ -41,14 +49,19 @@ class PublicFiles extends BlueprintGear
     }
 
     /**
+     * Get information about a file
+     *
      * @param string $cabin
      * @param array $path
      * @param string $filename
      * @return array
      * @throws FileNotFound
      */
-    public function getFileInfo(string $cabin = '', array $path = [], string $filename = ''): array
-    {
+    public function getFileInfo(
+        string $cabin = '',
+        array $path = [],
+        string $filename = ''
+    ): array {
         if (empty($path)) {
             $fileInfo = $this->db->row(
                 'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ?',

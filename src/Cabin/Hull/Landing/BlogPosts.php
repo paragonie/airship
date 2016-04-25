@@ -3,16 +3,35 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Alerts\Router\EmulatePageNotFound;
-use \Airship\Alerts\Security\UserNotLoggedIn;
-use \ReCaptcha\ReCaptcha;
+use \Airship\Cabin\Hull\Blueprint\Blog;
+use \Airship\Engine\Lens;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class BlogPosts
+ *
+ * Read-only access to blog posts.
+ *
+ * @package Airship\Cabin\Hull\Landing
+ */
 class BlogPosts extends LandingGear
 {
+    protected $blog;
+
+    public function __construct()
+    {
+        if (IDE_HACKS) {
+            $this->blog = new Blog(\Airship\get_database());
+            $this->airship_lens_object = new Lens(
+                new \Twig_Environment()
+            );
+        }
+    }
+
     /**
      * This function is called after the dependencies have been injected by
-     * AutoPilot. Think of it as a userland constructor.
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {
@@ -30,24 +49,38 @@ class BlogPosts extends LandingGear
      * @param int $blogPostId
      * @return bool
      */
-    protected function addComment(array $post = [], int $blogPostId = 0): bool
-    {
+    protected function addComment(
+        array $post = [],
+        int $blogPostId = 0
+    ): bool {
         if (!$this->config('blog.comments.enabled')) {
-            $this->storeLensVar('blog_error', 'Comments are not enabled on this blog.');
+            $this->storeLensVar(
+                'blog_error',
+                \__('Comments are not enabled on this blog.')
+            );
             return false;
         }
         if (!$this->isLoggedIn() && !$this->config('blog.comments.guests')) {
-            $this->storeLensVar('blog_error', 'Guest comments are not enabled on this blog.');
+            $this->storeLensVar(
+                'blog_error',
+                \__('Guest comments are not enabled on this blog.')
+            );
             return false;
         }
         if (!$this->isLoggedIn() && (empty($post['name']) || empty($post['email']))) {
-            $this->storeLensVar('blog_error', 'Name and email address are required fields.');
+            $this->storeLensVar(
+                'blog_error',
+                \__('Name and email address are required fields.')
+            );
             return false;
         }
         if ($this->isLoggedIn() && !$this->isSuperUser()) {
             $allowedAuthors = $this->blog->getAuthorsForUser($this->getActiveUserId());
             if (!\in_array($post['author'], $allowedAuthors)) {
-                $this->storeLensVar('blog_error', 'You do not have permission to post as this author.');
+                $this->storeLensVar(
+                    'blog_error',
+                    \__('You do not have permission to post as this author.')
+                );
                 return false;
             }
         }
@@ -62,12 +95,18 @@ class BlogPosts extends LandingGear
                 $this->config('recaptcha.secret-key'),
                 $this->config('recaptcha.curl-opts') ?? []
             );
-            $resp = $rc->verify($post['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+            $resp = $rc->verify(
+                $post['g-recaptcha-response'],
+                $_SERVER['REMOTE_ADDR']
+            );
             $can_comment = $resp->isSuccess();
         }
 
         if (!$can_comment) {
-            $this->storeLensVar('blog_error', 'Invalid CAPTCHA Response. Please try again.');
+            $this->storeLensVar(
+                'blog_error',
+                \__('Invalid CAPTCHA Response. Please try again.')
+            );
             return false;
         }
         $_POST['name'] = '';
@@ -85,6 +124,7 @@ class BlogPosts extends LandingGear
     /**
      * List all of the blog posts
      *
+     * @route blog/all
      * @throws EmulatePageNotFound
      */
     public function listAll()
@@ -92,25 +132,27 @@ class BlogPosts extends LandingGear
         if (!$this->can('read')) {
             throw new EmulatePageNotFound();
         }
-        $blogroll = $this->blog->listAllPublic();
+        $blogRoll = $this->blog->listAllPublic();
 
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
         $this->stasis('blog/all', [
             'pageTitle' => 'All Blog Posts',
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax
+            'blogRoll' => $blogRoll,
+            'mathjax' => $mathJAX
         ]);
     }
 
     /**
      * List all of the blog posts for a given year
+     *
+     * @route blog/author/{slug}/{page}
      * @param string $slug
      * @param string $page
      * @throws EmulatePageNotFound
@@ -128,21 +170,21 @@ class BlogPosts extends LandingGear
         }
 
         $count = $this->blog->countByAuthor($author['authorid']);
-        $blogroll = $this->blog->listByAuthor($author['authorid'], $limit, $offset);
+        $blogRoll = $this->blog->listByAuthor($author['authorid'], $limit, $offset);
 
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
         $this->lens('blog/author', [
             'author' => $author,
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax,
+            'blogroll' => $blogRoll,
+            'mathjax' => $mathJAX,
             'pagination' => [
                 'base' => '/blog/author/' . $slug,
                 'count' => $count,
@@ -154,6 +196,8 @@ class BlogPosts extends LandingGear
 
     /**
      * List all of the blog posts for a given year
+     *
+     * @route blog/category/{slug}/{page}
      * @param string $slug
      * @param string $page
      * @throws EmulatePageNotFound
@@ -179,21 +223,21 @@ class BlogPosts extends LandingGear
         }
 
         $count = $this->blog->countByCategories($cats);
-        $blogroll = $this->blog->listByCategories($cats, $limit, $offset);
+        $blogRoll = $this->blog->listByCategories($cats, $limit, $offset);
 
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
         $this->lens('blog/category', [
             'category' => $category,
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax,
+            'blogroll' => $blogRoll,
+            'mathjax' => $mathJAX,
             'pagination' => [
                 'base' => '/blog/category/' . $slug,
                 'count' => $count,
@@ -205,6 +249,8 @@ class BlogPosts extends LandingGear
 
     /**
      * List all of the blog posts for a given year
+     *
+     * @route blog/series
      */
     public function listSeries()
     {
@@ -231,6 +277,8 @@ class BlogPosts extends LandingGear
 
     /**
      * List all of the blog posts for a given year
+     *
+     * @route blog/series/{slug}/{page}
      * @param string $slug
      * @param string $page
      */
@@ -260,6 +308,7 @@ class BlogPosts extends LandingGear
     /**
      * List all of the blog posts for a given tag
      *
+     * @route blog/tag/{slug}/{page}
      * @param string $slug
      * @param string $page
      */
@@ -270,21 +319,21 @@ class BlogPosts extends LandingGear
         $tag = $this->blog->getTag($slug);
 
         $count = $this->blog->countByTag($tag['tagid']);
-        $blogroll = $this->blog->listByTag($tag['tagid'], $limit, $offset);
+        $blogRoll = $this->blog->listByTag($tag['tagid'], $limit, $offset);
 
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
         $this->lens('blog/tag', [
-            'blogroll' => $blogroll,
+            'blogroll' => $blogRoll,
             'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', $tag['name']),
-            'mathjax' => $mathjax,
+            'mathjax' => $mathJAX,
             'pagination' => [
                 'base' => '/blog/tag/' . $slug,
                 'count' => $count,
@@ -297,6 +346,7 @@ class BlogPosts extends LandingGear
     /**
      * List all of the blog posts for a given year/month
      *
+     * @route blog/{year}/{month}
      * @param string $year
      * @param string $month
      */
@@ -304,22 +354,22 @@ class BlogPosts extends LandingGear
     {
         $count = $this->blog->countByMonth($year, $month);
         list($offset, $limit) = $this->getOffsetAndLimit();
-        $blogroll = $this->blog->listByMonth($year, $month, $limit, $offset);
+        $blogRoll = $this->blog->listByMonth($year, $month, $limit, $offset);
 
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
         $dt = new \DateTime("{$year}-{$month}-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
         $this->lens('blog/list', [
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax,
+            'blogroll' => $blogRoll,
+            'mathjax' => $mathJAX,
             'pageTitle' => \__(
                 'Blog Posts in %s %s (Page %d)', 'default',
                 $dt->format('F'),
@@ -339,26 +389,27 @@ class BlogPosts extends LandingGear
     /**
      * List all of the blog posts for a given year
      * @param string $year
+     * @route blog/{year}
      */
     public function listYear(string $year)
     {
         list($offset, $limit) = $this->getOffsetAndLimit();
         $count = $this->blog->countByYear($year);
-        $blogroll = $this->blog->listByYear($year, $limit, $offset);
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $blogRoll = $this->blog->listByYear($year, $limit, $offset);
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
         $dt = new \DateTime("{$year}-01-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
         $this->lens('blog/list', [
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax,
+            'blogroll' => $blogRoll,
+            'mathjax' => $mathJAX,
             'pageTitle' => \__(
                 'Blog Posts in the Year %s (Page %d)', 'default',
                 $dt->format('Y'),
@@ -374,22 +425,25 @@ class BlogPosts extends LandingGear
         ]);
     }
 
+    /**
+     * Blog post home
+     */
     public function index()
     {
-        $blogroll = $this->blog->recentFullPosts(5);
-        $mathjax = false;
-        foreach ($blogroll as $i => $blog) {
-            $blogroll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogroll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogroll[$i]['snippet'] = \rtrim($blogroll[$i]['snippet'], "\n");
+        $blogRoll = $this->blog->recentFullPosts(5);
+        $mathJAX = false;
+        foreach ($blogRoll as $i => $blog) {
+            $blogRoll[$i] = $this->blog->getSnippet($blog);
+            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
-            $mathjax = $mathjax || \strpos($blog['body'], '$$') !== false;
+            $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
         $this->lens('blog/index', [
             'pageTitle' => \__('Blog'),
-            'blogroll' => $blogroll,
-            'mathjax' => $mathjax
+            'blogroll' => $blogRoll,
+            'mathjax' => $mathJAX
         ]);
     }
 
@@ -399,32 +453,34 @@ class BlogPosts extends LandingGear
      * @param string $year
      * @param string $month
      * @param string $slug
+     *
+     * @route blog/{year}/{month}/{slug}
      */
     public function readPost(string $year, string $month, string $slug)
     {
-        $blogpost = $this->blog->getBlogPost($year, $month, $slug);
+        $blogPost = $this->blog->getBlogPost($year, $month, $slug);
         if ($post = $this->post()) {
-            if ($this->addComment($post, (int) $blogpost['postid'])) {
+            if ($this->addComment($post, (int) $blogPost['postid'])) {
                 if (!$this->isLoggedIn()) {
                     $this->storeLensVar(
                         'blog_success',
-                        'Your comment has been submitted successfully, but it will not appear it has been approved by the crew.'
+                        \__('Your comment has been submitted successfully, but it will not appear it has been approved by the crew.')
                     );
                 }
             }
         }
-        $mathjax = \strpos($blogpost['body'], '$$') !== false;
+        $mathJAX = \strpos($blogPost['body'], '$$') !== false;
 
-        $blogpost['series'] = $this->blog->getPostsSeries((int) $blogpost['postid']);
-        $comments =  $this->blog->getCommentTree($blogpost['postid']);
+        $blogPost['series'] = $this->blog->getPostsSeries((int) $blogPost['postid']);
+        $comments =  $this->blog->getCommentTree($blogPost['postid']);
 
         $this->lens('blog/read', [
-            'pageTitle' => $blogpost['title'],
-            'blogpost' => $blogpost,
+            'pageTitle' => $blogPost['title'],
+            'blogpost' => $blogPost,
             'comments' => $comments,
-            'author' => $this->blog->getAuthor($blogpost['author']),
+            'author' => $this->blog->getAuthor($blogPost['author']),
             'config' => $this->config(),
-            'mathjax' => $mathjax
+            'mathjax' => $mathJAX
         ]);
     }
 
@@ -434,7 +490,7 @@ class BlogPosts extends LandingGear
      * @param mixed $page
      * @return int[]
      */
-    protected function getOffsetAndLimit($page = null)
+    protected function getOffsetAndLimit($page = null): array
     {
         $per_page = $this->config('blog.per_page') ?? 20;
         $page = (int) (!empty($page) ? $page : ($_GET['page'] ?? 0));

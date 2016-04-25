@@ -14,6 +14,13 @@ use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class CustomPages
+ *
+ * Custom page handler.
+ *
+ * @package Airship\Cabin\Hull\Landing
+ */
 class CustomPages extends LandingGear
 {
     protected $pages;
@@ -91,9 +98,14 @@ class CustomPages extends LandingGear
      * @param array $dirs
      * @return bool
      */
-    protected function serveCustomPage(string $file, array $dirs = []): bool
-    {
-        return $this->serveFile($file, $this->pages->getParentDir($dirs));
+    protected function serveCustomPage(
+        string $file,
+        array $dirs = []
+    ): bool {
+        return $this->serveFile(
+            $file,
+            $this->pages->getParentDir($dirs)
+        );
     }
 
     /**
@@ -103,8 +115,10 @@ class CustomPages extends LandingGear
      * @param int $directoryId
      * @return bool
      */
-    protected function serveFile(string $file, int $directoryId): bool
-    {
+    protected function serveFile(
+        string $file,
+        int $directoryId
+    ): bool {
         $page = $this->pages->getPage($file, $directoryId);
         if (!empty($page)) {
             return $this->serveLatestVersion($page);

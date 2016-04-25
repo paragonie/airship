@@ -6,6 +6,13 @@ use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class CustomPages
+ *
+ * Custom web pages
+ *
+ * @package Airship\Cabin\Hull\Blueprint
+ */
 class CustomPages extends BlueprintGear
 {
     protected $cabin;
@@ -139,6 +146,7 @@ class CustomPages extends BlueprintGear
      * Get the parent directory
      *
      * @param string $dir
+     * @param string $cabin
      * @return int
      */
     public function getParentDirFromStr(string $dir, string $cabin = ''): int
@@ -153,10 +161,13 @@ class CustomPages extends BlueprintGear
      * Get the parent directory
      *
      * @param array $dirs
+     * @param string $cabin
      * @return int
      */
-    public function getParentDir(array $dirs = [], string $cabin = ''): int
-    {
+    public function getParentDir(
+        array $dirs = [],
+        string $cabin = ''
+    ): int {
         $parent = 0;
         foreach ($dirs as $dir) {
             $parent = $this->getDirectoryId($dir, $parent, $cabin);
@@ -173,8 +184,11 @@ class CustomPages extends BlueprintGear
      * @return array
      * @throws CustomPageNotFoundException
      */
-    public function getPage(string $file, int $directoryId = 0, string $cabin = ''): array
-    {
+    public function getPage(
+        string $file,
+        int $directoryId = 0,
+        string $cabin = ''
+    ): array {
         if (empty($cabin)) {
             $cabin = $this->cabin;
         }
@@ -198,15 +212,15 @@ class CustomPages extends BlueprintGear
             // No directory? Only look for when it's null then!
             $page = $this->db->row(
                 "SELECT
-                *
-            FROM
-                airship_custom_page
-            WHERE
-                    active
-                AND cabin = ?
-                AND directory IS NULL
-                AND url = ?
-            ",
+                    *
+                FROM
+                    airship_custom_page
+                WHERE
+                        active
+                    AND cabin = ?
+                    AND directory IS NULL
+                    AND url = ?
+                ",
                 $cabin,
                 $file
             );
@@ -282,10 +296,14 @@ class CustomPages extends BlueprintGear
      */
     public function serveRedirect(string $uri): bool
     {
-        $lookup = $this->db->row('SELECT * FROM airship_custom_redirect WHERE oldpath = ?', $uri);
+        $lookup = $this->db->row(
+            'SELECT * FROM airship_custom_redirect WHERE oldpath = ?',
+            $uri
+        );
         if (empty($lookup)) {
             return false;
         }
         \Airship\redirect($lookup['newpath']); // Exits
+        return true;
     }
 }

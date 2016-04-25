@@ -6,12 +6,31 @@ use Airship\Alerts\Router\EmulatePageNotFound;
 
 require_once __DIR__.'/gear.php';
 
+/**
+ * Class Blog
+ *
+ * Read-only access to blog posts, etc.
+ * Create comments.
+ *
+ * @package Airship\Cabin\Hull\Blueprint
+ */
 class Blog extends BlueprintGear
 {
+    /**
+     * Adds a new comment to a blog post
+     *
+     * @param array $post
+     * @param int $blogPostId
+     * @param bool $published
+     * @return bool
+     */
     public function addCommentToPost(array $post, int $blogPostId, bool $published = false): bool
     {
         $replyTo = isset($post['reply_to'])
-            ? $this->checkCommentReplyTo((int) $post['reply_to'], $blogPostId)
+            ? $this->checkCommentReplyTo(
+                (int) $post['reply_to'],
+                $blogPostId
+            )
             : null;
 
         if (!empty($post['author'])) {
@@ -27,7 +46,7 @@ class Blog extends BlueprintGear
         $this->db->beginTransaction();
 
         // Create the new comment:
-        $commentid = $this->db->insertGet(
+        $commentId = $this->db->insertGet(
             'hull_blog_comments',
             [
                 'blogpost' => $blogPostId,
@@ -38,11 +57,11 @@ class Blog extends BlueprintGear
             'commentid'
         );
 
-        if (!empty($commentid)) {
+        if (!empty($commentId)) {
             // Insert the comment
             $this->db->insert(
                 'hull_blog_comment_versions', [
-                    'comment' => $commentid,
+                    'comment' => $commentId,
                     'approved' => $published ?? false,
                     'message' => $post['message']
                 ]
@@ -50,7 +69,7 @@ class Blog extends BlueprintGear
             // Hooray!
             return $this->db->commit();
         }
-        $this->db->rollback();
+        $this->db->rollBack();
         return false;
     }
 
@@ -63,7 +82,10 @@ class Blog extends BlueprintGear
      */
     public function checkCommentReplyTo(int $replyTo, int $blogPostId)
     {
-        $parent = $this->db->cell('SELECT blogpost FROM hull_blog_comments WHERE commentid = ?', $replyTo) ;
+        $parent = $this->db->cell(
+            'SELECT blogpost FROM hull_blog_comments WHERE commentid = ?',
+            $replyTo
+        );
         if (empty($parent)) {
             return null;
         }
@@ -112,8 +134,7 @@ class Blog extends BlueprintGear
                     AND categoryid IS NULL'
             );
         }
-        \array_walk($categories, 'intval');
-        $imp = \implode(', ', $categories);
+        $imp = $this->db->escapeValueSet($categories, 'int');
         return $this->db->cell(
             'SELECT
                 count(postid)
@@ -121,7 +142,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
-                AND categoryid IN (' . $imp . ')'
+                AND categoryid IN ' . $imp
         );
     }
 
@@ -343,7 +364,10 @@ class Blog extends BlueprintGear
      */
     public function getAuthorsForUser(int $userId): array
     {
-        $authors = $this->db->col('SELECT authorid FROM view_hull_users_authors WHERE userid = ?', $userId);
+        $authors = $this->db->first(
+            'SELECT authorid FROM view_hull_users_authors WHERE userid = ?',
+            $userId
+        );
         if (empty($authors)) {
             return [];
         }
@@ -464,7 +488,7 @@ class Blog extends BlueprintGear
     public function getBlogMenu(): array
     {
         $years = [];
-        $getyears = $this->db->run(
+        $getYears = $this->db->run(
             "SELECT DISTINCT
                 date_part('year', published) AS blogyear,
                 date_part('month', published) AS blogmonth
@@ -478,8 +502,8 @@ class Blog extends BlueprintGear
                 blogmonth ASC
             "
         );
-        if (!empty($getyears)) {
-            foreach ($getyears as $yr) {
+        if (!empty($getYears)) {
+            foreach ($getYears as $yr) {
                 $dt = new \DateTime($yr['blogyear'] . '-' . $yr['blogmonth'] . '-01');
                 $y = intval($yr['blogyear']);
                 if ($yr['blogmonth'] < 10) {
@@ -538,7 +562,7 @@ class Blog extends BlueprintGear
         }
         foreach ($cats as $i => $cat) {
             $cats[$i]['children'] = $this->getCategoryTree(
-                \intval($cat['categoryid'])
+                (int) $cat['categoryid']
             );
         }
         return $cats;
@@ -573,14 +597,14 @@ class Blog extends BlueprintGear
     }
 
     /**
-     *
+     * Get a comment (and all of its replies)
      *
      * @param int $commentId
      * @return array
      */
     public function getCommentWithChildren(int $commentId): array
     {
-        $versionid = $this->db->cell('
+        $versionId = $this->db->cell('
             SELECT
               MAX(versionid)
             FROM
@@ -589,7 +613,7 @@ class Blog extends BlueprintGear
               approved
               AND comment = ?
         ', $commentId);
-        if (empty($versionid)) {
+        if (empty($versionId)) {
             return [];
         }
 
@@ -609,7 +633,7 @@ class Blog extends BlueprintGear
              WHERE
                  v.versionid = ?
              ',
-            $versionid
+            $versionId
         );
         if (isset($comment['metadata'])) {
             $comment['metadata'] = \json_decode($comment['metadata'], true);
@@ -643,10 +667,10 @@ class Blog extends BlueprintGear
     /**
      * Get all of the tags for a particular post
      *
-     * @param int $postid
+     * @param int $postId
      * @return array
      */
-    public function getPostTags(int $postid): array
+    public function getPostTags(int $postId): array
     {
         return $this->db->run(
             'SELECT
@@ -660,7 +684,7 @@ class Blog extends BlueprintGear
             WHERE j.postid = ?
             ORDER BY t.name ASC
             ',
-            $postid
+            $postId
         );
     }
 
@@ -686,7 +710,6 @@ class Blog extends BlueprintGear
         foreach ($series as $i => $ser) {
             $series[$i] = $this->getSeriesExtra($ser);
         }
-
         return $series;
     }
 
@@ -698,8 +721,16 @@ class Blog extends BlueprintGear
      */
     protected function getSeriesExtra(array $ser): array
     {
-        $ser['prev_link'] = $this->getSeriesLink($ser['seriesid'], $ser['listorder'], 'prev');
-        $ser['next_link'] = $this->getSeriesLink($ser['seriesid'], $ser['listorder'], 'next');
+        $ser['prev_link'] = $this->getSeriesLink(
+            $ser['seriesid'],
+            $ser['listorder'],
+            'prev'
+        );
+        $ser['next_link'] = $this->getSeriesLink(
+            $ser['seriesid'],
+            $ser['listorder'],
+            'next'
+        );
         $ser['config'] = \json_decode($ser['config'], true);
         return $ser;
     }
@@ -713,7 +744,8 @@ class Blog extends BlueprintGear
     public function getSeriesById(int $id): array
     {
         return $this->db->row(
-            'SELECT * FROM hull_blog_series WHERE seriesid = ?', $id
+            'SELECT * FROM hull_blog_series WHERE seriesid = ?',
+            $id
         );
     }
 
@@ -727,7 +759,8 @@ class Blog extends BlueprintGear
     public function getSeriesInfo(string $slug): array
     {
         $series = $this->db->row(
-            'SELECT * FROM hull_blog_series WHERE slug = ?', $slug
+            'SELECT * FROM hull_blog_series WHERE slug = ?',
+            $slug
         );
         if (empty($series)) {
             throw new EmulatePageNotFound();
@@ -737,12 +770,15 @@ class Blog extends BlueprintGear
 
     /**
      * @param int $series
-     * @param int $listorder
+     * @param int $listOrder
      * @param string $which
      * @return string
      */
-    protected function getSeriesLink(int $series, int $listorder, string $which = 'curr'): string
-    {
+    protected function getSeriesLink(
+        int $series,
+        int $listOrder,
+        string $which = 'curr'
+    ): string {
         $query = "
             SELECT
                 *
@@ -767,16 +803,22 @@ class Blog extends BlueprintGear
                 $query .= ' != ? ORDER BY listorder ASC';
         }
 
-        $data = $this->db->row($query, $series, $listorder);
+        $data = $this->db->row($query, $series, $listOrder);
         if (empty($data)) {
             return '';
         }
 
         if (!empty($data['series'])) {
-            return '/blog/series/' . $this->db->cell('SELECT slug FROM hull_blog_series WHERE seriesid = ?', $data['series']);
+            return '/blog/series/' . $this->db->cell(
+                'SELECT slug FROM hull_blog_series WHERE seriesid = ?',
+                $data['series']
+            );
         }
         if (!empty($data['post'])) {
-            $b = $this->db->row('SELECT blogyear, blogmonth, slug FROM view_hull_blog_list WHERE postid = ?', $data['post']);
+            $b = $this->db->row(
+                'SELECT blogyear, blogmonth, slug FROM view_hull_blog_list WHERE postid = ?',
+                $data['post']
+            );
             return '/blog/' . $b['blogyear'] . '/' . \str_pad($b['blogmonth'], 2, '0', STR_PAD_LEFT) . '/' . $b['slug'];
         }
         return '';
@@ -790,8 +832,11 @@ class Blog extends BlueprintGear
      * @param int $depth
      * @return array
      */
-    protected function getSeriesRecursive(int $seriesId, array $seen = [], int $depth = 0): array
-    {
+    protected function getSeriesRecursive(
+        int $seriesId,
+        array $seen = [],
+        int $depth = 0
+    ): array {
         $series = [];
         foreach ($this->getParentSeries($seriesId, $seen, $depth) as $ser) {
             if (!empty($ser)) {
@@ -800,7 +845,12 @@ class Blog extends BlueprintGear
                 $_seen = $seen;
                 \array_push($_seen, $ser['seriesid']);
 
-                foreach ($this->getSeriesRecursive($ser['seriesid'], $seen, $depth + 1) as $par) {
+                $parents = $this->getSeriesRecursive(
+                    $ser['seriesid'],
+                    $seen,
+                    $depth + 1
+                );
+                foreach ($parents as $par) {
                     if (!empty($par)) {
                         $series [] = $par;
                     }
@@ -841,8 +891,11 @@ class Blog extends BlueprintGear
      * @param int $depth
      * @return array
      */
-    public function getParentSeries(int $seriesId, array $seenIds = [], int $depth = 0): array
-    {
+    public function getParentSeries(
+        int $seriesId,
+        array $seenIds = [],
+        int $depth = 0
+    ): array {
         $addendum = '';
         if (!empty($seenIds)) {
             $addendum = "AND i.series NOT IN " . $this->db->escapeValueSet($seenIds, 'int');
@@ -876,6 +929,7 @@ class Blog extends BlueprintGear
         if (empty($post['body'])) {
             return $post;
         }
+        $i = 0;
         if ($post['format'] === 'Rich Text') {
             $post['body'] = \str_replace(
                 '><',
@@ -907,7 +961,7 @@ class Blog extends BlueprintGear
                     break;
                 }
             } elseif ($post['format'] === 'HTML' || $post['format'] === 'Rich Text') {
-                if (\preg_match('#^<h[1-7]>#', $line[0], $m)) {
+                if (\preg_match('#^<'.'h[1-7]>#', $line[0], $m)) {
                     $cutoff = $i;
                     break;
                 }
@@ -1186,8 +1240,11 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function listBySeries(int $seriesId, int $num = 20, int $offset = 0): array
-    {
+    public function listBySeries(
+        int $seriesId,
+        int $num = 20,
+        int $offset = 0
+    ): array {
         $items = $this->db->run(
             'SELECT
                 *
@@ -1229,8 +1286,11 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function listByTag(int $tagId, int $num = 20, int $offset = 0): array
-    {
+    public function listByTag(
+        int $tagId,
+        int $num = 20,
+        int $offset = 0
+    ): array {
         $posts = $this->db->run(
             'SELECT
                 p.*
@@ -1267,8 +1327,11 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function listByYear(string $year, int $num = 20, int $offset = 0): array
-    {
+    public function listByYear(
+        string $year,
+        int $num = 20,
+        int $offset = 0
+    ): array {
         $posts = $this->db->run(
             'SELECT
                 *
@@ -1303,8 +1366,12 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function listByMonth(string $year, string $month, int $num = 20, int $offset = 0): array
-    {
+    public function listByMonth(
+        string $year,
+        string $month,
+        int $num = 20,
+        int $offset = 0
+    ): array {
         $posts = $this->db->run(
             'SELECT
                 *

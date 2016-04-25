@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: scott
- * Date: 3/2/16
- * Time: 9:36 PM
- */
-
+declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Cabin\Hull\Blueprint\PublicFiles as HullPublicFiles;
