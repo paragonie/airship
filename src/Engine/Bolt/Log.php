@@ -13,7 +13,7 @@ trait Log
      * @param string $message
      * @param string $level
      * @param array $context
-     * @return type
+     * @return mixed
      */
     public function log(
         string $message, 

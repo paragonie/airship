@@ -3,12 +3,18 @@ declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
 use Airship\Engine\{
-    Gears, Security\Authentication, Security\Permissions, State
+    Gears,
+    Security\Authentication,
+    Security\Permissions,
+    State
 };
-use \ParagonIE\Halite\Cookie;
 use \Airship\Alerts\Security\LongTermAuthAlert;
 use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Alerts\Security\UserNotLoggedIn;
+use \ParagonIE\Halite\{
+    Cookie,
+    Symmetric\EncryptionKey
+};
 use \Psr\Log\LogLevel;
 
 trait Security
@@ -59,8 +65,8 @@ trait Security
         string $context_id = '',
         string $cabin = '',
         int $user_id = 0
-    ) {
-        if (!\property_exists($this, 'airship_perms')) {
+    ): bool {
+        if (!($this->airship_perms instanceof Permissions)) {
             $this->tightenSecurityBolt();
         }
         return $this->airship_perms->can(
@@ -96,7 +102,7 @@ trait Security
      * @return boolean
      */
     public function isSuperUser(int $user_id = 0) {
-        if (!\property_exists($this, 'airship_perms')) {
+        if (!($this->airship_perms instanceof Permissions)) {
             $this->tightenSecurityBolt();
         }
         if (empty($user_id)) {
@@ -116,7 +122,7 @@ trait Security
      */
     public function isLoggedIn()
     {
-        if (!\property_exists($this, 'airship_cookie')) {
+        if (!($this->airship_cookie instanceof Cookie)) {
             $this->tightenSecurityBolt();
         }
         $state = State::instance();
@@ -148,16 +154,29 @@ trait Security
         string $uid_idx,
         string $token_idx
     ): bool {
+        if (
+            !($this->airship_cookie instanceof Cookie)
+                ||
+            !($this->airship_auth instanceof Authentication)
+        ) {
+            $this->tightenSecurityBolt();
+        }
+        if (IDE_HACKS) {
+            $this->airship_auth = new Authentication(
+                new EncryptionKey(),
+                $this->db
+            );
+        }
         $state = State::instance();
         try {
-            $userid = $this->airship_auth->loginByToken($token);
+            $userId = $this->airship_auth->loginByToken($token);
             // Set session variable
-            $_SESSION[$uid_idx] = $userid;
+            $_SESSION[$uid_idx] = $userId;
 
             // Rotate the authentication token:
             $this->airship_cookie->store(
                 $token_idx,
-                $this->airship_auth->rotateToken($token, $userid),
+                $this->airship_auth->rotateToken($token, $userId),
                 \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                 '/',
                 '',
@@ -172,7 +191,7 @@ trait Security
             // Let's log this incident
             if (\property_exists($this, 'log')) {
                 $this->log(
-                    $e->getMessage,
+                    $e->getMessage(),
                     LogLevel::CRITICAL,
                     [
                         'exception' => \Airship\throwableToArray($e)
@@ -197,6 +216,9 @@ trait Security
      */
     public function completeLogOut(): bool
     {
+        if (!($this->airship_cookie instanceof Cookie)) {
+            $this->tightenSecurityBolt();
+        }
         $state = State::instance();
         $token_idx = $state->universal['cookie_index']['auth_token'];
         $_SESSION = [];

@@ -6,6 +6,9 @@ use \Airship\Engine\Cache\File;
 
 trait FileCache
 {
+    public $airship_filecache_object;
+    public $airship_cspcache_object;
+
     function tightenCacheBolt()
     {
         static $tightened = false;
