@@ -2,7 +2,7 @@
   {
     "name": "Paragon Initiative Enterprises",
     "urls": [
-      "http://localhost/bridge/channel_peer"
+      "http://localhost/bridge/notary"
     ],
     "public_key": ""
   }

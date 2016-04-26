@@ -2,7 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use Airship\Engine\{
+use \Airship\Alerts\Continuum\CouldNotUpdate;
+use \Airship\Engine\{
     Continuum\API,
     Database,
     Hail,
@@ -21,6 +22,8 @@ use \ParagonIE\Halite\{
     Structure\MerkleTree,
     Structure\Node
 };
+use Psr\Http\Message\ResponseInterface;
+use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/gear.php';
 
@@ -122,15 +125,16 @@ class ChannelUpdates extends BlueprintGear
      * Send the HTTP request, return the
      *
      * @param string $root
-     * @return string
+     * @return array
      */
-    protected function getChannelUpdates(string $root): string
+    protected function getChannelUpdates(string $root): array
     {
         $state = State::instance();
         if (IDE_HACKS) {
             $state->hail = new Hail(new Client());
         }
         foreach ($this->getChannelURLs() as $url) {
+            $initiated = new \DateTime('now');
             $response = $state->hail->post(
                 $url . API::get('fetch_keys') . '/' . $root
             );
@@ -139,9 +143,15 @@ class ChannelUpdates extends BlueprintGear
                 if ($code >= 200 && $code < 300) {
                     try {
                         return $this->parseChannelUpdateResponse(
-                            (string) $response->getBody()
+                            (string) $response->getBody(),
+                            $initiated
                         );
-                    } catch (\Exception $ex) {
+                    } catch (CouldNotUpdate $ex) {
+                        $this->log(
+                            $ex->getMessage(),
+                            LogLevel::ALERT,
+                            \Airship\throwableToArray($ex)
+                        );
                         // continue;
                     }
                 }
@@ -154,12 +164,26 @@ class ChannelUpdates extends BlueprintGear
     /**
      * Get key updates from the channel
      *
-     * @param string $root
+     * @param MerkleTree $tree
      * @return Node[]
      */
-    protected function getKeyUpdates(string $root): array
+    protected function getKeyUpdates(MerkleTree $tree): array
     {
         $newNodes = [];
+
+        foreach ($this->getChannelUpdates($tree->getRoot()) as $new) {
+            $newNode = new Node($new['data']);
+            $tree = $tree->getExpandedTree($newNode);
+
+            // Verify that we've calculated the same Merkle root for each new leaf:
+            if (\hash_equals($new['root'], $tree->getRoot())) {
+                $this->storeUpdate($new);
+                $newNodes[] = $newNode;
+            }
+        }
+        if (\count($newNodes) > 0) {
+            $this->notifyPeersOfNewUpdate();
+        }
 
         return $newNodes;
     }
@@ -185,9 +209,7 @@ class ChannelUpdates extends BlueprintGear
     protected function getUpdatedMerkleTree(): MerkleTree
     {
         $originalTree = $this->getMerkleTree();
-        $newNodes = $this->getKeyUpdates(
-            $originalTree->getRoot()
-        );
+        $newNodes = $this->getKeyUpdates($originalTree);
         if (empty($newNodes)) {
             return $originalTree;
         }
@@ -195,18 +217,98 @@ class ChannelUpdates extends BlueprintGear
     }
 
     /**
+     * Parse the HTTP response and get the useful information out of it.
+     *
      * @param string $raw
+     * @param \DateTime $originated
      * @return array
+     * @throws CouldNotUpdate
      */
-    protected function parseChannelUpdateResponse(string $raw): array
+    protected function parseChannelUpdateResponse(string $raw, \DateTime $originated): array
     {
         $data = \json_decode($raw, true);
+        if ($data['status'] !== 'success') {
+            throw new CouldNotUpdate($data['message'] ?? 'An update has occurred');
+        }
         $valid = [];
         if (!empty($data['no_updates'])) {
-            // Verify signature.
-        } else {
-            // Verify each update.
+            // Verify signature of the "no updates" timestamp.
+            $sig = Base64UrlSafe::decode($data['signature']);
+            if (!AsymmetricCrypto::verify($data['no_updates'], $this->channelPublicKey, $sig, true)) {
+                throw new CouldNotUpdate('Invalid signature from channel');
+            }
+            $time = (new \DateTime($data['no_updates']))->add(new \DateInterval('PT01D'));
+            if ($time < $originated) {
+                throw new CouldNotUpdate('Channel is reporting a stale "no update" status');
+            }
+            // No updates.
+            return [];
         }
+        // Verify the signature of each update.
+        foreach ($data['updates'] as $update) {
+            $data = Base64UrlSafe::decode($update['data']);
+            $sig = Base64UrlSafe::decode($update['signature']);
+            if (AsymmetricCrypto::verify($data, $this->channelPublicKey, $sig, true)) {
+                $dataInternal = \json_decode($data, true);
+                $valid[] = [
+                    'id' => (int) $update['id'],
+                    'root' => $dataInternal['root'],
+                    'data' => $dataInternal['data']
+                ];
+            }
+        }
+        // Sort by ID
+        \uasort($valid, function (array $a, array $b): array {
+            return $a['id'] <=> $b['id'];
+        });
         return $valid;
+    }
+
+    /**
+     * This propagates the new update through the network.
+     */
+    protected function notifyPeersOfNewUpdate()
+    {
+        $state = State::instance();
+        if (IDE_HACKS) {
+            $state->hail = new Hail(new Client());
+        }
+        $resp = [];
+        $peers = \Airship\loadJSON(ROOT . '/config/channel_peers/' . $this->channel . '.json');
+        foreach ($peers as $peer) {
+            foreach ($peer['urls'] as $url) {
+                $resp []= $state->hail->getAsync($url, [
+                    'challenge' => Base64UrlSafe::encode(\random_bytes(21))
+                ]);
+            }
+        }
+        foreach ($resp as $r) {
+            $r->then(function (ResponseInterface $response) {
+                $context = \json_decode((string) $response->getBody());
+                $this->log(
+                    'Peer notified of channel update',
+                    LogLevel::INFO,
+                    $context
+                );
+            });
+        }
+    }
+
+    /**
+     * Store the new update in the database.
+     *
+     * @param array $nodeData
+     */
+    protected function storeUpdate(array $nodeData)
+    {
+        $this->db->insert(
+            'airship_key_updates',
+            [
+                'channel' => $this->channel,
+                'channelupdateid' => $nodeData['id'],
+                'data' => $nodeData['data'],
+                'merkleroot' => $nodeData['root']
+            ]
+        );
     }
 }
