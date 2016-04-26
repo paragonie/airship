@@ -158,6 +158,11 @@
         "my":
             ["Account", "myIndex"],
 
+        "notary/verify":
+            ["Notary", "verify"],
+        "notary":
+            ["Notary", "index"],
+
         "pages/{string}/deleteDir":
             ["PageManager", "deleteDir"],
         "pages/{string}/deletePage":

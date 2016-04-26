@@ -10,5 +10,9 @@
   "cookie.encrypt_key": {
     "type": "EncryptionKey",
     "file": "cookie_encryption.skey"
+  },
+  "notary.online_signing_key": {
+    "type": "SignatureSecretKey",
+    "file": "notary_signing.skey"
   }
 }
