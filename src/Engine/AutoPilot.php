@@ -198,6 +198,13 @@ class AutoPilot implements RouterInterface
                         ? self::forceHTTPS($scheme)
                         : true;
                 }
+            } elseif (
+                \strtolower($activeHost) === \strtolower($cabinKey) &&
+                \preg_match('#^'.\preg_quote($cabinKey, '#').'#', $uri)
+            ) {
+                return $https_only
+                    ? self::forceHTTPS($scheme)
+                    : true;
             } else {
                 \var_dump($cabinKey, $pos);
             }
