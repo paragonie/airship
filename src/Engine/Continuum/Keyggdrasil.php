@@ -92,9 +92,11 @@ class Keyggdrasil
      * @return KeyUpdate[]
      * @throws TransferException
      */
-    protected function fetchKeyUpdates(Channel $chan, string $url): array
+    protected function fetchKeyUpdates(Channel $chan, string $url, string $root): array
     {
-        $response = $this->hail->post($url . API::get('fetch_keys'));
+        $response = $this->hail->post(
+            $url . API::get('fetch_keys') . '/' . $root
+        );
         if ($response instanceof Response) {
             $code = $response->getStatusCode();
             if ($code >= 200 && $code < 300) {
@@ -213,7 +215,7 @@ class Keyggdrasil
         $originalTree = $this->getMerkleTree($chan);
         foreach ($chan->getAllURLs() as $url) {
             try {
-                $updates = $this->fetchKeyUpdates($chan, $url); // KeyUpdate[]
+                $updates = $this->fetchKeyUpdates($chan, $url, $originalTree->getRoot()); // KeyUpdate[]
                 while (!empty($updates)) {
                     $merkleTree = $originalTree;
                     if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
