@@ -1,8 +1,8 @@
 {
   "localhost": {
-    "publickey": "",
+    "publickey": "6386dabb7c57006fbbd5092d77d34398332f475f7340ae32d02cda6bc4295da6",
     "urls": [
-      "http://localhost:88/hail"
+      "https://airship.paragonie.com/hail"
     ]
   }
 }
