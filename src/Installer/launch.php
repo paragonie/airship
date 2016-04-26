@@ -11,6 +11,9 @@ if (PHP_MAJOR_VERSION < 7) {
 if (!extension_loaded('libsodium')) {
     die("Airship requires Libsodium.");
 }
+if (!\defined('IDE_HACKS')) {
+    define('IDE_HACKS', false);
+}
 if (!\session_id()) {
     \session_start();
 }

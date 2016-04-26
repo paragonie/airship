@@ -2,7 +2,7 @@
   {
     "name": "Paragon Initiative Enterprises",
     "urls": [
-      "http://localhost/bridge/notary"
+      "https://cspr.ng/bridge/notary/verify"
     ],
     "public_key": ""
   }

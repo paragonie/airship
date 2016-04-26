@@ -52,7 +52,7 @@ class ChannelUpdates extends BlueprintGear
         $this->channel = $channel;
         $channelConfig = \Airship\loadJSON(ROOT . '/config/channels.json');
         $this->channelPublicKey = new SignaturePublicKey(
-            \Sodium\bin2hex($channelConfig[$channel])
+            \Sodium\hex2bin($channelConfig[$channel]['publickey'])
         );
         $this->urls = $channelConfig[$channel]['urls'];
     }
