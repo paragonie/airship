@@ -18,6 +18,13 @@ use \ParagonIE\Halite\{
 };
 use \Psr\Log\LogLevel;
 
+/**
+ * Class AutoUpdater
+ *
+ * The base class for the auto-updaters.
+ *
+ * @package Airship\Engine\Continuum
+ */
 abstract class AutoUpdater
 {
     use Log;
@@ -138,7 +145,6 @@ abstract class AutoUpdater
         if (IDE_HACKS) {
             $this->hail = new Hail(new Client);
         }
-
         try {
             $version = $update->getVersion();
             $response = $this->hail->post(
@@ -148,9 +154,9 @@ abstract class AutoUpdater
                 ]
             );
             if ($response instanceof Response) {
-                $outFile = \tempnam(\sys_get_temp_dir(), 'airship-') . '.phar';
                 $code = $response->getStatusCode();
                 if ($code >= 200 && $code < 300) {
+                    $outFile = \tempnam(\sys_get_temp_dir(), 'airship-') . '.phar';
                     $body = (string) $response->getBody();
                     $saved = \file_put_contents($outFile, $body);
                     if ($saved !== false) {
@@ -239,6 +245,10 @@ abstract class AutoUpdater
         string $minVersion = '',
         string $apiEndpoint = 'version'
     ): array {
+        if (IDE_HACKS) {
+            $this->hail = new Hail(new Client);
+            $this->supplier = new Supplier('');
+        }
         if (empty($supplier)) {
             $supplier = $this->supplier->getName();
         }
@@ -308,7 +318,7 @@ abstract class AutoUpdater
     ): bool {
         $ret = false;
         if (IDE_HACKS) {
-            $this->supplier = new Supplier([]);
+            $this->supplier = new Supplier('');
         }
 
         foreach ($this->supplier->getSigningKeys() as $key) {

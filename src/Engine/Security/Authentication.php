@@ -4,6 +4,7 @@ namespace Airship\Engine\Security;
 
 use \Airship\Alerts\Security\LongTermAuthAlert;
 use \Airship\Engine\Contract\DBInterface;
+use \Airship\Engine\Database;
 use \ParagonIE\Halite\{
     Symmetric\EncryptionKey,
     Password
@@ -11,12 +12,15 @@ use \ParagonIE\Halite\{
 use \ParagonIE\ConstantTime\Base64;
 
 /**
+ * Class Authentication
+ *
  * Airship gear: Authentication
- * 
+ *
  * Covers both short-term authentication (current browsing session) and optional
  * long-term authentication (i.e. "remember me" cookies).
- * 
+ *
  * @ref https://paragonie.com/b/rgbsTmsWFoQRpIg-
+ * @package Airship\Engine\Security
  */
 class Authentication
 {
@@ -71,6 +75,9 @@ class Authentication
         if (!empty($db)) {
             $this->db = $db;
         }
+        if (IDE_HACKS) {
+            $this->db = new Database(new \PDO('sqlite::memory:', 'sqlite'));
+        }
     }
     
     /**
@@ -90,7 +97,7 @@ class Authentication
      * @param int $userId
      * @return string (to store in a cookie, for example)
      */
-    public function createAuthToken(int $userId) : string
+    public function createAuthToken(int $userId): string
     {
         $f = $this->tableConfig['fields']['longterm'];
         
@@ -225,7 +232,7 @@ class Authentication
             return false;
         } elseif (
             \mb_strlen($decoded, '8bit')
-            !==
+                !==
             (self::SELECTOR_BYTES + self::VALIDATOR_BYTES)
         ) {
             return false;
@@ -252,7 +259,7 @@ class Authentication
      * @param DBInterface $db
      * @return Authentication ($this)
      */
-    public function setDatabase(DBInterface $db)
+    public function setDatabase(DBInterface $db): self
     {
         $this->db = $db;
         return $this;
@@ -264,7 +271,7 @@ class Authentication
      * @param string $dbIndex
      * @return Authentication ($this)
      */
-    public function setDatabaseByKey(string $dbIndex = '')
+    public function setDatabaseByKey(string $dbIndex = ''): self
     {
         $this->db = \Airship\get_database($dbIndex);
         return $this;
@@ -277,7 +284,7 @@ class Authentication
      * @param string $field
      * @return Authentication ($this)
      */
-    public function setLongTermSelectorField(string $field)
+    public function setLongTermSelectorField(string $field): self
     {
         $this->tableConfig['field']['longterm']['selector'] = $field;
         return $this;
@@ -290,7 +297,7 @@ class Authentication
      * @param string $field
      * @return Authentication ($this)
      */
-    public function setLongTermValidatorField(string $field)
+    public function setLongTermValidatorField(string $field): self
     {
         $this->tableConfig['field']['longterm']['validator'] = $field;
         return $this;
@@ -304,7 +311,7 @@ class Authentication
      * @param string $field
      * @return Authentication ($this)
      */
-    public function setPasswordField(string $field)
+    public function setPasswordField(string $field): self
     {
         $this->tableConfig['field']['accounts']['password'] = $field;
         return $this;
@@ -316,7 +323,7 @@ class Authentication
      * @param string $table
      * @return Authentication ($this)
      */
-    public function setTable(string $table)
+    public function setTable(string $table): self
     {
         $this->tableConfig['table'] = $table;
         return $this;
@@ -328,7 +335,7 @@ class Authentication
      * @param string $field
      * @return Authentication ($this)
      */
-    public function setUserIdField(string $field)
+    public function setUserIdField(string $field): self
     {
         $this->tableConfig['field']['accounts']['userid'] = $field;
         return $this;
@@ -341,7 +348,7 @@ class Authentication
      * @param string $field
      * @return Authentication ($this)
      */
-    public function setUsernameField(string $field)
+    public function setUsernameField(string $field): self
     {
         $this->tableConfig['field']['accounts']['username'] = $field;
         return $this;

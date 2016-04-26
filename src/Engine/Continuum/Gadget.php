@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Hail\{
-    NoAPIResponse,
-    PeerVerificationFailure
-};
+use \Airship\Alerts\Continuum\CouldNotUpdate;
+use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\Hail;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
@@ -77,10 +75,15 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
-     * @throws PeerVerificationFailure
+     * @throws CouldNotUpdate
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
+        if (!$file->hashMatches($info->getChecksum())) {
+            throw new CouldNotUpdate(
+                'Checksum mismatched'
+            );
+        }
         \rename($this->filePath, $this->filePath.'.backup');
         \rename($file->getPath(), $this->filePath);
 

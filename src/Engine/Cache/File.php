@@ -31,14 +31,15 @@ class File implements CacheInterface
      * Delete a cache entry
      *
      * @param string $key
-     * @return bool|null
+     * @return bool
      */
-    public function delete(string $key)
+    public function delete(string $key): bool
     {
         $path = $this->getRelativePath($key);
         if (\file_exists($path)) {
             return \unlink($path);
         }
+        return false;
     }
 
     /**
@@ -90,8 +91,10 @@ class File implements CacheInterface
      * @return string|array
      * @throws InvalidType
      */
-    public static function getRelativeHash(string $preHash, bool $asString = false)
-    {
+    public static function getRelativeHash(
+        string $preHash,
+        bool $asString = false
+    ): string {
         $state = State::instance();
         $cacheKey = $state->keyring['cache.hash_key'];
 

@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use \Airship\Alerts\Continuum\NoSupplier;
+use \Airship\Alerts\Continuum\{
+    CouldNotUpdate,
+    NoSupplier
+};
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey

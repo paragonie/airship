@@ -3,15 +3,18 @@ declare(strict_types=1);
 namespace Airship\Engine\Security;
 
 use \Airship\Alerts\Security\CSRF\InvalidConfig;
-use \ParagonIE\ConstantTime\Base64;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 
+/**
+ * Class CSRF
+ * @package Airship\Engine\Security
+ */
 class CSRF
 {
     const FORM_TOKEN = '_CSRF_TOKEN';
 
     protected $recycleAfter = 1024;
-    protected $hmacIP = true;
+    protected $hmacIP = false; // Default to FALSE to be friendly to Tor/Mobile users!
     protected $expireOld = false;
     protected $sessionIndex = 'CSRF';
 
@@ -29,10 +32,10 @@ class CSRF
      * Insert a CSRF token to a form
      *
      * @param string $lockTo This CSRF token is only valid for this HTTP request endpoint
-     * @param boolean $echo if true, echo instead of returning
+     * @param bool $echo if true, echo instead of returning
      * @return string
      */
-    public function insertToken(string $lockTo = '', $echo = true) : string
+    public function insertToken(string $lockTo = '', bool $echo = true): string
     {
         $token = $this->getTokenString($lockTo);
         $ret = '<input type="hidden"' .
@@ -53,7 +56,7 @@ class CSRF
      * 
      * @return string
      */
-    public function getTokenString(string $lockTo = '') : string
+    public function getTokenString(string $lockTo = ''): string
     {
         if (!isset($_SESSION[$this->sessionIndex])) {
             $_SESSION[$this->sessionIndex] = [];
@@ -70,7 +73,7 @@ class CSRF
         list($index, $token) = $this->generateToken($lockTo);
 
         if ($this->hmacIP) {
-            // Use HMAC to only allow this particular IP to send this request
+            // Use a keyed BLAKE2b hash to only allow this particular IP to send this request
             $token = Base64UrlSafe::encode(
                 \Sodium\crypto_generichash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
@@ -96,7 +99,7 @@ class CSRF
             return false;
         }
         
-        if (!isset($_POST[self::FORM_TOKEN])) {
+        if (!isset($_POST[self::FORM_TOKEN]) || !\is_string($_POST[self::FORM_TOKEN])) {
             return false;
         }
 
@@ -183,7 +186,7 @@ class CSRF
     protected function generateToken(string $lockTo = ''): array
     {
         $index = Base64UrlSafe::encode(\random_bytes(18));
-        $token = Base64UrlSafe::encode(\random_bytes(32));
+        $token = Base64UrlSafe::encode(\random_bytes(33));
 
         $_SESSION[$this->sessionIndex][$index] = [
             'created' => \intval(\date('YmdHis')),
@@ -218,8 +221,8 @@ class CSRF
         // Sort by creation time
         \uasort(
             $_SESSION[$this->sessionIndex],
-            function($a, $b) {
-                return $a['created'] - $b['created'];
+            function (array $a, array $b) {
+                return $a['created'] <=> $b['created'];
             }
         );
 

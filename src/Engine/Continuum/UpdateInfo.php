@@ -43,6 +43,16 @@ class UpdateInfo
     }
 
     /**
+     * Get the checksum of the file.
+     *
+     * @return string
+     */
+    public function getChecksum(): string
+    {
+        return $this->checksum;
+    }
+
+    /**
      * Get the signature
      *
      * @param bool $hex

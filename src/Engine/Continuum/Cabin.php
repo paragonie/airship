@@ -2,13 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use Airship\Alerts\Hail\NoAPIResponse;
-use Airship\Alerts\Hail\PeerVerificationFailure;
-use \Airship\Engine\Contract\ContinuumInterface;
-use \Airship\Engine\Hail;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use \Airship\Alerts\Continuum\CouldNotUpdate;
+use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Engine\{
+    Contract\ContinuumInterface,
+    Hail
+};
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
+/**
+ * Class Cabin
+ * @package Airship\Engine\Continuum
+ */
 class Cabin extends AutoUpdater implements ContinuumInterface
 {
     private $name;
@@ -72,10 +78,15 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
-     * @throws PeerVerificationFailure
+     * @throws CouldNotUpdate
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
+        if (!$file->hashMatches($info->getChecksum())) {
+            throw new CouldNotUpdate(
+                'Checksum mismatched'
+            );
+        }
         $path = $file->getPath();
         $updater = new \Phar(
             $path,

@@ -2,11 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Engine\Contract\ContinuumInterface;
-use \Airship\Alerts\Hail\{
-    NoAPIResponse,
-    PeerVerificationFailure
-};
+use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\{
     Hail,
     State
@@ -83,10 +81,15 @@ class Airship extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
-     * @throws PeerVerificationFailure
+     * @throws CouldNotUpdate
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
+        if (!$file->hashMatches($info->getChecksum())) {
+            throw new CouldNotUpdate(
+                'Checksum mismatched'
+            );
+        }
         // Let's open the update package:
         $path = $file->getPath();
         $updater = new \Phar(
@@ -111,8 +114,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
         }
 
         // Free up the updater alias
-        $garbageAlias =
-            Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
+        $garbageAlias = Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
         $updater->setAlias($garbageAlias);
         unset($updater);
 
@@ -124,9 +126,9 @@ class Airship extends AutoUpdater implements ContinuumInterface
      * Unique to Airship updating; replace a file with one in the archive
      *
      * @param string $filename
-     * @return int|bool
+     * @return bool
      */
-    protected function replaceFile(string $filename)
+    protected function replaceFile(string $filename): bool
     {
         if (\file_exists(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup')) {
             \unlink(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup');
@@ -138,6 +140,6 @@ class Airship extends AutoUpdater implements ContinuumInterface
         return \file_put_contents(
             ROOT . DIRECTORY_SEPARATOR . $filename,
             \file_get_contents('phar://' . $this->pharAlias . '/'.$filename)
-        );
+        ) !== false;
     }
 }

@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \ParagonIE\Halite\File;
+
 /**
  * Class UpdateFile
  * @package Airship\Engine\Continuum
@@ -22,11 +24,7 @@ class UpdateFile
         $this->path = $data['path'];
         $this->version = $data['version'];
         $this->size = $data['size'] ?? \filesize($data['path']);
-        $this->hash = $data['hash'] ?? \Sodium\bin2hex(
-                \Sodium\crypto_generichash(
-                    \file_get_contents($data['path'])
-                )
-            );
+        $this->hash = $data['hash'] ?? File::checksum($data['path']);
     }
 
     /**

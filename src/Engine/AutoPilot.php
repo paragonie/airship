@@ -2,13 +2,18 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use Airship\Alerts\Router\EmulatePageNotFound;
-use \Airship\Alerts\Router\FallbackLoop;
+use \Airship\Alerts\Router\{
+    EmulatePageNotFound,
+    FallbackLoop
+};
 use \Airship\Engine\Contract\RouterInterface;
-use \Airship\Engine\State;
 
 /**
- * RESTful Routing for the Airship 
+ * Class AutoPilot
+ *
+ * RESTful Routing for the Airship
+ *
+ * @package Airship\Engine
  */
 class AutoPilot implements RouterInterface
 {
@@ -334,6 +339,10 @@ class AutoPilot implements RouterInterface
         
         // Load our cabin-specific landing
         $landing = new $class_name;
+
+        if (IDE_HACKS) {
+            $landing = new Landing();
+        }
         
         // Dependency injection with a twist
         $landing->airshipEjectFromCockpit(
@@ -389,12 +398,13 @@ class AutoPilot implements RouterInterface
     
     /**
      * Do not allow insecure HTTP request to proceed
-     * 
+     *
+     * @param string $scheme
      * @return bool
      */
-    protected static function forceHTTPS(): bool
+    protected static function forceHTTPS(string $scheme = ''): bool
     {
-        if (!self::isHTTPSconnection()) {
+        if (!self::isHTTPSconnection($scheme)) {
             // Should we redirect to an HTTPS endpoint?
             \Airship\redirect(
                 'https://'.$_SERVER['HTTP_HOST'].'/'.$_SERVER['REQUEST_URI'],

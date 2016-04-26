@@ -2,8 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use ParagonIE\CSPBuilder\CSPBuilder;
+use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\Alerts\InvalidType;
+use \ParagonIE\Halite\Util;
 use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
@@ -120,7 +121,7 @@ class Landing
      *
      * @return Contract\DBInterface
      */
-    protected function airshipChooseDB()
+    protected function airshipChooseDB(): DBInterface
     {
         if (\array_key_exists('default', $this->airship_databases)) {
             $db = $this->airship_databases['default'];
@@ -154,43 +155,37 @@ class Landing
     protected function blueprint(string $name, ...$cargs): Blueprint
     {
         if (!empty($cargs)) {
-            $cache = \Sodium\bin2hex(
-                \Sodium\crypto_generichash($name.':'.\json_encode($cargs))
-            );
+            $cache = Util::hash($name.':'.\json_encode($cargs));
         } else {
             $cargs = array();
-            $cache = \Sodium\bin2hex(
-                \Sodium\crypto_generichash($name.'[]')
-            );
+            $cache = Util::hash($name.'[]');
         }
 
-        if (isset($this->_cache['blueprints'][$cache])) {
-            return $this->_cache['blueprints'][$cache];
-        }
+        if (!isset($this->_cache['blueprints'][$cache])) {
+            // CACHE MISS. We need to build it, then!
+            $db = $this->airshipChooseDB();
+            if ($db instanceof DBInterface) {
+                \array_unshift($cargs, $db);
+            }
 
-        // CACHE MISS. We need to build it, then!
-        $db = $this->airshipChooseDB();
-        if ($db instanceof DBInterface) {
-            \array_unshift($cargs, $db);
-        }
+            if ($name[0] === '\\') {
+                // If you pass a \Absolute\Namespace, we will just use it.
+                $class = $name;
+            } else {
+                // We default to \Current\Application\Namespace\Blueprint\NameHere.
+                $x = \explode('\\', $this->getNamespace());
+                \array_pop($x);
 
-        if ($name[0] === '\\') {
-            // If you pass a \Absolute\Namespace, we will just use it.
-            $class = $name;
-        } else {
-            // We default to \Current\Application\Namespace\Blueprint\NameHere.
-            $x = \explode('\\', $this->getNamespace());
-            \array_pop($x);
-
-            $class = \implode('\\', $x).'\\Blueprint\\'.$name;
+                $class = \implode('\\', $x).'\\Blueprint\\'.$name;
+            }
+            $this->_cache['blueprints'][$cache] = new $class(...$cargs);
+            if (!($this->_cache['blueprints'][$cache] instanceof Blueprint)) {
+                throw new InvalidType(
+                    \trk('errors.type.wrong_class', 'Blueprint')
+                );
+            }
+            \Airship\tightenBolts($this->_cache['blueprints'][$cache]);
         }
-        $this->_cache['blueprints'][$cache] = new $class(...$cargs);
-        if (!($this->_cache['blueprints'][$cache] instanceof Blueprint)) {
-            throw new InvalidType(
-                \trk('errors.type.wrong_class', 'Blueprint')
-            );
-        }
-        \Airship\tightenBolts($this->_cache['blueprints'][$cache]);
         return $this->_cache['blueprints'][$cache];
     }
 
@@ -222,11 +217,11 @@ class Landing
      *
      * @return string
      */
-    protected function getNamespace()
+    protected function getNamespace(): string
     {
         $current = \get_class($this);
-        $refl = new \ReflectionClass($current);
-        return $refl->getNamespaceName();
+        $reflect = new \ReflectionClass($current);
+        return $reflect->getNamespaceName();
     }
 
     /**
@@ -272,6 +267,7 @@ class Landing
         if ($this->airship_csrf->check()) {
             return $_POST;
         }
+        return false;
     }
 
     /**

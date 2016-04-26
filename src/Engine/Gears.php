@@ -24,8 +24,11 @@ abstract class Gears
      * @throws GearNotFound
      * @throws GearWrongType
      */
-    public static function attach(string $index, string $new_type, string $namespace = '')
-    {
+    public static function attach(
+        string $index,
+        string $new_type,
+        string $namespace = ''
+    ): bool {
         $state = State::instance();
         $gears = $state->gears;
         
@@ -113,7 +116,7 @@ abstract class Gears
         string $index,
         string $desired_name, 
         string $namespace = ''
-    ) {
+    ): string {
         $state = State::instance();
         if (!isset($state->gears[$index])) {
             throw new GearNotFound($index);
@@ -183,7 +186,7 @@ abstract class Gears
         $obj = new $className(...$args);
         return $obj;
     }
-    
+
     /**
      * Get the class name of a Gear
      * 
@@ -200,7 +203,7 @@ abstract class Gears
         $gears = $state->gears;
         return $gears[$name];
     }
-    
+
     /**
      * Set up initial classes
      * 
@@ -218,9 +221,9 @@ abstract class Gears
      * internal functions
      * 
      * @param string $file
-     * @return boolean
+     * @return bool
      */
-    protected function sandboxRequire(string $file)
+    protected function sandboxRequire(string $file): bool
     {
         return (require $file) === 1;
     }

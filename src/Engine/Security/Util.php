@@ -2,6 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
+use ParagonIE\ConstantTime\Binary;
+
+/**
+ * Class Util
+ *
+ * Contains various utilities that may be useful in developing Airship cabins.
+ *
+ * @package Airship\Engine\Security
+ */
 abstract class Util
 {
     const PRINTABLE_ASCII = "\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f".
@@ -41,13 +50,7 @@ abstract class Util
      */
     public static function subString(string $str, int $start, $length = null): string
     {
-        if (\function_exists('\\mb_substr')) {
-            return \mb_substr($str, $start, $length, '8bit');
-        }
-        if ($length === null) {
-            return \substr($str, $start);
-        }
-        return \substr($str, $start, $length);
+        return Binary::safeSubstr($str, $start, $length);
     }
 
     /**
@@ -58,10 +61,7 @@ abstract class Util
      */
     public static function stringLength(string $str) : int
     {
-        if (\function_exists('\\mb_substr')) {
-            return \mb_strlen($str, '8bit');
-        }
-        return \strlen($str);
+        return Binary::safeStrlen($str);
     }
     
     /**

@@ -2,9 +2,18 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Psr\Http\Message\ResponseInterface;
+use \GuzzleHttp\Client;
 use \GuzzleHttp\ClientInterface;
+use \Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class Hail
+ *
+ * Abstracts away the network communications; silently enforces configuration
+ * (e.g. tor-only mode).
+ *
+ * @package Airship\Engine
+ */
 class Hail
 {
     protected $client;
@@ -16,6 +25,9 @@ class Hail
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
+        if (IDE_HACKS) {
+            $this->client = new Client();
+        }
     }
     
     /**
@@ -40,8 +52,10 @@ class Hail
      * @param array $params
      * @return ResponseInterface
      */
-    public function getAsync(string $url, array $params = []): ResponseInterface
-    {
+    public function getAsync(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
         return $this->client->getAsync(
             $url,
             $this->params($params, $url)
@@ -56,8 +70,10 @@ class Hail
      *
      * @return ResponseInterface
      */
-    public function post(string $url, array $params = []): ResponseInterface
-    {
+    public function post(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
         return $this->client->post(
             $url,
             $this->params($params, $url)
@@ -97,8 +113,10 @@ class Hail
      * @param array $params
      * @return ResponseInterface
      */
-    public function postAsync(string $url, array $params = []): ResponseInterface
-    {
+    public function postAsync(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
         return $this->client->postAsync(
             $url,
             $this->params($params, $url)

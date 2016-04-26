@@ -142,7 +142,7 @@ class Lens
      * @param mixed $val Value
      * @return Lens
      */
-    public function store(string $key, $val)
+    public function store(string $key, $val): self
     {
         $this->stored[$key] = $val;
         return $this;
@@ -155,7 +155,7 @@ class Lens
      * @param mixed $val Value
      * @return Lens
      */
-    public function append(string $key, $val)
+    public function append(string $key, $val): self
     {
         if (!isset($this->stored[$key])) {
             $this->stored[$key] = [];
@@ -174,7 +174,7 @@ class Lens
      * @param mixed $val Value
      * @return Lens
      */
-    public function prepend(string $key, $val)
+    public function prepend(string $key, $val): self
     {
         if (!isset($this->stored[$key])) {
             $this->stored[$key] = [];
@@ -192,12 +192,13 @@ class Lens
      * @param string $name - Name to access in Twig
      * @param callable $func - function definition
      * @param array $is_safe
+     * @return Lens
      */
     public function func(
         string $name,
         $func = null,
         $is_safe = ['html']
-    ) {
+    ): self {
         if (empty($func)) {
             $func = '\\Airship\\LensFunctions\\'.$name;
         }
@@ -208,6 +209,7 @@ class Lens
                 ['is_safe' => $is_safe]
             )
         );
+        return $this;
     }
 
     /**
@@ -215,12 +217,14 @@ class Lens
      *
      * @param string $name Name to access in Twig (by ref)
      * @param &array $value Reference to the value
+     * @return Lens
      */
     public function registerGlobal(
         string $name,
         &$value
-    ) {
+    ): self {
         $this->twigEnv->addGlobal($name, $value);
+        return $this;
     }
 
     /**
@@ -228,17 +232,19 @@ class Lens
      *
      * @param string $name - Name to access n Twig
      * @param callable $func - function to apply
+     * @return Lens
      */
     public function filter(
         string $name,
         $func = null
-    ) {
+    ): self {
         if (empty($func)) {
             $func = '\\Airship\\LensFunctions\\'.$name;
         }
         $this->twigEnv->addFilter(
             new \Twig_SimpleFilter($name, $func)
         );
+        return $this;
     }
     
     /**
@@ -246,18 +252,20 @@ class Lens
      * 
      * @param string $key
      * @param &mixed $value
+     * @return Lens
      */
     public function addGlobal(
         string $key,
         $value
-    ) {
+    ): self {
         $this->twigEnv->addGlobal($key, $value);
+        return $this;
     }
     
     /**
      * Get all filters
      * 
-     * @return array
+     * @return \Twig_FilterInterface[]
      */
     public function listFilters(): array
     {
@@ -284,23 +292,32 @@ class Lens
 
     /**
      * Reset the base template
+     *
+     * @return Lens
      */
-    public function resetBaseTemplate()
+    public function resetBaseTemplate(): self
     {
         $state = State::instance();
-        $state->base_template = 'base.twig';;
+        $state->base_template = 'base.twig';
+        return $this;
     }
 
     /**
      * Override the base template
      *
      * @param string $name
+     * @return Lens
      */
-    public function setBaseTemplate(string $name)
+    public function setBaseTemplate(string $name): self
     {
         $state = State::instance();
         if (isset($state->motifs[$name]) && isset($state->motifs[$name]['config']['base_template'])) {
-            $state->base_template = 'motif/' . $name . '/lens/' . $state->motifs[$name]['config']['base_template'] . '.twig';
+            $state->base_template = 'motif/' .
+                $name .
+                '/lens/' .
+                $state->motifs[$name]['config']['base_template'] .
+                '.twig';
         }
+        return $this;
     }
 }

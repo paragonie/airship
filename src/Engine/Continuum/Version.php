@@ -2,6 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+/**
+ * Class Version
+ *
+ * This contains the version comparison logic.
+ *
+ * @package Airship\Engine\Continuum
+ */
 class Version
 {
     const GROUP_MAJOR     = 1000000;

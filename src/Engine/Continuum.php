@@ -229,7 +229,6 @@ class Continuum
         $phar = new \Phar($file);
         $meta = $phar->getMetadata();
         if (empty($meta)) {
-            /** @todo handle edge cases here if people neglect to use barge */
             return [];
         }
         return $meta;

@@ -89,6 +89,11 @@ class Motif extends AutoUpdater implements ContinuumInterface
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
+        if (!$file->hashMatches($info->getChecksum())) {
+            throw new CouldNotUpdate(
+                'Checksum mismatched'
+            );
+        }
         // Let's open the update package:
         $path = $file->getPath();
         $zip = new \ZipArchive();

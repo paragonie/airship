@@ -9,9 +9,10 @@ use \Airship\Engine\Bolt\{
 
 /**
  * Class Blueprint
- * @package Airship\Engine
  *
  * For MVC developers, this is analogous to a Model
+ * 
+ * @package Airship\Engine
  */
 class Blueprint
 {

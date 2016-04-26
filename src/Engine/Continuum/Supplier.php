@@ -3,14 +3,25 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
-use \Airship\Engine\Contract\ContinuumInterface;
 
+/**
+ * Class Supplier
+ *
+ * This abstracts away a particular supplier.
+ *
+ * @package Airship\Engine\Continuum
+ */
 class Supplier
 {
     private $name;
     private $channels;
     private $signing_keys = [];
-    
+
+    /**
+     * Supplier constructor.
+     * @param $name
+     * @param array $data
+     */
     public function __construct($name, array $data = [])
     {
         $this->name = $name;

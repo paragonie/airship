@@ -5,7 +5,11 @@ namespace Airship\Engine\Continuum;
 use \Airship\Alerts\Continuum\InvalidConfig;
 
 /**
- * Hail - versioned API schema
+ * Class API
+ *
+ * Continuum - versioned API schema
+ *
+ * @package Airship\Engine\Continuum
  */
 abstract class API
 {
@@ -18,13 +22,14 @@ abstract class API
      * @param string $version
      * @return string
      */
-    public static function get(string $key, $version = self::API_VERSION): string {
+    public static function get(
+        string $key,
+        $version = self::API_VERSION
+    ): string {
         static $cache = [];
-        
         if (empty($cache[$version])) {
             $cache[$version] = self::getAll($version);
         }
-        
         return (
             isset($cache[$version][$key])
                 ? $cache[$version][$key]

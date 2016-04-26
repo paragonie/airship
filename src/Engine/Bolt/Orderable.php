@@ -11,8 +11,10 @@ trait Orderable
      * @param bool $defaultDesc
      * @return array
      */
-    public function getSortArgs(string $defaultIndex, bool $defaultDesc = false): array
-    {
+    public function getSortArgs(
+        string $defaultIndex,
+        bool $defaultDesc = false
+    ): array {
         $sort = $_GET['sort'] ?? $defaultIndex;
         $dir = $_GET['dir'] ?? (
             $defaultDesc

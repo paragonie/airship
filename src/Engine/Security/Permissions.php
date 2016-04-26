@@ -4,6 +4,7 @@ namespace Airship\Engine\Security;
 
 use \Airship\Engine\{
     AutoPilot,
+    Database,
     State,
     Contract\DBInterface
 };
@@ -32,6 +33,7 @@ class Permissions
         $this->db = $db;
         if (IDE_HACKS) {
             define('CABIN_NAME', '');
+            $this->db = new Database(new \PDO('sqlite::memory:', 'sqlite'));
         }
     }
 
@@ -112,67 +114,33 @@ class Permissions
     }
 
     /**
-     * Returns an array with overlapping context IDs -- useful for when
-     * contexts are used with regular expressions
+     * Do the members of this group have permission to do something?
      *
-     * @param string $context Context
-     * @param string $cabin Cabin
-     * @return array
-     */
-    public function getOverlap(
-        string $context = '',
-        string $cabin = \CABIN_NAME
-    ): array {
-        if (empty($context)) {
-            $context = AutoPilot::$path;
-        }
-        $ctx = $this->db->first(
-            \Airship\queryStringRoot(
-                'security.permissions.get_overlap',
-                $this->db->getDriver()
-            ),
-            $cabin,
-            $context
-        );
-        if (empty($ctx)) {
-            return [];
-        }
-        return $ctx;
-    }
-    
-    /**
-     * Is this user a super user? Do they belong in a superuser group?
-     * 
-     * @param int $user_id - User ID
-     * @param bool $ignore_groups - Don't look at their groups
+     * @param string $action - perm_actions.label
+     * @param int $context_id - perm_contexts.contextid
+     * @param integer $group_id - groups.groupid
+     * @param bool $deep_search - Also search groups' inheritances
      * @return bool
      */
-    public function isSuperUser(
-        int $user_id = 0,
-        bool $ignore_groups = false
+    public function checkGroup(
+        string $action,
+        int $context_id = null,
+        int $group_id = null,
+        bool $deep_search = true
     ): bool {
-        if (empty($user_id)) {
-            // We can short-circuit this for guests...
-            return false;
-        }
-
-        $statements = [
-            'check_user' => \Airship\queryStringRoot(
-                'security.permissions.is_superuser_user',
+        return 0 < $this->db->single(
+            \Airship\queryStringRoot(
+                $deep_search
+                    ? 'security.permissions.check_groups_deep'
+                    : 'security.permissions.check_groups',
                 $this->db->getDriver()
             ),
-            'check_groups' =>\Airship\queryStringRoot(
-                'security.permissions.is_superuser_group',
-                $this->db->getDriver()
-            )
-        ];
-
-        if ($this->db->cell($statements['check_user'], $user_id) > 0) {
-            return true;
-        } elseif (!$ignore_groups) {
-            return $this->db->cell($statements['check_groups'], $user_id) > 0; 
-        }
-        return false;
+            [
+                'action' => $action,
+                'context' => $context_id,
+                'group' => $group_id
+            ]
+        );
     }
 
     /**
@@ -245,32 +213,66 @@ class Permissions
     }
 
     /**
-     * Do the members of this group have permission to do something?
+     * Returns an array with overlapping context IDs -- useful for when
+     * contexts are used with regular expressions
      *
-     * @param string $action - perm_actions.label
-     * @param int $context_id - perm_contexts.contextid
-     * @param integer $group_id - groups.groupid
-     * @param bool $deep_search - Also search groups' inheritances
-     * @return bool
+     * @param string $context Context
+     * @param string $cabin Cabin
+     * @return array
      */
-    public function checkGroup(
-        string $action,
-        int $context_id = null,
-        int $group_id = null,
-        bool $deep_search = true
-    ): bool {
-        return 0 < $this->db->single(
+    public function getOverlap(
+        string $context = '',
+        string $cabin = \CABIN_NAME
+    ): array {
+        if (empty($context)) {
+            $context = AutoPilot::$path;
+        }
+        $ctx = $this->db->first(
             \Airship\queryStringRoot(
-                $deep_search
-                    ? 'security.permissions.check_groups_deep'
-                    : 'security.permissions.check_groups',
+                'security.permissions.get_overlap',
                 $this->db->getDriver()
             ),
-            [
-                'action' => $action,
-                'context' => $context_id,
-                'group' => $group_id
-            ]
+            $cabin,
+            $context
         );
+        if (empty($ctx)) {
+            return [];
+        }
+        return $ctx;
+    }
+    
+    /**
+     * Is this user a super user? Do they belong in a superuser group?
+     * 
+     * @param int $user_id - User ID
+     * @param bool $ignore_groups - Don't look at their groups
+     * @return bool
+     */
+    public function isSuperUser(
+        int $user_id = 0,
+        bool $ignore_groups = false
+    ): bool {
+        if (empty($user_id)) {
+            // We can short-circuit this for guests...
+            return false;
+        }
+
+        $statements = [
+            'check_user' => \Airship\queryStringRoot(
+                'security.permissions.is_superuser_user',
+                $this->db->getDriver()
+            ),
+            'check_groups' =>\Airship\queryStringRoot(
+                'security.permissions.is_superuser_group',
+                $this->db->getDriver()
+            )
+        ];
+
+        if ($this->db->cell($statements['check_user'], $user_id) > 0) {
+            return true;
+        } elseif (!$ignore_groups) {
+            return $this->db->cell($statements['check_groups'], $user_id) > 0; 
+        }
+        return false;
     }
 }
