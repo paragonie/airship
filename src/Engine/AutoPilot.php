@@ -202,8 +202,6 @@ class AutoPilot implements RouterInterface
                 return $https_only
                     ? self::forceHTTPS($scheme)
                     : true;
-            } else {
-                \var_dump($cabinKey, $pos);
             }
         }
         return false;
