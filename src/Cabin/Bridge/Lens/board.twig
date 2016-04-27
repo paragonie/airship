@@ -11,7 +11,7 @@
             <form
                 id="board"
                 class="board-form pure-form pure-form-stacked"
-                action="/bridge/board"
+                action="{{ cabin_url('Bridge')|e('html_attr') }}/board"
                 method="post"
             >{{ form_token() }}
                 <label for="username">{{ __("Username") }}:</label>
