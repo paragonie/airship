@@ -291,9 +291,10 @@ class Landing
 
         $state = State::instance();
         if (!\headers_sent()) {
-            \header('X-XSS-Protection: 1; mode=block');
             \header('Content-Type: text/html;charset=UTF-8');
             \header('Content-Language: '.$state->lang);
+            \header('X-Frame-Optiona: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-XSS-Protection: 1; mode=block');
         }
         $csp = $state->CSP;
         if ($csp instanceof CSPBuilder) {
