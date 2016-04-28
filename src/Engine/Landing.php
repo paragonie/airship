@@ -2,9 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\Halite\Alerts\InvalidType;
-use \ParagonIE\Halite\Util;
+use \Airship\Engine\Cache\File;
 use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
@@ -12,6 +10,10 @@ use \Airship\Engine\Bolt\{
     Log as LogBolt,
     Security as SecurityBolt
 };
+use \Airship\Engine\Security\CSRF;
+use \ParagonIE\CSPBuilder\CSPBuilder;
+use \ParagonIE\Halite\Alerts\InvalidType;
+use \ParagonIE\Halite\Util;
 
 /**
  * Class Landing
@@ -82,6 +84,9 @@ class Landing
      */
     public function resetBaseTemplate()
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
         return $this->airship_lens_object->resetBaseTemplate();
     }
 
@@ -91,6 +96,9 @@ class Landing
      */
     public function setBaseTemplate(string $name)
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
         return $this->airship_lens_object->setBaseTemplate($name);
     }
 
@@ -102,6 +110,9 @@ class Landing
      */
     protected function addLensFilter(string $name, callable $func)
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
         $this->airship_lens_object->filter($name, $func);
     }
 
@@ -113,6 +124,9 @@ class Landing
      */
     protected function addLensFunction(string $name, callable $func)
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
         $this->airship_lens_object->func($name, $func);
     }
 
@@ -148,16 +162,16 @@ class Landing
      * Grab a blueprint
      *
      * @param string $name
-     * @param mixed[] ...$cargs Constructor arguments
+     * @param mixed[] ...$cArgs Constructor arguments
      * @return Blueprint
      * @throws InvalidType
      */
-    protected function blueprint(string $name, ...$cargs): Blueprint
+    protected function blueprint(string $name, ...$cArgs): Blueprint
     {
-        if (!empty($cargs)) {
-            $cache = Util::hash($name.':'.\json_encode($cargs));
+        if (!empty($cArgs)) {
+            $cache = Util::hash($name.':'.\json_encode($cArgs));
         } else {
-            $cargs = array();
+            $cArgs = array();
             $cache = Util::hash($name.'[]');
         }
 
@@ -165,7 +179,7 @@ class Landing
             // CACHE MISS. We need to build it, then!
             $db = $this->airshipChooseDB();
             if ($db instanceof DBInterface) {
-                \array_unshift($cargs, $db);
+                \array_unshift($cArgs, $db);
             }
 
             if ($name[0] === '\\') {
@@ -178,7 +192,7 @@ class Landing
 
                 $class = \implode('\\', $x).'\\Blueprint\\'.$name;
             }
-            $this->_cache['blueprints'][$cache] = new $class(...$cargs);
+            $this->_cache['blueprints'][$cache] = new $class(...$cArgs);
             if (!($this->_cache['blueprints'][$cache] instanceof Blueprint)) {
                 throw new InvalidType(
                     \trk('errors.type.wrong_class', 'Blueprint')
@@ -228,24 +242,30 @@ class Landing
      * Grab a lens
      *
      * @param string $name
-     * @param mixed[] ...$cargs Constructor arguments
+     * @param mixed[] ...$cArgs Constructor arguments
      * @return bool
      */
-    protected function lens(string $name, ...$cargs): bool
+    protected function lens(string $name, ...$cArgs): bool
     {
-        return $this->airship_lens_object->display($name, ...$cargs);
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
+        return $this->airship_lens_object->display($name, ...$cArgs);
     }
 
     /**
      * Render a Lens as text, return a string
      *
      * @param string $name
-     * @param mixed[] ...$cargs Constructor arguments
+     * @param mixed[] ...$cArgs Constructor arguments
      * @return string
      */
-    protected function getLensAsText(string $name, ...$cargs): string
+    protected function getLensAsText(string $name, ...$cArgs): string
     {
-        return $this->airship_lens_object->render($name, ...$cargs);
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
+        return $this->airship_lens_object->render($name, ...$cArgs);
     }
 
     /**
@@ -263,6 +283,9 @@ class Landing
         if ($ignoreCSRFToken) {
             return $_POST;
         }
+        if (IDE_HACKS) {
+            $this->airship_csrf = new CSRF();
+        }
 
         if ($this->airship_csrf->check()) {
             return $_POST;
@@ -274,14 +297,20 @@ class Landing
      * Render lens content, cache it, then display it.
      *
      * @param string $name
-     * @param array $cargs Constructor arguments
+     * @param array $cArgs Constructor arguments
      * @return bool
      */
-    protected function stasis(string $name, ...$cargs): bool
+    protected function stasis(string $name, ...$cArgs): bool
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+            $this->airship_filecache_object = new File('');
+            $this->airship_cspcache_object = new File('');
+        }
+
         $oldSession = $_SESSION;
         $_SESSION = [];
-        $data = $this->airship_lens_object->render($name, ...$cargs);
+        $data = $this->airship_lens_object->render($name, ...$cArgs);
         $_SESSION = $oldSession;
 
         $this->airship_filecache_object->set(
@@ -313,18 +342,25 @@ class Landing
      *
      * @param string $name
      * @param mixed $value
+     * @return Lens
      */
-    protected function storeLensVar(string $name, $value)
+    protected function storeLensVar(string $name, $value): Lens
     {
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
         return $this->airship_lens_object->store($name, $value);
     }
 
     /**
      * @param string $name
-     * @return mixed
+     * @return bool
      */
-    protected function setActiveMotif(string $name)
+    protected function setActiveMotif(string $name): bool
     {
-        return $this->airship_lens_object->setMotif($name);
+        if (IDE_HACKS) {
+            $this->airship_lens_object = new Lens(new \Twig_Environment());
+        }
+        return $this->airship_lens_object->setActiveMotif($name);
     }
 }
