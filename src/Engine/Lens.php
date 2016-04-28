@@ -41,7 +41,7 @@ class Lens
         if (!\headers_sent()) {
             \header('Content-Type: '.$mime);
             \header('Content-Language: '.$state->lang);
-            \header('X-Frame-Optiona: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
             \ob_start();
             // We need to render this to make sure our CSP headers send!
@@ -79,7 +79,7 @@ class Lens
         if (!\headers_sent()) {
             \header('Content-Type: '.$mime);
             \header('Content-Language: '.$state->lang);
-            \header('X-Frame-Optiona: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
             \ob_start();
             // We need to render this to make sure our CSP headers send!
@@ -132,7 +132,7 @@ class Lens
         if (!\headers_sent()) {
             \header("Content-Type: text/html;charset=UTF-8");
             \header("Content-Language: ".$state->lang);
-            \header('X-Frame-Optiona: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
         }
         return $this->twigEnv->render(

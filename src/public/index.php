@@ -41,7 +41,7 @@ if (empty($_POST)) {
             \header('Content-Type: text/html;charset=UTF-8');
             \header('Content-Language: ' . $state->lang);
             \header('X-XSS-Protection: 1; mode=block');
-            \header('X-Frame-Optiona: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
         }
         $csp =  $cspCache->get(
             $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI']
