@@ -38,6 +38,7 @@ if (empty($_POST)) {
     );
     if (!empty($staticPage)) {
         if (!\headers_sent()) {
+            \header('X-XSS-Protection: 1; mode=block');
             \header('Content-Type: text/html;charset=UTF-8');
             \header('Content-Language: ' . $state->lang);
         }

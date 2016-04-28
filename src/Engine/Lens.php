@@ -41,6 +41,7 @@ class Lens
         if (!\headers_sent()) {
             \header('Content-Type: '.$mime);
             \header('Content-Language: '.$state->lang);
+            \header('X-XSS-Protection: 1; mode=block');
             \ob_start();
             // We need to render this to make sure our CSP headers send!
             echo $this->twigEnv->render(
@@ -77,6 +78,7 @@ class Lens
         if (!\headers_sent()) {
             \header('Content-Type: '.$mime);
             \header('Content-Language: '.$state->lang);
+            \header('X-XSS-Protection: 1; mode=block');
             \ob_start();
             // We need to render this to make sure our CSP headers send!
             echo $this->twigEnv->render(
