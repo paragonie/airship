@@ -1,8 +1,8 @@
 /.idea/
 /nbproject/
-/files/*
-/src/Cabin/*/Lens/motif/*
-/src/Cabin/*/public/motif/*
+/files/
+/src/Cabin/*/Lens/motif/
+/src/Cabin/*/public/motif/
 /src/public/static/Bridge
 /src/public/static/Hull
 /src/public/launch.php
@@ -18,6 +18,5 @@
 /src/tmp/last_update_check.txt
 /test/phpunit.phar
 /test/phpunit.phar.asc
-/vendor/*
 /vendor/
 /composer.lock
