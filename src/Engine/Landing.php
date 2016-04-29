@@ -61,7 +61,7 @@ class Landing
         $this->airship_lens_object = $lens;
         $this->airship_databases = $databases;
         $this->airship_csrf = Gears::get('CSRF');
-        $this->airship_cabin_prefix = '/' . $urlPrefix;
+        $this->airship_cabin_prefix = \rtrim('/' . $urlPrefix, '/');
         $file = ROOT . '/config/Cabin/' . \CABIN_NAME . '/config.json';
         if (\file_exists($file)) {
             $this->airship_config = \Airship\loadJSON($file);

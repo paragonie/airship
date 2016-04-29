@@ -27,6 +27,10 @@ class Blog extends LoggedInUsersOnly
         }
     }
 
+    /**
+     * This method gets invoked by the router before the final method call
+     * of the HTTP request.
+     */
     public function airshipLand()
     {
         parent::airshipLand();
@@ -56,7 +60,7 @@ class Blog extends LoggedInUsersOnly
         $post = $this->post();
         if (!empty($post)) {
             if ($this->blog->updateCategory($id, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/category');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
             }
         }
         $category = $this->blog->getCategoryInfo($id);
@@ -105,7 +109,7 @@ class Blog extends LoggedInUsersOnly
         $post = $this->post();
         if (!empty($post)) {
             if ($this->processEditPost($post, $authorsAllowed, $blogPost)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/post');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
         }
         $this->lens(
@@ -157,7 +161,7 @@ class Blog extends LoggedInUsersOnly
             }
             if (!\in_array($series['author'], $authorsAllowed)) {
                 // You are not allowed
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/series');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
             }
         }
 
@@ -168,7 +172,7 @@ class Blog extends LoggedInUsersOnly
                 $seriesId,
                 $this->flattenOld($series_items)
             )) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/series');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
             }
         }
         $this->lens(
@@ -190,14 +194,14 @@ class Blog extends LoggedInUsersOnly
     public function editTag(string $id = '')
     {
         if (!$this->can('update')) {
-            \Airship\redirect($this->airship_cabin_prefix.'/blog/tag');
+            \Airship\redirect($this->airship_cabin_prefix . '/blog/tag');
         }
         $tag = $this->blog->getTagInfo((int) $id);
 
         $post = $this->post();
         if (!empty($post)) {
             if ($this->processEditTag((int) $id, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/tag');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/tag');
             }
         }
         $this->lens(
@@ -345,12 +349,12 @@ class Blog extends LoggedInUsersOnly
     public function newCategory()
     {
         if (!$this->can('create')) {
-            \Airship\redirect($this->airship_cabin_prefix.'/blog/category');
+            \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
         }
         $post = $this->post();
         if (!empty($post)) {
             if ($this->blog->createCategory($post)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/category');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
             }
         }
 
@@ -367,7 +371,7 @@ class Blog extends LoggedInUsersOnly
     public function newPost()
     {
         if (!$this->can('create')) {
-            \Airship\redirect($this->airship_cabin_prefix.'/blog/post');
+            \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
         }
         // Load Data
         if ($this->isSuperUser()) {
@@ -387,7 +391,7 @@ class Blog extends LoggedInUsersOnly
                 $authorsAllowed[] = $a['authorid'];
             }
             if ($this->processNewPost($post, $authorsAllowed)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/post');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
         }
         $this->lens(
@@ -405,7 +409,7 @@ class Blog extends LoggedInUsersOnly
     public function newSeries()
     {
         if (!$this->can('create')) {
-            \Airship\redirect($this->airship_cabin_prefix.'/blog/series');
+            \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
         }
         // Load Data
         if ($this->isSuperUser()) {
@@ -423,7 +427,7 @@ class Blog extends LoggedInUsersOnly
                 $authorsAllowed[] = $a['authorid'];
             }
             if ($this->processNewSeries($post, $authorsAllowed)) {
-                \Airship\redirect($this->airship_cabin_prefix.'/blog/series');
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
             }
         }
         $this->lens(

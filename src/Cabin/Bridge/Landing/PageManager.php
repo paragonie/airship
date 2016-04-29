@@ -61,7 +61,7 @@ class PageManager extends LoggedInUsersOnly
             $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
         $secretKey = $this->config('recaptcha.secret-key');
@@ -124,7 +124,7 @@ class PageManager extends LoggedInUsersOnly
             $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
 
@@ -190,7 +190,7 @@ class PageManager extends LoggedInUsersOnly
             $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
         $latest = $this->pg->getLatestDraft($page['pageid']);
@@ -236,7 +236,7 @@ class PageManager extends LoggedInUsersOnly
         } catch (CustomPageNotFoundException $ex) {
             if (!empty($path)) {
                 \Airship\redirect(
-                    $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                    $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
                 );
             }
             $dirs = [];
@@ -361,7 +361,7 @@ class PageManager extends LoggedInUsersOnly
         $page = [];
         $path = $this->determinePath($cabin);
         if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+            \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -382,7 +382,7 @@ class PageManager extends LoggedInUsersOnly
                 ]
             );
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
 
@@ -418,7 +418,7 @@ class PageManager extends LoggedInUsersOnly
         $history = [];
         $path = $this->determinePath($cabin);
         if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/'));
+            \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNames();
         if (!\in_array($cabin, $cabins)) {
@@ -432,7 +432,7 @@ class PageManager extends LoggedInUsersOnly
             $history = $this->pg->getHistory($page['pageid']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
 
@@ -470,7 +470,7 @@ class PageManager extends LoggedInUsersOnly
                 ]
             );
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
 
         }
@@ -493,7 +493,7 @@ class PageManager extends LoggedInUsersOnly
         $path = $this->determinePath($cabin);
         if (\is1DArray($_GET)) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
         $cabins = $this->getCabinNames();
@@ -511,7 +511,7 @@ class PageManager extends LoggedInUsersOnly
             $page = $this->pg->getPageById($version['page']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/' . \trim($cabin, '/')
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
         $prevUnique = $this->pg->getPrevVersionUniqueId(
@@ -580,7 +580,7 @@ class PageManager extends LoggedInUsersOnly
                 );
             }
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/'.$cabin, [
+                $this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $dir
             ]);
         }
@@ -631,7 +631,7 @@ class PageManager extends LoggedInUsersOnly
         }
         if ($this->pg->updatePage($pageId, $post, $publish, $raw)) {
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/'.$cabin, [
+                $this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $dir
             ]);
         }
@@ -675,7 +675,7 @@ class PageManager extends LoggedInUsersOnly
                 );
             }
             \Airship\redirect(
-                $this->airship_cabin_prefix.'/pages/'.$cabin, [
+                $this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $dir
             ]);
         }
@@ -697,7 +697,7 @@ class PageManager extends LoggedInUsersOnly
             return false;
         }
         if ($this->pg->createDir($cabin, $parent, $post)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/'.$cabin, [
+            \Airship\redirect($this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $parent
             ]);
         }
@@ -750,7 +750,7 @@ class PageManager extends LoggedInUsersOnly
             return false;
         }
         if ($this->pg->createPage($cabin, $path, $post, $publish, $raw)) {
-            \Airship\redirect($this->airship_cabin_prefix.'/pages/'.$cabin, [
+            \Airship\redirect($this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $path
             ]);
         }

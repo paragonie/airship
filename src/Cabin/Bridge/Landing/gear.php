@@ -62,7 +62,7 @@ if (!\class_exists('LoggedInUsersOnly')) {
                 \Airship\redirect($this->airship_cabin_prefix);
             } elseif (!$this->can('read') && !$this->can('index')) {
                 // Sorry, you can't read this?
-                \Airship\redirect($this->airship_cabin_prefix.'/?' . \http_build_query([
+                \Airship\redirect($this->airship_cabin_prefix . '/?' . \http_build_query([
                     'error' => '403 Forbidden'
                 ]));
             }
