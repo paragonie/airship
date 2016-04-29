@@ -22,6 +22,14 @@ class IndexPage extends LandingGear
             $this->blog = new Blog(\Airship\get_database());
         }
 
+        if (!\file_exists(ROOT . '/src/public/robots.txt')) {
+            // Default robots.txt
+            \file_put_contents(
+                ROOT . '/src/public/robots.txt',
+                "User-agent: *\nAllow: /"
+            );
+        }
+
         $blogRoll = $this->blog->recentFullPosts(5);
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
