@@ -6,6 +6,7 @@
 /src/public/static/Bridge
 /src/public/static/Hull
 /src/public/launch.php
+/src/public/robots.txt
 /src/config/cabins.json
 /src/config/gears.json
 /src/config/databases.json

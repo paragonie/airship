@@ -22,10 +22,10 @@ class IndexPage extends LandingGear
             $this->blog = new Blog(\Airship\get_database());
         }
 
-        if (!\file_exists(ROOT . '/src/public/robots.txt')) {
+        if (!\file_exists(ROOT . '/public/robots.txt')) {
             // Default robots.txt
             \file_put_contents(
-                ROOT . '/src/public/robots.txt',
+                ROOT . '/public/robots.txt',
                 "User-agent: *\nAllow: /"
             );
         }
