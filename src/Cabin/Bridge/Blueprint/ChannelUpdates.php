@@ -177,8 +177,10 @@ class ChannelUpdates extends BlueprintGear
 
             // Verify that we've calculated the same Merkle root for each new leaf:
             if (\hash_equals($new['root'], $tree->getRoot())) {
-                $this->storeUpdate($new);
-                $newNodes[] = $newNode;
+                // Attempt to store the update (and create/revoke copies of the public keys):
+                if ($this->storeUpdate($new)) {
+                    $newNodes[] = $newNode;
+                }
             }
         }
         if (\count($newNodes) > 0) {
@@ -217,6 +219,57 @@ class ChannelUpdates extends BlueprintGear
     }
 
     /**
+     * We are creating a new key
+     *
+     * @param array $keyData
+     * @param array $nodeData
+     * @return bool
+     */
+    protected function insertKey(array $keyData, array $nodeData): bool
+    {
+        $supplier = \preg_replace('/[^A-Za-z0-9_\-]/', '', $keyData['supplier']);
+        if (\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
+            /**
+             * @todo verify master signature before inserting.
+             */
+        } else {
+            /**
+             * @todo make sure this is the first, master key for the user
+             */
+        }
+    }
+
+    /**
+     * This propagates the new update through the network.
+     */
+    protected function notifyPeersOfNewUpdate()
+    {
+        $state = State::instance();
+        if (IDE_HACKS) {
+            $state->hail = new Hail(new Client());
+        }
+        $resp = [];
+        $peers = \Airship\loadJSON(ROOT . '/config/channel_peers/' . $this->channel . '.json');
+        foreach ($peers as $peer) {
+            foreach ($peer['urls'] as $url) {
+                $resp []= $state->hail->getAsync($url, [
+                    'challenge' => Base64UrlSafe::encode(\random_bytes(21))
+                ]);
+            }
+        }
+        foreach ($resp as $r) {
+            $r->then(function (ResponseInterface $response) {
+                $context = \json_decode((string) $response->getBody());
+                $this->log(
+                    'Peer notified of channel update',
+                    LogLevel::INFO,
+                    $context
+                );
+            });
+        }
+    }
+
+    /**
      * Parse the HTTP response and get the useful information out of it.
      *
      * @param string $raw
@@ -252,6 +305,8 @@ class ChannelUpdates extends BlueprintGear
                 $dataInternal = \json_decode($data, true);
                 $valid[] = [
                     'id' => (int) $update['id'],
+                    'stored' => $dataInternal['stored'],
+                    'master_signature' => $dataInternal['master_signature'],
                     'root' => $dataInternal['root'],
                     'data' => $dataInternal['data']
                 ];
@@ -265,42 +320,26 @@ class ChannelUpdates extends BlueprintGear
     }
 
     /**
-     * This propagates the new update through the network.
+     * We are marking a key as invalid, and never trusting it again.
+     *
+     * @param array $keyData
+     * @param array $nodeData
+     * @return bool
      */
-    protected function notifyPeersOfNewUpdate()
+    protected function revokeKey(array $keyData, array $nodeData): bool
     {
-        $state = State::instance();
-        if (IDE_HACKS) {
-            $state->hail = new Hail(new Client());
-        }
-        $resp = [];
-        $peers = \Airship\loadJSON(ROOT . '/config/channel_peers/' . $this->channel . '.json');
-        foreach ($peers as $peer) {
-            foreach ($peer['urls'] as $url) {
-                $resp []= $state->hail->getAsync($url, [
-                    'challenge' => Base64UrlSafe::encode(\random_bytes(21))
-                ]);
-            }
-        }
-        foreach ($resp as $r) {
-            $r->then(function (ResponseInterface $response) {
-                $context = \json_decode((string) $response->getBody());
-                $this->log(
-                    'Peer notified of channel update',
-                    LogLevel::INFO,
-                    $context
-                );
-            });
-        }
+
     }
 
     /**
      * Store the new update in the database.
      *
      * @param array $nodeData
+     * @return bool
      */
-    protected function storeUpdate(array $nodeData)
+    protected function storeUpdate(array $nodeData): bool
     {
+        $this->db->beginTransaction();
         $this->db->insert(
             'airship_key_updates',
             [
@@ -310,5 +349,21 @@ class ChannelUpdates extends BlueprintGear
                 'merkleroot' => $nodeData['root']
             ]
         );
+        $unpacked = \json_decode($nodeData['data'], true);
+        switch ($unpacked['action']) {
+            case 'CREATE':
+                if (!$this->insertKey($unpacked, $nodeData)) {
+                    $this->db->rollBack();
+                    return false;
+                }
+                break;
+            case 'INSERT':
+                if (!$this->revokeKey($unpacked, $nodeData)) {
+                    $this->db->rollBack();
+                    return false;
+                }
+                break;
+        }
+        return $this->db->commit();
     }
 }
