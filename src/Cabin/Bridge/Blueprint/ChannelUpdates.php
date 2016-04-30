@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
+use Airship\Alerts\InvalidType;
 use \Airship\Engine\{
     Continuum\API,
     Database,
@@ -142,11 +143,13 @@ class ChannelUpdates extends BlueprintGear
                 $code = $response->getStatusCode();
                 if ($code >= 200 && $code < 300) {
                     try {
+                        // We use a separate method for parsing this update:
                         return $this->parseChannelUpdateResponse(
                             (string) $response->getBody(),
                             $initiated
                         );
                     } catch (CouldNotUpdate $ex) {
+                        // Log the error message:
                         $this->log(
                             $ex->getMessage(),
                             LogLevel::ALERT,
@@ -224,19 +227,53 @@ class ChannelUpdates extends BlueprintGear
      * @param array $keyData
      * @param array $nodeData
      * @return bool
+     * @throws InvalidType
      */
     protected function insertKey(array $keyData, array $nodeData): bool
     {
         $supplier = \preg_replace('/[^A-Za-z0-9_\-]/', '', $keyData['supplier']);
-        if (\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
-            /**
-             * @todo verify master signature before inserting.
-             */
-        } else {
-            /**
-             * @todo make sure this is the first, master key for the user
-             */
+        if (empty($supplier)) {
+            throw new InvalidType(
+                'Expected non-empty string for supplier name'
+            );
         }
+        $filePath = ROOT . '/config/supplier_keys/' . $supplier . '.json';
+
+        if (\file_exists($filePath)) {
+            $supplierData = \Airship\loadJSON($filePath);
+            if (!$this->verifyMasterSignature($supplierData, $keyData, $nodeData)) {
+                return false;
+            }
+
+            // Create new entry
+            $supplierData['signing_keys'][] = [
+                'type' => $keyData['type'] ?? 'signing',
+                'public_key' => $keyData['public_key']
+            ];
+            return \file_put_contents(
+                $filePath,
+                \json_encode($supplierData, JSON_PRETTY_PRINT)
+            ) !== false;
+        } elseif ($keyData['type'] === 'master') {
+            // The supplier's first key.
+            $supplierData = [
+                'channels' => [
+                    $this->channel
+                ],
+                'signing_keys' => [
+                    [
+                        'type' => 'master',
+                        'public_key' => $keyData['public_key']
+                    ]
+                ]
+            ];
+            return \file_put_contents(
+                $filePath,
+                \json_encode($supplierData, JSON_PRETTY_PRINT)
+            ) !== false;
+        }
+        // Fail closed:
+        return false;
     }
 
     /**
@@ -320,15 +357,43 @@ class ChannelUpdates extends BlueprintGear
     }
 
     /**
-     * We are marking a key as invalid, and never trusting it again.
+     * We are removing a key from our trust store.
      *
      * @param array $keyData
      * @param array $nodeData
      * @return bool
+     * @throws InvalidType
      */
     protected function revokeKey(array $keyData, array $nodeData): bool
     {
+        $supplier = \preg_replace('/[^A-Za-z0-9_\-]/', '', $keyData['supplier']);
+        if (empty($supplier)) {
+            throw new InvalidType(
+                'Expected non-empty string for supplier name'
+            );
+        }
+        $filePath = ROOT . '/config/supplier_keys/' . $supplier . '.json';
 
+        if (\file_exists($filePath)) {
+            $supplierData = \Airship\loadJSON($filePath);
+            if (!$this->verifyMasterSignature($supplierData, $keyData, $nodeData)) {
+                return false;
+            }
+
+            // Remove the revoked key.
+            foreach ($supplierData['signing_keys'] as $i => $key) {
+                if (\hash_equals($keyData['public_key'], $key['public_key'])) {
+                    unset($supplierData['signing_keys'][$i]);
+                    break;
+                }
+            }
+            return \file_put_contents(
+                $filePath,
+                \json_encode($supplierData, JSON_PRETTY_PRINT)
+            ) !== false;
+        }
+        // Fail closed:
+        return false;
     }
 
     /**
@@ -363,7 +428,51 @@ class ChannelUpdates extends BlueprintGear
                     return false;
                 }
                 break;
+            default:
+                // Unknown operation. Do nothing and abort.
+                $this->db->rollBack();
+                return false;
         }
         return $this->db->commit();
+    }
+
+    /**
+     * Verify that this key update was signed by the master key for this supplier.
+     *
+     * @param array $supplierData
+     * @param array $keyData
+     * @param array $nodeData
+     * @return bool
+     */
+    protected function verifyMasterSignature(
+        array $supplierData,
+        array $keyData,
+        array $nodeData
+    ): bool {
+        $masterData = \json_decode($nodeData['master'], true);
+        if ($masterData === false) {
+            return false;
+        }
+
+        foreach ($supplierData['signing_keys'] as $key) {
+            if ($key['type'] !== 'master') {
+                continue;
+            }
+            if (\hash_equals($keyData['public_key'], $masterData['public_key'])) {
+                $publicKey = new SignaturePublicKey(
+                    \Sodium\hex2bin($masterData['public_key'])
+                );
+                $message = \json_encode($keyData);
+
+                // If the signature is valid, we return true.
+                return AsymmetricCrypto::verify(
+                    $message,
+                    $publicKey,
+                    $masterData['signature']
+                );
+            }
+        }
+        // Fail closed.
+        return false;
     }
 }
