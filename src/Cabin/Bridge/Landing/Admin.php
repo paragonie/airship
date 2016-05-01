@@ -157,8 +157,12 @@ class Admin extends AdminOnly
             ROOT . $ds . 'config' . $ds . 'content_security_policy.json',
             \json_encode($csp, JSON_PRETTY_PRINT)
         );
-        foreach ($post['universal']['guest_groups'] as $i => $g) {
-            $post['universal']['guest_groups'][$i] = (int) $g;
+        if (empty($post['universal']['guest_groups'])) {
+            $post['universal']['guest_groups'] = [];
+        } else {
+            foreach ($post['universal']['guest_groups'] as $i => $g) {
+                $post['universal']['guest_groups'][$i] = (int)$g;
+            }
         }
 
         // Save universal config
