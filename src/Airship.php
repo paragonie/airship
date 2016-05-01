@@ -308,6 +308,25 @@ function get_database(string $id = 'default'): Database
 }
 
 /**
+ * Given a file path, only return the file name.
+ *
+ * @param string $fullPath
+ * @param bool $trimExtension
+ * @return string
+ */
+function path_to_filename(string $fullPath, bool $trimExtension = false): string
+{
+    $pieces = \Airship\chunk($fullPath);
+    $lastPiece = \array_pop($pieces);
+    if ($trimExtension) {
+        $parts = \Airship\chunk($lastPiece, '.');
+        \array_pop($parts);
+        return \implode('.', $parts);
+    }
+    return $lastPiece;
+}
+
+/**
  * Get a base URL for a gravatar image
  *
  * @param string $email

@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Alerts\FileSystem\FileNotFound;
+use Airship\Engine\Continuum\Airship;
 use \Airship\Engine\State;
 
 require_once __DIR__.'/gear.php';
@@ -77,8 +78,11 @@ class Admin extends AdminOnly
             $this->loadJSONConfigFile('gears.json');
         $settings['keyring'] =
             $this->loadJSONConfigFile('keyring.json');
-        $settings['suppliers'] =
-            $this->loadJSONConfigFile('supplier_keys.json');
+
+        foreach (\Airship\list_all_files(ROOT . '/config/supplier_keys/', 'json') as $supplier) {
+            $name = \Airship\path_to_filename($supplier, true);
+            $settings['suppliers'][$name] = \Airship\loadJSON($supplier);
+        }
 
         $this->lens('admin_settings', [
             'config' => $settings,
