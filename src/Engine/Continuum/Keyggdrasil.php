@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Continuum\ChannelSignatureFailed;
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use Airship\Alerts\Continuum\PeerSignatureFailed;
+use \Airship\Alerts\Continuum\{
+    ChannelSignatureFailed,
+    CouldNotUpdate,
+    PeerSignatureFailed
+};
 use \Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
     Bolt\Log,
@@ -15,8 +17,7 @@ use \Airship\Engine\{
 };
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\ConstantTime\Base64;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\{
     Asymmetric\Crypto as AsymmetricCrypto,
     Structure\MerkleTree,
