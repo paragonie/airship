@@ -5,6 +5,7 @@ namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\ChannelSignatureFailed;
 use \Airship\Alerts\Continuum\CouldNotUpdate;
+use Airship\Alerts\Continuum\PeerSignatureFailed;
 use \Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
     Bolt\Log,
@@ -67,6 +68,70 @@ class Keyggdrasil
         foreach ($channels as $ch => $config) {
             $this->channelCache[$ch] = new Channel($this, $ch, $config);
         }
+    }
+
+    /**
+     * Does this peer notary see the same Merkle root?
+     *
+     * @param Peer $peer
+     * @param string $expectedRoot
+     * @return bool
+     * @throws CouldNotUpdate
+     * @throws PeerSignatureFailed
+     */
+    protected function checkWithPeer(Peer $peer, string $expectedRoot): bool
+    {
+        foreach ($peer->getAllURLs() as $url) {
+            $challenge = Base64UrlSafe::encode(\random_bytes(33));
+            $response = $this->hail->post($url, [
+                'challenge' => $challenge
+            ]);
+            if ($response instanceof Response) {
+                $code = $response->getStatusCode();
+                if ($code >= 200 && $code < 300) {
+                    $body = (string) $response->getBody();
+                    $response = \json_decode($body, true);
+                    if ($response['status'] === 'OK') {
+                        // Decode then verify signature
+                        $message = Base64UrlSafe::decode($response['response']);
+                        $signature = Base64UrlSafe::decode($response['signature']);
+                        if (!AsymmetricCrypto::verify($message, $peer->getPublicKey(), $signature, true)) {
+                            throw new PeerSignatureFailed(
+                                'Invalid digital signature (i.e. it was signed with an incorrect key).'
+                            );
+                        }
+                        // Make sure our challenge was signed.
+                        $decoded = \json_decode($message, true);
+                        if (!\hash_equals($challenge, $decoded['challenge'])) {
+                            throw new CouldNotUpdate(
+                                'Challenge-response authentication failed.'
+                            );
+                        }
+                        // Make sure this was a recent signature (it *should* be):
+                        $min = (new \DateTime('now'))
+                            ->sub(new \DateInterval('P01D'));
+                        $time = new \DateTime($decoded['timestamp']);
+                        if ($time < $min) {
+                            throw new CouldNotUpdate(
+                                'Timestamp ' . $decoded['timestamp'] . ' is far too old.'
+                            );
+                        }
+
+                        // Return TRUE if it matches the expected root.
+                        // Return FALSE if it matches.
+                        return \hash_equals(
+                            $expectedRoot,
+                            $decoded['root']
+                        );
+                    }
+                    // If we're still here, the Peer returned an error.
+                }
+                // If we're still here, the Peer returned an HTTP error.
+            }
+            // If we're still here, Guzzle failed.
+        }
+        // When all else fails, throw a TransferException
+        throw new TransferException();
     }
 
     /**
@@ -194,7 +259,9 @@ class Keyggdrasil
      */
     protected function processKeyUpdates(Channel $chan, KeyUpdate ...$updates)
     {
-
+        /**
+         * Last piece before field testing.
+         */
     }
 
     /**
@@ -217,10 +284,21 @@ class Keyggdrasil
                 $updates = $this->fetchKeyUpdates($chan, $url, $originalTree->getRoot()); // KeyUpdate[]
                 while (!empty($updates)) {
                     $merkleTree = $originalTree;
-                    if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
-                        $this->processKeyUpdates($chan, ...$updates);
-                        return;
+                    // Verify these updates with our Peers.
+                    try {
+                        if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
+                            // Apply these updates:
+                            $this->processKeyUpdates($chan, ...$updates);
+                            return;
+                        }
+                    } catch (CouldNotUpdate $ex) {
+                        $this->log(
+                            $ex->getMessage(),
+                            LogLevel::ALERT,
+                            \Airship\throwableToArray($ex)
+                        );
                     }
+                    // If verification fails, pop off the last update and try again
                     \array_pop($updates);
                 }
                 // Received a successful API response.
@@ -254,12 +332,79 @@ class Keyggdrasil
      * @param MerkleTree $originalTree
      * @param KeyUpdate[] ...$updates
      * @return bool
+     * @throws CouldNotUpdate
      */
     protected function verifyResponseWithPeers(
         Channel $channel,
         MerkleTree $originalTree,
         KeyUpdate ...$updates
     ): bool {
-        
+        $state = State::instance();
+        $nodes = $this->updatesToNodes($updates);
+        $tree = $originalTree->getExpandedTree(...$nodes);
+
+        $maxUpdateIndex = \count($updates) - 1;
+        $expectedRoot = $updates[$maxUpdateIndex]->getRoot();
+        if (\hash_equals($tree->getRoot(), $expectedRoot)) {
+            // Calculated root did not match.
+            throw new CouldNotUpdate(
+                'Calculated Merkle root did not match the update.'
+            );
+        }
+
+        if ($state->univeral['auto-update']['ignore-peer-verification']) {
+            // The user has expressed no interest in verification
+            return true;
+        }
+
+        $peers = $channel->getPeerList();
+        $numPeers = \count($peers);
+        $minSuccess = $channel->getAppropriatePeerSize();
+        $maxFailure = (int) \min(
+            \floor($minSuccess * M_E),
+            $numPeers - 1
+        );
+        if ($maxFailure < 1) {
+            $maxFailure = 1;
+        }
+        \Airship\secure_shuffle($peers);
+
+        $success = $networkError = 0;
+
+        for ($i = 0; $i < $numPeers; ++$i) {
+            try {
+                if (!$this->checkWithPeer($peers[$i], $tree->getRoot())) {
+                    // Merkle root mismatch? Abort.
+                    return false;
+                }
+                ++$success;
+            } catch (TransferException $ex) {
+                ++$networkError;
+            }
+
+            if ($success >= $minSuccess) {
+                // We have enough good responses.
+                return true;
+            } elseif ($networkError >= $maxFailure) {
+                return false;
+            }
+        }
+        // Fail closed:
+        return false;
+    }
+
+    /**
+     * Get a bunch of nodes for inclusion in the Merkle tree.
+     *
+     * @param KeyUpdate[] $updates
+     * @return Node[]
+     */
+    protected function updatesToNodes(array $updates): array
+    {
+        $return = [];
+        foreach ($updates as $up) {
+            $return []= new Node($up->getNodeJSON());
+        }
+        return $return;
     }
 }

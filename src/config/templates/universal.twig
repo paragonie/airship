@@ -4,6 +4,7 @@
         "trusted-supplier": {{ universal.airship["trusted-supplier"]|je }}
     },
     "auto-update": {
+        "ignore-peer-verification": {{ universal["auto-update"]["ignore-peer-verification"] ? 'true' : 'false'}},
         "check": {{ universal["auto-update"]["check"]|round }},
         "major": {{ universal["auto-update"]["major"] ? 'true' : 'false'}},
         "minor": {{ universal["auto-update"]["minor"] ? 'true' : 'false'}},

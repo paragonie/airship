@@ -147,12 +147,30 @@ class Channel
     }
 
     /**
+     * The natural log of the size of the peer list, rounded up.
+     *
+     * @param int $sizeOfList
+     * @return int
+     */
+    public function getAppropriatePeerSize(int $sizeOfList = 0): int
+    {
+        if ($sizeOfList < 1) {
+            $sizeOfList = \count($this->peers);
+        }
+        $log = (int) \ceil(\log($sizeOfList + 0.0));
+        if ($log < 1) {
+            return 1;
+        }
+        return $log;
+    }
+
+    /**
      * Get a list of peers for a given channel
      *
      * @param bool $forceFlush
      * @return Peer[]
      */
-    protected function getPeerList(bool $forceFlush = false): array
+    public function getPeerList(bool $forceFlush = false): array
     {
         if (!empty($this->peers) && !$forceFlush) {
             return $this->peers;

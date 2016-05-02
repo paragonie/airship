@@ -15,14 +15,33 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 class Peer
 {
     private $name;
+    private $onion = false;
     private $publicKey;
     private $urls = [];
 
     public function __construct(array $config = [])
     {
         $this->name = $config['name'];
-        $this->publicKey = new SignaturePublicKey($config['public_key']);
+        $this->publicKey = new SignaturePublicKey(
+            \Sodium\hex2bin($config['public_key'])
+        );
         $this->urls = $config['urls'];
+        foreach ($this->urls as $url) {
+            if (\strpos($url, '.onion') !== false) {
+                $this->onion = true;
+                break;
+            }
+        }
+    }
+
+    /**
+     * Does this domain have a .onion address?
+     *
+     * @return bool
+     */
+    public function hasOnionAddress(): bool
+    {
+        return $this->onion;
     }
 
     /**
@@ -61,5 +80,13 @@ class Peer
             }
         }
         return $candidates;
+    }
+
+    /**
+     * @return SignaturePublicKey
+     */
+    public function getPublicKey(): SignaturePublicKey
+    {
+        return $this->publicKey;
     }
 }

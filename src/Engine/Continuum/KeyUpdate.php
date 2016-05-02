@@ -110,6 +110,16 @@ class KeyUpdate
     }
 
     /**
+     * Get the Merkle root for this update
+     *
+     * @return string
+     */
+    public function getRoot(): string
+    {
+        return $this->merkleRoot;
+    }
+
+    /**
      * @return Supplier
      */
     public function getSupplier(): Supplier
