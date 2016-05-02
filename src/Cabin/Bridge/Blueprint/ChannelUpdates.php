@@ -209,6 +209,8 @@ class ChannelUpdates extends BlueprintGear
     }
 
     /**
+     * Get the Merkle tree with key updates factored in.
+     *
      * @return MerkleTree
      */
     protected function getUpdatedMerkleTree(): MerkleTree
@@ -415,7 +417,7 @@ class ChannelUpdates extends BlueprintGear
             ]
         );
         $unpacked = \json_decode($nodeData['data'], true);
-        switch ($unpacked['action']) {
+        switch ($nodeData['stored']['action']) {
             case 'CREATE':
                 if (!$this->insertKey($unpacked, $nodeData)) {
                     $this->db->rollBack();

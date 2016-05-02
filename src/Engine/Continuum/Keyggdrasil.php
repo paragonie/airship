@@ -89,6 +89,7 @@ class Keyggdrasil
      *
      * @param Channel $chan
      * @param string $url
+     * @param string $root Which Merkle root are we starting at?
      * @return KeyUpdate[]
      * @throws TransferException
      */
@@ -158,30 +159,28 @@ class Keyggdrasil
             return [];
         }
 
-        /**
-         * $response['updates'] should look like this:
-         * [
-         *    {
-         *        "id" 10,
-         *        "data": "base64urlSafeEncoded_JSON_Blob",
-         *        "signature": "blahblahblah"
-         *    },
-         *    {
-         *        ...
-         *    },
-         *    ...
-         * ]
-         */
         $keyUpdateArray = [];
         foreach ($response['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
-            // Verify the signature of each update.
-            if (!AsymmetricCrypto::verify($data, $chan->getPublicKey(), $update['signature'])) {
+            $sig = Base64UrlSafe::decode($update['signature']);
+            if (!AsymmetricCrypto::verify($data, $chan->getPublicKey(), $sig, true)) {
                 // Invalid signature
                 throw new ChannelSignatureFailed();
             }
-            $keyUpdateArray[] = new KeyUpdate($chan, \json_decode($data, true));
+            // Now that we know it was signed by the channel, time to update
+            $keyUpdateArray[] = new KeyUpdate(
+                $chan,
+                \json_decode($data, true)
+            );
         }
+        // Sort by ID
+        \uasort(
+            $keyUpdateArray,
+            function (KeyUpdate $a, KeyUpdate $b): array
+            {
+                return $a->getChannelId() <=> $b->getChannelId();
+            }
+        );
         return $keyUpdateArray;
     }
 

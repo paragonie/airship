@@ -6,6 +6,7 @@ use \Airship\Alerts\Continuum\{
     CouldNotUpdate,
     NoSupplier
 };
+use Airship\Hangar\Commands\Sign;
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
@@ -28,23 +29,36 @@ class KeyUpdate
     protected $channelId;
     protected $channelName;
     protected $isNewSupplier = false;
+    protected $masterSig = null;
     protected $merkleRoot = '';
+    protected $newPublicKey = null;
     protected $updateMessage = [];
+    protected $stored;
     protected $supplier;
     protected $supplierMasterKeyUsed;
     protected $verified = false;
 
     /**
      * KeyUpdate constructor.
+     *
      * @param Channel $chan
      * @param array $updateData
      */
     public function __construct(Channel $chan, array $updateData)
     {
+        /**
+         * This represents data from the base64urlsafe encoded JSON blob that is signed by the channel.
+         */
         $this->channelId = (int) $updateData['id'];
         $this->channelName = $chan->getName();
         $this->merkleRoot = $updateData['root'];
+        $this->stored = $updateData['stored'];
+        $this->action = $this->stored['action'];
+        if (!empty($updateData['master_signature'])) {
+            $this->masterSig = $updateData['master_signature'];
+        }
         $this->unpackMessageUpdate($chan, $updateData['data']);
+        $this->newPublicKey = $this->stored['public_key'];
     }
 
     /**
@@ -74,11 +88,53 @@ class KeyUpdate
     }
 
     /**
+     * Get the new public key as a SignaturePublicKey object
+     *
+     * @return SignaturePublicKey
+     */
+    public function getPublicKeyObject(): SignaturePublicKey
+    {
+        return new SignaturePublicKey(
+            \Sodium\hex2bin($this->newPublicKey)
+        );
+    }
+
+    /**
+     * Get the new public key as a hex-coded string
+     *
+     * @return string
+     */
+    public function getPublicKeyString(): string
+    {
+        return $this->newPublicKey;
+    }
+
+    /**
      * @return Supplier
      */
     public function getSupplier(): Supplier
     {
         return $this->supplier;
+    }
+
+    /**
+     * Is this a "create key" update?
+     *
+     * @return bool
+     */
+    public function isCreateKey(): bool
+    {
+        return $this->action === 'CREATE';
+    }
+
+    /**
+     * Is this a "revoke key" update?
+     *
+     * @return bool
+     */
+    public function isRevokeKey(): bool
+    {
+        return $this->action === 'REVOKE';
     }
 
     /**
@@ -127,9 +183,9 @@ class KeyUpdate
     {
         $messageToSign = [
             'action' =>
-                $updateData['action'],
+                $this->action,
             'date_generated' =>
-                $updateData['date_generated'],
+                $this->stored['date_generated'],
             'public_key' =>
                 $updateData['public_key'],
             'supplier' =>
@@ -138,8 +194,6 @@ class KeyUpdate
                 $updateData['type']
         ];
         $this->supplier = $this->loadSupplier($chan, $updateData);
-        $signature = $updateData['signature'];
-
         // If this isn't a new supplier, we need to verify the key
         if (!$this->isNewSupplier) {
             foreach ($this->supplier->getSigningKeys() as $supKey) {
@@ -151,6 +205,8 @@ class KeyUpdate
                     continue;
                 }
                 $pub = \Sodium\bin2hex($supKey['key']->getRawKeyMaterial());
+
+                // Is this the key we're looking for?
                 if (\hash_equals($pub, $messageToSign['public_key'])) {
                     // Store the public key
                     $this->supplierMasterKeyUsed = $supKey;
@@ -158,14 +214,17 @@ class KeyUpdate
                 }
             }
             if (empty($this->supplierMasterKeyUsed)) {
-                throw new CouldNotUpdate('The provided public key does not match any known master key');
+                throw new CouldNotUpdate(
+                    'The provided public key does not match any known master key'
+                );
             }
             $encoded = \json_encode($messageToSign);
-            if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $signature)) {
-                throw new CouldNotUpdate('Invalid signature for this master key');
+            if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $this->masterSig)) {
+                throw new CouldNotUpdate(
+                    'Invalid signature for this master key'
+                );
             }
         }
-
         $this->updateMessage = $updateData;
     }
 }
