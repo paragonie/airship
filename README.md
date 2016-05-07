@@ -12,5 +12,5 @@ non-free software product.
 ## Minimum Requirements
 
 * PHP 7.0.5 or newer
-* PECL Libsodium 1.0.3 or newer
-* Libsodium 1.0.9 or newer
+* PECL Libsodium 1.0.6 or newer
+* Libsodium 1.0.10 or newer
