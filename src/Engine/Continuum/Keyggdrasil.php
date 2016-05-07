@@ -194,6 +194,30 @@ class Keyggdrasil
     }
 
     /**
+     * We're storing a new public key for this supplier.
+     *
+     * @param Channel $chan
+     * @param KeyUpdate $update
+     */
+    protected function insertKey(Channel $chan, KeyUpdate $update)
+    {
+        $supplier = $update->getSupplier();
+        $name = $supplier->getName();
+        $file = ROOT . '/config/supplier_keys/' . $name . '.json';
+        $supplierData = \Airship\loadJSON($file);
+
+        $supplierData['signing_keys'][] = [
+            'type' => $update->getKeyType(),
+            'public_key' => $update->getPublicKeyString()
+        ];
+        \Airship\saveJSON($file, $supplierData);
+        \clearstatcache();
+
+        // Flush the channel's supplier cache
+        $chan->getSupplier($name, true);
+    }
+
+    /**
      * Interpret the KeyUpdate objects from the API response. OR verify the signature
      * of the "no updates" message to prevent a DoS.
      *
@@ -208,7 +232,12 @@ class Keyggdrasil
         $response = \Airship\parseJSON($body);
         if (empty($response['updates'])) {
             // The "no updates" message should be authenticated.
-            if (!AsymmetricCrypto::verify($response['no_updates'], $chan->getPublicKey(), $response['signature'])) {
+            $signatureVerified = AsymmetricCrypto::verify(
+                $response['no_updates'],
+                $chan->getPublicKey(),
+                $response['signature']
+            );
+            if (!$signatureVerified) {
                 throw new ChannelSignatureFailed();
             }
             $datetime = new \DateTime($response['no_updates']);
@@ -229,7 +258,13 @@ class Keyggdrasil
         foreach ($response['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
             $sig = Base64UrlSafe::decode($update['signature']);
-            if (!AsymmetricCrypto::verify($data, $chan->getPublicKey(), $sig, true)) {
+            $signatureVerified = AsymmetricCrypto::verify(
+                $data,
+                $chan->getPublicKey(),
+                $sig,
+                true
+            );
+            if (!$signatureVerified) {
                 // Invalid signature
                 throw new ChannelSignatureFailed();
             }
@@ -253,16 +288,59 @@ class Keyggdrasil
     /**
      * Insert/delete entries in supplier_keys, while updating the database.
      *
-     * Return the updated Merkle Tree if all is well
-     *
      * @param Channel $chan)
      * @param KeyUpdate[] $updates
+     * @return bool
      */
-    protected function processKeyUpdates(Channel $chan, KeyUpdate ...$updates)
+    protected function processKeyUpdates(Channel $chan, KeyUpdate ...$updates): bool
     {
-        /**
-         * Last piece before field testing.
-         */
+        $this->db->beginTransaction();
+        foreach ($updates as $update) {
+            // Insert the new node in the database:
+            $this->db->insert(
+                'airship_key_updates', [
+                    'channel' => $chan->getName(),
+                    'channelupdateid' => $update->getChannelId(),
+                    'data' => $update->getNodeJSON(),
+                    'merkleroot' => $update->getRoot()
+                ]
+            );
+
+            // Update the JSON files separately:
+            if ($update->isCreateKey()) {
+                $this->insertKey($chan, $update);
+            } elseif ($update->isRevokeKey()) {
+                $this->revokeKey($chan, $update);
+            }
+        }
+        return $this->db->commit();
+    }
+
+    /**
+     * We're storing a new public key for this supplier.
+     *
+     * @param Channel $chan
+     * @param KeyUpdate $update
+     */
+    protected function revokeKey(Channel $chan, KeyUpdate $update)
+    {
+        $supplier = $update->getSupplier();
+        $name = $supplier->getName();
+        $file = ROOT . '/config/supplier_keys/' . $name . '.json';
+        $supplierData = \Airship\loadJSON($file);
+
+        foreach ($supplierData['signing_keys'] as $id => $skey) {
+            if (\hash_equals($skey['public_key'], $update->getPublicKeyString())) {
+                // Remove this key
+                unset($supplierData['signing_keys'][$id]);
+                break;
+            }
+        }
+        \Airship\saveJSON($file, $supplierData);
+        \clearstatcache();
+
+        // Flush the channel's supplier cache
+        $chan->getSupplier($name, true);
     }
 
     /**
@@ -360,6 +438,7 @@ class Keyggdrasil
 
         $peers = $channel->getPeerList();
         $numPeers = \count($peers);
+
         $minSuccess = $channel->getAppropriatePeerSize();
         $maxFailure = (int) \min(
             \floor($minSuccess * M_E),
@@ -387,6 +466,7 @@ class Keyggdrasil
                 // We have enough good responses.
                 return true;
             } elseif ($networkError >= $maxFailure) {
+                // We can't give a confident response here.
                 return false;
             }
         }

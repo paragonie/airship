@@ -31,7 +31,10 @@ trait Supplier
             ROOT . '/config/supplier_keys/' . $supplierName . '.json',
             \json_encode(
                 [
-
+                    'channels' => [
+                        $channelName
+                    ],
+                    'signing_keys' => []
                 ],
                 JSON_PRETTY_PRINT
             )

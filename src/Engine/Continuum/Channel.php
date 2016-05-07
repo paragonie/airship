@@ -99,12 +99,13 @@ class Channel
      * Get a supplier
      *
      * @param string $name
+     * @param bool $flush
      * @return Supplier
      * @throws NoSupplier
      */
-    public function getSupplier(string $name)
+    public function getSupplier(string $name, bool $flush = false)
     {
-        return $this->parent->getSupplier($name);
+        return $this->parent->getSupplier($name, $flush);
     }
 
     /**

@@ -29,6 +29,7 @@ class KeyUpdate
     protected $channelId;
     protected $channelName;
     protected $isNewSupplier = false;
+    protected $keyType;
     protected $masterSig = null;
     protected $merkleRoot = '';
     protected $newPublicKey = null;
@@ -36,6 +37,7 @@ class KeyUpdate
     protected $stored;
     protected $supplier;
     protected $supplierMasterKeyUsed;
+    protected $supplierName;
     protected $verified = false;
 
     /**
@@ -57,6 +59,7 @@ class KeyUpdate
         if (!empty($updateData['master_signature'])) {
             $this->masterSig = $updateData['master_signature'];
         }
+        $this->keyType = $updateData['data']['type'];
         $this->unpackMessageUpdate($chan, $updateData['data']);
         $this->newPublicKey = $this->stored['public_key'];
     }
@@ -77,6 +80,14 @@ class KeyUpdate
     public function getChannelName(): string
     {
         return $this->channelName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyType(): string
+    {
+        return $this->keyType;
     }
 
     /**
@@ -128,6 +139,14 @@ class KeyUpdate
     }
 
     /**
+     * @return string
+     */
+    public function getSupplierName(): string
+    {
+        return $this->supplierName;
+    }
+
+    /**
      * Is this a "create key" update?
      *
      * @return bool
@@ -157,6 +176,7 @@ class KeyUpdate
      */
     protected function loadSupplier(Channel $chan, array $updateData): Supplier
     {
+        $this->supplierName = $updateData['supplier'];
         try {
             return $chan->getSupplier($updateData['supplier']);
         } catch (NoSupplier $ex) {
