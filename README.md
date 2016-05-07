@@ -14,3 +14,15 @@ non-free software product.
 * PHP 7.0.5 or newer
 * PECL Libsodium 1.0.6 or newer
 * Libsodium 1.0.10 or newer
+
+## Customizing Your Airship
+
+Airship extensions come in three flavors:
+
+* **Cabins**: entire self-contained applications
+* **Gadgets**: alters the functionality of an existing cabin (or of the
+  Engine itself)
+* **Motifs**: alters the apperance of an existing cabin
+
+To create and/or manage these extensions, check out 
+[barge, our command line utility](https://github.com/paragonie/airship-barge).
