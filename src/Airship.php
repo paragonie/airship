@@ -19,6 +19,10 @@ use \ReCaptcha\ReCaptcha;
 use \ReCaptcha\RequestMethod\CurlPost;
 
 \define('AIRSHIP_VERSION', '0.2.0');
+\define(
+    'AIRSHIP_BLAKE2B_PERSONALIZATION',
+    'ParagonInitiativeEnterprises:Airship-PoweredByHalite:Keyggdrasil'
+);
 
 /**
  * Do all of these keys exist in the target array
