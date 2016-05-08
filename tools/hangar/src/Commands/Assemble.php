@@ -3,7 +3,11 @@ declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
 use \Airship\Hangar\SessionCommand;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\{
+    Base64,
+    Base64UrlSafe
+};
+use \ParagonIE\Halite\Util;
 
 class Assemble extends SessionCommand
 {
@@ -13,6 +17,8 @@ class Assemble extends SessionCommand
     public $description = 'Build a PHP Archive with an update package.';
     public $pharname; // File name of the output PHP archive
     public $pharAlias = 'airship-update.phar';
+
+    protected $metadata;
 
     /**
      * Execute the assemble command
@@ -56,8 +62,11 @@ class Assemble extends SessionCommand
      * @return bool
      * @throws \Error
      */
-    protected function addautoRun(array $run, string $workspace, string $file): bool
-    {
+    protected function addautoRun(
+        array $run,
+        string $workspace,
+        string $file
+    ): bool {
         static $db_tpl = null;
         if ($db_tpl === null) {
             $db_tpl = \file_get_contents(
@@ -65,9 +74,7 @@ class Assemble extends SessionCommand
             );
         }
 
-        $hash = \Sodium\bin2hex(
-            \Sodium\crypto_generichash($file)
-        );
+        $hash = Util::hash($file);
 
         switch ($run['type']) {
             case 'php':

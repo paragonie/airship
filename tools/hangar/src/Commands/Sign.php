@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
 use \Airship\Hangar\Command;
-use \ParagonIE\Halite\{
+use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     Asymmetric\SignatureSecretKey,
     File,
@@ -24,6 +24,7 @@ class Sign extends Command
      *
      * @param array $args
      * @return bool
+     * @throws \Error
      */
     public function fire(array $args = []): bool
     {
@@ -36,7 +37,12 @@ class Sign extends Command
         echo 'Generating a signature for: ', $file, "\n";
         $password = $this->silentPrompt('Enter password: ');
 
-        $sign_kp = KeyFactory::deriveSignatureKeyPair($password, $salt);
+        $sign_kp = KeyFactory::deriveSignatureKeyPair(
+            $password,
+            $salt,
+            false,
+            KeyFactory::SENSITIVE
+        );
         if (!($sign_kp instanceof SignatureKeyPair)) {
             throw new \Error('Error during key derivation');
         }
@@ -57,6 +63,7 @@ class Sign extends Command
      *
      * @param mixed $filename
      * @return string
+     * @throws \Error
      */
     protected function selectFile($filename = null): string
     {

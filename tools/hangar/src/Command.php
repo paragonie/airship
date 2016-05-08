@@ -67,8 +67,9 @@ abstract class Command
      *
      * @param string $name
      * @param boolean $cache
+     * @return Command (derived class)
      */
-    public function getCommandObject($name, $cache = true)
+    public function getCommandObject($name, $cache = true): self
     {
         $obj = self::getCommandStatic($name, $cache);
         if (!empty($this->db) && !empty($this->bc)) {
@@ -84,14 +85,15 @@ abstract class Command
      * Get a token for HTTP requests
      *
      * @param string $supplier
+     * @return string
      */
-    public function getToken($supplier)
+    public function getToken($supplier): string
     {
         if (!isset($this->config['suppliers'][$supplier])) {
-            return null;
+            return '';
         }
         if (empty($this->config['suppliers'][$supplier]['token'])) {
-            return null;
+            return '';
         }
         $v = $this->config['suppliers'][$supplier]['token'];
         return $v['selector'].':'.$v['validator'];
@@ -117,11 +119,17 @@ abstract class Command
         return new $_name;
     }
 
-    final public function storeConfig($data)
+    /**
+     * @param array $data
+     */
+    final public function storeConfig(array $data = [])
     {
         $this->config = $data;
     }
 
+    /**
+     * Save the configuration
+     */
     final public function saveConfig()
     {
         \file_put_contents(
@@ -139,7 +147,7 @@ abstract class Command
     /**
      * Get the session data
      *
-     * @return
+     * @return mixed
      * @throws \Error
      */
     final protected function getSession()
@@ -211,7 +219,7 @@ abstract class Command
     public function usageInfo(array $args = [])
     {
         $TAB = str_repeat(' ', self::TAB_SIZE);
-        $HTAB = str_repeat(' ', ceil(self::TAB_SIZE / 2));
+        $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 
         echo $HTAB, 'Airship / Hanger - ', $this->name, "\n\n";
         echo $TAB, $this->description, "\n\n";

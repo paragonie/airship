@@ -17,6 +17,7 @@ class Meta extends SessionCommand
      *
      * @param array $args
      * @return bool
+     * @throws \Error
      */
     public function fire(array $args = []): bool
     {

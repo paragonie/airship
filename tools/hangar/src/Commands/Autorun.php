@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use Airship\Engine\Continuum\Airship;
-use Airship\Hangar\SessionCommand;
+use \Airship\Hangar\SessionCommand;
+use \ParagonIE\ConstantTime\Base64;
 
 class autoRun extends SessionCommand
 {
@@ -87,7 +87,7 @@ class autoRun extends SessionCommand
         }
         $this->session['autoRun'][$path] = [
             'type' => $this->getType($path),
-            'data' => Base64::_encode(\file_get_contents($path))
+            'data' => Base64::encode(\file_get_contents($path))
         ];
         echo $this->c['green'], 'autoRun script registered: ', $this->c[''], $path, "\n";
         return 1;

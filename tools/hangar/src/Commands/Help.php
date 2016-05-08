@@ -136,7 +136,7 @@ class Help extends Command
 
         $repeatPad = str_repeat(' ', $columns[0] + $columns[1] + (3 * self::TAB_SIZE));
         $TAB = str_repeat(' ', self::TAB_SIZE);
-        $HTAB = str_repeat(' ', ceil(self::TAB_SIZE / 2));
+        $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 
         $header = $this->c['blue'].
             $TAB.
@@ -150,11 +150,11 @@ class Help extends Command
             $TAB . str_repeat('=', $width - self::TAB_SIZE - 1)."\n";
 
         echo $this->c[''], $HTAB, "How to use one of the commands in the table below:\n";
-        echo $TAB, $this->c['cyan'], "barge [command]", $this->c[''], "\n";
+        echo $TAB, $this->c['cyan'], "hangar [command]", $this->c[''], "\n";
         echo $TAB, $HTAB, "Run the command.";
         echo "\n\n";
 
-        echo $TAB, $this->c['cyan']."barge help [command]", $this->c[''], "\n";
+        echo $TAB, $this->c['cyan']."hangar help [command]", $this->c[''], "\n";
         echo $TAB, $HTAB, "Display usage information for a specific command.";
         echo "\n\n";
 
@@ -178,7 +178,7 @@ class Help extends Command
         }
         if (!$this->showAll) {
             echo "\n\n", $HTAB, 'To view all of the available commands, run this command: ';
-            echo $this->c['cyan'], 'barge help', $this->c[''];
+            echo $this->c['cyan'], 'hangar help', $this->c[''];
             return;
         }
 
@@ -245,17 +245,17 @@ class Help extends Command
         // Now let's actually print the usage info for this class
 
         $TAB = str_repeat(' ', self::TAB_SIZE);
-        $HTAB = str_repeat(' ', ceil(self::TAB_SIZE / 2));
+        $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 
         echo $HTAB, $this->name, "\n";
         echo $TAB, $this->description, "\n\n";
         echo $HTAB, "How to use this command:\n";
-        echo $TAB, $this->c['cyan'], "barge ", $this->c[''], "\n";
-        echo $TAB, $this->c['cyan'], "barge help", $this->c[''], "\n";
-        echo $TAB, $HTAB, "List all of the commands available to barge.";
+        echo $TAB, $this->c['cyan'], "hangar ", $this->c[''], "\n";
+        echo $TAB, $this->c['cyan'], "hangar help", $this->c[''], "\n";
+        echo $TAB, $HTAB, "List all of the commands available to hangar.";
         echo "\n";
 
-        echo $TAB, $this->c['cyan']."barge help [command]", $this->c[''], "\n";
+        echo $TAB, $this->c['cyan']."hangar help [command]", $this->c[''], "\n";
         echo $TAB, $HTAB, "Display usage information for a specific command.";
         echo "\n";
 

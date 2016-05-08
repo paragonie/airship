@@ -35,10 +35,12 @@ class Start extends Command
                     AIRSHIP_LOCAL_CONFIG.'/hangar.session.json',
                     \json_encode(['dir' => \getcwd()], JSON_PRETTY_PRINT)
                 );
+                \clearstatcache();
                 return true;
             } else {
                 echo 'There is already an active session!', "\n";
                 echo 'To nuke the active session, run "hangar start --force"', "\n";
+                \clearstatcache();
                 return false;
             }
         }
@@ -48,6 +50,7 @@ class Start extends Command
         );
         echo '[', $this->c['green'], 'OK', $this->c[''], '] ',
             'Session started: ', \getcwd(), "\n";
+        \clearstatcache();
         return true;
     }
 }
