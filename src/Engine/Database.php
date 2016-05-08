@@ -765,7 +765,7 @@ class Database implements DBInterface
      *
      * @return bool
      */
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
@@ -774,7 +774,7 @@ class Database implements DBInterface
      *
      * @return bool
      */
-    public function commit()
+    public function commit(): bool
     {
         return $this->pdo->commit();
     }
@@ -784,7 +784,7 @@ class Database implements DBInterface
      *
      * @return string
      */
-    public function errorCode()
+    public function errorCode(): string
     {
         return $this->pdo->errorCode();
     }
@@ -834,7 +834,7 @@ class Database implements DBInterface
      *
      * @return bool
      */
-    public function inTransaction()
+    public function inTransaction(): bool
     {
         return $this->pdo->inTransaction();
     }
@@ -844,7 +844,7 @@ class Database implements DBInterface
      * @param mixed ...$args
      * @return string
      */
-    public function lastInsertId(...$args)
+    public function lastInsertId(...$args): string
     {
         return $this->pdo->lastInsertId(...$args);
     }
@@ -880,7 +880,7 @@ class Database implements DBInterface
      * @param mixed ...$args
      * @return string
      */
-    public function quote(...$args)
+    public function quote(...$args): string
     {
         return $this->pdo->quote(...$args);
     }
@@ -890,7 +890,7 @@ class Database implements DBInterface
      *
      * @return bool
      */
-    public function rollBack()
+    public function rollBack(): bool
     {
         return $this->pdo->rollBack();
     }
@@ -901,7 +901,7 @@ class Database implements DBInterface
      * @param mixed ...$args
      * @return bool
      */
-    public function setAttribute(...$args)
+    public function setAttribute(...$args): bool
     {
         return $this->pdo->setAttribute(...$args);
     }

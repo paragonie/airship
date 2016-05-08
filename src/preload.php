@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
+
+use \ParagonIE\Halite\Halite;
+
 if (PHP_VERSION_ID < 70000) {
-    die("Airship requires PHP 7.0.0 or newer. You are running PHP ".PHP_VERSION);
+    die("Airship requires PHP 7.0.0 or newer. You are running PHP " . PHP_VERSION);
 }
 if (!extension_loaded('libsodium')) {
     die("Airship requires Libsodium.");
@@ -15,15 +18,11 @@ define('IDE_HACKS', false);
 if (!defined('ROOT')) {
     \define('ROOT', __DIR__);
 }
-\define(
-    'AIRSHIP_UPLOADS',
-    ROOT . DIRECTORY_SEPARATOR .
-        'files' . DIRECTORY_SEPARATOR .
-        'uploaded' . DIRECTORY_SEPARATOR
-);
+\define('AIRSHIP_UPLOADS', ROOT . '/files/uploaded/');
 if (!defined('ISCLI')) {
-    define('ISCLI', PHP_SAPI === 'cli');
+    \define('ISCLI', PHP_SAPI === 'cli');
 }
+
 if (ISCLI) {
     if (isset($argc)) {
         $_SERVER['REQUEST_URI'] = $argc > 1
@@ -32,21 +31,21 @@ if (ISCLI) {
     } elseif(empty($_SERVER['REQUEST_URI'])) {
         $_SERVER['REQUEST_URI'] = '';
     }
-} elseif (\file_exists(ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt')) {
+} elseif (\file_exists(ROOT . '/tmp/site_down.txt')) {
     // There might be an automatic update in progress!
     // Let's give it up to 15 seconds, but only as much time as is needed.
     $iter = 0;
     do {
-        if (!\file_exists(ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt')) {
+        if (!\file_exists(ROOT . '/tmp/site_down.txt')) {
             break;
         }
         \usleep(100);
         ++$iter;
-    } while($iter < 15000);
+    } while ($iter < 15000);
 
     \clearstatcache();
     // If we're still in the middle of that process, let's not load anything else:
-    if (\file_exists(ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt')) {
+    if (\file_exists(ROOT . '/tmp/site_down.txt')) {
         echo 'This Airship is currently being repaired. Please try again later.', "\n";
         exit(255);
     }
@@ -63,10 +62,10 @@ require_once ROOT.'/Airship.php';
 /**
  * 3. Let's autoload the composer packages
  */
-require_once \dirname(ROOT).'/vendor/autoload.php';
+require_once \dirname(ROOT) . '/vendor/autoload.php';
 
 // Let's also make sure we're using a good version of libsodium
-if (!\ParagonIE\Halite\Halite::isLibsodiumSetupCorrectly()) {
+if (!Halite::isLibsodiumSetupCorrectly()) {
     die("Airship requires libsodium 1.0.9 or newer (with a stable version of the PHP bindings).");
 }
 
@@ -81,6 +80,7 @@ if (!\ParagonIE\Halite\Halite::isLibsodiumSetupCorrectly()) {
  */
 $state = \Airship\Engine\State::instance();
 
+// 5a. Initialize the Gears.
 require_once ROOT.'/gear_init.php';
 
 /**

@@ -59,7 +59,6 @@ class FileStore implements LedgerStorageInterface
             );
         }
         if (\strpos($file, $this->basedir) === false) {
-            header('Content-Type: text/plain');
             throw new FileAccessDenied(
                 \trk('errors.file.lfi')
             );
