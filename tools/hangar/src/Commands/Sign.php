@@ -32,7 +32,26 @@ class Sign extends Command
         if (!isset($this->config['salt']) && \count($args) < 2) {
             throw new \Error('No salt configured or passed');
         }
-        $salt = $args[1] ?? \Sodium\hex2bin($this->config['salt']);
+        if (\count($args) > 2) {
+            switch (\strtolower($args[2])) {
+                case 'fast':
+                case 'i':
+                case 'interactive':
+                case 'weak':
+                    $level = KeyFactory::INTERACTIVE;
+                    break;
+                case 'm':
+                case 'moderate':
+                    $level = KeyFactory::MODERATE;
+                    break;
+                default:
+                    $level = KeyFactory::SENSITIVE;
+                    break;
+            }
+        } else {
+            $level = KeyFactory::SENSITIVE;
+        }
+        $salt = \Sodium\hex2bin($args[1] ?? $this->config['salt']);
 
         echo 'Generating a signature for: ', $file, "\n";
         $password = $this->silentPrompt('Enter password: ');
@@ -41,7 +60,7 @@ class Sign extends Command
             $password,
             $salt,
             false,
-            KeyFactory::SENSITIVE
+            $level
         );
         if (!($sign_kp instanceof SignatureKeyPair)) {
             throw new \Error('Error during key derivation');

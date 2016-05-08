@@ -71,14 +71,7 @@ abstract class Command
      */
     public function getCommandObject($name, $cache = true): self
     {
-        $obj = self::getCommandStatic($name, $cache);
-        if (!empty($this->db) && !empty($this->bc)) {
-            $obj->setStorage(
-                $this->db,
-                $this->bc
-            );
-        }
-        return $obj;
+        return self::getCommandStatic($name, $cache);
     }
 
     /**
