@@ -63,7 +63,7 @@ class Channel
      * @return Supplier
      * @throws NoSupplier
      */
-    public function createSupplier(array $data)
+    public function createSupplier(array $data): Supplier
     {
         return $this->parent->createSupplier($this->name, $data);
     }
@@ -90,7 +90,7 @@ class Channel
      * @return Supplier[]
      * @throws
      */
-    public function getAllSuppliers()
+    public function getAllSuppliers(): array
     {
         return $this->parent->getSupplier('');
     }
@@ -103,7 +103,7 @@ class Channel
      * @return Supplier
      * @throws NoSupplier
      */
-    public function getSupplier(string $name, bool $flush = false)
+    public function getSupplier(string $name, bool $flush = false): Supplier
     {
         return $this->parent->getSupplier($name, $flush);
     }

@@ -1,5 +1,8 @@
 <?php
 declare(strict_types=1);
+
+use \Airship\Engine\Continuum\Keyggdrasil;
+
 /**
  * Automatic update processing -- either throw this in a cronjob or let it get
  * triggered every time a page loads after enough time has elapsed
@@ -22,6 +25,9 @@ if (\is_readable(ROOT . '/config/database.json')) {
         $database,
         $channels
     );
+    if (IDE_HACKS) {
+        $keyUpdater = new Keyggdrasil();
+    }
 
     $keyUpdater->doUpdate();
 } else {

@@ -366,7 +366,11 @@ class Keyggdrasil
         $originalTree = $this->getMerkleTree($chan);
         foreach ($chan->getAllURLs() as $url) {
             try {
-                $updates = $this->fetchKeyUpdates($chan, $url, $originalTree->getRoot()); // KeyUpdate[]
+                $updates = $this->fetchKeyUpdates(
+                    $chan,
+                    $url,
+                    $originalTree->getRoot()
+                ); // KeyUpdate[]
                 while (!empty($updates)) {
                     $merkleTree = $originalTree;
                     // Verify these updates with our Peers.
@@ -376,6 +380,7 @@ class Keyggdrasil
                             $this->processKeyUpdates($chan, ...$updates);
                             return;
                         }
+                        // If we're here, verification failed
                     } catch (CouldNotUpdate $ex) {
                         $this->log(
                             $ex->getMessage(),

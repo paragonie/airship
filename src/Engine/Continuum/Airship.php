@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
-use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\{
     Hail,
     State
@@ -12,6 +12,13 @@ use \Airship\Engine\{
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
+/**
+ * Class Airship
+ *
+ * This is used to self-update the Airship
+ *
+ * @package Airship\Engine\Continuum
+ */
 class Airship extends AutoUpdater implements ContinuumInterface
 {
     protected $pharAlias = 'airship-update.phar';

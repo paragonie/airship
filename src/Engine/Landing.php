@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Engine\Cache\File;
-use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
     FileCache as FileCacheBolt,
     Log as LogBolt,
     Security as SecurityBolt
 };
+use \Airship\Engine\Cache\File;
+use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Security\CSRF;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\Alerts\InvalidType;

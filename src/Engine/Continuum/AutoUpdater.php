@@ -82,9 +82,7 @@ abstract class AutoUpdater
      */
     protected function bringSiteBackUp()
     {
-        \unlink(
-            ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt'
-        );
+        \unlink(ROOT . '/tmp/site_down.txt');
         \clearstatcache();
     }
 
@@ -93,10 +91,7 @@ abstract class AutoUpdater
      */
     protected function bringSiteDown()
     {
-        \file_put_contents(
-            ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'site_down.txt',
-            \date('Y-m-d\TH:i:s')
-        );
+        \file_put_contents(ROOT . '/tmp/site_down.txt', \date('Y-m-d\TH:i:s'));
         \clearstatcache();
     }
 
