@@ -5,11 +5,11 @@
   "signing_keys": [
     {
       "type": "master",
-      "public_key": "c1faa97190083d94a8866088f9f049d31b0acdb7947fd428a170b1f5766569b0"
+      "public_key": "1d9b44a5ec7be970dcb07efa81e661cb493f700953c0c26e5161b9cf0637e7f1"
     },
     {
       "type": "signing",
-      "public_key": "fcd948a8bad18fbadb5cb2efe49104e8a968030e2d5f428bfd950f3e0bcc54ab"
+      "public_key": "6731558f53c6edf15c7cc1e439b15c18d6dfc1fd2c66f9fda8c56cfe7d37110b"
     }
   ]
 }
