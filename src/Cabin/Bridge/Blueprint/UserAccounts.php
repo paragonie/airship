@@ -8,6 +8,7 @@ use Airship\Engine\{
     Bolt\Security as SecurityBolt,
     Database,
     Security\Authentication,
+    Security\HiddenString,
     State
 };
 use ParagonIE\Halite\KeyFactory;
@@ -92,7 +93,9 @@ class UserAccounts extends BlueprintGear
             $this->f['username'] =>
                 $post['username'],
             $this->f['password'] =>
-                $this->airship_auth->createHash($post['passphrase']),
+                $this->airship_auth->createHash(
+                    new HiddenString($post['passphrase'])
+                ),
             $this->f['uniqueid'] =>
                 $this->generateUniqueId(),
             $this->f['email'] =>
@@ -198,7 +201,9 @@ class UserAccounts extends BlueprintGear
         }
 
         if (!empty($post['password'])) {
-            $updates[$this->f['password']] = $this->airship_auth->createHash($post['password']);
+            $updates[$this->f['password']] = $this->airship_auth->createHash(
+                new HiddenString($post['password'])
+            );
         }
 
         $updates['custom_fields'] = \json_encode(\json_decode($post['custom_fields'], true));
@@ -234,7 +239,7 @@ class UserAccounts extends BlueprintGear
      */
     public function getGroupChildren(int $groupId): array
     {
-        $group = $this->db->col('SELECT groupid FROM airship_groups WHERE inherits = ?', 0, $groupId);
+        $group = $this->db->first('SELECT groupid FROM airship_groups WHERE inherits = ?', $groupId);
         if (empty($group)) {
             return [];
         }
@@ -521,7 +526,7 @@ class UserAccounts extends BlueprintGear
      * @param int $accountId
      * @return mixed
      */
-    public function setPassphrase(string $passphrase, int $accountId)
+    public function setPassphrase(HiddenString $passphrase, int $accountId)
     {
         return $this->db->update(
             $this->table,[

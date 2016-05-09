@@ -83,12 +83,12 @@ class Authentication
     /**
      * Generate a hash of a password
      * 
-     * @param string $password
+     * @param HiddenString $password
      * @return string
      */
-    public function createHash(string $password): string
+    public function createHash(HiddenString $password): string
     {
-        return Password::hash($password, $this->key);
+        return Password::hash($password->getString(), $this->key);
     }
     
     /**
@@ -123,10 +123,10 @@ class Authentication
      * leaking that information through timing side-channels.
      * 
      * @param string $username
-     * @param string $password
+     * @param HiddenString $password
      * @return bool|int
      */
-    public function login(string $username, string $password)
+    public function login(string $username, HiddenString $password)
     {
         /**
          * To prevent extreme stupidity, we escape our table and column names
@@ -154,11 +154,11 @@ class Authentication
              * User not found. Use the dummy password to mitigate user
              * enumeration via timing side-channels.
              */
-            Password::verify($password, $this->dummyHash, $this->key);
+            Password::verify($password->getString(), $this->dummyHash, $this->key);
             
             // No matter what, return false here:
             return false;
-        } elseif (Password::verify($password, $user[$f['password']], $this->key)) {
+        } elseif (Password::verify($password->getString(), $user[$f['password']], $this->key)) {
             return $user[$f['userid']];
         }
         return false;

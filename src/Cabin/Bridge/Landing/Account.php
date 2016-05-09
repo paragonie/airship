@@ -372,7 +372,10 @@ class Account extends LandingGear
             exit;
         }
         try {
-            $userid = $this->airship_auth->login($post['username'], $post['passphrase']);
+            $userid = $this->airship_auth->login(
+                $post['username'],
+                new HiddenString($post['passphrase'])
+            );
         } catch (InvalidMessage $e) {
             $this->log(
                 'InvalidMessage Exception on Login; probable cause: password column was corrupted',
