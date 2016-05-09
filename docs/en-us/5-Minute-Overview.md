@@ -92,7 +92,7 @@ Presently, you can format your blog posts in:
 * Markdown
 * ReStructuredText
 * Raw HTML
-* (Coming Soon: a WYSIWYG "Rich Text" editor)
+* Rich Text (WYSIWYG editor for HTML)
 
 Type in your blog post in the textbox, then press the "Preview" tab
 beneath it to see how it renders. If you're satisfied, you can press
