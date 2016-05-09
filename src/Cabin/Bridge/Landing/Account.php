@@ -6,6 +6,7 @@ use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Engine\{
     Bolt\Security,
     Security\Authentication,
+    Security\HiddenString,
     State
 };
 use \ParagonIE\Halite\Alerts\InvalidMessage;

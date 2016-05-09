@@ -18,20 +18,20 @@ if (!\session_id()) {
     }
 }
 
-if (!isset($_SESSION['created_canary'])) {
+if (empty($_SESSION['created_canary'])) {
     // We haven't seen this session ID before
     $oldSession = $_SESSION;
-    // Create the canary
-    $oldSession['created_canary'] = (new \DateTime('NOW'))
-        ->format('Y-m-d\TH:i:s');
     // Make sure $_SESSION is empty before we regenerate IDs
     $_SESSION = [];
     \session_regenerate_id(true);
     // Now let's restore the superglobal
     $_SESSION = $oldSession;
+    // Create the canary
+    $_SESSION['created_canary'] = (new \DateTime('NOW'))
+        ->format('Y-m-d\TH:i:s');
 } else {
     $dt = (
-        new \DateTime($oldSession['created_canary'])
+        new \DateTime($_SESSION['created_canary'])
     )->add(
         new \DateInterval('PT01H')
     );
@@ -40,13 +40,13 @@ if (!isset($_SESSION['created_canary'])) {
     if ($dt < $now) {
         // We haven't seen this session ID before
         $oldSession = $_SESSION;
-        // Create the canary
-        $oldSession['created_canary'] = $now->format('Y-m-d\TH:i:s');
         // An hour has passed:
         // Make sure $_SESSION is empty before we regenerate IDs
         $_SESSION = [];
         \session_regenerate_id(true);
         // Now let's restore the superglobal
         $_SESSION = $oldSession;
+        // Create the canary
+        $_SESSION['created_canary'] = $now->format('Y-m-d\TH:i:s');
     }
 }
