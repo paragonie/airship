@@ -15,6 +15,11 @@ use \Airship\Engine\{
     State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\{
+    Asymmetric\Crypto,
+    Asymmetric\SignatureSecretKey,
+    SignatureKeyPair
+};
 use \ReCaptcha\ReCaptcha;
 use \ReCaptcha\RequestMethod\CurlPost;
 
@@ -382,12 +387,32 @@ function is_disabled(string $function): bool
  * Output a JSON response, terminate script execution.
  *
  * @param mixed $result
+ * @param SignatureSecretKey $signingKey Optional - used for API responses.
  */
-function json_response($result)
+function json_response($result, $signingKey = null)
 {
     if (!\headers_sent()) {
         \header("Content-Type: application/json");
     }
+    if ($signingKey instanceof SignatureSecretKey || $signingKey instanceof SignatureKeyPair) {
+        if ($signingKey instanceof SignatureKeyPair) {
+            // We don't need the whole keypair.
+            $signingKey = $signingKey->getSecretKey();
+        }
+        $message = \json_encode($result, JSON_PRETTY_PRINT);
+        $signature = Crypto::sign(
+            $message,
+            $signingKey,
+            true
+        );
+        unset($signingKey);
+        die(
+            Base64UrlSafe::encode($signature) .
+            "\n" .
+            $message
+        );
+    }
+    // Otherwise, we're just dumping the message verbatim:
     die(
         \json_encode($result, JSON_PRETTY_PRINT)
     );

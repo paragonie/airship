@@ -2,9 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \GuzzleHttp\{
-    Client,
-    ClientInterface
+use Airship\Alerts\Hail\SignatureFailed;
+use GuzzleHttp\{
+    Client, ClientInterface, Exception\TransferException, Psr7\Response
+};
+use \ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary
+};
+use \ParagonIE\Halite\Asymmetric\{
+    Crypto as Asymmetric,
+    SignaturePublicKey
 };
 use \Psr\Http\Message\ResponseInterface;
 
@@ -18,6 +26,8 @@ use \Psr\Http\Message\ResponseInterface;
  */
 class Hail
 {
+    const ENCODED_SIGNATURE_LENGTH = 88;
+
     protected $client;
     protected $supplierCache;
     
@@ -45,6 +55,27 @@ class Hail
             $url,
             $this->params($params, $url)
         );
+    }
+
+    /**
+     * Perform a GET request
+     *
+     * @param string $url
+     * @param array $params
+     * @return mixed
+     */
+    public function getSignedJSON(
+        string $url,
+        SignaturePublicKey $publicKey,
+        array $params = []
+    ) {
+        $response = $this->client->get(
+            $url,
+            $this->params($params, $url)
+        );
+        if ($response instanceof Response) {
+            return $this->parseSignedJSON($response, $publicKey);
+        }
     }
     
     /**
@@ -184,5 +215,36 @@ class Hail
                 'form_params' => $params
             ]
         );
+    }
+
+    /**
+     * Parse a signed JSON response
+     *
+     * @param Response $response
+     * @param SignaturePublicKey $publicKey
+     * @return mixed
+     * @throws SignatureFailed
+     * @throws TransferException
+     */
+    public function parseSignedJSON(Response $response, SignaturePublicKey $publicKey)
+    {
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+            $body = (string) $response->getBody();
+            $firstNewLine = \strpos($body, "\n");
+            // There should be a newline immediately after the base64urlsafe-encoded signature
+            if ($firstNewLine !== self::ENCODED_SIGNATURE_LENGTH) {
+                throw new SignatureFailed();
+            }
+            $sig = Base64UrlSafe::decode(
+                Binary::safeSubstr($body, 0, 88)
+            );
+            $msg = Binary::safeSubstr($body, 89);
+            if (!Asymmetric::verify($msg, $publicKey, $sig, true)) {
+                throw new SignatureFailed();
+            }
+            return \json_decode($msg, true);
+        }
+        throw new TransferException();
     }
 }
