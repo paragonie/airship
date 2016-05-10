@@ -4,7 +4,10 @@ namespace Airship\Engine;
 
 use Airship\Alerts\Hail\SignatureFailed;
 use GuzzleHttp\{
-    Client, ClientInterface, Exception\TransferException, Psr7\Response
+    Client,
+    ClientInterface,
+    Exception\TransferException,
+    Psr7\Response
 };
 use \ParagonIE\ConstantTime\{
     Base64UrlSafe,
