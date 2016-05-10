@@ -44,6 +44,32 @@ class Hail
             $this->client = new Client();
         }
     }
+
+    /**
+     * Download a file over the Internet
+     *
+     * @param string $url - the URL to request
+     * @param string $filename - the name of the local file path
+     * @param array $params
+     *
+     * @return ResponseInterface
+     */
+    public function downloadFile(
+        string $url,
+        string $filename,
+        array $params = []
+    ): ResponseInterface {
+        $fp = \fopen($filename, 'wb');
+        $opts = $this->params($params, $url);
+
+        $opts[CURLOPT_FOLLOWLOCATION] = true;
+        $opts[CURLOPT_FILE] = $fp;
+
+        $result = $this->client->post($url, $opts);
+
+        \fclose($fp);
+        return $result;
+    }
     
     /**
      * Perform a GET request
@@ -61,9 +87,42 @@ class Hail
     }
 
     /**
-     * Perform a GET request
+     * Perform a GET request, get a decoded JSON response.
      *
      * @param string $url
+     * @param array $params
+     * @return mixed
+     */
+    public function getJSON(string $url, array $params = [])
+    {
+        $this->parseJSON(
+            $this->get($url, $params)
+        );
+    }
+
+    /**
+     * Perform a GET request, asynchronously
+     *
+     * @param string $url
+     * @param array $params
+     * @return ResponseInterface
+     */
+    public function getAsync(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
+        return $this->client->getAsync(
+            $url,
+            $this->params($params, $url)
+        );
+    }
+
+    /**
+     * Perform a GET request, get a decoded JSON response.
+     * Internally verifies an Ed25519 signature.
+     *
+     * @param string $url
+     * @param SignaturePublicKey $publicKey
      * @param array $params
      * @return mixed
      */
@@ -80,91 +139,13 @@ class Hail
             return $this->parseSignedJSON($response, $publicKey);
         }
     }
-    
-    /**
-     * Perform a GET request, asynchronously
-     * 
-     * @param string $url
-     * @param array $params
-     * @return ResponseInterface
-     */
-    public function getAsync(
-        string $url,
-        array $params = []
-    ): ResponseInterface {
-        return $this->client->getAsync(
-            $url,
-            $this->params($params, $url)
-        );
-    }
-    
-    /**
-     * Perform a GET request
-     * 
-     * @param string $url
-     * @param array $params
-     *
-     * @return ResponseInterface
-     */
-    public function post(
-        string $url,
-        array $params = []
-    ): ResponseInterface {
-        return $this->client->post(
-            $url,
-            $this->params($params, $url)
-        );
-    }
-    
-    /**
-     * Download a file over the Internet
-     * 
-     * @param string $url - the URL to request
-     * @param string $filename - the name of the local file path
-     * @param array $params
-     * 
-     * @return ResponseInterface
-     */
-    public function downloadFile(
-        string $url,
-        string $filename,
-        array $params = []
-    ): ResponseInterface {
-        $fp = \fopen($filename, 'wb');
-        $opts = $this->params($params, $url);
-        
-        $opts[CURLOPT_FOLLOWLOCATION] = true;
-        $opts[CURLOPT_FILE] = $fp;
-        
-        $result = $this->client->post($url, $opts);
-        
-        \fclose($fp);
-        return $result;
-    }
-    
-    /**
-     * Perform a GET request, asynchronously
-     * 
-     * @param string $url
-     * @param array $params
-     * @return ResponseInterface
-     */
-    public function postAsync(
-        string $url,
-        array $params = []
-    ): ResponseInterface {
-        return $this->client->postAsync(
-            $url,
-            $this->params($params, $url)
-        );
-    }
-    
+
     /**
      * Make sure we include the default params
-     * 
+     *
      * @param array $params
      * @param string $url (used for decision-making)
-     * 
+     *
      * @return array
      */
     public function params(
@@ -178,7 +159,7 @@ class Hail
                 CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
             ]
         ];
-        
+
         /**
          * If we have pre-configured some global parameters, let's add them to
          * our defaults before we check if we need Tor support.
@@ -189,7 +170,7 @@ class Hail
                 $config->universal['guzzle']
             );
         }
-        
+
         /**
          * Support for Tor Hidden Services
          */
@@ -211,13 +192,32 @@ class Hail
             $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
             $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
         }
-        
+
         return \array_merge(
             $defaults,
             [
                 'form_params' => $params
             ]
         );
+    }
+
+    /**
+     * Parse an usigned JSON response
+     *
+     * @param Response $response
+     * @param SignaturePublicKey $publicKey
+     * @return mixed
+     * @throws SignatureFailed
+     * @throws TransferException
+     */
+    public function parseJSON(Response $response, SignaturePublicKey $publicKey)
+    {
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+            $body = (string) $response->getBody();
+            return \Airship\parseJSON($body, true);
+        }
+        throw new TransferException();
     }
 
     /**
@@ -246,8 +246,80 @@ class Hail
             if (!Asymmetric::verify($msg, $publicKey, $sig, true)) {
                 throw new SignatureFailed();
             }
-            return \json_decode($msg, true);
+            return \Airship\parseJSON($msg, true);
         }
         throw new TransferException();
+    }
+
+    /**
+     * Perform a POST request
+     *
+     * @param string $url
+     * @param array $params
+     *
+     * @return ResponseInterface
+     */
+    public function post(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
+        return $this->client->post(
+            $url,
+            $this->params($params, $url)
+        );
+    }
+    
+    /**
+     * Perform a GET request, asynchronously
+     * 
+     * @param string $url
+     * @param array $params
+     * @return ResponseInterface
+     */
+    public function postAsync(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
+        return $this->client->postAsync(
+            $url,
+            $this->params($params, $url)
+        );
+    }
+
+    /**
+     * Perform a POST request, get a decoded JSON response.
+     *
+     * @param string $url
+     * @param array $params
+     * @return mixed
+     */
+    public function postJSON(string $url, array $params = [])
+    {
+        $this->parseJSON(
+            $this->post($url, $params)
+        );
+    }
+
+    /**
+     * Perform a POST request, get a decoded JSON response.
+     * Internally verifies an Ed25519 signature.
+     *
+     * @param string $url
+     * @param SignaturePublicKey $publicKey
+     * @param array $params
+     * @return mixed
+     */
+    public function postSignedJSON(
+        string $url,
+        SignaturePublicKey $publicKey,
+        array $params = []
+    ) {
+        $response = $this->client->post(
+            $url,
+            $this->params($params, $url)
+        );
+        if ($response instanceof Response) {
+            return $this->parseSignedJSON($response, $publicKey);
+        }
     }
 }
