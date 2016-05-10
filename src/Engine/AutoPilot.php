@@ -72,7 +72,7 @@ class AutoPilot implements RouterInterface
      * @param string $string
      * @return string
      */
-    public static function makePath(string $string)
+    public static function makePath(string $string): string
     {
         return
             \str_replace([
@@ -156,7 +156,7 @@ class AutoPilot implements RouterInterface
         string $scheme = '',
         string $activeHost = '',
         string $uri = ''
-    ) : bool {
+    ): bool {
         if (empty($uri)) {
             $uri = $_SERVER['REQUEST_URI'] ?? '';
         }
@@ -265,6 +265,8 @@ class AutoPilot implements RouterInterface
     }
 
     /**
+     * Which Cabin does this URL belong to?
+     *
      * @param string $url
      * @return string
      */
@@ -292,6 +294,8 @@ class AutoPilot implements RouterInterface
      * See Gadgets::injectRoutes()
      *
      * This loads all of the routes injected by the Gadgets into the current cabin
+     *
+     * @return void
      */
     protected function loadInjectedRoutes()
     {
@@ -369,6 +373,13 @@ class AutoPilot implements RouterInterface
     }
 
     /**
+     * This serves the fallback route, if it's defined.
+     *
+     * The fallbackroute handles:
+     *
+     * - Custom pages (if any exist), or
+     * - Redirects
+     *
      * @return mixed
      */
     protected function serveFallback()

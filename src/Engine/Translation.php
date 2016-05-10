@@ -5,7 +5,11 @@ namespace Airship\Engine;
 use \Airship\Alerts\TranslationKeyNotFound;
 
 /**
+ * Class Translation
+ *
  * Registry Singleton for keeping track of application state
+ *
+ * @package Airship\Engine
  */
 class Translation
 {

@@ -6,7 +6,11 @@ use \Airship\Engine\Bolt\Log as LogBolt;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 
 /**
+ * Class Lens
+ *
  * For MVC developers, this is analogous to a View
+ *
+ * @package Airship\Engine
  */
 class Lens
 {

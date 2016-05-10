@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \GuzzleHttp\Client;
-use \GuzzleHttp\ClientInterface;
+use \GuzzleHttp\{
+    Client,
+    ClientInterface
+};
 use \Psr\Http\Message\ResponseInterface;
 
 /**

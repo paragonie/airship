@@ -17,9 +17,10 @@ use \ParagonIE\Halite\Util;
 
 /**
  * Class Landing
- * @package Airship\Engine
  *
  * For MVC developers, this is analogous to a Controller
+ *
+ * @package Airship\Engine
  */
 class Landing
 {

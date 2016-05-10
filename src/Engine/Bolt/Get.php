@@ -2,6 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+/**
+ * Trait Get
+ *
+ * Handle HTTP get params on mildly misconfigured servers.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Get
 {
     /**

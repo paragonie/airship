@@ -17,6 +17,13 @@ use \ParagonIE\Halite\{
 };
 use \Psr\Log\LogLevel;
 
+/**
+ * Bolt Security
+ *
+ * Common security features. Mostly access controls.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Security
 {
     public $airship_auth;

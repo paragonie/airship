@@ -4,6 +4,13 @@ namespace Airship\Engine\Bolt;
 
 use \Airship\Engine\State;
 
+/**
+ * Trait Common
+ *
+ * Common stuff.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Common
 {
     /**

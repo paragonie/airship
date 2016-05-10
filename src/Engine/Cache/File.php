@@ -10,10 +10,17 @@ use \Airship\Engine\{
 };
 use \ParagonIE\Halite\Key;
 
+/**
+ * Class File
+ *
+ * Caches data in the filesystem.
+ *
+ * @package Airship\Engine\Cache
+ */
 class File implements CacheInterface
 {
     const HASH_SIZE = 32;
-    const PERMS = 0755;
+    const PERMS = 0775;
 
     protected $baseDir = '';
 
@@ -71,11 +78,16 @@ class File implements CacheInterface
 
         // Let's make sure both directories exist
         $dirs = self::getRelativeHash($this->baseDir . DIRECTORY_SEPARATOR . $key);
-        if (!\is_dir($this->baseDir . DIRECTORY_SEPARATOR . $dirs[0])) {
-            \mkdir($this->baseDir . DIRECTORY_SEPARATOR . $dirs[0], self::PERMS);
+        $dirName = \implode(DIRECTORY_SEPARATOR, [$this->baseDir, $dirs[0]]);
+        if (!\is_dir($dirName)) {
+            \mkdir($dirName, self::PERMS);
         }
-        if (!\is_dir($this->baseDir . DIRECTORY_SEPARATOR . $dirs[0] . DIRECTORY_SEPARATOR . $dirs[1])) {
-            \mkdir($this->baseDir . DIRECTORY_SEPARATOR . $dirs[0] . DIRECTORY_SEPARATOR . $dirs[1], self::PERMS);
+        $dirName .= DIRECTORY_SEPARATOR . $dirs[1];
+        if (!\is_dir($dirName)) {
+            \mkdir(
+                $dirName,
+                self::PERMS
+            );
         }
 
         // Now let's store our data in the file

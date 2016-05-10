@@ -2,6 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+/**
+ * Trait Orderable
+ *
+ * Adds sorting methods to any class.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Orderable
 {
     /**

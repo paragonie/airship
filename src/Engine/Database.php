@@ -6,6 +6,15 @@ use \Airship\Alerts\Database as DBAlert;
 use \Airship\Engine\Contract\DBInterface;
 use MongoDB\BSON\Type;
 
+/**
+ * Class Database
+ *
+ * Wraps PDO and gives a bunch of nice and easy one-liners
+ * that in most cases use Prepared Statements to ensure
+ * we aren't committing a huge security foot-cannon.
+ *
+ * @package Airship\Engine
+ */
 class Database implements DBInterface
 {
     protected $dbengine = null;
@@ -96,8 +105,11 @@ class Database implements DBInterface
      * @return array [$dsn, $driver]
      * @throws DBAlert\DBException
      */
-    public static function flattenDSN(array $dbConf, string $username = '', string $password = ''): array
-    {
+    public static function flattenDSN(
+        array $dbConf,
+        string $username = '',
+        string $password = ''
+    ): array {
         switch ($dbConf['driver']) {
             case 'mysql':
                 $dsn = $dbConf['driver'].':';
@@ -866,8 +878,11 @@ class Database implements DBInterface
      * @param mixed $arg3
      * @return \PDOStatement|bool
      */
-    public function query(string $statement, int $mode = \PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null)
-    {
+    public function query(
+        string $statement,
+        int $mode = \PDO::ATTR_DEFAULT_FETCH_MODE,
+        $arg3 = null
+    ) {
         if ($arg3) {
             return $this->pdo->query($statement, $mode, $arg3);
         }

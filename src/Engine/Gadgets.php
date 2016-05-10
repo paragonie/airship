@@ -4,9 +4,10 @@ namespace Airship\Engine;
 
 /**
  * Class Gadgets
- * @package Airship\Engine
  *
  * This abstract class simply contains some methods useful for Gadget development
+ *
+ * @package Airship\Engine
  */
 abstract class Gadgets
 {

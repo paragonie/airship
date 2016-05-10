@@ -5,6 +5,13 @@ namespace Airship\Engine\Bolt;
 use \Airship\Engine\State;
 use \Psr\Log\LogLevel;
 
+/**
+ * Trait Log
+ *
+ * Adds a common log() method.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Log
 {
     /**

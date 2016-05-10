@@ -59,16 +59,13 @@ class Continuum
     }
     
     /**
-     * Do we need to do an update check?
+     * Do we need to do an update check? If so, start the update check process.
      * 
      * @param bool $force Force start the update check?
-     * 
      */
     public function checkForUpdates(bool $force = false)
     {
-        $update = $force
-            ? true
-            : $this->needsUpdate();
+        $update = $force || $this->needsUpdate();
         
         if ($update) {
             // Load all the suppliers

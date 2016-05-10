@@ -4,6 +4,13 @@ namespace Airship\Engine\Bolt;
 
 use \Airship\Engine\Cache\File;
 
+/**
+ * Trait FileCache
+ *
+ * Used to cache stuff on the filesystem.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait FileCache
 {
     public $airship_filecache_object;

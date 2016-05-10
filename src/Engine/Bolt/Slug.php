@@ -4,6 +4,13 @@ namespace Airship\Engine\Bolt;
 
 use Airship\Engine\Database;
 
+/**
+ * Trait Slug
+ *
+ * Put common methods for slug generation here.
+ *
+ * @package Airship\Engine\Bolt
+ */
 trait Slug
 {
     /**
