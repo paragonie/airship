@@ -68,6 +68,11 @@ class UpdateFile
         return \hash_equals($this->hash, $hash);
     }
 
+    /**
+     * Get the version of a particular update file.
+     *
+     * @return string
+     */
     public function getVersion(): string
     {
         return $this->version;
