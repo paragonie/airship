@@ -103,10 +103,8 @@ class File implements CacheInterface
      * @return string|array
      * @throws InvalidType
      */
-    public static function getRelativeHash(
-        string $preHash,
-        bool $asString = false
-    ): string {
+    public static function getRelativeHash(string $preHash, bool $asString = false)
+    {
         $state = State::instance();
         $cacheKey = $state->keyring['cache.hash_key'];
 
