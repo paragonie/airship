@@ -9,7 +9,7 @@
             ["BlogPosts", "listAll"],
         "blog/author/{lslug}{_page}":
             ["BlogPosts", "listByAuthor"],
-        "blog/author{_lslug}":
+        "blog/author/{lslug}":
             ["BlogPosts", "listByAuthor"],
         "blog/authors":
             ["BlogPosts", "listPublicAuthors"],

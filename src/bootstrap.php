@@ -83,10 +83,14 @@ $twigLoader = new \Twig_Loader_Filesystem(
 $lensLoad = [];
 // Load all the gadgets, which can act on $twigLoader
 include ROOT.'/config/gadgets.php';
+$twigOpts = [
+    'debug' => $state->universal['debug']
+];
+if (!empty($state->universal['twig-cache'])) {
+    $twigOpts['cache'] = ROOT . '/tmp/cache/twig';
+}
 
-$twigEnv = new \Twig_Environment($twigLoader, [
-    'debug' => true
-]);
+$twigEnv = new \Twig_Environment($twigLoader, $twigOpts);
 $twigEnv->addExtension(new \Twig_Extension_Debug());
 
 $lens = \Airship\Engine\Gears::get('Lens', $twigEnv);

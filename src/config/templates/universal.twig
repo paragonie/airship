@@ -35,5 +35,6 @@
         "user_id": {{ universal["session_index"]["user_id"]|je }},
         "logout_token": {{ universal["session_index"]["logout_token"]|je }}
     },
-    "tor-only": {{ universal["tor-only"] ? 'true' : 'false' }}
+    "tor-only": {{ universal["tor-only"] ? 'true' : 'false' }},
+    "twig-cache":  {{ universal["twig-cache"] ? 'true' : 'false'}}
 }
