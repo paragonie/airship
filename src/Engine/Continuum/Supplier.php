@@ -78,13 +78,9 @@ class Supplier
             foreach ($data['signing_keys'] as $sk) {
                 $keys[] = [
                     'type' => $sk['type'],
-                    'key' => new SignaturePublicKey(\Sodium\hex2bin($sk['public_key']), true, true, true),
-                    'from' => empty($sk['validity']['from'])
-                        ? null
-                        : new \DateTime($sk['validity']['from']),
-                    'until' => empty($sk['validity']['until'])
-                        ? null
-                        : new \DateTime($sk['validity']['until'])
+                    'key' => new SignaturePublicKey(
+                        \Sodium\hex2bin($sk['public_key'])
+                    )
                 ];
             }
             $this->signing_keys = $keys;

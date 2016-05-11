@@ -2,14 +2,16 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Alerts\Hail\{
+    NoAPIResponse,
+    SignatureFailed
+};
 use Airship\Engine\{
     Bolt\Log,
     Hail,
     State
 };
 use \GuzzleHttp\Client;
-use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\ConstantTime\Base64;
 use \ParagonIE\Halite\{
@@ -142,32 +144,26 @@ abstract class AutoUpdater
         }
         try {
             $version = $update->getVersion();
-            $response = $this->hail->post(
+            $body = $this->hail->postReturnBody(
                 $update->getChannel() . API::get($apiEndpoint),
                 [
                     'version' => $version
                 ]
             );
-            if ($response instanceof Response) {
-                $code = $response->getStatusCode();
-                if ($code >= 200 && $code < 300) {
-                    $outFile = \tempnam(\sys_get_temp_dir(), 'airship-') . '.phar';
-                    $body = (string) $response->getBody();
-                    $saved = \file_put_contents($outFile, $body);
-                    if ($saved !== false) {
-                        // To prevent TOCTOU issues down the line
-                        $hash = Util::hash($body);
-                        $body = null;
-                        \clearstatcache();
+            $outFile = \tempnam(\sys_get_temp_dir(), 'airship-') . '.phar';
+            $saved = \file_put_contents($outFile, $body);
+            if ($saved !== false) {
+                // To prevent TOCTOU issues down the line
+                $hash = Util::hash($body);
+                $body = null;
+                \clearstatcache();
 
-                        return new UpdateFile([
-                            'path' => $outFile,
-                            'version' => $version,
-                            'hash' => $hash,
-                            'size' => \filesize($outFile)
-                        ]);
-                    }
-                }
+                return new UpdateFile([
+                    'path' => $outFile,
+                    'version' => $version,
+                    'hash' => $hash,
+                    'size' => \filesize($outFile)
+                ]);
             }
             // If we're still here...
             throw new TransferException();
@@ -255,10 +251,12 @@ abstract class AutoUpdater
         }
         foreach ($channelsConfigured as $channelName) {
             $channel = $this->getChannel($channelName);
+            $publicKey = $channel->getPublicKey();
             foreach ($channel->getAllURLs() as $ch) {
                 try {
-                    $response = $this->hail->post(
+                    $response = $this->hail->postSignedJSON(
                         $ch . API::get($apiEndpoint),
+                        $publicKey,
                         [
                             'type' => $this->type,
                             'supplier' => $supplier,
@@ -266,20 +264,26 @@ abstract class AutoUpdater
                             'minimum' => $minVersion
                         ]
                     );
-                    if ($response instanceof Response) {
-                        $code = $response->getStatusCode();
-                        if ($code >= 200 && $code < 300) {
-                            $body = \json_decode((string)$response->getBody(), true);
-                            $updates = [];
-                            foreach ($body['versions'] as $update) {
-                                $updates [] = new UpdateInfo(
-                                    $update,
-                                    $ch
-                                );
-                            }
-                            return $this->sortUpdatesByVersion($updates);
-                        }
+                    $updates = [];
+                    foreach ($response['versions'] as $update) {
+                        $updates [] = new UpdateInfo(
+                            $update,
+                            $ch,
+                            $publicKey
+                        );
                     }
+                    return $this->sortUpdatesByVersion($updates);
+                } catch (SignatureFailed $ex) {
+                    // Log? Definitely suppress, however.
+                    $this->log(
+                        'Automatic update - signature failure. (' . \get_class($ex) . ')',
+                        LogLevel::ALERT,
+                        [
+                            'exception' => \Airship\throwableToArray($ex),
+                            'channelName' => $channelName,
+                            'channel' => $ch
+                        ]
+                    );
                 } catch (TransferException $ex) {
                     // Log? Definitely suppress, however.
                     $this->log(

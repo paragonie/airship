@@ -118,6 +118,29 @@ class Hail
     }
 
     /**
+     * Perform a POST request, get the body
+     *
+     * @param string $url
+     * @param array $params
+     * @return ResponseInterface
+     * @throws TransferException
+     */
+    public function getReturnBody(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
+        $response = $this->client->get(
+            $url,
+            $this->params($params, $url)
+        );
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+            return (string) $response->getBody();
+        }
+        throw new TransferException();
+    }
+
+    /**
      * Perform a GET request, get a decoded JSON response.
      * Internally verifies an Ed25519 signature.
      *
@@ -298,6 +321,29 @@ class Hail
         $this->parseJSON(
             $this->post($url, $params)
         );
+    }
+
+    /**
+     * Perform a POST request, get the body
+     *
+     * @param string $url
+     * @param array $params
+     * @return ResponseInterface
+     * @throws TransferException
+     */
+    public function postReturnBody(
+        string $url,
+        array $params = []
+    ): ResponseInterface {
+        $response = $this->client->post(
+            $url,
+            $this->params($params, $url)
+        );
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+            return (string) $response->getBody();
+        }
+        throw new TransferException();
     }
 
     /**

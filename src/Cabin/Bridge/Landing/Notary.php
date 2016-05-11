@@ -58,19 +58,20 @@ class Notary extends LandingGear
         if (IDE_HACKS) {
             $this->pk = new SignaturePublicKey();
         }
-        \Airship\json_response([
-            'status' =>
-                'OK',
-            'channel' =>
-                $this->channel,
-            'message' =>
-                '',
-            'public_key' =>
-                Base64UrlSafe::encode(
-                    $this->pk->getRawKeyMaterial()
-                )
-        ]);
-
+        \Airship\json_response(
+            [
+                'status' =>
+                    'OK',
+                'channel' =>
+                    $this->channel,
+                'message' =>
+                    '',
+                'public_key' =>
+                    Base64UrlSafe::encode(
+                        $this->pk->getRawKeyMaterial()
+                    )
+            ]
+        );
     }
 
     /**

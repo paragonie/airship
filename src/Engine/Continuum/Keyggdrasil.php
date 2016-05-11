@@ -84,50 +84,41 @@ class Keyggdrasil
     {
         foreach ($peer->getAllURLs() as $url) {
             $challenge = Base64UrlSafe::encode(\random_bytes(33));
-            $response = $this->hail->post($url, [
-                'challenge' => $challenge
-            ]);
-            if ($response instanceof Response) {
-                $code = $response->getStatusCode();
-                if ($code >= 200 && $code < 300) {
-                    $body = (string) $response->getBody();
-                    $response = \json_decode($body, true);
-                    if ($response['status'] === 'OK') {
-                        // Decode then verify signature
-                        $message = Base64UrlSafe::decode($response['response']);
-                        $signature = Base64UrlSafe::decode($response['signature']);
-                        if (!AsymmetricCrypto::verify($message, $peer->getPublicKey(), $signature, true)) {
-                            throw new PeerSignatureFailed(
-                                'Invalid digital signature (i.e. it was signed with an incorrect key).'
-                            );
-                        }
-                        // Make sure our challenge was signed.
-                        $decoded = \json_decode($message, true);
-                        if (!\hash_equals($challenge, $decoded['challenge'])) {
-                            throw new CouldNotUpdate(
-                                'Challenge-response authentication failed.'
-                            );
-                        }
-                        // Make sure this was a recent signature (it *should* be):
-                        $min = (new \DateTime('now'))
-                            ->sub(new \DateInterval('P01D'));
-                        $time = new \DateTime($decoded['timestamp']);
-                        if ($time < $min) {
-                            throw new CouldNotUpdate(
-                                'Timestamp ' . $decoded['timestamp'] . ' is far too old.'
-                            );
-                        }
-
-                        // Return TRUE if it matches the expected root.
-                        // Return FALSE if it matches.
-                        return \hash_equals(
-                            $expectedRoot,
-                            $decoded['root']
-                        );
-                    }
-                    // If we're still here, the Peer returned an error.
+            $response = $this->hail->postJSON($url, ['challenge' => $challenge]);
+            if ($response['status'] === 'OK') {
+                // Decode then verify signature
+                $message = Base64UrlSafe::decode($response['response']);
+                $signature = Base64UrlSafe::decode($response['signature']);
+                if (!AsymmetricCrypto::verify($message, $peer->getPublicKey(), $signature, true)) {
+                    throw new PeerSignatureFailed(
+                        'Invalid digital signature (i.e. it was signed with an incorrect key).'
+                    );
                 }
-                // If we're still here, the Peer returned an HTTP error.
+                // Make sure our challenge was signed.
+                $decoded = \json_decode($message, true);
+                if (!\hash_equals($challenge, $decoded['challenge'])) {
+                    throw new CouldNotUpdate(
+                        'Challenge-response authentication failed.'
+                    );
+                }
+                // Make sure this was a recent signature (it *should* be):
+                $min = (new \DateTime('now'))
+                    ->sub(new \DateInterval('P01D'));
+                $time = new \DateTime($decoded['timestamp']);
+                if ($time < $min) {
+                    throw new CouldNotUpdate(
+                        'Timestamp ' . $decoded['timestamp'] . ' is far too old.'
+                    );
+                }
+
+                // Return TRUE if it matches the expected root.
+                // Return FALSE if it matches.
+                return \hash_equals(
+                    $expectedRoot,
+                    $decoded['root']
+                );
+            } else {
+                return false;
             }
             // If we're still here, Guzzle failed.
         }
@@ -157,24 +148,16 @@ class Keyggdrasil
      * @param string $url
      * @param string $root Which Merkle root are we starting at?
      * @return KeyUpdate[]
-     * @throws TransferException
      */
     protected function fetchKeyUpdates(Channel $chan, string $url, string $root): array
     {
-        $response = $this->hail->post(
-            $url . API::get('fetch_keys') . '/' . $root
+        return $this->parseKeyUpdateResponse(
+            $chan,
+            $this->hail->getSignedJSON(
+                $url . API::get('fetch_keys') . '/' . $root,
+                $chan->getPublicKey()
+            )
         );
-        if ($response instanceof Response) {
-            $code = $response->getStatusCode();
-            if ($code >= 200 && $code < 300) {
-                $body = (string) $response->getBody();
-
-                // This should return an array of KeyUpdate objects:
-                return $this->parseKeyUpdateResponse($chan, $body);
-            }
-        }
-        // When all else fails, TransferException
-        throw new TransferException();
     }
 
     /**
@@ -228,14 +211,13 @@ class Keyggdrasil
      * of the "no updates" message to prevent a DoS.
      *
      * @param Channel $chan
-     * @param string $body
+     * @param array $response
      * @return KeyUpdate[]
      * @throws ChannelSignatureFailed
      * @throws CouldNotUpdate
      */
-    protected function parseKeyUpdateResponse(Channel $chan, string $body): array
+    protected function parseKeyUpdateResponse(Channel $chan, array $response): array
     {
-        $response = \Airship\parseJSON($body);
         if (empty($response['updates'])) {
             // The "no updates" message should be authenticated.
             $signatureVerified = AsymmetricCrypto::verify(

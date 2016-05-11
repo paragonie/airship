@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+
 /**
  * Class UpdateInfo
  * @package Airship\Engine\Continuum
@@ -17,19 +19,19 @@ class UpdateInfo
      * UpdateInfo constructor.
      * @param array $json
      * @param string $channelURL
-     * @param string $version
+     * @param SignaturePublicKey $channelPublicKey
      */
-    public function __construct(array $json, string $channelURL, string $version = '')
-    {
+    public function __construct(
+        array $json,
+        string $channelURL,
+        SignaturePublicKey $channelPublicKey
+    ) {
         $this->response = $json;
         $this->channel = $channelURL;
+        $this->publicKey = $channelPublicKey;
         $this->checksum = $json['checksum'];
         $this->releaseInfo = $json['release_info'];
-        if (empty($version)) {
-            $this->version = $json['version'];
-        } else {
-            $this->version = $version;
-        }
+        $this->version = $json['version'];
     }
 
     /**
@@ -40,6 +42,16 @@ class UpdateInfo
     public function getChannel(): string
     {
         return $this->channel;
+    }
+
+    /**
+     * Get the channel's public key
+     *
+     * @return SignaturePublicKey
+     */
+    public function getChannelPublicKey(): SignaturePublicKey
+    {
+        return $this->publicKey;
     }
 
     /**
