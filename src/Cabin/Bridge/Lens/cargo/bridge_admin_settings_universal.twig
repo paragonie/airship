@@ -157,8 +157,15 @@
 
             <br />
 
-            <input {% if universal["debug"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="universal[debug]" value="1" />
-            <label for="network-tor">
+            <input {% if universal["twig-cache"] %} checked="checked"{% endif %} id="twig-cache" type="checkbox" name="universal[twig-cache]" value="1" />
+            <label for="twig-cache">
+                Cache templates?
+            </label>
+
+            <br />
+
+            <input {% if universal["debug"] %} checked="checked"{% endif %} id="debug-mode" type="checkbox" name="universal[debug]" value="1" />
+            <label for="debug-mode">
                 {{ __("Debug Mode (not recommended in production environments)") }}
             </label>
         </div>
