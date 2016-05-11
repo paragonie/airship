@@ -4,6 +4,28 @@
         "title": "My Blog",
         "tagline": "Something classy goes here"
     },
+    "navbar": [
+        {
+            "url": "~/",
+            "label": "Home",
+            "translate": true
+        },
+        {
+            "url": "~/about",
+            "label": "About",
+            "translate": true
+        },
+        {
+            "url": "~/contact",
+            "label": "Contact",
+            "translate": true
+        },
+        {
+            "url": "~/blog",
+            "label": "Blog",
+            "translate": false
+        }
+    ],
     "title": "Airship 0.1",
     "tagline": "Even the sky shall not limit you!"
 }
