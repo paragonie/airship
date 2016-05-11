@@ -7,7 +7,7 @@ use \Airship\Engine\{
     Gears,
     State
 };
-use Airship\Engine\Security\Permissions;
+use \Airship\Engine\Security\Permissions;
 use \Gregwar\RST\Parser as RSTParser;
 use \League\CommonMark\CommonMarkConverter;
 use \ParagonIE\CSPBuilder\CSPBuilder;
@@ -15,6 +15,7 @@ use \ParagonIE\ConstantTime\{
     Base64,
     Base64UrlSafe
 };
+use \ParagonIE\Halite\Util;
 
 /**
  * Get the base template (normally "base.twig")
@@ -117,7 +118,7 @@ function can(
             \Airship\get_database()
         );
         if (IDE_HACKS) {
-            $perm = new Permissions();
+            $perm = new Permissions(\Airship\get_database());
         }
     }
     return $perm->can($label, $context_regex, $domain, $user_id);
@@ -144,12 +145,10 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
 {
     $state = State::instance();
     if (isset($state->CSP)) {
-        $csum = \Sodium\bin2hex(
-            \Sodium\crypto_generichash('Content Security Policy Hash:' . $file)
-        );
-        $h1 = substr($csum, 0, 2);
-        $h2 = substr($csum, 2, 2);
-        $fhash = substr($csum, 4);
+        $checksum = Util::hash('Content Security Policy Hash:' . $file);
+        $h1 = substr($checksum, 0, 2);
+        $h2 = substr($checksum, 2, 2);
+        $fhash = substr($checksum, 4);
 
         if (\file_exists(ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2.'/'.$fhash.'.txt')) {
             if ($state->CSP instanceof CSPBuilder) {
@@ -398,20 +397,18 @@ function motifs()
  * @output HTML
  * @return string
  */
-function render_markdown(string $string = '', bool $return = false)
+function render_markdown(string $string = '', bool $return = false): string
 {
     static $md = null;
     if (empty($md)) {
         $md = new CommonMarkConverter();
     }
 
-    $csum = \Sodium\bin2hex(
-        \Sodium\crypto_generichash('Markdown' . $string)
-    );
+    $checksum = Util::hash('Markdown' . $string);
 
-    $h1 = substr($csum, 0, 2);
-    $h2 = substr($csum, 2, 2);
-    $hash = substr($csum, 4);
+    $h1 = substr($checksum, 0, 2);
+    $h2 = substr($checksum, 2, 2);
+    $hash = substr($checksum, 4);
 
     if (\file_exists(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
         $output = \file_get_contents(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt');
@@ -437,6 +434,7 @@ function render_markdown(string $string = '', bool $return = false)
         return (string) $output;
     }
     echo $output;
+    return '';
 }
 
 /**
@@ -447,20 +445,18 @@ function render_markdown(string $string = '', bool $return = false)
  * @output HTML
  * @return string
  */
-function render_rst(string $string = '', bool $return = false)
+function render_rst(string $string = '', bool $return = false): string
 {
     static $rst = null;
     if (empty($rst)) {
         $rst = new RSTParser();
     }
 
-    $csum = \Sodium\bin2hex(
-        \Sodium\crypto_generichash('ReStructuredText' . $string)
-    );
+    $checksum = Util::hash('ReStructuredText' . $string);
 
-    $h1 = substr($csum, 0, 2);
-    $h2 = substr($csum, 2, 2);
-    $hash = substr($csum, 4);
+    $h1 = substr($checksum, 0, 2);
+    $h2 = substr($checksum, 2, 2);
+    $hash = substr($checksum, 4);
 
     if (\file_exists(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
         $output = \file_get_contents(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt');
@@ -489,9 +485,12 @@ function render_rst(string $string = '', bool $return = false)
         return $output;
     }
     echo $output;
+    return '';
 }
 
 /**
+ * Purify a string using HTMLPurifier
+ *
  * @param $string
  * @return string
  */
@@ -501,7 +500,36 @@ function purify(string $string = '')
     if ($state === null) {
         $state = State::instance();
     }
-    return $state->HTMLPurifier->purify($string);
+    $checksum = Util::hash('HTML Purifier' . $string);
+
+    $h1 = substr($checksum, 0, 2);
+    $h2 = substr($checksum, 2, 2);
+    $hash = substr($checksum, 4);
+
+    if (\file_exists(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
+        $output = \file_get_contents(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt');
+    } else {
+        if (!is_dir(ROOT.'/tmp/cache/html_purifier')) {
+            \mkdir(ROOT.'/tmp/cache/html_purifier', 0777);
+        }
+        if (!is_dir(ROOT.'/tmp/cache/html_purifier/'.$h1)) {
+            \mkdir(ROOT.'/tmp/cache/html_purifier/'.$h1, 0777);
+        }
+        if (!is_dir(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2)) {
+            \mkdir(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2, 0777);
+        }
+        $output = $state->HTMLPurifier->purify($string);
+        // Cache for later
+        \file_put_contents(
+            ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt',
+            $output
+        );
+        \chmod(
+            ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt',
+            0666
+        );
+    }
+    echo $output;
 }
 
 /**
@@ -522,7 +550,7 @@ function render_purified_markdown(string $string = '')
 function render_purified_rest(string $string = '')
 {
     echo \Airship\LensFunctions\purify(
-        \Airship\LensFunctions\render_rest($string, true)
+        \Airship\LensFunctions\render_rst($string, true)
     );
 }
 
@@ -553,7 +581,10 @@ function user_authors(int $userId = null): array
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->run('SELECT * FROM view_hull_users_authors WHERE userid = ?', $userId);
+    return $db->run(
+        'SELECT * FROM view_hull_users_authors WHERE userid = ?',
+        $userId
+    );
 }
 
 /**
@@ -569,7 +600,10 @@ function user_author_ids(int $userId = null): array
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->col('SELECT authorid FROM hull_blog_author_owners WHERE userid = ?', 0, $userId);
+    return $db->first(
+        'SELECT authorid FROM hull_blog_author_owners WHERE userid = ?',
+        $userId
+    );
 }
 
 /**
@@ -585,7 +619,10 @@ function user_display_name(int $userId = null): string
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->cell('SELECT COALESCE(display_name, username) FROM airship_users WHERE userid = ?', $userId);
+    return $db->cell(
+        'SELECT COALESCE(display_name, username) FROM airship_users WHERE userid = ?',
+        $userId
+    );
 }
 
 /**
@@ -616,5 +653,8 @@ function user_name(int $userId = null): string
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->cell('SELECT username FROM airship_users WHERE userid = ?', $userId);
+    return $db->cell(
+        'SELECT username FROM airship_users WHERE userid = ?',
+        $userId
+    );
 }
