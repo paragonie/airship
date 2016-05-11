@@ -12,10 +12,12 @@ use \Airship\Engine\{
 };
 use \GuzzleHttp\{
     Client,
-    Exception\TransferException,
-    Psr7\Response
+    Exception\TransferException
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary
+};
 use \ParagonIE\Halite\{
     Asymmetric\Crypto as AsymmetricCrypto,
     Asymmetric\SignaturePublicKey,
@@ -136,28 +138,24 @@ class ChannelUpdates extends BlueprintGear
         }
         foreach ($this->getChannelURLs() as $url) {
             $initiated = new \DateTime('now');
-            $response = $state->hail->post(
-                $url . API::get('fetch_keys') . '/' . $root
+            $response = $state->hail->postSignedJSON(
+                $url . API::get('fetch_keys') . '/' . $root,
+                $this->channelPublicKey
             );
-            if ($response instanceof Response) {
-                $code = $response->getStatusCode();
-                if ($code >= 200 && $code < 300) {
-                    try {
-                        // We use a separate method for parsing this update:
-                        return $this->parseChannelUpdateResponse(
-                            (string) $response->getBody(),
-                            $initiated
-                        );
-                    } catch (CouldNotUpdate $ex) {
-                        // Log the error message:
-                        $this->log(
-                            $ex->getMessage(),
-                            LogLevel::ALERT,
-                            \Airship\throwableToArray($ex)
-                        );
-                        // continue;
-                    }
-                }
+            try {
+                // We use a separate method for parsing this update:
+                return $this->parseChannelUpdateResponse(
+                    $response,
+                    $initiated
+                );
+            } catch (CouldNotUpdate $ex) {
+                // Log the error message:
+                $this->log(
+                    $ex->getMessage(),
+                    LogLevel::ALERT,
+                    \Airship\throwableToArray($ex)
+                );
+                // continue;
             }
         }
         // When all else fails, TransferException
@@ -304,7 +302,8 @@ class ChannelUpdates extends BlueprintGear
         }
         foreach ($resp as $r) {
             $r->then(function (ResponseInterface $response) {
-                $context = \json_decode((string) $response->getBody());
+                $body = $response->getBody();
+                $context = \json_decode(Binary::safeSubstr($body, 89));
                 $this->log(
                     'Peer notified of channel update',
                     LogLevel::INFO,
@@ -317,16 +316,15 @@ class ChannelUpdates extends BlueprintGear
     /**
      * Parse the HTTP response and get the useful information out of it.
      *
-     * @param string $raw
+     * @param array $data
      * @param \DateTime $originated
      * @return array
      * @throws CouldNotUpdate
      */
-    protected function parseChannelUpdateResponse(string $raw, \DateTime $originated): array
+    protected function parseChannelUpdateResponse(array $data, \DateTime $originated): array
     {
-        $data = \json_decode($raw, true);
         if ($data['status'] !== 'success') {
-            throw new CouldNotUpdate($data['message'] ?? 'An update has occurred');
+            throw new CouldNotUpdate($data['message'] ?? 'An update error has occurred');
         }
         $valid = [];
         if (!empty($data['no_updates'])) {

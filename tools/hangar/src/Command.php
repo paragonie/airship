@@ -214,7 +214,7 @@ abstract class Command
         $TAB = str_repeat(' ', self::TAB_SIZE);
         $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 
-        echo $HTAB, 'Airship / Hanger - ', $this->name, "\n\n";
+        echo $HTAB, 'Airship / Hangar - ', $this->name, "\n\n";
         echo $TAB, $this->description, "\n\n";
         return true;
     }
