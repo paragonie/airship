@@ -22,7 +22,7 @@
     <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
         {{  __("Save Changes") }}
     </button>
-    <button data-href="{{ cabin_url() ~ "/pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+    <button data-href="{{ cabin_url() ~ "pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
         Cancel
     </button>
 

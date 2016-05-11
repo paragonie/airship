@@ -11,7 +11,7 @@
 </form>
 {% endif %}
 
-{% set tag_base = cabin_url() ~ "/blog/tag/" ~ pagination.page|e('html_attr') %}
+{% set tag_base = cabin_url() ~ "blog/tag/" ~ pagination.page|e('html_attr') %}
 <div class="table" id="bridge_tag_list">
     <div class="table-row table-header">
         <div class="table-cell"></div>

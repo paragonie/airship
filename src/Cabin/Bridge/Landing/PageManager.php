@@ -615,6 +615,7 @@ class PageManager extends LoggedInUsersOnly
         } else {
             $raw = null; // Don't set
         }
+        $cache = !empty($post['cache']);
         if ($this->can('publish')) {
             $publish = $post['save_btn'] === 'publish';
         } elseif ($this->can('update')) {
@@ -629,7 +630,7 @@ class PageManager extends LoggedInUsersOnly
             );
             return false;
         }
-        if ($this->pg->updatePage($pageId, $post, $publish, $raw)) {
+        if ($this->pg->updatePage($pageId, $post, $publish, $raw, $cache)) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/'.$cabin, [
                 'dir' => $dir

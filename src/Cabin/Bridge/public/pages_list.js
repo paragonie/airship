@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#pages_list_cabin").on('change', function() {
         var cabin = $(this).val()
             .replace("/", "");
-        window.location = $("#bridge_main_menu_left").data('linkprefix') + "/pages/" + cabin;
+        window.location = $("#bridge_main_menu_left").data('linkprefix') + "pages/" + cabin;
     });
 
     $(".dir_rename").on('click', function() {
@@ -15,7 +15,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/renameDir?dir=" +
+            "pages/" + cabin + "/renameDir?dir=" +
             (parent !== "" ? parent + "/" : "") +
             dir;
     });
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/deleteDir?dir=" +
+            "pages/" + cabin + "/deleteDir?dir=" +
             (parent !== "" ? parent + "/" : "") +
             dir;
     });
@@ -44,7 +44,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/edit?" +
+            "pages/" + cabin + "/edit?" +
             (dir !== "" ? "dir=" + dir + "&" : "") +
             "page=" + page;
     });
@@ -57,7 +57,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/renamePage?" +
+            "pages/" + cabin + "/renamePage?" +
             (dir !== "" ? "dir=" + dir + "&" : "") +
             "page=" + page;
     });
@@ -70,7 +70,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/history?" +
+            "pages/" + cabin + "/history?" +
             (dir !== "" ? "dir=" + dir + "&" : "") +
             "page=" + page;
     });
@@ -83,7 +83,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/deletePage?" +
+            "pages/" + cabin + "/deletePage?" +
             (dir !== "" ? "dir=" + dir + "&" : "") +
             "page=" + page;
     });
@@ -95,7 +95,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/newDir?dir=" + dir;
+            "pages/" + cabin + "/newDir?dir=" + dir;
     });
 
     $("#new_page").on('click', function() {
@@ -105,7 +105,7 @@ $(document).ready(function() {
 
         // Let's go to the correct location
         window.location = $("#bridge_main_menu_left").data('linkprefix') +
-            "/pages/" + cabin + "/newPage?dir=" + dir;
+            "pages/" + cabin + "/newPage?dir=" + dir;
     })
 
 });

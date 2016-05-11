@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
     FileCache as FileCacheBolt,
@@ -291,6 +292,12 @@ class Landing
         if ($this->airship_csrf->check()) {
             return $_POST;
         }
+        $state = State::instance();
+        if ($state->universal['debug']) {
+            throw new SecurityAlert(
+                'CSRF validation failed'
+            );
+        }
         return false;
     }
 
@@ -314,10 +321,11 @@ class Landing
         $data = $this->airship_lens_object->render($name, ...$cArgs);
         $_SESSION = $oldSession;
 
-        $this->airship_filecache_object->set(
-            $_SERVER['REQUEST_URI'],
-            $data
-        );
+        $port = $_SERVER['HTTP_PORT'] ?? '';
+        $cacheKey = $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI'];
+        if (!$this->airship_filecache_object->set($cacheKey, $data)) {
+            return false;
+        }
 
         $state = State::instance();
         if (!\headers_sent()) {

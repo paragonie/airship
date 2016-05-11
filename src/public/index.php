@@ -16,6 +16,7 @@ if (
 require_once dirname(__DIR__).'/preload.php';
 
 if (empty($_POST)) {
+    $start = \microtime(true);
 
     /**
      * Let's get rid of trailing slashes in URLs without POST data
@@ -53,6 +54,7 @@ if (empty($_POST)) {
         }
 
         echo $staticPage;
+        echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
         exit;
     }
     unset($staticCache);
@@ -114,3 +116,4 @@ if (!empty($state->universal['debug'])) {
 } else {
     $autoPilot->route();
 }
+echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s -->';

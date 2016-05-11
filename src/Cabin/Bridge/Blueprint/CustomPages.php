@@ -657,20 +657,27 @@ class CustomPages extends HullCustomPages
      * @param array $post
      * @param bool $publish (This is set to FALSE by the Landing if the permission check fails)
      * @param bool|null $raw
+     * @param bool $cache
      * @return bool
      */
     public function updatePage(
         int $pageId,
         array $post = [],
         bool $publish = false,
-        $raw = null
+        $raw = null,
+        bool $cache = false
     ): bool {
         $this->db->beginTransaction();
         if ($publish) {
             $this->db->update(
                 'airship_custom_page',
-                ['active' => true],
-                ['pageid' => $pageId]
+                [
+                    'active' => true,
+                    'cache' => $cache
+                ],
+                [
+                    'pageid' => $pageId
+                ]
             );
         }
 
@@ -705,7 +712,8 @@ class CustomPages extends HullCustomPages
                     ]
                 );
             }
-            return $this->clearPageCache();
+            $this->clearPageCache();
+            return $this->db->commit();
         }
         $meta = !empty($post['metadata'])
             ? \json_encode($post['metadata'])
