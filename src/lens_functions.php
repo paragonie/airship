@@ -533,6 +533,8 @@ function purify(string $string = '')
 }
 
 /**
+ * Markdown then HTMLPurifier
+ *
  * @param string $string
  * @return string
  */
@@ -544,6 +546,8 @@ function render_purified_markdown(string $string = '')
 }
 
 /**
+ * ReStructuredText then HTMLPurifier
+ *
  * @param string $string
  * @return string
  */
@@ -607,7 +611,7 @@ function user_author_ids(int $userId = null): array
 }
 
 /**
- * Get all of a user's author profiles
+ * Get the user's public display name.
  *
  * @param int|null $userId
  * @return string
@@ -626,22 +630,52 @@ function user_display_name(int $userId = null): string
 }
 
 /**
+ * Get the user's selected Motif
+ *
  * @param int|null $userId
+ * @param string $cabin
  * @return array
  */
-function user_motif(int $userId = null): array
+function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
 {
+    static $userCache = [];
     $state = State::instance();
-    $k = \array_keys($state->motifs)[0];
-    return $state->motifs[$k];
-    /** @todo let users specify which motif they want active */
     if (empty($userId)) {
         $userId = \Airship\LensFunctions\userid();
+        if (empty($userId)) {
+            $k = \array_keys($state->motifs)[0];
+            return $state->motifs[$k];
+        }
     }
+    if (isset($userCache[$userId])) {
+        return $state->motifs[$userCache[$userId]];
+    }
+    $db = \Airship\get_database();
+    $userPrefs = $db->cell(
+        'SELECT preferences FROM airship_user_preferences WHERE userid = ?',
+        $userId
+    );
+    if (!empty($userPrefs)) {
+        $userPrefs = \Airship\parseJSON($userPrefs, true);
+        if (isset($userPrefs['motif'][$cabin])) {
+            $split = \explode('/', $userPrefs['motif'][$cabin]);
+            foreach ($state->motifs as $k => $motif) {
+                if ($motif['config']['supplier'] === $split[0]) {
+                    if ($motif['config']['name'] === $split[1]) {
+                        $userCache[$userId] = $k;
+                        return $state->motifs[$k];
+                    }
+                }
+            }
+        }
+    }
+    $k = \array_keys($state->motifs)[0];
+    $userCache[$userId] = $k;
+    return $state->motifs[$k];
 }
 
 /**
- * Get all of a user's author profiles
+ * Get a user's username, given their user ID
  *
  * @param int|null $userId
  * @return string
