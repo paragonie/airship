@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use \ParagonIE\Halite\Util;
 use \Airship\Engine\{
     Gears,
-    Security\Util,
     State
 };
 /**
@@ -33,7 +33,14 @@ use \Airship\Engine\{
         int $length, 
         string $info = '', 
         string $salt = null
-    ) : string {
+    ): string {
+        if (\strtolower($hash) === 'blake2b') {
+            // Punt to Halite.
+            if ($salt) {
+                return Util::hkdfBlake2b($ikm, $length, $info, $salt);
+            }
+            return Util::hkdfBlake2b($ikm, $length, $info);
+        }
         // Find the correct digest length
         $digest_length = Util::safeStrlen(
             \hash_hmac($hash, '', '', true)
@@ -64,7 +71,7 @@ use \Airship\Engine\{
         // T(0) = ''
         $t = '';
         $last_block = '';
-        for ($block_index = 1; Util::selfStrlen($t) < $length; ++$block_index) {
+        for ($block_index = 1; Util::safeStrlen($t) < $length; ++$block_index) {
             // T(i) = HMAC-Hash(PRK, T(i-1) | info | 0x??)
             $last_block = \hash_hmac(
                 $hash,
@@ -76,7 +83,7 @@ use \Airship\Engine\{
             $t .= $last_block;
         }
         // ORM = first L octets of T
-        $orm = Util::selfSubstr($t, 0, $length);
+        $orm = Util::safeSubstr($t, 0, $length);
         if ($orm === FALSE) {
             throw new \Exception(
                 \trk('errors.crypto.general_error')
@@ -117,7 +124,7 @@ use \Airship\Engine\{
                 }
                 $ret = false;
             }
-            if (!\Airship\is1DArray($row)) {
+            if (!\is1DArray($row)) {
                 if (!$constantTime) {
                     return false;
                 }

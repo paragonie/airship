@@ -1477,3 +1477,19 @@ fieldset.preferences > legend {
 .ui-widget-header .ui-icon {
     background-image: url("/css/images/ui-icons_F8F8E0_256x240.png") !important;
 }
+#blog_post_delete_redirect_box {
+    display: table;
+    width: 100%;
+}
+#blog_post_delete_redirect_box label {
+    display: table-cell;
+    white-space: nowrap;
+    padding-right: 1em;
+    width: 1px;
+}
+#blog_post_delete_redirect_box .input-wrapper {
+    display: table-cell;
+}
+#blog_post_delete_redirect_box .input-wrapper input {
+    width: 100%;
+}

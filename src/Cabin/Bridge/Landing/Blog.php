@@ -49,6 +49,54 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * Delete a blog post
+     *
+     * @route blog/post/delete/{id}
+     * @param string $id
+     */
+    public function deletePost(string $id)
+    {
+        // Load Data
+        $blogPost = $this->blog->getBlogPostById((int) $id);
+        $blogPost['tags'] = $this->blog->getTagsForPost((int) $id);
+        $latestVersion = $this->blog->getBlogPostLatestVersion((int) $id);
+
+        if ($this->isSuperUser()) {
+            $authors = $this->author->getAll();
+        } else {
+            $authors = $this->author->getForUser(
+                $this->getActiveUserId()
+            );
+        }
+        $authorsAllowed = [];
+        foreach ($authors as $a) {
+            $authorsAllowed[] = $a['authorid'];
+        }
+
+        // The 'delete' permission here means "delete any", not just "delete mine":
+        if (!$this->can('delete')) {
+            // Does this author belong to you?
+            if (!\in_array($blogPost['author'], $authorsAllowed)) {
+                // No? Then you don't belong here
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
+            }
+        }
+
+        $post = $this->post();
+        if (!empty($post)) {
+            if ($this->processDeletePost($post, $authorsAllowed, $blogPost)) {
+                \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
+            }
+        }
+        $this->lens(
+            'blog/posts_delete', [
+                'blogpost' => $blogPost,
+                'latest' => $latestVersion
+            ]
+        );
+    }
+
+    /**
      * Edit a category
      *
      * @route blog/category/edit/{id}
@@ -499,7 +547,33 @@ class Blog extends LoggedInUsersOnly
     // POST data processing methods below:
 
     /**
-     * Create a new blog post
+     * Delete a blog post
+     *
+     * @param array $post
+     * @param array $authorsAllowed
+     * @param array $oldPost
+     * @return bool
+     */
+    protected function processDeletePost(
+        array $post,
+        array $authorsAllowed = [],
+        array $oldPost = []
+    ): bool {
+        // Extra caution: check permissions again.
+        if (!$this->isSuperUser()) {
+            if (!$this->can('delete')) {
+                // Does this author belong to you?
+                if (!\in_array($oldPost['author'], $authorsAllowed)) {
+                    return false;
+                }
+            }
+        }
+
+        return $this->blog->deletePost($post, $oldPost);
+    }
+
+    /**
+     * Update a blog post
      *
      * @param array $post
      * @param array $authorsAllowed
@@ -512,6 +586,7 @@ class Blog extends LoggedInUsersOnly
         array $oldPost = []
     ): bool {
         $required = [
+            'author',
             'blog_post_body',
             'format',
             'save_btn',
@@ -526,6 +601,7 @@ class Blog extends LoggedInUsersOnly
                 return false;
             }
             if (!\in_array($oldPost['author'], $authorsAllowed)) {
+                // This author is invalid.
                 return false;
             }
         }

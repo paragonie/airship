@@ -1,5 +1,5 @@
 <form method="post">{{ form_token() }}
-    <h3>Confirm Deletion</h3>
+    <h3>{{ __("Confirm Custom Page Deletion") }}</h3>
     <p>
         {{ __("Are you sure you want to delete this page? There is no undo.") }}
     </p>
@@ -25,5 +25,4 @@
     <button data-href="{{ cabin_url() ~ "pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
         Cancel
     </button>
-
 </form>

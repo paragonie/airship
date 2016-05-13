@@ -2,14 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
+use \Airship\Alerts\CabinNotFound;
+use Airship\Alerts\Database\DBException;
 use \Airship\Engine\Bolt\{
+    Common,
     Orderable,
     Slug
 };
 use \Airship\Cabin\Hull\Exceptions\{
     CustomPageNotFoundException
 };
-use Airship\Engine\Bolt\FileCache;
+use \Airship\Engine\Bolt\FileCache;
 
 require_once __DIR__.'/gear.php';
 
@@ -22,9 +25,13 @@ require_once __DIR__.'/gear.php';
  */
 class Blog extends BlueprintGear
 {
+    use Common;
     use Orderable;
     use Slug;
     use FileCache;
+
+    // Cabin for this blog post (used as a default parameter)
+    protected $cabin = 'Hull';
 
     /**
      * Sanity check; don't allow a category to belong to one of its children.
@@ -235,6 +242,78 @@ class Blog extends BlueprintGear
                 'slug' => $slug
             ]
         );
+        return $this->db->commit();
+    }
+
+    /**
+     * Delete a blog post
+     *
+     * @param array $formData
+     * @param array $blogPost
+     * @return bool
+     */
+    public function deletePost(array $formData, array $blogPost = []): bool
+    {
+        $this->db->beginTransaction();
+        try {
+            if (!empty($formData['create_redirect']) && !empty($formData['redirect_url'])) {
+                $blogUrl = \implode('/', [
+                    'blog',
+                    $blogPost['blogyear'],
+                    $blogPost['blogmonth'],
+                    $blogPost['slug']
+                ]);
+                try {
+                    $cabin = $this->getCabinNameFromURL($formData['redirect_url']);
+                    $this->db->insert(
+                        'airship_custom_redirect',
+                        [
+                            'oldpath' => $blogUrl,
+                            'newpath' => $formData['redirect_url'] ?? '/',
+                            'cabin' => $cabin,
+                            'same_cabin' => $cabin === $this->cabin
+                        ]
+                    );
+                } catch (CabinNotFound $ex) {
+                    $this->db->insert(
+                        'airship_custom_redirect',
+                        [
+                            'oldpath' => $blogUrl,
+                            'newpath' => $formData['redirect_url'] ?? '/',
+                            'cabin' => $this->cabin,
+                            'same_cabin' => false
+                        ]
+                    );
+                }
+            }
+            $this->db->delete(
+                'hull_blog_post_versions',
+                [
+                    'post' => $blogPost['postid']
+                ]
+            );
+            $this->db->delete(
+                'hull_blog_post_tags',
+                [
+                    'postid' => $blogPost['postid']
+                ]
+            );
+            $this->db->delete(
+                'hull_blog_comments',
+                [
+                    'blogpost' => $blogPost['postid']
+                ]
+            );
+            $this->db->delete(
+                'hull_blog_posts',
+                [
+                    'postid' => $blogPost['postid']
+                ]
+            );
+        } catch (DBException $ex) {
+            $this->db->rollBack();
+            return false;
+        }
         return $this->db->commit();
     }
 

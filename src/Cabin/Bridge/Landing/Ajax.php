@@ -2,7 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use Airship\Cabin\Bridge\Blueprint\{
+use \Airship\Alerts\CabinNotFound;
+use \Airship\Cabin\Bridge\Blueprint\{
     Author,
     Blog,
     Permissions,
@@ -220,16 +221,15 @@ class Ajax extends LoggedInUsersOnly
                 'message' => \__('You must enter a URL.')
             ]);
         }
-        $state = State::instance();
-        $ap = $state->autoPilot;
-        $cabin = $ap->testCabinForUrl($_POST['url']);
-        if (empty($cabin)) {
+        try {
+            $cabin = $this->getCabinNameFromURL($_POST['url']);
+            $this->getPermissionDataForURL($_POST['url'], $cabin);
+        } catch (CabinNotFound $ex) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('URL does not resolve to an existing Cabin.')
             ]);
         }
-        $this->getPermissionDataForURL($_POST['url'], $cabin);
     }
 
     /**

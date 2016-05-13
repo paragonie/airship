@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+use \Airship\Alerts\CabinNotFound;
 use \Airship\Engine\State;
 
 /**
@@ -26,5 +27,23 @@ trait Common
             $cabins [] = $cabin['name'];
         }
         return $cabins;
+    }
+
+    /**
+     * These isn't a cabin.
+     *
+     * @param string $url
+     * @return string
+     * @throws CabinNotFound
+     */
+    public function getCabinNameFromURL(string $url): string
+    {
+        $state = State::instance();
+        $ap = $state->autoPilot;
+        $cabin = $ap->testCabinForUrl($url);
+        if (empty($cabin)) {
+            throw new CabinNotFound();
+        }
+        return $cabin;
     }
 }

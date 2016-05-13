@@ -58,6 +58,8 @@
         "blog/comments{_page}":
             ["Blog", "listComments"],
 
+        "blog/post/delete/{id}":
+            ["Blog", "deletePost"],
         "blog/post/edit/{id}":
             ["Blog", "editPost"],
         "blog/post/new":

@@ -1,0 +1,27 @@
+<h3>{{ __("Confirm Blog Post Deletion") }}</h3>
+<p>
+    {{ __("Are you sure you want to delete this blog post? There is no undo.") }}
+</p>
+<form method="post">{{ form_token() }}
+    <fieldset class="form-metadata-wrapper">
+    <legend>
+        <input id="create_redirect" name="create_redirect" type="checkbox" value="1" />
+        <label for="create_redirect">{{ __("Redirect users to a different location?") }}</label>
+    </legend>
+
+
+    <div id="blog_post_delete_redirect_box">
+        <label for="redirect_url">{{ __("Redirect destination") }}:</label>
+        <div class="input-wrapper">
+            <input type="text" id="redirect_url" placeholder="/example/path" />
+        </div>
+    </div>
+    </fieldset>
+
+    <fieldset class="form-button-group">
+            <button type="submit" name="delete_btn" value="draft" class="pure-button pure-button-primary">
+                <i class="fa fa-trash"></i>
+                {{  __("Delete Blog Post") }}
+            </button>
+    </fieldset>
+</form>
