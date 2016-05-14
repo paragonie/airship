@@ -504,7 +504,7 @@ a:hover .bridge-icon {
 #bridge_table {
     margin-bottom: 0;
     border: 2px solid #010308;
-    box-shadow: rgba(255, 255, 255, 0.05) -1ex -1ex 1ex, rgba(0, 0, 0, 0.5) 1ex 1ex 1.5ex;
+    box-shadow: rgba(0, 0, 0, 0.5) 0ex 0.66ex 1.66ex;
 }
 #bridge_left a {
     color: #EFE5C8;
@@ -1507,4 +1507,20 @@ fieldset.preferences > legend {
 .diff_del {
     background-color: rgba(192, 0, 0, 0.15);
     color: #c00;
+}
+.channel_wrapper {
+    padding: 0.5ex 2.5ex;
+}
+.channel_wrapper table {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+.channel_wrapper td,
+.channel_wrapper th {
+    border: 1px solid #000;
+}
+.channel_wrapper table thead > tr {
+    background-color: #451d80;
+    color :#eee;
+    font-weight: bold;
 }

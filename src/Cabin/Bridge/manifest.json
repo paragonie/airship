@@ -8,6 +8,10 @@
 
         "admin/database":
             ["Admin", "manageDatabase"],
+        "admin/extensions":
+            ["Admin", "manageExtensions"],
+        "admin/notaries":
+            ["Admin", "manageNotaries"],
         "admin/settings":
             ["Admin", "manageSettings"],
         "admin/skyport":
@@ -130,8 +134,10 @@
         "gadgets":
             ["Gadgets", "index"],
 
+        /*
         "gears":
             ["Gears", "index"],
+        */
 
         "login":
             ["Account", "login"],

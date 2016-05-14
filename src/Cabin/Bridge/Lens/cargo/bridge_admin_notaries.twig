@@ -1,0 +1,12 @@
+<h1>Notaries</h1>
+
+<p>
+    {{ __(
+        "Notaries are other Airships that verify they're seeing the same data from the update server. " ~
+        "The more notaries you add, the more resilient your Airship will be to infrastructure attacks."
+    ) }}
+</p>
+
+<div id="bridge_admin_notaries_list">
+    {% include cargo("bridge_admin_notaries_list") %}
+</div>

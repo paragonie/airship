@@ -1,0 +1,33 @@
+{% for name, channel in channels %}
+{% if channels|length > 1 %}<h3>Channel: {{ name }}</h3>{% endif %}
+<div class="channel_wrapper">
+    <table class="full-width">
+        <thead>
+            <tr>
+                <td>{{ __("Name") }}</td>
+                <td>{{ __("Public Key") }}</td>
+                <td>{{ __("URLs") }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notary in channel.notaries %}
+            <tr>
+                <td>
+                    {{ notary.name|e('html') }}
+                </td>
+                <td>
+                    {{ notary.public_key|e('html') }}
+                </td>
+                <td>
+                    <ol>
+                    {% for url in notary.urls %}
+                        <li>{{ url|e('html') }}</li>
+                    {% endfor %}
+                    </ol>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}

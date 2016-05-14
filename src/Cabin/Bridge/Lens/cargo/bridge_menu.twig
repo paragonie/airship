@@ -82,14 +82,14 @@
                                     <i class="fa fa-file-code-o bridge-icon"></i>{{ __("Web Pages") }}
                                 </a>
                             </li>
-                        {% endif %}{# TODO BEFORE v1.0.0
+                        {% endif %}
                         {% if can_read("redirects/" ~ cabin.name) %}
                             <li>
                                 <a href="{{ cabin_url() }}redirects/{{ cabin.name|e('url') }}">
                                     <i class="fa fa-arrows-alt bridge-icon"></i>{{ __("Redirects") }}
                                 </a>
                             </li>
-                        {% endif %}#}
+                        {% endif %}
                         {% if is_admin() %}
                             <li>
                                 <a href="{{ cabin_url() }}file_manager/{{ cabin.name|e('url') }}">
@@ -118,6 +118,11 @@
             </a>
             <ul>
                 <li>
+                    <a href="{{ cabin_url() }}admin/settings">
+                        <i class="fa fa-wrench bridge-icon"></i>{{ __("Airship Settings") }}
+                    </a>
+                </li>
+                <li>
                     <a href="{{ cabin_url() }}crew">
                         <i class="fa fa-group bridge-icon"></i>{{ __("Crew") }}
                     </a>
@@ -138,11 +143,6 @@
                             </a>
                         </li>
                     </ul>
-                </li>{# TODO BEFORE v1.0.0
-                <li>
-                    <a href="{{ cabin_url() }}gears">
-                        <i class="fa fa-gears bridge-icon"></i>{{ __("Gears") }}
-                    </a>
                 </li>
                 <li>
                     <a href="{{ cabin_url() }}admin/database">
@@ -150,20 +150,32 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ cabin_url() }}motifs">
-                        <i class="fa fa-paint-brush bridge-icon"></i>{{ __("Motifs") }}
+                    <a href="{{ cabin_url() }}admin/extensions">
+                        <i class="fa fa-plug bridge-icon"></i>{{ __("Extensions") }}
                     </a>
-                </li>#}
-                <li>
-                    <a href="{{ cabin_url() }}admin/settings">
-                        <i class="fa fa-wrench bridge-icon"></i>{{ __("Airship Settings") }}
-                    </a>
-                </li>{# TODO BEFORE v1.0.0
-                <li>
-                    <a href="{{ cabin_url() }}admin/skyport">
-                        <i class="fa fa-cloud bridge-icon"></i>{{ __("Skyport Marketplace") }}
-                    </a>
-                </li>#}
+                    <ul>
+                        <li>
+                            <a href="{{ cabin_url() }}gadgets">
+                                <i class="fa fa-gears bridge-icon"></i>{{ __("Gadgets") }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ cabin_url() }}motifs">
+                                <i class="fa fa-paint-brush bridge-icon"></i>{{ __("Motifs") }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ cabin_url() }}admin/notaries">
+                                <i class="fa fa-sitemap bridge-icon"></i>{{ __("Notaries") }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ cabin_url() }}admin/skyport">
+                                <i class="fa fa-cloud bridge-icon"></i>{{ __("Skyport Marketplace") }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 {% include cargo("bridge_menu_admin_links") ignore missing %}
             </ul>
         </li>

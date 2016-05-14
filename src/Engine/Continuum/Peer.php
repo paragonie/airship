@@ -47,10 +47,11 @@ class Peer
     /**
      * Get all URLs
      *
+     * @param string $suffix
      * @param bool $doNotShuffle
      * @return string[]
      */
-    public function getAllURLs(bool $doNotShuffle = false): array
+    public function getAllURLs(string $suffix = '', bool $doNotShuffle = false): array
     {
         $state = State::instance();
         $candidates = [];
@@ -59,9 +60,9 @@ class Peer
             $after = [];
             foreach ($this->urls as $url) {
                 if (\strpos($url, '.onion') !== false) {
-                    $candidates[] = $url;
+                    $candidates[] = $url . $suffix;
                 } else {
-                    $after[] = $url;
+                    $after[] = $url . $suffix;
                 }
             }
 
@@ -71,12 +72,15 @@ class Peer
             }
 
             foreach ($after as $url) {
-                $candidates[] = $url;
+                $candidates[] = $url . $suffix;
             }
         } else {
             $candidates = $this->urls;
             if (!$doNotShuffle) {
                 \Airship\secure_shuffle($candidates);
+            }
+            foreach (\array_keys($candidates) as $i) {
+                $candidates[$i] .= $suffix;
             }
         }
         return $candidates;

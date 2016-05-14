@@ -8,6 +8,11 @@
 
 <ul>
     <li>
+        <a href="{{ cabin_url() }}admin/settings">
+            {{ __("Airship Settings") }}
+        </a>
+    </li>
+    <li>
         <a href="{{ cabin_url() }}crew">
             {{ __("Crew") }}
         </a>
@@ -30,8 +35,35 @@
         </ul>
     </li>
     <li>
-        <a href="{{ cabin_url() }}admin/settings">
-            {{ __("Airship Settings") }}
+        <a href="{{ cabin_url() }}admin/database">
+            {{ __("Databases") }}
         </a>
+    </li>
+    <li>
+        <a href="{{ cabin_url() }}admin/extensions">
+            {{ __("Extensions") }}
+        </a>
+        <ul>
+            <li>
+                <a href="{{ cabin_url() }}gadgets">
+                    {{ __("Gadgets") }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ cabin_url() }}motifs">
+                    {{ __("Motifs") }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ cabin_url() }}admin/notaries">
+                    {{ __("Notaries") }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ cabin_url() }}admin/skyport">
+                    {{ __("Skyport Marketplace") }}
+                </a>
+            </li>
+        </ul>
     </li>
 </ul>

@@ -30,7 +30,8 @@ trait Common
     }
 
     /**
-     * These isn't a cabin.
+     * Given a URL, return the cabin name that applies to it;
+     * otherwise, throw a CabinNotFound exception.
      *
      * @param string $url
      * @return string

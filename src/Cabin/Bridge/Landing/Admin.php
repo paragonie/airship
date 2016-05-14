@@ -48,6 +48,39 @@ class Admin extends AdminOnly
     }
 
     /**
+     * Landing page for the Administrative > Extensions section
+     *
+     * @route admin/extensions
+     */
+    public function manageExtensions()
+    {
+        $this->lens('admin_extensions');
+    }
+
+    /**
+     * Landing page for the Administrative > Extensions section
+     *
+     * @route admin/notaries
+     */
+    public function manageNotaries()
+    {
+        $channels = \Airship\loadJSON(ROOT . '/config/channels.json');
+        foreach ($channels as $chanName => $chanConfig) {
+            $channels[$chanName]['notaries'] = \Airship\loadJSON(
+                ROOT . '/config/channel_peers/' . $chanName . '.json'
+            );
+        }
+
+        $post = $this->post();
+        if (!empty($post)) {
+
+        }
+        $this->lens('admin_notaries', [
+            'channels' => $channels
+        ]);
+    }
+
+    /**
      * @route admin/settings
      */
     public function manageSettings()

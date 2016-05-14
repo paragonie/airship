@@ -82,7 +82,7 @@ class Keyggdrasil
      */
     protected function checkWithPeer(Peer $peer, string $expectedRoot): bool
     {
-        foreach ($peer->getAllURLs() as $url) {
+        foreach ($peer->getAllURLs('/verify') as $url) {
             $challenge = Base64UrlSafe::encode(\random_bytes(33));
             $response = $this->hail->postJSON($url, ['challenge' => $challenge]);
             if ($response['status'] === 'OK') {
