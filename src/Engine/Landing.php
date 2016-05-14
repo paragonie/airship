@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use Airship\Alerts\Security\SecurityAlert;
+use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
     FileCache as FileCacheBolt,
@@ -15,6 +15,7 @@ use \Airship\Engine\Security\CSRF;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\Alerts\InvalidType;
 use \ParagonIE\Halite\Util;
+use \Psr\Log\LogLevel;
 
 /**
  * Class Landing
@@ -276,6 +277,7 @@ class Landing
      * @param bool $ignoreCSRFToken - Don't validate CSRF tokens
      *
      * @return array|bool
+     * @throws SecurityAlert
      */
     protected function post(bool $ignoreCSRFToken = false)
     {
@@ -294,10 +296,12 @@ class Landing
         }
         $state = State::instance();
         if ($state->universal['debug']) {
+            // This is only thrown during development, to be noisy.
             throw new SecurityAlert(
                 'CSRF validation failed'
             );
         }
+        $this->log('CSRF validation failed', LogLevel::ALERT);
         return false;
     }
 

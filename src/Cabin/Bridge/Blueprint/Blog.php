@@ -256,7 +256,11 @@ class Blog extends BlueprintGear
     {
         $this->db->beginTransaction();
         try {
-            if (!empty($formData['create_redirect']) && !empty($formData['redirect_url'])) {
+            if (!empty($formData['create_redirect'])) {
+                if (empty($formData)) {
+                    $this->db->rollBack();
+                    return false;
+                }
                 $blogUrl = \implode('/', [
                     'blog',
                     $blogPost['blogyear'],

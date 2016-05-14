@@ -9,6 +9,7 @@
         <label for="create_redirect">{{ __("Redirect users to a different location?") }}</label>
     </legend>
 
+        {% if form_error %}<p class="error_header">{{ form_error|e('html') }}</p>{% endif %}
 
     <div id="blog_post_delete_redirect_box">
         <label for="redirect_url">{{ __("Redirect destination") }}:</label>

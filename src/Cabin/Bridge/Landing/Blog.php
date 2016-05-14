@@ -87,6 +87,7 @@ class Blog extends LoggedInUsersOnly
             if ($this->processDeletePost($post, $authorsAllowed, $blogPost)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
+            $this->storeLensVar('form_error', \__('An error has occurred.'));
         }
         $this->lens(
             'blog/posts_delete', [
