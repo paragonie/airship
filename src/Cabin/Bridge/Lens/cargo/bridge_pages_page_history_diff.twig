@@ -1,1 +1,10 @@
-TODO
+<div id="page_history_header">
+    {% include cargo("bridge_pages_page_history_header") %}
+</div>
+<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/view/{{ left.uniqueid|e('html_attr') }}">Left</a>
+<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/view/{{ right.uniqueid|e('html_attr') }}">Right</a>
+<div class="form-table">
+    <textarea id="diff_src_left" class="hidden">{{ left.body|default('')|e('html_attr') }}</textarea>
+    <textarea id="diff_src_right" class="hidden">{{ right.body|default('')|e('html_attr') }}</textarea>
+    <div id="diff_output" class="monospage"></div>
+</div>

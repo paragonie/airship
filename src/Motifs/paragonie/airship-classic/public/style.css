@@ -1493,3 +1493,18 @@ fieldset.preferences > legend {
 #blog_post_delete_redirect_box .input-wrapper input {
     width: 100%;
 }
+#diff_output {
+    background-color: #eee;
+    border: 1px solid #333;
+    font-family: monospace;
+    margin: 1ex;
+    padding: 1ex;
+}
+.diff_add {
+    background-color: rgba(0, 192, 0, 0.15);
+    color: #060;
+}
+.diff_del {
+    background-color: rgba(192, 0, 0, 0.15);
+    color: #c00;
+}

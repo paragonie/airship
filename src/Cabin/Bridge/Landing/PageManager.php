@@ -417,7 +417,7 @@ class PageManager extends LoggedInUsersOnly
         $page = [];
         $history = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
+        if (!\is1DArray($_GET)) {
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNames();
@@ -474,7 +474,10 @@ class PageManager extends LoggedInUsersOnly
             );
 
         }
-        $this->lens('pages/page_history_diff');
+        $this->lens('pages/page_history_diff', [
+            'left' => $left,
+            'right' => $right
+        ]);
     }
 
     /**
@@ -491,7 +494,7 @@ class PageManager extends LoggedInUsersOnly
         $page = [];
         $version = [];
         $path = $this->determinePath($cabin);
-        if (\is1DArray($_GET)) {
+        if (!\is1DArray($_GET)) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
