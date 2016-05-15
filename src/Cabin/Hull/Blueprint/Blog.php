@@ -103,7 +103,7 @@ class Blog extends BlueprintGear
      */
     public function countByAuthor(int $authorId): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT
                 count(postid)
             FROM
@@ -124,7 +124,7 @@ class Blog extends BlueprintGear
     public function countByCategories(array $categories = []): int
     {
         if (empty($categories)) {
-            return $this->db->cell(
+            return (int) $this->db->cell(
                 'SELECT
                     count(postid)
                 FROM
@@ -135,7 +135,7 @@ class Blog extends BlueprintGear
             );
         }
         $imp = $this->db->escapeValueSet($categories, 'int');
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT
                 count(postid)
             FROM
@@ -155,7 +155,7 @@ class Blog extends BlueprintGear
      */
     public function countByMonth(string $year, string $month): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT
                 count(postid)
             FROM
@@ -177,7 +177,7 @@ class Blog extends BlueprintGear
      */
     public function countByYear(string $year): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT
                 count(postid)
             FROM
@@ -1442,7 +1442,7 @@ class Blog extends BlueprintGear
         if (empty($post)) {
             return [];
         }
-        $post['tags'] = $this->getPostTags($post['postid']);
+        $post['tags'] = $this->getPostTags($post['postid'] + 0);
         if ($post['blogmonth'] < 10) {
             // Left-pad with a single zero
             $post['blogmonth'] = '0'.$post['blogmonth'];

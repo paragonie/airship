@@ -44,11 +44,11 @@ class Channel
         }
         // The channel should be signing responses at the application layer:
         $this->publicKey = new SignaturePublicKey(
-            \Sodium\bin2hex($config['publickey'])
+            \Sodium\hex2bin($config['publickey'])
         );
         $this->name = $name;
         foreach (\array_values($config['urls']) as $index => $url) {
-            if (\is_string($url)) {
+            if (!\is_string($url)) {
                 throw new \TypeError(
                     'Expected an array of strings; ' . \gettype($url) . ' given at index ' . $index .'.'
                 );

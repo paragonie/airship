@@ -169,8 +169,8 @@ class BlogPosts extends LandingGear
             throw new EmulatePageNotFound();
         }
 
-        $count = $this->blog->countByAuthor($author['authorid']);
-        $blogRoll = $this->blog->listByAuthor($author['authorid'], $limit, $offset);
+        $count = $this->blog->countByAuthor($author['authorid'] + 0);
+        $blogRoll = $this->blog->listByAuthor($author['authorid'] + 0, $limit, $offset);
 
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
@@ -472,7 +472,7 @@ class BlogPosts extends LandingGear
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;
 
         $blogPost['series'] = $this->blog->getPostsSeries((int) $blogPost['postid']);
-        $comments =  $this->blog->getCommentTree($blogPost['postid']);
+        $comments =  $this->blog->getCommentTree((int) $blogPost['postid']);
 
         $this->lens('blog/read', [
             'pageTitle' => $blogPost['title'],

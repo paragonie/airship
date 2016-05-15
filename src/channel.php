@@ -12,13 +12,14 @@ use \Airship\Engine\Continuum\Keyggdrasil;
 
 require_once __DIR__.'/bootstrap.php';
 
-if (\is_readable(ROOT . '/config/database.json')) {
+if (\is_readable(ROOT . '/config/databases.json')) {
     /**
      * Initialize the channel updater service
      */
     $channels = \Airship\loadJSON(ROOT . '/config/channels.json');
     $database = \Airship\get_database();
 
+    $state->logger->info('Keyggdrasil started');
     $keyUpdater = \Airship\Engine\Gears::get(
         'KeyUpdater',
         $hail,
@@ -30,6 +31,7 @@ if (\is_readable(ROOT . '/config/database.json')) {
     }
 
     $keyUpdater->doUpdate();
+    $state->logger->info('Keyggdrasil concluded');
 } else {
     // We can't update keys without a place to persist the changes
 }

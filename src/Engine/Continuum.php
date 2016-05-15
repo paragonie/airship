@@ -148,7 +148,10 @@ class Continuum
     {
         $gadgets = [];
         // First, each cabin's gadgets:
-        foreach (\Airship\list_all_files(ROOT.'/Cabin/') as $dir) {
+        foreach (\glob(ROOT.'/Cabin/*') as $dir) {
+            if (!\is_dir($dir)) {
+                continue;
+            }
             $cabinInfo = \Airship\loadJSON($dir . '/manifest.json');
             if (\is_dir($dir.'/Gadgets')) {
                 foreach (\Airship\list_all_files($dir.'/Gadgets/', 'phar') as $file) {

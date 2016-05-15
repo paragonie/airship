@@ -63,7 +63,7 @@ class Permissions
                 ? $state->config['session_index']['user_id']
                 : 'userid';
             if (!empty($_SESSION[$idx])) {
-                $user_id = $_SESSION[$idx];
+                $user_id = $_SESSION[$idx] + 0;
             }
         }
 

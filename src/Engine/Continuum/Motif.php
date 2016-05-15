@@ -20,12 +20,12 @@ use \Psr\Log\LogLevel;
  */
 class Motif extends AutoUpdater implements ContinuumInterface
 {
-    private $hail;
-    private $cabin;
-    private $name;
-    private $supplier;
-    private $filePath;
-    private $manifest;
+    protected $hail;
+    protected $cabin;
+    protected $name;
+    protected $supplier;
+    protected $filePath;
+    protected $manifest;
 
     public function __construct(
         Hail $hail,
