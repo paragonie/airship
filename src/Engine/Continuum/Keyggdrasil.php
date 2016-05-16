@@ -8,14 +8,15 @@ use \Airship\Alerts\Continuum\{
     CouldNotUpdate,
     PeerSignatureFailed
 };
+use \Airship\Alerts\Hail\SignatureFailed;
 use \Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
     Bolt\Log,
     Contract\DBInterface,
     Hail,
+    Ledger,
     State
 };
-use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\{
@@ -151,13 +152,22 @@ class Keyggdrasil
      */
     protected function fetchKeyUpdates(Channel $chan, string $url, string $root): array
     {
-        return $this->parseKeyUpdateResponse(
-            $chan,
-            $this->hail->getSignedJSON(
-                $url . API::get('fetch_keys') . '/' . $root,
-                $chan->getPublicKey()
-            )
-        );
+        try {
+            return $this->parseKeyUpdateResponse(
+                $chan,
+                $this->hail->getSignedJSON(
+                    $url . API::get('fetch_keys') . '/' . $root,
+                    $chan->getPublicKey()
+                )
+            );
+        } catch (SignatureFailed $ex) {
+            $state = State::instance();
+            if (IDE_HACKS) {
+                $state->logger = new Ledger();
+            }
+            $state->logger->alert('Signature failed!', \Airship\throwableToArray($ex));
+            return [];
+        }
     }
 
     /**
@@ -218,12 +228,13 @@ class Keyggdrasil
      */
     protected function parseKeyUpdateResponse(Channel $chan, array $response): array
     {
-        if (empty($response['updates'])) {
+        if (!empty($response['no_updates'])) {
             // The "no updates" message should be authenticated.
             $signatureVerified = AsymmetricCrypto::verify(
                 $response['no_updates'],
                 $chan->getPublicKey(),
-                $response['signature']
+                Base64UrlSafe::decode($response['signature']),
+                true
             );
             if (!$signatureVerified) {
                 throw new ChannelSignatureFailed();
@@ -265,7 +276,7 @@ class Keyggdrasil
         // Sort by ID
         \uasort(
             $keyUpdateArray,
-            function (KeyUpdate $a, KeyUpdate $b): array
+            function (KeyUpdate $a, KeyUpdate $b): int
             {
                 return $a->getChannelId() <=> $b->getChannelId();
             }
@@ -417,14 +428,14 @@ class Keyggdrasil
 
         $maxUpdateIndex = \count($updates) - 1;
         $expectedRoot = $updates[$maxUpdateIndex]->getRoot();
-        if (\hash_equals($tree->getRoot(), $expectedRoot)) {
+        if (!\hash_equals($tree->getRoot(), $expectedRoot)) {
             // Calculated root did not match.
             throw new CouldNotUpdate(
                 'Calculated Merkle root did not match the update.'
             );
         }
 
-        if ($state->univeral['auto-update']['ignore-peer-verification']) {
+        if ($state->universal['auto-update']['ignore-peer-verification']) {
             // The user has expressed no interest in verification
             return true;
         }

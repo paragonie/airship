@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use \Airship\Engine\State;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
@@ -23,7 +24,7 @@ class Peer
     {
         $this->name = $config['name'];
         $this->publicKey = new SignaturePublicKey(
-            \Sodium\hex2bin($config['public_key'])
+            Base64UrlSafe::decode($config['public_key'])
         );
         $this->urls = $config['urls'];
         foreach ($this->urls as $url) {

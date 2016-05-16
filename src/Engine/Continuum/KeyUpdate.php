@@ -6,7 +6,6 @@ use \Airship\Alerts\Continuum\{
     CouldNotUpdate,
     NoSupplier
 };
-use Airship\Hangar\Commands\Sign;
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
@@ -59,9 +58,16 @@ class KeyUpdate
         if (!empty($updateData['master_signature'])) {
             $this->masterSig = $updateData['master_signature'];
         }
-        $this->keyType = $updateData['data']['type'];
-        $this->unpackMessageUpdate($chan, $updateData['data']);
-        $this->newPublicKey = $this->stored['public_key'];
+        $data = \json_decode($updateData['data'], true);
+        try {
+            $this->unpackMessageUpdate($chan, $data);
+        } catch (\Throwable $ex) {
+            $this->isNewSupplier = true;
+            $chan->createSupplier($data);
+            $this->supplier = $chan->getSupplier($data['supplier']);
+        }
+        $this->keyType = $data['type'];
+        $this->newPublicKey = $data['public_key'];
     }
 
     /**
@@ -176,9 +182,12 @@ class KeyUpdate
      */
     protected function loadSupplier(Channel $chan, array $updateData): Supplier
     {
-        $this->supplierName = $updateData['supplier'];
+        $this->supplierName = \preg_replace('/[^A-Za-z0-9\-_]/', '', $updateData['supplier']);
         try {
-            return $chan->getSupplier($updateData['supplier']);
+            if (!\file_exists(ROOT . '/config/supplier_keys/' . $this->supplierName . '.json')) {
+                throw new NoSupplier($this->supplierName);
+            }
+            return $chan->getSupplier($this->supplierName);
         } catch (NoSupplier $ex) {
             if ($updateData['action'] !== self::ACTION_INSERT_KEY) {
                 throw new CouldNotUpdate(
@@ -208,9 +217,11 @@ class KeyUpdate
      * @param array $updateData
      * @return void
      * @throws CouldNotUpdate
+     * @throws NoSupplier
      */
     protected function unpackMessageUpdate(Channel $chan, array $updateData)
     {
+        $this->updateMessage = $updateData;
         $messageToSign = [
             'action' =>
                 $this->action,
@@ -223,7 +234,14 @@ class KeyUpdate
             'type' =>
                 $updateData['type']
         ];
-        $this->supplier = $this->loadSupplier($chan, $updateData);
+
+        try {
+            $this->supplier = $this->loadSupplier($chan, $updateData);
+        } catch (NoSupplier $ex) {
+            if (!$this->isNewSupplier) {
+                throw $ex;
+            }
+        }
         // If this isn't a new supplier, we need to verify the key
         if (!$this->isNewSupplier) {
             foreach ($this->supplier->getSigningKeys() as $supKey) {
@@ -234,7 +252,9 @@ class KeyUpdate
                 if ($supKey['type'] !== 'master') {
                     continue;
                 }
-                $pub = \Sodium\bin2hex($supKey['key']->getRawKeyMaterial());
+                $pub = \Sodium\bin2hex(
+                    $supKey['key']->getRawKeyMaterial()
+                );
 
                 // Is this the key we're looking for?
                 if (\hash_equals($pub, $messageToSign['public_key'])) {
@@ -255,6 +275,5 @@ class KeyUpdate
                 );
             }
         }
-        $this->updateMessage = $updateData;
     }
 }

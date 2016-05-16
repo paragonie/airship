@@ -70,7 +70,7 @@ class Supplier
     {
         if (empty($data)) {
             $data = \Airship\loadJSON(
-                ROOT . '/config/signing_keys/' . $this->name . '.json'
+                ROOT . '/config/supplier_keys/' . $this->name . '.json'
             );
         }
         if (isset($data['signing_keys'])) {

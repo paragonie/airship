@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
 use \Airship\Alerts\Continuum\NoSupplier;
+use \Airship\Alerts\FileSystem\AccessDenied;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Engine\Continuum\Supplier as SupplierObject;
 
@@ -22,12 +23,12 @@ trait Supplier
      * @param string $channelName
      * @param array $data
      * @return SupplierObject
+     * @throws AccessDenied
      */
     public function createSupplier(string $channelName, array $data): SupplierObject
     {
         $supplierName = $data['supplier'];
-        
-        \file_put_contents(
+        $written = \file_put_contents(
             ROOT . '/config/supplier_keys/' . $supplierName . '.json',
             \json_encode(
                 [
@@ -39,6 +40,11 @@ trait Supplier
                 JSON_PRETTY_PRINT
             )
         );
+        if ($written === false) {
+            throw new AccessDenied('Could not save new key');
+        }
+
+        return $this->getSupplier($supplierName, true);
     }
 
     /**
@@ -61,8 +67,11 @@ trait Supplier
                 foreach ($allSuppliers as $supplierKeyFile) {
                     // We want everything except the .json
                     $supplier = \substr($this->getEndPiece($supplierKeyFile), 0, -5);
-
-                    $data = \Airship\loadJSON($supplierKeyFile);
+                    try {
+                        $data = \Airship\loadJSON($supplierKeyFile);
+                    } catch (FileNotFound $ex) {
+                        $data = [];
+                    }
                     $supplierCache[$supplier] = new SupplierObject($supplier, $data);
                 }
                 $this->supplierCache = $supplierCache;
@@ -72,6 +81,9 @@ trait Supplier
         // Otherwise, we're just fetching one supplier's keys
         if ($force_flush || empty($this->supplierCache[$supplier])) {
             try {
+                if (!\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
+                    throw new NoSupplier(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+                }
                 $data = \Airship\loadJSON(ROOT . '/config/supplier_keys/' . $supplier . '.json');
             } catch (FileNotFound $ex) {
                 throw new NoSupplier($supplier, 0, $ex);
