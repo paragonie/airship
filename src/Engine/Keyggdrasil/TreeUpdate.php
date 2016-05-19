@@ -24,8 +24,9 @@ use \ParagonIE\Halite\Asymmetric\{
  */
 class TreeUpdate
 {
-    const ACTION_INSERT_KEY = 'insert';
-    const ACTION_REVOKE_KEY = 'revoke';
+    const ACTION_INSERT_KEY = 'CREATE';
+    const ACTION_REVOKE_KEY = 'REVOKE';
+    const ACTION_PACKAGE_UPDATE = 'PACKAGE';
     const KEY_TYPE_MASTER = 'master';
     const KEY_TYPE_SIGNING = 'sub';
 
@@ -163,7 +164,7 @@ class TreeUpdate
      */
     public function isCreateKey(): bool
     {
-        return $this->action === 'CREATE';
+        return $this->action === self::ACTION_INSERT_KEY;
     }
 
     /**
@@ -173,7 +174,7 @@ class TreeUpdate
      */
     public function isPackageUpdate(): bool
     {
-        return $this->action === 'PACKAGE';
+        return $this->action === self::ACTION_PACKAGE_UPDATE;
     }
 
     /**
@@ -183,7 +184,7 @@ class TreeUpdate
      */
     public function isRevokeKey(): bool
     {
-        return $this->action === 'REVOKE';
+        return $this->action === self::ACTION_REVOKE_KEY;
     }
 
     /**
@@ -236,18 +237,23 @@ class TreeUpdate
     protected function unpackMessageUpdate(Channel $chan, array $updateData)
     {
         $this->updateMessage = $updateData;
-        $messageToSign = [
-            'action' =>
-                $this->action,
-            'date_generated' =>
-                $this->stored['date_generated'],
-            'public_key' =>
-                $updateData['public_key'],
-            'supplier' =>
-                $updateData['supplier'],
-            'type' =>
-                $updateData['type']
-        ];
+        if ($this->isPackageUpdate()) {
+            // These aren't signed for updating the tree.
+            return;
+        } else {
+            $messageToSign = [
+                'action' =>
+                    $this->action,
+                'date_generated' =>
+                    $this->stored['date_generated'],
+                'public_key' =>
+                    $updateData['public_key'],
+                'supplier' =>
+                    $updateData['supplier'],
+                'type' =>
+                    $updateData['type']
+            ];
+        }
 
         try {
             $this->supplier = $this->loadSupplier($chan, $updateData);

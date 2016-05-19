@@ -184,7 +184,7 @@ class Keyggdrasil
     protected function getMerkleTree(Channel $chan): MerkleTree
     {
         $nodeList = [];
-        $queryString = 'SELECT data FROM airship_key_updates WHERE channel = ? ORDER BY TreeUpdateid ASC';
+        $queryString = 'SELECT data FROM airship_tree_updates WHERE channel = ? ORDER BY TreeUpdateid ASC';
         foreach ($this->db->run($queryString, $chan->getName()) as $node) {
             $nodeList []= new Node($node['data']);
         }
@@ -302,7 +302,7 @@ class Keyggdrasil
         foreach ($updates as $update) {
             // Insert the new node in the database:
             $this->db->insert(
-                'airship_key_updates', [
+                'airship_tree_updates', [
                     'channel' => $chan->getName(),
                     'channelupdateid' => $update->getChannelId(),
                     'data' => $update->getNodeJSON(),
@@ -315,10 +315,28 @@ class Keyggdrasil
                 $this->insertKey($chan, $update);
             } elseif ($update->isRevokeKey()) {
                 $this->revokeKey($chan, $update);
+            } elseif ($update->isPackageUpdate()) {
+                $this->packageUpdate($chan, $update);
             }
         }
         return $this->db->commit();
     }
+    /**
+     * We're storing a new public key for this supplier.
+     *
+     * @param Channel $chan
+     * @param TreeUpdate $update
+     */
+    protected function packageUpdate(Channel $chan, TreeUpdate $update)
+    {
+        $supplier = $update->getSupplier();
+        $name = $supplier->getName();
+
+        /**
+         * @todo insert into airship_package_updates
+         */
+    }
+
 
     /**
      * We're storing a new public key for this supplier.

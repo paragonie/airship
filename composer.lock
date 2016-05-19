@@ -492,16 +492,16 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "ac89eee5e20295a3c7ed39a021132022f4863e0b"
+                "reference": "b0040cd67915397740bc07161b2c66599b8b1b12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/ac89eee5e20295a3c7ed39a021132022f4863e0b",
-                "reference": "ac89eee5e20295a3c7ed39a021132022f4863e0b",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/b0040cd67915397740bc07161b2c66599b8b1b12",
+                "reference": "b0040cd67915397740bc07161b2c66599b8b1b12",
                 "shasum": ""
             },
             "require": {
@@ -525,7 +525,7 @@
                 }
             ],
             "description": "High-level cryptography interface powered by libsodium",
-            "time": "2016-05-07 21:31:27"
+            "time": "2016-05-15 07:41:00"
         },
         {
             "name": "paragonie/recaptcha",

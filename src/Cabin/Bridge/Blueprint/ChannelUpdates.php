@@ -199,7 +199,7 @@ class ChannelUpdates extends BlueprintGear
     protected function getMerkleTree(): MerkleTree
     {
         $nodeList = [];
-        $queryString = 'SELECT data FROM airship_key_updates WHERE channel = ? ORDER BY keyupdateid ASC';
+        $queryString = 'SELECT data FROM airship_tree_updates WHERE channel = ? ORDER BY treeupdateid ASC';
         foreach ($this->db->run($queryString, $this->channel) as $node) {
             $nodeList []= new Node($node['data']);
         }
@@ -412,7 +412,7 @@ class ChannelUpdates extends BlueprintGear
     {
         $this->db->beginTransaction();
         $this->db->insert(
-            'airship_key_updates',
+            'airship_tree_updates',
             [
                 'channel' => $this->channel,
                 'channelupdateid' => $nodeData['id'],
