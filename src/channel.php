@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Continuum\Keyggdrasil;
+use \Airship\Engine\Keyggdrasil;
 
 /**
  * Automatic update processing -- either throw this in a cronjob or let it get

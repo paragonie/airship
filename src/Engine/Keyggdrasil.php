@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine;
 
 use \Airship\Alerts\Continuum\{
     ChannelSignatureFailed,
@@ -12,10 +12,15 @@ use \Airship\Alerts\Hail\SignatureFailed;
 use \Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
     Bolt\Log,
-    Contract\DBInterface,
-    Hail,
-    Ledger,
-    State
+    Contract\DBInterface
+};
+use \Airship\Engine\Continuum\{
+    API,
+    Channel
+};
+use \Airship\Engine\Keyggdrasil\{
+    Peer,
+    TreeUpdate
 };
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
@@ -148,12 +153,12 @@ class Keyggdrasil
      * @param Channel $chan
      * @param string $url
      * @param string $root Which Merkle root are we starting at?
-     * @return KeyUpdate[]
+     * @return TreeUpdate[]
      */
-    protected function fetchKeyUpdates(Channel $chan, string $url, string $root): array
+    protected function fetchTreeUpdates(Channel $chan, string $url, string $root): array
     {
         try {
-            return $this->parseKeyUpdateResponse(
+            return $this->parseTreeUpdateResponse(
                 $chan,
                 $this->hail->getSignedJSON(
                     $url . API::get('fetch_keys') . '/' . $root,
@@ -179,7 +184,7 @@ class Keyggdrasil
     protected function getMerkleTree(Channel $chan): MerkleTree
     {
         $nodeList = [];
-        $queryString = 'SELECT data FROM airship_key_updates WHERE channel = ? ORDER BY keyupdateid ASC';
+        $queryString = 'SELECT data FROM airship_key_updates WHERE channel = ? ORDER BY TreeUpdateid ASC';
         foreach ($this->db->run($queryString, $chan->getName()) as $node) {
             $nodeList []= new Node($node['data']);
         }
@@ -196,9 +201,9 @@ class Keyggdrasil
      * We're storing a new public key for this supplier.
      *
      * @param Channel $chan
-     * @param KeyUpdate $update
+     * @param TreeUpdate $update
      */
-    protected function insertKey(Channel $chan, KeyUpdate $update)
+    protected function insertKey(Channel $chan, TreeUpdate $update)
     {
         $supplier = $update->getSupplier();
         $name = $supplier->getName();
@@ -217,16 +222,16 @@ class Keyggdrasil
     }
 
     /**
-     * Interpret the KeyUpdate objects from the API response. OR verify the signature
+     * Interpret the TreeUpdate objects from the API response. OR verify the signature
      * of the "no updates" message to prevent a DoS.
      *
      * @param Channel $chan
      * @param array $response
-     * @return KeyUpdate[]
+     * @return TreeUpdate[]
      * @throws ChannelSignatureFailed
      * @throws CouldNotUpdate
      */
-    protected function parseKeyUpdateResponse(Channel $chan, array $response): array
+    protected function parseTreeUpdateResponse(Channel $chan, array $response): array
     {
         if (!empty($response['no_updates'])) {
             // The "no updates" message should be authenticated.
@@ -253,7 +258,7 @@ class Keyggdrasil
             return [];
         }
 
-        $keyUpdateArray = [];
+        $TreeUpdateArray = [];
         foreach ($response['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
             $sig = Base64UrlSafe::decode($update['signature']);
@@ -268,30 +273,30 @@ class Keyggdrasil
                 throw new ChannelSignatureFailed();
             }
             // Now that we know it was signed by the channel, time to update
-            $keyUpdateArray[] = new KeyUpdate(
+            $TreeUpdateArray[] = new TreeUpdate(
                 $chan,
                 \json_decode($data, true)
             );
         }
         // Sort by ID
         \uasort(
-            $keyUpdateArray,
-            function (KeyUpdate $a, KeyUpdate $b): int
+            $TreeUpdateArray,
+            function (TreeUpdate $a, TreeUpdate $b): int
             {
                 return $a->getChannelId() <=> $b->getChannelId();
             }
         );
-        return $keyUpdateArray;
+        return $TreeUpdateArray;
     }
 
     /**
      * Insert/delete entries in supplier_keys, while updating the database.
      *
      * @param Channel $chan)
-     * @param KeyUpdate[] $updates
+     * @param TreeUpdate[] $updates
      * @return bool
      */
-    protected function processKeyUpdates(Channel $chan, KeyUpdate ...$updates): bool
+    protected function processTreeUpdates(Channel $chan, TreeUpdate ...$updates): bool
     {
         $this->db->beginTransaction();
         foreach ($updates as $update) {
@@ -319,9 +324,9 @@ class Keyggdrasil
      * We're storing a new public key for this supplier.
      *
      * @param Channel $chan
-     * @param KeyUpdate $update
+     * @param TreeUpdate $update
      */
-    protected function revokeKey(Channel $chan, KeyUpdate $update)
+    protected function revokeKey(Channel $chan, TreeUpdate $update)
     {
         $supplier = $update->getSupplier();
         $name = $supplier->getName();
@@ -359,18 +364,18 @@ class Keyggdrasil
         $originalTree = $this->getMerkleTree($chan);
         foreach ($chan->getAllURLs() as $url) {
             try {
-                $updates = $this->fetchKeyUpdates(
+                $updates = $this->fetchTreeUpdates(
                     $chan,
                     $url,
                     $originalTree->getRoot()
-                ); // KeyUpdate[]
+                ); // TreeUpdate[]
                 while (!empty($updates)) {
                     $merkleTree = $originalTree;
                     // Verify these updates with our Peers.
                     try {
                         if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
                             // Apply these updates:
-                            $this->processKeyUpdates($chan, ...$updates);
+                            $this->processTreeUpdates($chan, ...$updates);
                             return;
                         }
                         // If we're here, verification failed
@@ -413,14 +418,14 @@ class Keyggdrasil
      *
      * @param Channel $channel
      * @param MerkleTree $originalTree
-     * @param KeyUpdate[] ...$updates
+     * @param TreeUpdate[] ...$updates
      * @return bool
      * @throws CouldNotUpdate
      */
     protected function verifyResponseWithPeers(
         Channel $channel,
         MerkleTree $originalTree,
-        KeyUpdate ...$updates
+        TreeUpdate ...$updates
     ): bool {
         $state = State::instance();
         $nodes = $this->updatesToNodes($updates);
@@ -481,7 +486,7 @@ class Keyggdrasil
     /**
      * Get a bunch of nodes for inclusion in the Merkle tree.
      *
-     * @param KeyUpdate[] $updates
+     * @param TreeUpdate[] $updates
      * @return Node[]
      */
     protected function updatesToNodes(array $updates): array

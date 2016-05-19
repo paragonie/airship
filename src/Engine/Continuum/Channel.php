@@ -4,6 +4,8 @@ namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\NoSupplier;
 use \Airship\Engine\Continuum;
+use \Airship\Engine\Keyggdrasil;
+use \Airship\Engine\Keyggdrasil\Peer;
 use \Airship\Engine\State;
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 

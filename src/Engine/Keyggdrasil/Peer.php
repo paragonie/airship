@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine\Keyggdrasil;
 
 use \Airship\Engine\State;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
@@ -11,7 +11,7 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
  *
  * Represents a peer for a given channel
  *
- * @package Airship\Engine\Continuum
+ * @package Airship\Engine\Keyggdrasil
  */
 class Peer
 {

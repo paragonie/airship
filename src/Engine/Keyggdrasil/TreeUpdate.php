@@ -1,10 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine\Keyggdrasil;
 
 use \Airship\Alerts\Continuum\{
     CouldNotUpdate,
     NoSupplier
+};
+use \Airship\Engine\Continuum\{
+    Channel,
+    Supplier
 };
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
@@ -16,9 +20,9 @@ use \ParagonIE\Halite\Asymmetric\{
  *
  * This represents a key update
  *
- * @package Airship\Engine\Continuum
+ * @package Airship\Engine\Keyggdrasil
  */
-class KeyUpdate
+class TreeUpdate
 {
     const ACTION_INSERT_KEY = 'insert';
     const ACTION_REVOKE_KEY = 'revoke';
@@ -160,6 +164,16 @@ class KeyUpdate
     public function isCreateKey(): bool
     {
         return $this->action === 'CREATE';
+    }
+
+    /**
+     * Is this a "package release" update?
+     *
+     * @return bool
+     */
+    public function isPackageUpdate(): bool
+    {
+        return $this->action === 'PACKAGE';
     }
 
     /**
