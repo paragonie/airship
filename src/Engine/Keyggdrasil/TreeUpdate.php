@@ -32,6 +32,7 @@ class TreeUpdate
 
     protected $channelId;
     protected $channelName;
+    protected $checksum;
     protected $isNewSupplier = false;
     protected $keyType;
     protected $masterSig = null;
@@ -60,19 +61,23 @@ class TreeUpdate
         $this->merkleRoot = $updateData['root'];
         $this->stored = $updateData['stored'];
         $this->action = $this->stored['action'];
-        if (!empty($updateData['master_signature'])) {
-            $this->masterSig = $updateData['master_signature'];
+        if ($this->action === self::ACTION_PACKAGE_UPDATE) {
+            $this->checksum = $this->stored['checksum'];
+        } else {
+            if (!empty($updateData['master_signature'])) {
+                $this->masterSig = $updateData['master_signature'];
+            }
+            $data = \json_decode($updateData['data'], true);
+            try {
+                $this->unpackMessageUpdate($chan, $data);
+            } catch (\Throwable $ex) {
+                $this->isNewSupplier = true;
+                $chan->createSupplier($data);
+                $this->supplier = $chan->getSupplier($data['supplier']);
+            }
+            $this->keyType = $data['type'];
+            $this->newPublicKey = $data['public_key'];
         }
-        $data = \json_decode($updateData['data'], true);
-        try {
-            $this->unpackMessageUpdate($chan, $data);
-        } catch (\Throwable $ex) {
-            $this->isNewSupplier = true;
-            $chan->createSupplier($data);
-            $this->supplier = $chan->getSupplier($data['supplier']);
-        }
-        $this->keyType = $data['type'];
-        $this->newPublicKey = $data['public_key'];
     }
 
     /**
