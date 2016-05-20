@@ -3,8 +3,13 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
-use Airship\Engine\{
-    AutoPilot, Bolt\Security, Gears, Security\Authentication, Security\HiddenString, State
+use \Airship\Engine\{
+    AutoPilot,
+    Bolt\Security,
+    Gears,
+    Security\Authentication,
+    Security\HiddenString,
+    State
 };
 use \ParagonIE\Halite\Alerts\InvalidMessage;
 use \ParagonIE\Halite\{
