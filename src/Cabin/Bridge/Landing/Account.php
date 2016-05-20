@@ -3,11 +3,8 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
-use \Airship\Engine\{
-    Bolt\Security,
-    Security\Authentication,
-    Security\HiddenString,
-    State
+use Airship\Engine\{
+    AutoPilot, Bolt\Security, Gears, Security\Authentication, Security\HiddenString, State
 };
 use \ParagonIE\Halite\Alerts\InvalidMessage;
 use \ParagonIE\Halite\{
@@ -399,13 +396,19 @@ class Account extends LandingGear
             $_SESSION[$idx] = $userid;
 
             if (!empty($post['remember'])) {
+                $autoPilot = Gears::getName('Router');
+                if (IDE_HACKS) {
+                    $autoPilot = new AutoPilot();
+                }
+                $httpsOnly = (bool) $autoPilot::isHTTPSconnection();
+                
                 $this->airship_cookie->store(
                     $state->universal['cookie_index']['auth_token'],
                     $this->airship_auth->createAuthToken($userid),
                     \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                     '/',
                     '',
-                    false,
+                    $httpsOnly ?? false,
                     true
                 );
             }

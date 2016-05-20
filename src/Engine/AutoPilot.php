@@ -433,7 +433,7 @@ class AutoPilot implements RouterInterface
      * @param string $scheme
      * @return bool
      */
-    protected static function isHTTPSconnection(string $scheme = ''): bool
+    public static function isHTTPSconnection(string $scheme = ''): bool
     {
         if (empty($scheme)) {
             $scheme = $_SERVER['HTTPS'] ?? false;
