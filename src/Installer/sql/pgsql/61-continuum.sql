@@ -9,7 +9,7 @@ CREATE TABLE airship_package_updates (
     modified TIMESTAMP DEFAULT NOW()
 );
 
-DROP TRIGGER IF EXISTS update_airship_airship_package_updates_modtime ON airship_airship_package_updates;
-CREATE TRIGGER update_airship_airship_package_updates_modtime
-  BEFORE UPDATE ON airship_airship_package_updates
+DROP TRIGGER IF EXISTS update_airship_package_updates_modtime ON airship_package_updates;
+CREATE TRIGGER update_airship_package_updates_modtime
+  BEFORE UPDATE ON airship_package_updates
   FOR EACH ROW EXECUTE PROCEDURE update_modtime();

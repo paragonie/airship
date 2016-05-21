@@ -12,7 +12,7 @@ CREATE INDEX ON airship_tree_updates (channelupdateid);
 CREATE UNIQUE INDEX ON airship_tree_updates (channel, channelupdateid);
 CREATE INDEX ON airship_tree_updates (merkleroot);
 
-DROP TRIGGER IF EXISTS update_airship_airship_tree_updates_modtime ON airship_airship_tree_updates;
-CREATE TRIGGER update_airship_airship_tree_updates_modtime
-  BEFORE UPDATE ON airship_airship_tree_updates
+DROP TRIGGER IF EXISTS update_airship_tree_updates_modtime ON airship_tree_updates;
+CREATE TRIGGER update_airship_tree_updates_modtime
+  BEFORE UPDATE ON airship_tree_updates
   FOR EACH ROW EXECUTE PROCEDURE update_modtime();

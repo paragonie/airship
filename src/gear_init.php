@@ -22,9 +22,6 @@ declare(strict_types=1);
     
     'Hail' =>
         '\\Airship\\Engine\\Hail',
-
-    'KeyUpdater' =>
-        '\\Airship\\Engine\\Continuum\\Keyggdrasil',
     
     'Landing' =>
         '\\Airship\\Engine\\Landing',
@@ -39,5 +36,8 @@ declare(strict_types=1);
         '\\Airship\\Engine\\Security\\Permissions',
     
     'Translation' =>
-        '\\Airship\\Engine\\Translation'
+        '\\Airship\\Engine\\Translation',
+    
+    'TreeUpdater' =>
+        '\\Airship\\Engine\\Keyggdrasil'
 ]);

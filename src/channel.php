@@ -21,7 +21,7 @@ if (\is_readable(ROOT . '/config/databases.json')) {
 
     $state->logger->info('Keyggdrasil started');
     $keyUpdater = \Airship\Engine\Gears::get(
-        'KeyUpdater',
+        'TreeUpdater',
         $hail,
         $database,
         $channels
