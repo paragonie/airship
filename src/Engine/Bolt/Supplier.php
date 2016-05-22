@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+use \Airship\Alerts\Continuum\CouldNotCreateSupplier;
 use \Airship\Alerts\Continuum\NoSupplier;
 use \Airship\Alerts\FileSystem\AccessDenied;
 use \Airship\Alerts\FileSystem\FileNotFound;
@@ -24,10 +25,16 @@ trait Supplier
      * @param array $data
      * @return SupplierObject
      * @throws AccessDenied
+     * @throws CouldNotCreateSupplier
      */
     public function createSupplier(string $channelName, array $data): SupplierObject
     {
         $supplierName = $data['supplier'];
+        if (\file_exists(ROOT . '/config/supplier_keys/' . $supplierName . '.json')) {
+            throw new CouldNotCreateSupplier(
+                'File already exists: config/supplier_keys/' . $supplierName . '.json'
+            );
+        }
         $written = \file_put_contents(
             ROOT . '/config/supplier_keys/' . $supplierName . '.json',
             \json_encode(
