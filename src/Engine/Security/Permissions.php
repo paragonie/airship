@@ -22,7 +22,10 @@ use \Airship\Alerts\Database\NotImplementedException;
 class Permissions
 {
     const MAX_RECURSE_DEPTH = 100;
-    
+
+    /**
+     * @var Database
+     */
     private $db;
     
     /**
@@ -31,9 +34,6 @@ class Permissions
     public function __construct(DBInterface $db)
     {
         $this->db = $db;
-        if (IDE_HACKS) {
-            $this->db = \Airship\get_database();
-        }
     }
 
     /**

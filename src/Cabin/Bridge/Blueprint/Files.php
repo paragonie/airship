@@ -51,10 +51,6 @@ class Files extends BlueprintGear
     {
         parent::__construct($db);
         $this->finfo = new \finfo(FILEINFO_MIME);
-
-        if (IDE_HACKS) {
-            define('AIRSHIP_UPLOADS', ROOT . '/files/uploaded/');
-        }
     }
 
     /**

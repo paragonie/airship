@@ -36,21 +36,6 @@ class Account extends LandingGear
      */
     protected $acct;
 
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->airship_cookie = new Cookie(
-                new EncryptionKey(\random_bytes(32))
-            );
-            $this->airship_auth = new Authentication(
-                new EncryptionKey(\random_bytes(32)),
-                $db
-            );
-            $this->airship_perms = new Permissions($db);
-        }
-    }
-
     /**
      * We initialize this after the constructor is done.
      */

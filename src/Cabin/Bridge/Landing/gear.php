@@ -11,7 +11,7 @@ use \Airship\Engine\{
 if (!\class_exists('LandingGear')) {
     Gears::extract('Landing', 'LandingGearBase', __NAMESPACE__);
 
-    // IDE hack. @todo remove before going live
+    // IDE hack. Currently no other elegant way to make type-hinting work.
     if (IDE_HACKS) {
         class LandingGearBase extends Landing { }
     }
