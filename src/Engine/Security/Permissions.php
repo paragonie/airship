@@ -32,8 +32,7 @@ class Permissions
     {
         $this->db = $db;
         if (IDE_HACKS) {
-            define('CABIN_NAME', '');
-            $this->db = new Database(new \PDO('sqlite::memory:', 'sqlite'));
+            $this->db = \Airship\get_database();
         }
     }
 

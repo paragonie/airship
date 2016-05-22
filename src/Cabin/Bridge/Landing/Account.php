@@ -31,13 +31,15 @@ class Account extends LandingGear
 {
     use Security;
 
+    /**
+     * @var UserAccounts
+     */
     protected $acct;
 
     public function __construct()
     {
         if (IDE_HACKS) {
             $db = \Airship\get_database();
-            $this->acct = new UserAccounts($db);
             $this->airship_cookie = new Cookie(
                 new EncryptionKey(\random_bytes(32))
             );

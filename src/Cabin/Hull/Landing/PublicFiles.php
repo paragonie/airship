@@ -15,20 +15,11 @@ require_once __DIR__.'/gear.php';
 class PublicFiles extends LandingGear
 {
     protected $cabin = 'Hull';
+    /**
+     * @var BP\PublicFiles
+     */
     protected $files;
 
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $this->files = new BP\PublicFiles(
-                \Airship\get_database()
-            );
-        }
-    }
-
-    /**
-     *
-     */
     public function airshipLand()
     {
         parent::airshipLand();

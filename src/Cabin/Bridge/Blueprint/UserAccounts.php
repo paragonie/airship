@@ -47,17 +47,6 @@ class UserAccounts extends BlueprintGear
         'modified' => 'modified'
     ];
 
-    public function __construct(Database $db)
-    {
-        parent::__construct($db);
-        if (IDE_HACKS) {
-            $this->airship_auth = new Authentication(
-                KeyFactory::generateEncryptionKey(),
-                $db
-            );
-        }
-    }
-
     /**
      * Create a new user group
      *

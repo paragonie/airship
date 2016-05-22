@@ -18,16 +18,10 @@ class Author extends LoggedInUsersOnly
 {
     use OrderableBolt;
 
+    /**
+     * @var BP\Author
+     */
     private $author;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->author = new BP\Author($db);
-        }
-    }
-
 
     public function airshipLand()
     {

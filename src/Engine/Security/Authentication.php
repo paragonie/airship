@@ -74,9 +74,8 @@ class Authentication
         
         if (!empty($db)) {
             $this->db = $db;
-        }
-        if (IDE_HACKS) {
-            $this->db = new Database(new \PDO('sqlite::memory:', 'sqlite'));
+        } else {
+            $this->db = \Airship\get_database();
         }
     }
     

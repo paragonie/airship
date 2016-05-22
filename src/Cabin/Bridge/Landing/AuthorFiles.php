@@ -13,17 +13,12 @@ require_once __DIR__.'/gear.php';
  */
 class AuthorFiles extends FileManager
 {
+    /**
+     * @var Author
+     */
     protected $author;
     protected $authorId = 0;
     protected $authorSlug = '';
-
-    public function __construct()
-    {
-        parent::__construct();
-        if (IDE_HACKS) {
-            $this->author = new Author(\Airship\get_database());
-        }
-    }
 
     public function airshipLand()
     {

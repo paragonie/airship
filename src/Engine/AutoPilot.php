@@ -346,6 +346,7 @@ class AutoPilot implements RouterInterface
         // Load our cabin-specific landing
         $landing = new $class_name;
 
+        // For type-hinting and auto-complete:
         if (IDE_HACKS) {
             $landing = new Landing();
         }

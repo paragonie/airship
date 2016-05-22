@@ -9,17 +9,11 @@ require_once __DIR__.'/gear.php';
 
 class MyFiles extends FileManager
 {
+    /**
+     * @var UserAccounts
+     */
     protected $users;
     protected $userUniqueId;
-
-    public function __construct()
-    {
-        parent::__construct();
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->users = new UserAccounts($db);
-        }
-    }
 
     public function airshipLand()
     {

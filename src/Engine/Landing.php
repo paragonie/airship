@@ -33,12 +33,33 @@ class Landing
 
     const DEFAULT_LONGTERMAUTH_EXPIRE = 2592000; // 30 days
 
+    /**
+     * @var string
+     */
     protected $airship_http_method;
+    /**
+     * @var array
+     */
     protected $airship_config = [];
+    /**
+     * @var string
+     */
     protected $airship_cabin_prefix;
+    /**
+     * @var CSRF
+     */
     protected $airship_csrf;
+    /**
+     * @var DBInterface[][]
+     */
     protected $airship_databases;
+    /**
+     * @var Lens
+     */
     protected $airship_lens_object;
+    /**
+     * @var array
+     */
     protected $_cache = [
         'blueprints' => [],
         'lenses' => []
@@ -87,9 +108,6 @@ class Landing
      */
     public function resetBaseTemplate()
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->resetBaseTemplate();
     }
 
@@ -99,9 +117,6 @@ class Landing
      */
     public function setBaseTemplate(string $name)
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->setBaseTemplate($name);
     }
 
@@ -113,9 +128,6 @@ class Landing
      */
     protected function addLensFilter(string $name, callable $func)
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         $this->airship_lens_object->filter($name, $func);
     }
 
@@ -127,9 +139,6 @@ class Landing
      */
     protected function addLensFunction(string $name, callable $func)
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         $this->airship_lens_object->func($name, $func);
     }
 
@@ -250,9 +259,6 @@ class Landing
      */
     protected function lens(string $name, ...$cArgs): bool
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->display($name, ...$cArgs);
     }
 
@@ -265,9 +271,6 @@ class Landing
      */
     protected function getLensAsText(string $name, ...$cArgs): string
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->render($name, ...$cArgs);
     }
 
@@ -286,9 +289,6 @@ class Landing
         }
         if ($ignoreCSRFToken) {
             return $_POST;
-        }
-        if (IDE_HACKS) {
-            $this->airship_csrf = new CSRF();
         }
 
         if ($this->airship_csrf->check()) {
@@ -314,11 +314,6 @@ class Landing
      */
     protected function stasis(string $name, ...$cArgs): bool
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-            $this->airship_filecache_object = new File('');
-            $this->airship_cspcache_object = new File('');
-        }
 
         $oldSession = $_SESSION;
         $_SESSION = [];
@@ -359,9 +354,6 @@ class Landing
      */
     protected function storeLensVar(string $name, $value): Lens
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->store($name, $value);
     }
 
@@ -371,9 +363,6 @@ class Landing
      */
     protected function setActiveMotif(string $name): bool
     {
-        if (IDE_HACKS) {
-            $this->airship_lens_object = new Lens(new \Twig_Environment());
-        }
         return $this->airship_lens_object->setActiveMotif($name);
     }
 }

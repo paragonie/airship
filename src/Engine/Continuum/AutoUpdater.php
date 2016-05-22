@@ -38,7 +38,13 @@ abstract class AutoUpdater
 
     protected $pharAlias;
     protected $name;
+    /**
+     * @var Supplier
+     */
     protected $supplier;
+    /**
+     * @var Hail
+     */
     protected $hail;
     protected $type = '';
     protected static $channels = [];
@@ -139,9 +145,6 @@ abstract class AutoUpdater
         UpdateInfo $update,
         string $apiEndpoint = 'download'
     ): UpdateFile {
-        if (IDE_HACKS) {
-            $this->hail = new Hail(new Client);
-        }
         try {
             $version = $update->getVersion();
             $body = $this->hail->postReturnBody(
@@ -236,10 +239,6 @@ abstract class AutoUpdater
         string $minVersion = '',
         string $apiEndpoint = 'version'
     ): array {
-        if (IDE_HACKS) {
-            $this->hail = new Hail(new Client);
-            $this->supplier = new Supplier('');
-        }
         if (empty($supplier)) {
             $supplier = $this->supplier->getName();
         }
@@ -316,10 +315,6 @@ abstract class AutoUpdater
         UpdateFile $file
     ): bool {
         $ret = false;
-        if (IDE_HACKS) {
-            $this->supplier = new Supplier('');
-        }
-
         foreach ($this->supplier->getSigningKeys() as $key) {
             $ret = $ret || File::verify(
                 $file->getPath(),

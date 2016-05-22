@@ -18,11 +18,27 @@ use \ParagonIE\ConstantTime\Base64;
 class Install
 {
     const GROUP_ADMIN = 7;
-    
+
+    /**
+     * @var Database
+     */
     protected $db;
+    /**
+     * @var bool
+     */
     protected $autoSave = true;
+    /**
+     * @var \Twig_Environment
+     */
     protected $twig;
+    /**
+     * @var array
+     */
     protected $data;
+    /**
+     * @var CSRF
+     */
+    protected $csrf;
 
     /**
      * Install constructor.
@@ -35,10 +51,6 @@ class Install
         $this->twig = $twig;
         $this->data = $data;
         $this->csrf = new CSRF();
-        if (IDE_HACKS) {
-            // Just so IDEs know what class this is without tracing execution paths:
-            $this->db = new Database(new \PDO('dsfargeg'));
-        }
         
         // We do this to prevent someone from coming along and reading your
         // half-finished configuration settings (e.g. database passwords):

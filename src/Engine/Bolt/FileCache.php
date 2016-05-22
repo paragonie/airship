@@ -13,7 +13,13 @@ use \Airship\Engine\Cache\File;
  */
 trait FileCache
 {
+    /**
+     * @var File
+     */
     public $airship_filecache_object;
+    /**
+     * @var File
+     */
     public $airship_cspcache_object;
 
     function tightenCacheBolt()

@@ -24,9 +24,21 @@ require_once __DIR__.'/gear.php';
  */
 class Notary extends LandingGear
 {
+    /**
+     * @var SignatureSecretKey
+     */
     private $sk;
+    /**
+     * @var string
+     */
     protected $channel;
+    /**
+     * @var SignaturePublicKey
+     */
     protected $pk;
+    /**
+     * @var ChannelUpdates
+     */
     protected $chanUp;
 
     public function airshipLand()
@@ -42,9 +54,6 @@ class Notary extends LandingGear
             ]);
         }
         $this->sk = $config->keyring['notary.online_signing_key'];
-        if (IDE_HACKS) {
-            $this->sk = new SignatureSecretKey();
-        }
         $this->pk = $this->sk->derivePublicKey();
         $this->channel = $config->universal['notary']['channel'];
         $this->chanUp = $this->blueprint('ChannelUpdates', $this->channel);
@@ -55,9 +64,6 @@ class Notary extends LandingGear
      */
     public function index()
     {
-        if (IDE_HACKS) {
-            $this->pk = new SignaturePublicKey();
-        }
         \Airship\json_response(
             [
                 'status' =>
@@ -104,10 +110,7 @@ class Notary extends LandingGear
                     'Challenge is too short. Continuum should be generating a long random nonce.'
             ]);
         }
-
-        if (IDE_HACKS) {
-            $this->chanUp = new ChannelUpdates(\Airship\get_database());
-        }
+        
         try {
             list($update, $signature) = $this->chanUp->verifyUpdate(
                 $this->sk,

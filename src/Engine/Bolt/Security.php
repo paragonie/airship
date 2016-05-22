@@ -3,10 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
 use Airship\Engine\{
-    Gears,
-    Security\Authentication,
-    Security\Permissions,
-    State
+    AutoPilot, Gears, Security\Authentication, Security\Permissions, State
 };
 use \Airship\Alerts\Security\LongTermAuthAlert;
 use \Airship\Alerts\Security\SecurityAlert;
@@ -26,8 +23,17 @@ use \Psr\Log\LogLevel;
  */
 trait Security
 {
+    /**
+     * @var Authentication
+     */
     public $airship_auth;
+    /**
+     * @var Cookie
+     */
     public $airship_cookie;
+    /**
+     * @var Permissions
+     */
     public $airship_perms;
 
     /**
@@ -168,17 +174,17 @@ trait Security
         ) {
             $this->tightenSecurityBolt();
         }
-        if (IDE_HACKS) {
-            $this->airship_auth = new Authentication(
-                new EncryptionKey(),
-                $this->db
-            );
-        }
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
             // Set session variable
             $_SESSION[$uid_idx] = $userId;
+
+            $autoPilot = Gears::getName('Router');
+            if (IDE_HACKS) {
+                $autoPilot = new AutoPilot();
+            }
+            $httpsOnly = (bool) $autoPilot::isHTTPSconnection();
 
             // Rotate the authentication token:
             $this->airship_cookie->store(
@@ -187,7 +193,7 @@ trait Security
                 \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                 '/',
                 '',
-                false,
+                $httpsOnly ?? false,
                 true
             );
             return true;

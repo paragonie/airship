@@ -22,15 +22,10 @@ class FileManager extends LoggedInUsersOnly
     protected $attribution = []; // For uploads
     protected $root_dir = '';
     protected $path_middle = '';
+    /**
+     * @var Files
+     */
     protected $files;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->files = new Files($db);
-        }
-    }
 
     public function airshipLand()
     {

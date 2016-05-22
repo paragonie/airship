@@ -15,17 +15,15 @@ class Blog extends LoggedInUsersOnly
 {
     use Orderable;
 
+    /**
+     * @var BP\Author
+     */
     protected $author;
-    protected $blog;
 
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->author = new BP\Author($db);
-            $this->blog = new BP\Blog($db);
-        }
-    }
+    /**
+     * @var BP\Blog
+     */
+    protected $blog;
 
     /**
      * This method gets invoked by the router before the final method call

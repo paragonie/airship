@@ -15,16 +15,10 @@ class Crew extends AdminOnly
 {
     use Get;
 
+    /**
+     * @var UserAccounts
+     */
     protected $account;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->account = new UserAccounts($db);
-        }
-    }
-
 
     public function airshipLand()
     {

@@ -12,17 +12,14 @@ require_once __DIR__.'/gear.php';
  */
 class Permissions extends AdminOnly
 {
+    /**
+     * @var BP\Permissions
+     */
     private $perms;
+    /**
+     * @var BP\UserAccounts
+     */
     private $users;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->perms = new BP\Permissions($db);
-            $this->users = new BP\UserAccounts($db);
-        }
-    }
 
     public function airshipLand()
     {

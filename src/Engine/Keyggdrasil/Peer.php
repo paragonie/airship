@@ -88,6 +88,8 @@ class Peer
     }
 
     /**
+     * Get the Ed25519 public key for this peer
+     *
      * @return SignaturePublicKey
      */
     public function getPublicKey(): SignaturePublicKey

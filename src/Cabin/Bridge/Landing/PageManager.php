@@ -19,15 +19,11 @@ require_once __DIR__.'/gear.php';
 class PageManager extends LoggedInUsersOnly
 {
     use Get;
-    protected $pg;
 
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->pg = new CustomPages($db);
-        }
-    }
+    /**
+     * @var CustomPages
+     */
+    protected $pg;
 
     public function airshipLand()
     {

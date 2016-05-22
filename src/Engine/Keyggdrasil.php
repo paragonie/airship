@@ -16,7 +16,8 @@ use \Airship\Engine\{
 };
 use \Airship\Engine\Continuum\{
     API,
-    Channel
+    Channel,
+    Supplier
 };
 use \Airship\Engine\Keyggdrasil\{
     Peer,
@@ -46,9 +47,21 @@ class Keyggdrasil
     use SupplierBolt;
     use Log;
 
+    /**
+     * @var Database
+     */
     protected $db;
+    /**
+     * @var Hail
+     */
     protected $hail;
+    /**
+     * @var Supplier[]
+     */
     protected $supplierCache;
+    /**
+     * @var Channel[]
+     */
     protected $channelCache;
 
     /**

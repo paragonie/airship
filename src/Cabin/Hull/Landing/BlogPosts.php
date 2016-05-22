@@ -17,17 +17,10 @@ require_once __DIR__.'/gear.php';
  */
 class BlogPosts extends LandingGear
 {
+    /**
+     * @var Blog
+     */
     protected $blog;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $this->blog = new Blog(\Airship\get_database());
-            $this->airship_lens_object = new Lens(
-                new \Twig_Environment()
-            );
-        }
-    }
 
     /**
      * This function is called after the dependencies have been injected by

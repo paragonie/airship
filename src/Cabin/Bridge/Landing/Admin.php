@@ -15,15 +15,10 @@ require_once __DIR__.'/gear.php';
  */
 class Admin extends AdminOnly
 {
+    /**
+     * @var UserAccounts
+     */
     private $acct;
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $this->acct = new UserAccounts($db);
-        }
-    }
 
     public function airshipLand()
     {

@@ -8,6 +8,9 @@ require_once __DIR__.'/gear.php';
 
 class IndexPage extends LandingGear
 {
+    /**
+     * @var Blog
+     */
     protected $blog;
 
     /**
@@ -18,9 +21,6 @@ class IndexPage extends LandingGear
     public function index()
     {
         $this->blog = $this->blueprint('Blog');
-        if (IDE_HACKS) {
-            $this->blog = new Blog(\Airship\get_database());
-        }
 
         if (!\file_exists(ROOT . '/public/robots.txt')) {
             // Default robots.txt

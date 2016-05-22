@@ -23,15 +23,11 @@ require_once __DIR__.'/gear.php';
  */
 class CustomPages extends LandingGear
 {
+    /**
+     * @var PagesBlueprint
+     */
     protected $pages;
     protected $cabin = 'Hull';
-
-    public function __construct()
-    {
-        if (IDE_HACKS) {
-            $this->pages = new PagesBlueprint;
-        }
-    }
 
     public function airshipLand()
     {
