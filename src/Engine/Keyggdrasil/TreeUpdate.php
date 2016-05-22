@@ -70,7 +70,7 @@ class TreeUpdate
             $data = \json_decode($updateData['data'], true);
             try {
                 $this->unpackMessageUpdate($chan, $data);
-            } catch (\Throwable $ex) {
+            } catch (NoSupplier $ex) {
                 $this->isNewSupplier = true;
                 $chan->createSupplier($data);
                 $this->supplier = $chan->getSupplier($data['supplier']);
@@ -246,11 +246,14 @@ class TreeUpdate
             // These aren't signed for updating the tree.
             return;
         } else {
+            // We need a precise format:
+            $dateGen = (new \DateTime($this->stored['date_generated']))
+                ->format('Y-m-d\TH:i:s');
             $messageToSign = [
                 'action' =>
                     $this->action,
                 'date_generated' =>
-                    $this->stored['date_generated'],
+                    $dateGen,
                 'public_key' =>
                     $updateData['public_key'],
                 'supplier' =>
@@ -269,6 +272,7 @@ class TreeUpdate
         }
         // If this isn't a new supplier, we need to verify the key
         if (!$this->isNewSupplier) {
+            $master = \json_decode($updateData['master'], true);
             foreach ($this->supplier->getSigningKeys() as $supKey) {
                 if (IDE_HACKS) {
                     // Hi PHPStorm, this is a SignaturePublicKey I promise!
@@ -282,19 +286,19 @@ class TreeUpdate
                 );
 
                 // Is this the key we're looking for?
-                if (\hash_equals($pub, $messageToSign['public_key'])) {
+                if (\hash_equals($pub, $master['public_key'])) {
                     // Store the public key
-                    $this->supplierMasterKeyUsed = $supKey;
+                    $this->supplierMasterKeyUsed = $supKey['key'];
                     break;
                 }
             }
             if (empty($this->supplierMasterKeyUsed)) {
                 throw new CouldNotUpdate(
-                    'The provided public key does not match any known master key'
+                    'The provided public key does not match any known master key '
                 );
             }
             $encoded = \json_encode($messageToSign);
-            if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $this->masterSig)) {
+            if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $master['signature'])) {
                 throw new CouldNotUpdate(
                     'Invalid signature for this master key'
                 );

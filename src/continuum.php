@@ -18,7 +18,7 @@ try {
     $autoUpdater->doUpdateCheck(true);
 } catch (\Throwable $ex) {
     $state->logger->critical(
-        'Automatic update failed: ' . \get_class($ex),
+        'Tree update failed: ' . \get_class($ex),
         \Airship\throwableToArray($ex)
     );
     exit(255);
