@@ -16,9 +16,9 @@ use \ParagonIE\Halite\Asymmetric\{
 };
 
 /**
- * Class KeyUpdate
+ * Class TreeUpdate
  *
- * This represents a key update
+ * This represents an update to Keyggdrasil
  *
  * @package Airship\Engine\Keyggdrasil
  */
@@ -26,6 +26,7 @@ class TreeUpdate
 {
     const ACTION_INSERT_KEY = 'CREATE';
     const ACTION_REVOKE_KEY = 'REVOKE';
+    const ACTION_CORE_UPDATE = 'CORE';
     const ACTION_PACKAGE_UPDATE = 'PACKAGE';
     const KEY_TYPE_MASTER = 'master';
     const KEY_TYPE_SIGNING = 'sub';
@@ -46,7 +47,7 @@ class TreeUpdate
     protected $verified = false;
 
     /**
-     * KeyUpdate constructor.
+     * TreeUpdate constructor.
      *
      * @param Channel $chan
      * @param array $updateData
@@ -61,8 +62,14 @@ class TreeUpdate
         $this->merkleRoot = $updateData['root'];
         $this->stored = $updateData['stored'];
         $this->action = $this->stored['action'];
-        if ($this->action === self::ACTION_PACKAGE_UPDATE) {
+        $packageRelated = [
+            self::ACTION_CORE_UPDATE,
+            self::ACTION_PACKAGE_UPDATE
+        ];
+        if (\in_array($this->action, $packageRelated)) {
             $this->checksum = $this->stored['checksum'];
+            $data = \json_decode($updateData['data'], true);
+            $this->updateMessage = $data['data'];
         } else {
             if (!empty($updateData['master_signature'])) {
                 $this->masterSig = $updateData['master_signature'];
@@ -163,6 +170,16 @@ class TreeUpdate
     }
 
     /**
+     * Is this an update to the Airship core?
+     *
+     * @return bool
+     */
+    public function isAirshipUpdate(): bool
+    {
+        return $this->action === self::ACTION_CORE_UPDATE;
+    }
+
+    /**
      * Is this a "create key" update?
      *
      * @return bool
@@ -242,7 +259,7 @@ class TreeUpdate
     protected function unpackMessageUpdate(Channel $chan, array $updateData)
     {
         $this->updateMessage = $updateData;
-        if ($this->isPackageUpdate()) {
+        if ($this->isPackageUpdate() || $this->isAirshipUpdate()) {
             // These aren't signed for updating the tree.
             return;
         } else {

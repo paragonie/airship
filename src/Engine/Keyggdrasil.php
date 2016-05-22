@@ -78,6 +78,22 @@ class Keyggdrasil
     }
 
     /**
+     * We're storing a new Airship core update in the database.
+     *
+     * @param Channel $chan
+     * @param TreeUpdate $update
+     */
+    protected function airshipUpdate(Channel $chan, TreeUpdate $update)
+    {
+        $supplier = $update->getSupplier();
+        $name = $supplier->getName();
+
+        /**
+         * @todo insert into airship_package_updates
+         */
+    }
+
+    /**
      * Does this peer notary see the same Merkle root?
      *
      * @param Peer $peer
@@ -89,7 +105,9 @@ class Keyggdrasil
     protected function checkWithPeer(Peer $peer, string $expectedRoot): bool
     {
         foreach ($peer->getAllURLs('/verify') as $url) {
+            // Challenge nonce:
             $challenge = Base64UrlSafe::encode(\random_bytes(33));
+            // Peer's response:
             $response = $this->hail->postJSON($url, ['challenge' => $challenge]);
             if ($response['status'] === 'OK') {
                 // Decode then verify signature
@@ -184,7 +202,7 @@ class Keyggdrasil
     protected function getMerkleTree(Channel $chan): MerkleTree
     {
         $nodeList = [];
-        $queryString = 'SELECT data FROM airship_tree_updates WHERE channel = ? ORDER BY TreeUpdateid ASC';
+        $queryString = 'SELECT data FROM airship_tree_updates WHERE channel = ? ORDER BY treeupdateid ASC';
         foreach ($this->db->run($queryString, $chan->getName()) as $node) {
             $nodeList []= new Node($node['data']);
         }
@@ -317,12 +335,15 @@ class Keyggdrasil
                 $this->revokeKey($chan, $update);
             } elseif ($update->isPackageUpdate()) {
                 $this->packageUpdate($chan, $update);
+            } elseif ($update->isAirshipUpdate()) {
+                $this->airshipUpdate($chan, $update);
             }
         }
         return $this->db->commit();
     }
+
     /**
-     * We're storing a new public key for this supplier.
+     * We're storing the checksum of a new package update
      *
      * @param Channel $chan
      * @param TreeUpdate $update
