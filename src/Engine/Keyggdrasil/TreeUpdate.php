@@ -10,6 +10,7 @@ use \Airship\Engine\Continuum\{
     Channel,
     Supplier
 };
+use Airship\Engine\State;
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
@@ -108,7 +109,14 @@ class TreeUpdate
         if (\in_array($this->action, $packageRelated)) {
             $this->checksum = $this->stored['checksum'];
             $data = \json_decode($updateData['data'], true);
-            $this->updateMessage = $data['data'];
+            $this->updateMessage = $data;
+            if ($this->action === self::ACTION_CORE_UPDATE) {
+                $state = State::instance();
+                $trustedSupplier = $state->universal['airship']['trusted-supplier'] ?? 'paragonie';
+                $this->supplier = $chan->getSupplier($trustedSupplier);
+            } else {
+                $this->supplier = $chan->getSupplier($data['supplier']);
+            }
         } else {
             if (!empty($updateData['master_signature'])) {
                 $this->masterSig = $updateData['master_signature'];

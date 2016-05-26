@@ -414,15 +414,19 @@ class Keyggdrasil
     protected function updateChannel(Channel $chan)
     {
         $originalTree = $this->getMerkleTree($chan);
+        $originalRoot = $originalTree->getRoot();
         foreach ($chan->getAllURLs() as $url) {
             try {
                 $updates = $this->fetchTreeUpdates(
                     $chan,
                     $url,
-                    $originalTree->getRoot()
+                    $originalRoot
                 ); // TreeUpdate[]
+                if (empty($updates)) {
+                    return;
+                }
                 while (!empty($updates)) {
-                    $merkleTree = $originalTree;
+                    $merkleTree = $originalTree->getExpandedTree();
                     // Verify these updates with our Peers.
                     try {
                         if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
