@@ -65,7 +65,6 @@ class UpdateFile
      */
     public function hashMatches(string $hash): bool
     {
-        \var_dump($hash, $this->hash);
         return \hash_equals($this->hash, $hash);
     }
 

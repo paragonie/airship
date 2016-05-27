@@ -242,7 +242,8 @@ class Continuum
      */
     private function getEndPiece(string $fullPath): string
     {
-        $arr = \explode('/', \trim('/', $fullPath));
+        $trimmedPath = \trim($fullPath. '/');
+        $arr = \explode('/', $trimmedPath);
         return \array_pop($arr);
     }
 }

@@ -54,16 +54,13 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                 $this->manifest['version']
             );
             foreach ($updates as $updateInfo) {
-                $res = $updateInfo->getResponse();
-                if ($res['status'] !== 'error') {
-                    $updateFile = $this->downloadUpdateFile($updateInfo);
-                    /**
-                     * Don't proceed unless we've verified the signatures
-                     */
-                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                            $this->install($updateInfo, $updateFile);
-                        }
+                $updateFile = $this->downloadUpdateFile($updateInfo);
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                        $this->install($updateInfo, $updateFile);
                     }
                 }
             }
