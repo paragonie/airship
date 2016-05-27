@@ -13,8 +13,7 @@ $key_mgmt_closure = function() {
 
     $state = \Airship\Engine\State::instance();
     $keys = [];
-    
-    // ITERATE
+
     foreach ($keyRing as $index => $keyConfig) {
         $path = ROOT.'/config/keyring/'.$keyConfig['file'];
         if (\file_exists($path)) {

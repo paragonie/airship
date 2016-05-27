@@ -145,12 +145,14 @@ use \Airship\Engine\{
             \Sodium\bin2hex(random_bytes(4)),
             \Sodium\bin2hex(random_bytes(2)),
             \Sodium\bin2hex(
-                \chr(
+                \pack(
+                    'C',
                     (ord(\random_bytes(1)) & 0x0F) | 0x40
                 )
             ) . \Sodium\bin2hex(\random_bytes(1)),
             \Sodium\bin2hex(
-                \chr(
+                \pack(
+                    'C',
                     (\ord(\random_bytes(1)) & 0x3F) | 0x80
                 )
             ) . \Sodium\bin2hex(\random_bytes(1)),

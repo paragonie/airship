@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 /**
- * Load this in index.php, or anyhwere /AFTER/ the CABIN_DIR constant exists
+ * $active is defined before this is loaded.
+ *
+ * Load this in index.php, or anywhere /AFTER/ the CABIN_DIR constant exists
  */
 if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.motifs.json')) {
+    // Load from this cabin's motif cache.
     $motifs = \Airship\loadJSON(ROOT.'/tmp/cache/' . CABIN_NAME . '.motifs.json');
     $state->motifs = $motifs;
 } elseif (\defined('CABIN_DIR')) {

@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+use \Airship\Engine\Gears;
+use \Airship\Engine\Cache\File as FileCache;
+
 // Are we still installing?
 if (
     @\is_readable(dirname(__DIR__).'/tmp/installing.json')
@@ -13,7 +17,7 @@ if (
 /**
  * Load the bare minimum:
  */
-require_once dirname(__DIR__).'/preload.php';
+require_once \dirname(__DIR__).'/preload.php';
 
 $start = \microtime(true);
 if (empty($_POST)) {
@@ -21,7 +25,7 @@ if (empty($_POST)) {
     /**
      * Let's get rid of trailing slashes in URLs without POST data
      */
-    $sliceAt = strlen($_SERVER['REQUEST_URI']) - 1;
+    $sliceAt = \strlen($_SERVER['REQUEST_URI']) - 1;
     if ($sliceAt > 0 && $_SERVER['REQUEST_URI'][$sliceAt] === '/') {
         \Airship\redirect(
             '/'.\trim($_SERVER['REQUEST_URI'], '/')
@@ -31,12 +35,11 @@ if (empty($_POST)) {
     /**
      * Let's handle static content caching
      */
-    $staticCache = new \Airship\Engine\Cache\File(ROOT.'/tmp/cache/static');
-    $cspCache = new \Airship\Engine\Cache\File(ROOT.'/tmp/cache/csp_static');
+    $staticCache = new FileCache(ROOT.'/tmp/cache/static');
+    $cspCache = new FileCache(ROOT.'/tmp/cache/csp_static');
     $port = $_SERVER['HTTP_PORT'] ?? '';
-    $staticPage = $staticCache->get(
-        $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI']
-    );
+    $lookup = $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI'];
+    $staticPage = $staticCache->get($lookup);
     if (!empty($staticPage)) {
         if (!\headers_sent()) {
             \header('Content-Type: text/html;charset=UTF-8');
@@ -44,9 +47,7 @@ if (empty($_POST)) {
             \header('X-XSS-Protection: 1; mode=block');
             \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
         }
-        $csp =  $cspCache->get(
-            $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI']
-        );
+        $csp =  $cspCache->get($lookup);
         if (!empty($csp)) {
             foreach (\json_decode($csp, true) as $cspHeader) {
                 \header($cspHeader);
@@ -54,7 +55,10 @@ if (empty($_POST)) {
         }
 
         echo $staticPage;
-        echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
+        if (!empty($state->universal['debug'])) {
+            // This is just for benchmarking purposes:
+            echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
+        }
         exit;
     }
     unset($staticCache);
@@ -80,12 +84,7 @@ if ($autoUpdater->needsUpdate()) {
 /**
  * Let's load the latest gear for our autoloader
  */
-$autoPilot = \Airship\Engine\Gears::get(
-    'AutoPilot',
-    $active,
-    $lens,
-    $db
-);
+$autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
 $autoPilot->setActiveCabin($active, $state->active_cabin);
 \define('CABIN_NAME', $active['name']);
 \define('CABIN_DIR', ROOT.'/Cabin/'.$active['name']);
@@ -95,6 +94,7 @@ require ROOT.'/motifs.php';
 require ROOT.'/security.php';
 
 $state->autoPilot = $autoPilot;
+
 /**
  * Final step: Let's turn on the autopilot
  */
@@ -112,8 +112,20 @@ if (!empty($state->universal['debug'])) {
             $e->getMessage(), "\n\n",
             $e->getCode(), "\n\n",
             $e->getTraceAsString();
+
+        // Show previous throwables as well:
+        $n = 1;
+        while ($e = $e->getPrevious()) {
+            echo "\n", \str_repeat('#', 80), "\n";
+            echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
+                $e->getMessage(), "\n\n",
+                $e->getCode(), "\n\n",
+                $e->getTraceAsString();
+            ++$n;
+        }
     }
+    // This is just for benchmarking purposes:
+    echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s -->';
 } else {
     $autoPilot->route();
 }
-echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s -->';

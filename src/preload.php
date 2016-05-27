@@ -57,7 +57,7 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 /**
  * 2. Load the Airship functions
  */
-require_once ROOT.'/Airship.php';
+require_once ROOT . '/Airship.php';
 
 /**
  * 3. Let's autoload the composer packages

@@ -1,18 +1,19 @@
 <?php
 declare(strict_types=1);
+
+use \Airship\Engine\{
+    Gears,
+    State
+};
+
 // Always check for changes to channel keys before initiating update
 require_once __DIR__.'/channel.php';
-
-$state = \Airship\Engine\State::instance();
 
 /**
  * Initialize the automatic updater service
  * @var \Airship\Engine\Continuum
  */
-$autoUpdater = \Airship\Engine\Gears::get(
-    'AutoUpdater',
-    $hail
-);
+$autoUpdater = Gears::get('AutoUpdater', $hail);
 if (IDE_HACKS) {
     // Just for the sake of auto-completion:
     $autoUpdater = new \Airship\Engine\Continuum($hail);

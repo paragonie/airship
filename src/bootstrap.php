@@ -1,16 +1,20 @@
 <?php
 declare(strict_types=1);
+
 if (!\defined('ROOT')) {
     require_once __DIR__.'/preload.php';
 }
+
 /**
- * 1. Load all of the cabins, in order, and set up the autoloader.
+ * 1. Load all of the gears.
  */
 $gears = \Airship\loadJSON(ROOT.'/config/gears.json');
 foreach ($gears as $gear) {
+
     $ns = isset($gear['supplier'])
         ? $gear['supplier'].'\\'.$gear['name']
         : $gear['name'];
+
     // Load the gears first:
     \Airship\autoload(
         '\\Airship\\Gears\\'.$ns, 
@@ -21,16 +25,17 @@ foreach ($gears as $gear) {
 /**
  * 2. After loading the gears, we set up the cabins
  */
-require_once ROOT.'/cabins.php';
+require_once ROOT . '/cabins.php';
 \Airship\autoload('\\Airship\\Cabin', '~/Cabin');
 
 /**
  * 3. Let's bootstrap the routes and other configuration
+ *    for the current cabin (set in cabins.php)
  */
 $active = $state->cabins[$state->active_cabin];
 $state->lang = isset($active['lang']) 
     ? $active['lang']
-    : 'en-us';
+    : 'en-us'; // default
 
 if (!\ISCLI) {
     $cabinFile = \implode(DIRECTORY_SEPARATOR, [
@@ -53,7 +58,7 @@ if (!\ISCLI) {
         \clearstatcache();
         // If we're still in the middle of that process, let's not load anything else:
         if (\file_exists($cabinFile)) {
-            echo 'This Airship is currently being repaired. Please try again later.', "\n";
+            echo \__('This Airship is currently docked for routine maintenance. Please try again later.'), "\n";
             exit(255);
         }
     }
@@ -119,7 +124,7 @@ foreach ($lensLoad as $incl) {
 /**
  * Let's load up the databases
  */
-$db = [];
+$dbPool = [];
 require ROOT.'/database.php';
 
 $universal = \Airship\loadJSON(ROOT.'/config/universal.json');

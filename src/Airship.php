@@ -18,7 +18,8 @@ use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\{
     Asymmetric\Crypto,
     Asymmetric\SignatureSecretKey,
-    SignatureKeyPair
+    SignatureKeyPair,
+    Util
 };
 use \ReCaptcha\ReCaptcha;
 use \ReCaptcha\RequestMethod\CurlPost;
@@ -76,11 +77,11 @@ function array_multi_diff(array $new, array $old): array
     foreach (\array_keys($old) as $k) {
         if (!isset($new['' . $k])) {
             // This is part of the diff
-            $ret ['' . $k] = $old[$k];
+            $ret['' . $k] = $old[$k];
         }
     }
     foreach ($new_keys as $k) {
-        $ret ['' . $k] = $new[$k];
+        $ret['' . $k] = $new[$k];
     }
     $diffKeys = \array_diff(
         \array_keys($old),
@@ -162,7 +163,7 @@ function chunk(string $str, string $token = '/'): array
  * @param string $rootDir
  * @return \Twig_Environment
  */
-function configWriter(string $rootDir)
+function configWriter(string $rootDir): \Twig_Environment
 {
     $twigLoader = new \Twig_Loader_Filesystem($rootDir);
     $twigEnv = new \Twig_Environment($twigLoader);
@@ -548,8 +549,11 @@ function redirect(
  * @return string
  * @throws NotImplementedException
  */
-function queryStringRoot(string $index, string $driver = '', array $params = []): string
-{
+function queryStringRoot(
+    string $index,
+    string $driver = '',
+    array $params = []
+): string {
     return \Airship\queryString($index, $params, '', $driver);
 }
 
@@ -563,19 +567,20 @@ function queryStringRoot(string $index, string $driver = '', array $params = [])
  * @return string
  * @throws NotImplementedException
  */
-function queryString(string $index, array $params = [], string $cabin = \CABIN_NAME, string $driver = ''): string
-{
+function queryString(
+    string $index,
+    array $params = [],
+    string $cabin = \CABIN_NAME,
+    string $driver = ''
+): string {
     static $_cache = [];
     if (empty($driver)) {
         $db = \Airship\get_database();
         $driver = $db->getDriver();
     }
-    $cacheKey = \Sodium\bin2hex(
-        \Sodium\crypto_generichash(
-            $cabin . '/' . $driver,
-            '',
-            \Sodium\CRYPTO_GENERICHASH_BYTES_MIN
-        )
+    $cacheKey = Util::hash(
+        $cabin . '/' . $driver,
+        \Sodium\CRYPTO_GENERICHASH_BYTES_MIN
     );
     if (empty($_cache[$cacheKey])) {
         $driver = preg_replace('/[^a-z]/', '', \strtolower($driver));
