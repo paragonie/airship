@@ -7,15 +7,10 @@ use \Airship\Engine\{
     AutoPilot,
     Bolt\Security,
     Gears,
-    Security\Authentication,
     Security\HiddenString,
     State
 };
 use \ParagonIE\Halite\Alerts\InvalidMessage;
-use \ParagonIE\Halite\{
-    Cookie,
-    Symmetric\EncryptionKey
-};
 use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/gear.php';
@@ -86,53 +81,6 @@ class Account extends LandingGear
         $this->lens('board', [
             'config' => $this->config(),
             'title' => 'All Aboard!'
-        ]);
-    }
-
-    /**
-     * AJAX + JSON API to see if a username is taken or invalid.
-     *
-     * @todo move to PublicAjax
-     */
-    public function checkUsername()
-    {
-        // If you didn't supply a username, it's not available.
-        if (!\array_key_exists('username', $_POST)) {
-            \Airship\json_response([
-                'status' => 'error',
-                'message' => \__('You did not supply a username'),
-                'result' => []
-            ]);
-        }
-        
-        // Did someone else reserve this username?
-        if ($this->acct->isUsernameTaken($_POST['username'])) {
-            \Airship\json_response([
-                'status' => 'success',
-                'message' => \__('Username is not available'),
-                'result' => [
-                    'available' => false
-                ]
-            ]);
-        }
-
-        if ($this->acct->isUsernameInvalid($_POST['username'])) {
-            \Airship\json_response([
-                'status' => 'success',
-                'message' => \__('Username is not available'),
-                'result' => [
-                    'available' => false
-                ]
-            ]);
-        }
-        
-        // The username has not been reserved.
-        \Airship\json_response([
-            'status' => 'success',
-            'message' => \__('Username is available'),
-            'result' => [
-                'available' => true
-            ]
         ]);
     }
 
@@ -362,7 +310,7 @@ class Account extends LandingGear
             exit;
         }
         try {
-            $userid = $this->airship_auth->login(
+            $userID = $this->airship_auth->login(
                 $post['username'],
                 new HiddenString($post['passphrase'])
             );
@@ -383,9 +331,9 @@ class Account extends LandingGear
             exit;
         }
 
-        if (!empty($userid)) {
+        if (!empty($userID)) {
             $idx = $state->universal['session_index']['user_id'];
-            $_SESSION[$idx] = $userid;
+            $_SESSION[$idx] = $userID;
 
             if (!empty($post['remember'])) {
                 $autoPilot = Gears::getName('Router');
@@ -396,7 +344,7 @@ class Account extends LandingGear
                 
                 $this->airship_cookie->store(
                     $state->universal['cookie_index']['auth_token'],
-                    $this->airship_auth->createAuthToken($userid),
+                    $this->airship_auth->createAuthToken($userID),
                     \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                     '/',
                     '',

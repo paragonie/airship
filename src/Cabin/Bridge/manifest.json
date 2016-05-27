@@ -87,7 +87,7 @@
             ["Blog", "index"],
 
         "board/checkUsername":
-            ["Account", "checkUsername"],
+            ["PublicAjax", "checkUsername"],
         "board":
             ["Account", "board"],
 

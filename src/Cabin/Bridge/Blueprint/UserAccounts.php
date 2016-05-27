@@ -6,12 +6,9 @@ use \Airship\Alerts\Database\QueryError;
 use \Airship\Alerts\Security\UserNotFound;
 use Airship\Engine\{
     Bolt\Security as SecurityBolt,
-    Database,
-    Security\Authentication,
     Security\HiddenString,
     State
 };
-use ParagonIE\Halite\KeyFactory;
 use \Psr\Log\LogLevel;
 use \ZxcvbnPhp\Zxcvbn;
 
@@ -511,13 +508,14 @@ class UserAccounts extends BlueprintGear
     /**
      * Reset a user's passphrase
      *
-     * @param string $passphrase
+     * @param HiddenString $passphrase
      * @param int $accountId
-     * @return mixed
+     * @return bool
      */
-    public function setPassphrase(HiddenString $passphrase, int $accountId)
+    public function setPassphrase(HiddenString $passphrase, int $accountId): bool
     {
-        return $this->db->update(
+        $this->db->beginTransaction();
+        $this->db->update(
             $this->table,[
                 $this->f['password'] =>
                     $this->airship_auth->createHash($passphrase)
@@ -526,6 +524,7 @@ class UserAccounts extends BlueprintGear
                     $accountId
             ]
         );
+        return $this->db->commit();
     }
 
     /**
@@ -537,11 +536,12 @@ class UserAccounts extends BlueprintGear
      */
     public function updateAccountInfo(array $post, array $account)
     {
+        $this->db->beginTransaction();
         $post['custom_fields'] = isset($post['custom_fields'])
             ? \json_encode($post['custom_fields'])
             : '[]';
 
-        return $this->db->update(
+        $this->db->update(
             $this->table, [
                 $this->f['display_name'] =>
                     $post['display_name'] ?? '',
@@ -554,6 +554,7 @@ class UserAccounts extends BlueprintGear
                     $account[$this->f['userid']]
             ]
         );
+        return $this->db->commit();
     }
 
     /**
