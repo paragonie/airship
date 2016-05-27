@@ -215,7 +215,7 @@ class Author extends BlueprintGear
      */
     public function numAuthors(): int
     {
-        return $this->db->cell('SELECT count(authorid) FROM hull_blog_authors');
+        return (int) $this->db->cell('SELECT count(authorid) FROM hull_blog_authors');
     }
 
     /**

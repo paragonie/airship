@@ -14,6 +14,10 @@ class UpdateInfo
     protected $releaseInfo;
     protected $checksum;
     protected $response;
+    protected $merkleRoot;
+
+    protected $supplierName;
+    protected $packageName;
 
     /**
      * UpdateInfo constructor.
@@ -24,14 +28,19 @@ class UpdateInfo
     public function __construct(
         array $json,
         string $channelURL,
-        SignaturePublicKey $channelPublicKey
+        SignaturePublicKey $channelPublicKey,
+        string $supplierName,
+        string $packageName
     ) {
         $this->response = $json;
         $this->channel = $channelURL;
         $this->publicKey = $channelPublicKey;
         $this->checksum = $json['checksum'];
-        $this->releaseInfo = $json['release_info'];
+        $this->releaseInfo = $json['releaseinfo'];
         $this->version = $json['version'];
+        $this->merkleRoot = $json['merkle_root'];
+        $this->supplierName = $supplierName;
+        $this->packageName = $packageName;
     }
 
     /**
@@ -65,6 +74,30 @@ class UpdateInfo
     }
 
     /**
+     * Get the expected Merkle root (verify with Keyggdrasil's cache)
+     *
+     * @param bool $raw
+     * @return string
+     */
+    public function getMerkleRoot(bool $raw = false): string
+    {
+        if ($raw) {
+            return \Sodium\hex2bin($this->merkleRoot);
+        }
+        return $this->merkleRoot;
+    }
+
+    /**
+     * Get the name of the package we're updating
+     *
+     * @return string
+     */
+    public function getPackageName(): string
+    {
+        return $this->packageName;
+    }
+
+    /**
      * Get the signature
      *
      * @param bool $hex
@@ -77,6 +110,16 @@ class UpdateInfo
             return \Sodium\hex2bin($signature);
         }
         return $signature;
+    }
+
+    /**
+     * Get the supplier's name
+     *
+     * @return string
+     */
+    public function getSupplierName(): string
+    {
+        return $this->supplierName;
     }
 
     /**

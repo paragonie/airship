@@ -251,7 +251,7 @@ class Blog extends BlueprintGear
      */
     public function countByTag(int $tag): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT
                 count(p.postid)
             FROM

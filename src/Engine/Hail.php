@@ -46,6 +46,17 @@ class Hail
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'description' =>
+                'Tor-compatible HTTP client that enforces HTTPS'
+        ];
+    }
+
+    /**
      * Download a file over the Internet
      *
      * @param string $url - the URL to request
@@ -334,7 +345,7 @@ class Hail
     public function postReturnBody(
         string $url,
         array $params = []
-    ): ResponseInterface {
+    ): string {
         $response = $this->client->post(
             $url,
             $this->params($params, $url)
@@ -367,5 +378,6 @@ class Hail
         if ($response instanceof Response) {
             return $this->parseSignedJSON($response, $publicKey);
         }
+        return null;
     }
 }

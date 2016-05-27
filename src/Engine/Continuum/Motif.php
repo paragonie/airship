@@ -65,7 +65,9 @@ class Motif extends AutoUpdater implements ContinuumInterface
                      * Don't proceed unless we've verified the signatures
                      */
                     if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        $this->install($updateInfo, $updateFile);
+                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                            $this->install($updateInfo, $updateFile);
+                        }
                     }
                 }
             }

@@ -642,12 +642,12 @@ class CustomPages extends HullCustomPages
     public function numCustomPages($published = null): int
     {
         if ($published === null) {
-            return $this->db->cell('SELECT count(pageid) FROM airship_custom_page');
+            return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page');
         }
         if ($published) {
-            return $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE active');
+            return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE active');
         }
-        return $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE NOT active');
+        return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE NOT active');
     }
 
     /**

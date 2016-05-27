@@ -7,15 +7,20 @@ $state = \Airship\Engine\State::instance();
 
 /**
  * Initialize the automatic updater service
+ * @var \Airship\Engine\Continuum
  */
 $autoUpdater = \Airship\Engine\Gears::get(
     'AutoUpdater',
     $hail
 );
+if (IDE_HACKS) {
+    // Just for the sake of auto-completion:
+    $autoUpdater = new \Airship\Engine\Continuum($hail);
+}
 
 $state->logger->info('Automatic update started');
 try {
-    $autoUpdater->doUpdateCheck(true);
+    $autoUpdater->doUpdateCheck();
 } catch (\Throwable $ex) {
     $state->logger->critical(
         'Tree update failed: ' . \get_class($ex),

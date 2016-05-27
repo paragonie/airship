@@ -24,7 +24,7 @@ class UpdateFile
         $this->path = $data['path'];
         $this->version = $data['version'];
         $this->size = $data['size'] ?? \filesize($data['path']);
-        $this->hash = $data['hash'] ?? File::checksum($data['path']);
+        $this->hash = File::checksum($data['path']);
     }
 
     /**
@@ -65,6 +65,7 @@ class UpdateFile
      */
     public function hashMatches(string $hash): bool
     {
+        \var_dump($hash, $this->hash);
         return \hash_equals($this->hash, $hash);
     }
 

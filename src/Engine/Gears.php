@@ -178,7 +178,7 @@ abstract class Gears
      * 
      * @param string $name - Gear identifier
      * @param mixed[] $args - constructor parameters
-     * @return object
+     * @return mixed
      */
     public static function get(string $name, ...$args)
     {

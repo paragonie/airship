@@ -11,7 +11,6 @@ use Airship\Engine\{
     Hail,
     State
 };
-use \GuzzleHttp\Client;
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\ConstantTime\Base64;
 use \ParagonIE\Halite\{
@@ -135,6 +134,22 @@ abstract class AutoUpdater
     }
 
     /**
+     * Was the checksum of this file stored in Keyggdrasil?
+     *
+     * @param UpdateInfo $info
+     * @param UpdateFile $file
+     * @return bool
+     */
+    public function checkKeyggdrasil(UpdateInfo $info, UpdateFile $file): bool
+    {
+        $this->log(
+            'Checking Keyggdrasil - not implemented',
+            LogLevel::DEBUG
+        );
+        return true;
+    }
+
+    /**
      * Download an update into a temp file
      *
      * @param UpdateInfo $update
@@ -150,6 +165,9 @@ abstract class AutoUpdater
             $body = $this->hail->postReturnBody(
                 $update->getChannel() . API::get($apiEndpoint),
                 [
+                    'type' => \get_class($this),
+                    'supplier' => $update->getSupplierName(),
+                    'package' => $update->getPackageName(),
                     'version' => $version
                 ]
             );
@@ -215,9 +233,13 @@ abstract class AutoUpdater
      */
     protected function sortUpdatesByVersion(UpdateInfo ...$updates): array
     {
-        \uasort($updates, function(UpdateInfo $a, UpdateInfo $b) {
-            return $a->getVersionExpanded() <=> $b->getVersionExpanded();
-        });
+        \uasort(
+            $updates,
+            function(UpdateInfo $a, UpdateInfo $b): array
+            {
+                return $a->getVersionExpanded() <=> $b->getVersionExpanded();
+            }
+        );
         return $updates;
     }
     
@@ -263,15 +285,45 @@ abstract class AutoUpdater
                             'minimum' => $minVersion
                         ]
                     );
+                    if ($response['status'] === 'error') {
+                        $this->log(
+                            $response['error'],
+                            LogLevel::ERROR,
+                            [
+                                'response' => $response,
+                                'channel' => $ch,
+                                'supplier' => $supplier,
+                                'type' => $this->type,
+                                'package' => $packageName
+                            ]
+                        );
+                        continue;
+                    }
                     $updates = [];
                     foreach ($response['versions'] as $update) {
                         $updates [] = new UpdateInfo(
                             $update,
                             $ch,
-                            $publicKey
+                            $publicKey,
+                            $supplier,
+                            $packageName
                         );
                     }
-                    return $this->sortUpdatesByVersion($updates);
+                    if (empty($updates)) {
+                        $this->log(
+                            'No updates found.',
+                            LogLevel::DEBUG,
+                            [
+                                'type' => \get_class($this),
+                                'supplier' => $supplier,
+                                'package' => $packageName,
+                                'channelName' => $channelName,
+                                'channel' => $ch
+                            ]
+                        );
+                        return [];
+                    }
+                    return $this->sortUpdatesByVersion(...$updates);
                 } catch (SignatureFailed $ex) {
                     // Log? Definitely suppress, however.
                     $this->log(
@@ -316,7 +368,10 @@ abstract class AutoUpdater
     ): bool {
         $ret = false;
         foreach ($this->supplier->getSigningKeys() as $key) {
-            $ret = $ret || File::verify(
+            if ($key['type'] !== 'signing') {
+                continue;
+            }
+            $ret = $ret ||  File::verify(
                 $file->getPath(),
                 $key['key'],
                 $info->getSignature(true)

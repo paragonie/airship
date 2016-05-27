@@ -503,7 +503,7 @@ class UserAccounts extends BlueprintGear
      */
     public function numUsers(): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT count(*) FROM ' . $this->e($this->table)
         );
     }

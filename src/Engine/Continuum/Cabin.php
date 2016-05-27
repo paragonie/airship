@@ -17,10 +17,12 @@ use \Psr\Log\LogLevel;
  */
 class Cabin extends AutoUpdater implements ContinuumInterface
 {
-    private $name;
-    private $supplier;
-    private $manifest;
-    private $hail;
+    protected $hail;
+    protected $cabin;
+    protected $name;
+    protected $supplier;
+    protected $filePath;
+    protected $manifest;
     
     public function __construct(
         Hail $hail,
@@ -59,7 +61,9 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                      * Don't proceed unless we've verified the signatures
                      */
                     if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        $this->install($updateInfo, $updateFile);
+                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                            $this->install($updateInfo, $updateFile);
+                        }
                     }
                 }
             }

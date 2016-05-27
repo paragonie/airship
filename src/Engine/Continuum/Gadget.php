@@ -11,12 +11,12 @@ use \Psr\Log\LogLevel;
 
 class Gadget extends AutoUpdater implements ContinuumInterface
 {
-    private $hail;
-    private $cabin;
-    private $name;
-    private $supplier;
-    private $filePath;
-    private $manifest;
+    protected $hail;
+    protected $cabin;
+    protected $name;
+    protected $supplier;
+    protected $filePath;
+    protected $manifest;
 
     public function __construct(
         Hail $hail,
@@ -49,13 +49,12 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                 $this->manifest['version']
             );
             foreach ($updateInfoArray as $updateInfo) {
-                $res = $updateInfo->getResponse();
-                if ($res['status'] !== 'error') {
-                    $updateFile = $this->downloadUpdateFile($updateInfo);
-                    /**
-                     * Don't proceed unless we've verified the signatures
-                     */
-                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                $updateFile = $this->downloadUpdateFile($updateInfo);
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
                         $this->install($updateInfo, $updateFile);
                     }
                 }
@@ -87,6 +86,16 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         \rename($this->filePath, $this->filePath.'.backup');
         \rename($file->getPath(), $this->filePath);
 
+        $this->log(
+            'Begin install process',
+            LogLevel::DEBUG,
+            [
+                'path' => $file->getPath(),
+                'hash' => $file->getHash(),
+                'version' => $file->getVersion(),
+                'size' => $file->getSize()
+            ]
+        );
 
         // Let's open the update package:
         $newGadget = new \Phar(

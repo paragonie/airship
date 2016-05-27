@@ -27,6 +27,13 @@ trait Log
         string $level = LogLevel::ERROR,
         array $context = []
     ) {
+        if ($level === LogLevel::DEBUG) {
+            $state = State::instance();
+            if (!$state->universal['debug']) {
+                // Don't log debug messages unless debug mode is on:
+                return null;
+            }
+        }
         $state = State::instance();
         return $state->logger->log(
             $level,

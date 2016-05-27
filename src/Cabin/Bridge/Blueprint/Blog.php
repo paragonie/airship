@@ -903,7 +903,7 @@ class Blog extends BlueprintGear
      */
     public function numItemsInSeries(int $seriesId): int
     {
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT count(itemid) FROM hull_blog_series_items WHERE parent = ?',
             $seriesId
         );
@@ -921,12 +921,12 @@ class Blog extends BlueprintGear
     public function numComments($published = null): int
     {
         if ($published === null) {
-            return $this->db->cell('SELECT count(commentid) FROM hull_blog_comments');
+            return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments');
         }
         if ($published) {
-            return $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE approved');
+            return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE approved');
         }
-        return $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE NOT approved');
+        return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE NOT approved');
     }
 
     /**
@@ -941,12 +941,12 @@ class Blog extends BlueprintGear
     public function numPosts($published = null): int
     {
         if ($published === null) {
-            return $this->db->cell('SELECT count(postid) FROM hull_blog_posts');
+            return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts');
         }
         if ($published) {
-            return $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE status');
+            return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE status');
         }
-        return $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE NOT status');
+        return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE NOT status');
     }
 
     /**
@@ -956,7 +956,7 @@ class Blog extends BlueprintGear
      */
     public function numSeries(): int
     {
-        return $this->db->cell('SELECT count(seriesid) FROM hull_blog_series');
+        return (int) $this->db->cell('SELECT count(seriesid) FROM hull_blog_series');
     }
 
     /**
@@ -973,7 +973,7 @@ class Blog extends BlueprintGear
             $userId
         );
         $authorSet = $this->db->escapeValueSet($authorIds, 'int');
-        return $this->db->cell(
+        return (int) $this->db->cell(
             'SELECT count(seriesid) FROM hull_blog_series WHERE author IN ' . $authorSet
         );
     }
@@ -985,7 +985,7 @@ class Blog extends BlueprintGear
      */
     public function numTags(): int
     {
-        return $this->db->cell('SELECT count(tagid) FROM hull_blog_tags');
+        return (int) $this->db->cell('SELECT count(tagid) FROM hull_blog_tags');
     }
 
     /**
