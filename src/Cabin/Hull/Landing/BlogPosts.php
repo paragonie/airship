@@ -6,7 +6,7 @@ use \Airship\Alerts\Router\EmulatePageNotFound;
 use \Airship\Cabin\Hull\Blueprint\Blog;
 use \Airship\Engine\Lens;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class BlogPosts

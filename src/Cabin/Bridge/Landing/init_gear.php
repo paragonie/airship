@@ -11,7 +11,7 @@ use \Airship\Engine\{
 if (!\class_exists('LandingGear')) {
     Gears::extract('Landing', 'LandingGearBase', __NAMESPACE__);
 
-    // IDE hack. Currently no other elegant way to make type-hinting work.
+    // Make autocomplete work with existing IDEs:
     if (IDE_HACKS) {
         class LandingGearBase extends Landing { }
     }

@@ -4,7 +4,7 @@ namespace Airship\Cabin\Hull\Blueprint;
 
 use Airship\Alerts\Router\EmulatePageNotFound;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Blog

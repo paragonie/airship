@@ -5,7 +5,7 @@ namespace Airship\Cabin\Bridge\Landing;
 use \Airship\Cabin\Bridge\Blueprint\Author;
 use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class AuthorFiles

@@ -8,7 +8,7 @@ use \Airship\Engine\State;
 use Psr\Log\LogLevel;
 use \ReCaptcha\ReCaptcha;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Redirects

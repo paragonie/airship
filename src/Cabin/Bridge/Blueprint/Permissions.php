@@ -4,7 +4,7 @@ namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Engine\AutoPilot;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Permissions

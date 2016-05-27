@@ -7,7 +7,7 @@ use \Airship\Alerts\FileSystem\FileNotFound;
 use Airship\Engine\Continuum\Airship;
 use \Airship\Engine\State;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Admin

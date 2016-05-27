@@ -6,7 +6,7 @@ use Airship\Cabin\Bridge\Blueprint\Author;
 use Airship\Cabin\Bridge\Blueprint\Blog;
 use Airship\Cabin\Bridge\Blueprint\CustomPages;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class IndexPage

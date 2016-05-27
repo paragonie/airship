@@ -10,7 +10,7 @@ use \Airship\Engine\State;
 use \Airship\Engine\Bolt\Get;
 use \Psr\Log\LogLevel;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class PageManager

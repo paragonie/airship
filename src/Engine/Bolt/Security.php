@@ -180,7 +180,7 @@ trait Security
             // Set session variable
             $_SESSION[$uid_idx] = $userId;
 
-            $autoPilot = Gears::getName('Router');
+            $autoPilot = Gears::getName('AutoPilot');
             if (IDE_HACKS) {
                 $autoPilot = new AutoPilot();
             }

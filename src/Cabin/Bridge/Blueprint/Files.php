@@ -11,7 +11,7 @@ use \Airship\Engine\{
 };
 use \ParagonIE\Halite\File as HaliteFile;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Files

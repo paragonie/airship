@@ -4,7 +4,7 @@ namespace Airship\Cabin\Hull\Landing;
 
 use Airship\Cabin\Hull\Blueprint\Blog;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 class IndexPage extends LandingGear
 {

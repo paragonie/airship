@@ -6,7 +6,7 @@ use \Airship\Cabin\Hull\Blueprint as BP;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Alerts\Router\EmulatePageNotFound;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class PublicFiles

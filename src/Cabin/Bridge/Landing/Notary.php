@@ -13,7 +13,7 @@ use \ParagonIE\Halite\Asymmetric\{
     SignatureSecretKey
 };
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Notary

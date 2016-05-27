@@ -14,7 +14,7 @@ use \Airship\Cabin\Hull\Exceptions\{
 };
 use \Airship\Engine\Bolt\FileCache;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Blog

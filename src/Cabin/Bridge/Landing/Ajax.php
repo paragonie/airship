@@ -11,7 +11,7 @@ use \Airship\Cabin\Bridge\Blueprint\{
 };
 use \Airship\Engine\State;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 class Ajax extends LoggedInUsersOnly
 {

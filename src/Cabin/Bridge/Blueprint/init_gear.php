@@ -9,7 +9,7 @@ use \Airship\Engine\{
 
 if (!\class_exists('BlueprintGear')) {
     Gears::extract('Blueprint', 'BlueprintGear', __NAMESPACE__);
-    // IDE hack. @todo remove before going live
+    // Make autocomplete work with existing IDEs:
     if (IDE_HACKS) {
         class BlueprintGear extends Blueprint
         {

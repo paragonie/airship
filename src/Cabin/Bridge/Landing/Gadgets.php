@@ -4,7 +4,7 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Engine\State;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Gadgets

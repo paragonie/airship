@@ -12,7 +12,7 @@ use \Gregwar\RST\Parser as RSTParser;
 use \League\CommonMark\CommonMarkConverter;
 use \Psr\Log\LogLevel;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class CustomPages

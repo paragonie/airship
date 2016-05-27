@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Ajax

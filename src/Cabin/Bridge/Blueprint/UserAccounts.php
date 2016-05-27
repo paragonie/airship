@@ -12,7 +12,7 @@ use Airship\Engine\{
 use \Psr\Log\LogLevel;
 use \ZxcvbnPhp\Zxcvbn;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class UserAccounts

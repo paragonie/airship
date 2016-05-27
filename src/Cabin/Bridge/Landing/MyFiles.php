@@ -5,7 +5,7 @@ namespace Airship\Cabin\Bridge\Landing;
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 class MyFiles extends FileManager
 {

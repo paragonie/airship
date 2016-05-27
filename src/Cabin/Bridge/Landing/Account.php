@@ -13,7 +13,7 @@ use \Airship\Engine\{
 use \ParagonIE\Halite\Alerts\InvalidMessage;
 use \Psr\Log\LogLevel;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class Account

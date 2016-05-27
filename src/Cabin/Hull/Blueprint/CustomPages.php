@@ -4,7 +4,7 @@ namespace Airship\Cabin\Hull\Blueprint;
 
 use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
 
-require_once __DIR__.'/gear.php';
+require_once __DIR__.'/init_gear.php';
 
 /**
  * Class CustomPages
