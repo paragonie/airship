@@ -568,14 +568,7 @@ class UserAccounts extends BlueprintGear
     {
         $this->db->beginTransaction();
 
-        if ($this->db->cell('SELECT count(preferenceid) FROM airship_user_preferences WHERE userid = ?', $userId) === 0) {
-            $this->db->insert(
-                'airship_user_preferences', [
-                    'userid' => $userId,
-                    'preferences' => \json_encode($preferences)
-                ]
-            );
-        } else {
+        if ($this->db->cell('SELECT count(preferenceid) FROM airship_user_preferences WHERE userid = ?', $userId) > 0) {
             $this->db->update(
                 'airship_user_preferences',
                 [
@@ -583,6 +576,13 @@ class UserAccounts extends BlueprintGear
                 ],
                 [
                     'userid' => $userId
+                ]
+            );
+        } else {
+            $this->db->insert(
+                'airship_user_preferences', [
+                    'userid' => $userId,
+                    'preferences' => \json_encode($preferences)
                 ]
             );
         }

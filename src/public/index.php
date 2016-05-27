@@ -15,8 +15,8 @@ if (
  */
 require_once dirname(__DIR__).'/preload.php';
 
+$start = \microtime(true);
 if (empty($_POST)) {
-    $start = \microtime(true);
 
     /**
      * Let's get rid of trailing slashes in URLs without POST data
