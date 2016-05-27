@@ -107,7 +107,8 @@ class Hail
     public function getJSON(string $url, array $params = [])
     {
         $this->parseJSON(
-            $this->get($url, $params)
+            $this->get($url, $params),
+            true
         );
     }
 
@@ -329,8 +330,9 @@ class Hail
      */
     public function postJSON(string $url, array $params = [])
     {
-        $this->parseJSON(
-            $this->post($url, $params)
+        return $this->parseJSON(
+            $this->post($url, $params),
+            true
         );
     }
 

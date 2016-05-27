@@ -35,18 +35,40 @@ abstract class AutoUpdater
     const TYPE_GADGET = 'gadget';
     const TYPE_MOTIF = 'motif';
 
-    protected $pharAlias;
-    protected $name;
     /**
-     * @var Supplier
+     * @var Channel[]
      */
-    protected $supplier;
+    protected static $channels = [];
+
+    /**
+     * @var string
+     */
+    protected $ext = 'txt';
+
     /**
      * @var Hail
      */
     protected $hail;
+
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $pharAlias;
+
+    /**
+     * @var Supplier
+     */
+    protected $supplier;
+
+    /**
+     * @var string
+     */
     protected $type = '';
-    protected static $channels = [];
 
     /**
      * Automatic script execution
@@ -134,7 +156,7 @@ abstract class AutoUpdater
     }
 
     /**
-     * Was the checksum of this file stored in Keyggdrasil?
+     * Was the checksum of this update stored in Keyggdrasil?
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
@@ -142,11 +164,30 @@ abstract class AutoUpdater
      */
     public function checkKeyggdrasil(UpdateInfo $info, UpdateFile $file): bool
     {
-        $this->log(
-            'Checking Keyggdrasil - not implemented',
-            LogLevel::DEBUG
+        $db = \Airship\get_database();
+        $merkle = $db->row(
+            'SELECT * FROM airship_tree_updates WHERE merkleroot = ?',
+            $info->getMerkleRoot()
         );
-        return true;
+        if (empty($merkle)) {
+            // Not found in Keyggdrasil
+            return false;
+        }
+        $data = \Airship\parseJSON($merkle['data'], true);
+        if (!\hash_equals($this->type, $data['pkg_type'])) {
+            // Wrong package type
+            return false;
+        }
+        if (!\hash_equals($info->getSupplierName(), $data['supplier'])) {
+            // Wrong supplier
+            return false;
+        }
+        if (!\hash_equals($info->getPackageName(), $data['name'])) {
+            // Wrong package
+            return false;
+        }
+        // Finally, we verify that the checksum matches the entry in our Merkle tree:
+        return \hash_equals($file->getHash(), $data['checksum']);
     }
 
     /**
@@ -171,7 +212,7 @@ abstract class AutoUpdater
                     'version' => $version
                 ]
             );
-            $outFile = \tempnam(\sys_get_temp_dir(), 'airship-') . '.phar';
+            $outFile = \Airship\tempnam('airship-', $this->ext);
             $saved = \file_put_contents($outFile, $body);
             if ($saved !== false) {
                 // To prevent TOCTOU issues down the line

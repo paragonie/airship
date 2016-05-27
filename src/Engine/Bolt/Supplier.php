@@ -55,6 +55,24 @@ trait Supplier
     }
 
     /**
+     * For objects that don't bother caching
+     *
+     * @param string $supplier
+     * @return SupplierObject
+     * @throws AccessDenied
+     * @throws FileNotFound
+     * @throws NoSupplier
+     */
+    public function getSupplierDontCache(string $supplier): SupplierObject
+    {
+        if (!\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
+            throw new NoSupplier(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+        }
+        $data = \Airship\loadJSON(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+        return new SupplierObject($supplier, $data);
+    }
+
+    /**
      * Load all of the supplier's Ed25519 public keys
      *
      * @param string $supplier

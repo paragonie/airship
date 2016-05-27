@@ -102,14 +102,19 @@ class TreeUpdate
         $this->merkleRoot = $updateData['root'];
         $this->stored = $updateData['stored'];
         $this->action = $this->stored['action'];
-        $packageRelated = [
+        $packageRelatedActions = [
             self::ACTION_CORE_UPDATE,
             self::ACTION_PACKAGE_UPDATE
         ];
-        if (\in_array($this->action, $packageRelated)) {
+
+        if (\in_array($this->action, $packageRelatedActions)) {
+            // This is a package-related update:
             $this->checksum = $this->stored['checksum'];
+
+            // This is the JSON message from the tree node, stored as an array:
             $data = \json_decode($updateData['data'], true);
             $this->updateMessage = $data;
+
             if ($this->action === self::ACTION_CORE_UPDATE) {
                 $state = State::instance();
                 $trustedSupplier = $state->universal['airship']['trusted-supplier'] ?? 'paragonie';
@@ -118,6 +123,7 @@ class TreeUpdate
                 $this->supplier = $chan->getSupplier($data['supplier']);
             }
         } else {
+            // This is a key-related update:
             if (!empty($updateData['master_signature'])) {
                 $this->masterSig = $updateData['master_signature'];
             }
@@ -305,6 +311,7 @@ class TreeUpdate
      */
     protected function unpackMessageUpdate(Channel $chan, array $updateData)
     {
+        // This is the JSON message from the tree node, stored as an array:
         $this->updateMessage = $updateData;
         if ($this->isPackageUpdate() || $this->isAirshipUpdate()) {
             // These aren't signed for updating the tree.

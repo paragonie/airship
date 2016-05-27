@@ -23,6 +23,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
 {
     protected $pharAlias = 'airship-update.phar';
     protected $name = 'airship'; // Package name
+    protected $ext = 'phar';
     
     public function __construct(Hail $hail, Supplier $sup)
     {

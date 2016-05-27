@@ -22,6 +22,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     protected $supplier;
     protected $filePath;
     protected $manifest;
+    protected $ext = 'phar';
 
     // These are excluded. See Airship.php instead.
     const AIRSHIP_SPECIAL_CABINS = ['Hull', 'Bridge'];

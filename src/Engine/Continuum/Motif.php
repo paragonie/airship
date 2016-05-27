@@ -26,6 +26,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
     protected $supplier;
     protected $filePath;
     protected $manifest;
+    protected $ext = 'zip';
 
     public function __construct(
         Hail $hail,

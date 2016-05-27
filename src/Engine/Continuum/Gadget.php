@@ -17,6 +17,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
     protected $supplier;
     protected $filePath;
     protected $manifest;
+    protected $ext = 'phar';
 
     public function __construct(
         Hail $hail,

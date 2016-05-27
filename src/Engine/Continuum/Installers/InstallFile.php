@@ -1,0 +1,136 @@
+<?php
+declare(strict_types=1);
+namespace Airship\Engine\Continuum\Installers;
+
+use \Airship\Engine\Continuum\Supplier;
+use \ParagonIE\Halite\File;
+
+class InstallFile
+{
+    /**
+     * @var string
+     */
+    protected $hash;
+
+    /**
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * @var array
+     */
+    protected $releaseInfo;
+
+    /**
+     * @var int
+     */
+    protected $size;
+
+    /**
+     * @var Supplier
+     */
+    protected $supplier;
+
+    /**
+     * @var string
+     */
+    protected $version;
+
+    /**
+     * InstallFile constructor.
+     *
+     * @param Supplier $supplier
+     * @param array $data
+     */
+    public function __construct(Supplier $supplier, array $data)
+    {
+        $this->supplier = $supplier;
+        $this->path = $data['path'];
+        $this->version = $data['version'];
+        $this->size = $data['size'] ?? \filesize($this->path);
+        $this->hash = File::checksum($this->path);
+        $this->root = $data['data']['merkle_root'];
+        $this->releaseInfo = \Airship\parseJSON($data['data']['release_info'], true);
+    }
+
+    /**
+     * Get the hex-encoded hash of the file contents
+     *
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->hash;
+    }
+
+    /**
+     * Get the Merkle root that matches this version's release
+     *
+     * @return string
+     */
+    public function getMerkleRoot(): string
+    {
+        return $this->root;
+    }
+
+    /**
+     * Get the name of the file
+     *
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * Get the size of the file
+     *
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    /**
+     * Get the version of a particular update file.
+     *
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Does the given hash match the file?
+     *
+     * @param string $hash
+     * @return bool
+     */
+    public function hashMatches(string $hash): bool
+    {
+        return \hash_equals($this->hash, $hash);
+    }
+
+    /**
+     * Check that the signature is valid for this supplier's
+     * public keys.
+     *
+     * @param bool $fastExit
+     * @return bool
+     */
+    public function signatureIsValid(bool $fastExit = false): bool
+    {
+        $result = false;
+        foreach ($this->supplier->getSigningKeys() as $key) {
+            $result = $result || File::verify($this->path, $key, $this->releaseInfo['signature']);
+            if ($result && $fastExit) {
+                return true;
+            }
+        }
+        return $result;
+    }
+}

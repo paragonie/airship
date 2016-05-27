@@ -23,6 +23,7 @@ class Channel
     protected $peers = [];
     protected $publicKey;
     protected $urls = [];
+    protected $ext = '.phar';
 
     /**
      * Channel constructor.

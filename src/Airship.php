@@ -672,6 +672,22 @@ function slugFromTitle(string $title): string
 }
 
 /**
+ * @param string $prefix  Prefix
+ * @param string $ext     File extension
+ * @param string $dir     WHich directory?
+ * @return string
+ */
+function tempnam(string $prefix, string $ext, string $dir = ''): string
+{
+    if (empty($dir)) {
+        $dir = \sys_get_temp_dir();
+    }
+    $temp = \tempnam($dir, 'airship-');
+    \unlink($temp);
+    return $temp . '.' . $ext;
+}
+
+/**
  * Convert an Exception or Error into an array (for logging)
  *
  * @param \Throwable $ex
