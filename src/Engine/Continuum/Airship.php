@@ -4,8 +4,8 @@ namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\Contract\ContinuumInterface;
 use \Airship\Engine\{
+    Contract\ContinuumInterface,
     Hail,
     State
 };

@@ -19,7 +19,30 @@ if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     $active_cabin = null;
     foreach ($cabins as $key => $cabin) {
         try {
-            $cabin['data'] = \Airship\loadJSON(ROOT.'/Cabin/'.$cabin['name'].'/manifest.json');
+            if ($cabin['supplier']) {
+                $cabin['data'] = \Airship\loadJSON(
+                    \implode('/',
+                        [
+                            ROOT,
+                            'Cabin',
+                            // Adheres to a vendor name-spacing:
+                            $cabin['supplier'] . '_' . $cabin['name'],
+                            'manifest.json'
+                        ]
+                    )
+                );
+            } else {
+                $cabin['data'] = \Airship\loadJSON(
+                    \implode('/',
+                        [
+                            ROOT,
+                            'Cabin',
+                            $cabin['name'],
+                            'manifest.json'
+                        ]
+                    )
+                );
+            }
         } catch (Exception $ex) {
             $cabin['data'] = null;
         }

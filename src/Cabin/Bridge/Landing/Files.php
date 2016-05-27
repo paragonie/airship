@@ -38,7 +38,7 @@ class Files extends FileManager
     public function confirmDeleteFile(string $cabin = '')
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
@@ -55,7 +55,7 @@ class Files extends FileManager
     public function getFileInfo(string $cabin = '')
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
@@ -76,7 +76,7 @@ class Files extends FileManager
     public function index(string $cabin = '')
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->commonIndex($dir, $cabin);
@@ -89,7 +89,7 @@ class Files extends FileManager
     public function moveFile(string $cabin = '')
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {

@@ -33,7 +33,11 @@ $state->lang = isset($active['lang'])
     : 'en-us';
 
 if (!\ISCLI) {
-    $cabinFile = ROOT . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cabin.' . $active['name'] . '.offline.txt';
+    $cabinFile = \implode(DIRECTORY_SEPARATOR, [
+        ROOT,
+        'tmp',
+        'cabin.' . $active['name'] . '.offline.txt'
+    ]);
     if (\file_exists($cabinFile)) {
         // There might be an automatic update in progress!
         // Let's give it up to 15 seconds, but only as much time as is needed.

@@ -22,7 +22,7 @@ class Cabins extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->lens('cabins', [
-            'cabins' => $this->getCabinNames()
+            'cabins' => $this->getCabinNamespaces()
         ]);
     }
 
@@ -38,7 +38,7 @@ class Cabins extends LoggedInUsersOnly
             // Admins only!
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        if (!\in_array($cabinName, $this->getCabinNames())) {
+        if (!\in_array($cabinName, $this->getCabinNamespaces())) {
             // Invalid cabin name
             \Airship\redirect($this->airship_cabin_prefix . '/cabins');
         }
@@ -195,6 +195,10 @@ class Cabins extends LoggedInUsersOnly
                 $saveCabins[$cab] = $cab_data;
             } else {
                 $saveCabins[$post['config']['path']] = $post['config'];
+                if (isset($cab_data['namespace'])) {
+                    // This should be immutable.
+                    $saveCabins[$post['config']['path']]['namespace'] = $cab_data['namespace'];
+                }
                 unset($saveCabins['path']);
             }
         }

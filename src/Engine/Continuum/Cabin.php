@@ -4,9 +4,8 @@ namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\{
-    Contract\ContinuumInterface,
-    Hail
+use Airship\Engine\{
+    Contract\ContinuumInterface, Hail, State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
@@ -23,6 +22,9 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     protected $supplier;
     protected $filePath;
     protected $manifest;
+
+    // These are excluded. See Airship.php instead.
+    const AIRSHIP_SPECIAL_CABINS = ['Hull', 'Bridge'];
     
     public function __construct(
         Hail $hail,
@@ -36,6 +38,19 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         $this->pharAlias = 'cabin.' . $this->name . '.phar';
         $this->type = self::TYPE_CABIN;
     }
+
+    /**
+     * @return bool
+     */
+    protected function isAirshipSpecialCabin(): bool
+    {
+        $state = State::instance();
+        return (
+            $this->supplier->getName() === $state->universal['airship']['trusted-supplier']
+                &&
+            \in_array($this->name, self::AIRSHIP_SPECIAL_CABINS)
+        );
+    }
     
     /**
      * Process automatic updates:
@@ -47,6 +62,10 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      */
     public function autoUpdate()
     {
+        if ($this->isAirshipSpecialCabin()) {
+            // This only gets touched by core updates.
+            return;
+        }
         try {
             $updates = $this->updateCheck(
                 $this->supplier->getName(),
@@ -127,7 +146,14 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      */
     protected function replaceFile(string $filename)
     {
-        $cabinRoot = ROOT . DIRECTORY_SEPARATOR . 'Cabin' . DIRECTORY_SEPARATOR . $this->name;
+        $supplier = $this->supplier->getName();
+        $pieces = [
+            ROOT,
+            'Cabin',
+            $supplier,
+            $this->name
+        ];
+        $cabinRoot = \implode(DIRECTORY_SEPARATOR, $pieces);
         if (\file_exists($cabinRoot . DIRECTORY_SEPARATOR . $filename . '.backup')) {
             \unlink($cabinRoot . DIRECTORY_SEPARATOR . $filename . '.backup');
         }

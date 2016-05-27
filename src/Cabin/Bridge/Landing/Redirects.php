@@ -37,7 +37,7 @@ class Redirects extends LoggedInUsersOnly
     public function index()
     {
         $this->lens('redirect', [
-            'cabins' => $this->getCabinNames()
+            'cabins' => $this->getCabinNamespaces()
         ]);
     }
 

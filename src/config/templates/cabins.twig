@@ -31,13 +31,16 @@
             '{string}'
             '{hex}'
     */
-    {% for route, cabin in cabins %}
+{% for route, cabin in cabins %}
         {{ route|je }}: {
             // Only respond over HTTPS (recommended!):
             "https": {{ cabin.https ? 'true' : 'false' }},
             // Used in cross-cabin hyperlinks:
             "canon_url": {{ cabin['canon_url']|default('//')|je }},
             "language": {{ cabin.language|default('en-us')|je }},
+{% if supplier %}
+            "supplier": {{ cabin.supplier|je }},
+{% endif %}
             // Must be unique:
             "name": {{ cabin.name|default('UnnamedCabin' ~ loop.index)|je }}
         }{% if not loop.last %},{% endif %}

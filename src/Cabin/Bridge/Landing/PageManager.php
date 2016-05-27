@@ -45,7 +45,7 @@ class PageManager extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -108,7 +108,7 @@ class PageManager extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -175,7 +175,7 @@ class PageManager extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -221,7 +221,7 @@ class PageManager extends LoggedInUsersOnly
     public function forCabin(string $cabin = '')
     {
         $path = $this->determinePath($cabin);
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -262,7 +262,7 @@ class PageManager extends LoggedInUsersOnly
     public function index()
     {
         $this->lens('pages', [
-            'cabins' => $this->getCabinNames()
+            'cabins' => $this->getCabinNamespaces()
         ]);
     }
 
@@ -275,7 +275,7 @@ class PageManager extends LoggedInUsersOnly
     public function newDir(string $cabin = '')
     {
         $path = $this->determinePath($cabin);
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -309,7 +309,7 @@ class PageManager extends LoggedInUsersOnly
     public function newPage(string $cabin = '')
     {
         $path = $this->determinePath($cabin);
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -359,7 +359,7 @@ class PageManager extends LoggedInUsersOnly
         if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -416,7 +416,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\is1DArray($_GET)) {
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -495,7 +495,7 @@ class PageManager extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
         }
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }

@@ -158,7 +158,7 @@ class Authentication
             // No matter what, return false here:
             return false;
         } elseif (Password::verify($password->getString(), $user[$f['password']], $this->key)) {
-            return $user[$f['userid']];
+            return (int) $user[$f['userid']];
         }
         return false;
     }

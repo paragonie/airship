@@ -53,7 +53,7 @@ class AutoPilot implements RouterInterface
      */
     public function setActiveCabin(array $cabin, string $prefix)
     {
-        self::$active_cabin = $cabin['name'];
+        self::$active_cabin = $cabin['namespace'] ?? $cabin['name'];
         if ($prefix === '*') {
             self::$patternPrefix = '';
         } elseif ($prefix[0] === '*') {

@@ -37,7 +37,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir, $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
@@ -57,7 +57,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir, $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         return $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
@@ -74,7 +74,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir, $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         return $this->commonIndex($dir, $cabin);
@@ -91,7 +91,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir, $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNames())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {

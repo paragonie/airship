@@ -76,7 +76,7 @@ class FileManager extends LoggedInUsersOnly
         }
 
         $this->lens('files/delete_dir', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'root_dir' => $this->root_dir,
             'dir_contents' => $contents,
             // Untrusted, from the end user:
@@ -116,7 +116,7 @@ class FileManager extends LoggedInUsersOnly
         }
 
         $this->lens('files/delete', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
             // Untrusted, from the end user:
@@ -143,7 +143,7 @@ class FileManager extends LoggedInUsersOnly
         }
 
         $this->lens('files/info', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
             'all_dirs' => $this->files->getDirectoryTree($cabin, $this->root_dir),
@@ -194,7 +194,7 @@ class FileManager extends LoggedInUsersOnly
         $ignore = $path . '/';
 
         $this->lens('files/move_dir', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'root_dir' => $this->root_dir,
             'dir_contents' => $contents,
             'all_dirs' => $this->files->getDirectoryTree(
@@ -241,7 +241,7 @@ class FileManager extends LoggedInUsersOnly
         }
 
         $this->lens('files/move', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
             'all_dirs' => $this->files->getDirectoryTree($cabin, $this->root_dir),
@@ -280,7 +280,7 @@ class FileManager extends LoggedInUsersOnly
         }
 
         $this->lens('files/index', [
-            'cabins' => $this->getCabinNames(),
+            'cabins' => $this->getCabinNamespaces(),
             'subdirs' => $this->files->getChildrenOf($root, $cabin),
             'files' => $this->files->getFilesInDirectory($root, $cabin),
             'pathinfo' => $publicPath,
@@ -299,7 +299,7 @@ class FileManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->lens('files', [
-            'cabins' => $this->getCabinNames()
+            'cabins' => $this->getCabinNamespaces()
         ]);
     }
 

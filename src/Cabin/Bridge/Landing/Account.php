@@ -136,7 +136,7 @@ class Account extends LandingGear
         );
         $cabins = [];
         $motifs = [];
-        foreach ($this->getCabinNames() as $cabin) {
+        foreach ($this->getCabinNamespaces() as $cabin) {
             $cabins[] = $cabin;
             $filename = ROOT . '/tmp/cache/' . $cabin . '.motifs.json';
             if (\file_exists($filename)) {
@@ -336,7 +336,7 @@ class Account extends LandingGear
             $_SESSION[$idx] = $userID;
 
             if (!empty($post['remember'])) {
-                $autoPilot = Gears::getName('Router');
+                $autoPilot = Gears::getName('AutoPilot');
                 if (IDE_HACKS) {
                     $autoPilot = new AutoPilot();
                 }
