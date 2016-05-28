@@ -74,6 +74,7 @@ class Sign extends Command
             $this->config['build_history']['signed'] = true;
         }
         \file_put_contents($file.'.sig', $signature);
+        echo 'File signed: ' . $file.'.sig', "\n";
         return true;
     }
 

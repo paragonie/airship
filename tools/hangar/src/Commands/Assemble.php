@@ -145,6 +145,7 @@ class Assemble extends SessionCommand
         $metaData['commit'] = $this->getGitCommitHash();
         $phar->setMetadata($metaData);
 
+        echo 'Git commit for this build: ', $metaData['commit'], "\n";
         return $this->cleanupWorkspace($workspace);
     }
 
