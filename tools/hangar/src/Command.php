@@ -42,7 +42,7 @@ abstract class Command
     abstract public function fire(array $args = []): bool;
 
     /**
-     * Return the size of hte current terminal window
+     * Return the size of the current terminal window
      *
      * @return array (int, int)
      */

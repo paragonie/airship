@@ -17,6 +17,7 @@ class Assemble extends SessionCommand
     public $description = 'Build a PHP Archive with an update package.';
     public $pharname; // File name of the output PHP archive
     public $pharAlias = 'airship-update.phar';
+    public $pharStub;
 
     protected $metadata;
 
@@ -140,7 +141,9 @@ class Assemble extends SessionCommand
             $this->pharAlias
         );
         $phar->buildFromDirectory($workspace);
-        $phar->setMetadata($this->getMetadata());
+        $metaData = $this->getMetadata();
+        $metaData['commit'] = $this->getGitCommitHash();
+        $phar->setMetadata($metaData);
 
         return $this->cleanupWorkspace($workspace);
     }
@@ -260,5 +263,28 @@ class Assemble extends SessionCommand
                 $this->addautoRun($run, $workspace, $f);
             }
         }
+    }
+
+    /**
+     * Grab the git commit hash
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getGitCommitHash(): string
+    {
+        $projectRoot = $this->config['dir'];
+        if (!\is_dir($projectRoot . '/.git')) {
+            throw new \Exception(".git directory not found!");
+        }
+        $command = "/usr/bin/env bash -c 'echo OK'";
+        if (\rtrim(\shell_exec($command)) !== 'OK') {
+            throw new \Exception("Can't invoke bash");
+        }
+        $dir = \getcwd();
+        \chdir($projectRoot);
+        $hash = \rtrim(\shell_exec("git rev-parse HEAD"));
+        \chdir($dir);
+        return $hash;
     }
 }
