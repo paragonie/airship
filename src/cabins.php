@@ -14,7 +14,7 @@ if (IDE_HACKS) {
 /**
  * Cache the cabin configuration
  */
-if (false && \file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
+if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     // Load the cabins from cache
     $config = \Airship\loadJSON(ROOT.'/tmp/cache/cabin_data.json');
     foreach ($config['cabins'] as $key => $cabin) {
@@ -45,6 +45,8 @@ if (false && \file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
                     ]
                 )
             );
+
+            // Link configuration directory:
             $startLink = \implode(
                 '/',
                 [
@@ -62,6 +64,31 @@ if (false && \file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
                         'Cabin',
                         $cabinName,
                         'config'
+                    ]
+                );
+                \symlink($endLink, $startLink);
+            }
+
+            // Link configuration template:
+            $startLink = \implode(
+                '/',
+                [
+                    ROOT,
+                    'config',
+                    'templates',
+                    'Cabin',
+                    $cabinName
+                ]
+            );
+            if (!\is_link($startLink)) {
+                $endLink = \implode(
+                    '/',
+                    [
+                        ROOT,
+                        'Cabin',
+                        $cabinName,
+                        'config',
+                        'templates'
                     ]
                 );
                 \symlink($endLink, $startLink);
