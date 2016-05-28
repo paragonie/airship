@@ -31,6 +31,7 @@ class Cabin extends BaseInstaller
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
         $updater->setAlias($alias);
+        $metadata = \Airship\parseJSON($updater->getMetadata(), true);
 
         // Overwrite files
         $updater->extractTo(ROOT . '/Cabin/' . $ns);
@@ -43,12 +44,173 @@ class Cabin extends BaseInstaller
         $updater->setAlias($garbageAlias);
         unset($updater);
 
+        return $this->configure($ns, $metadata);
+    }
+
+    /**
+     * @return bool
+     */
+    public function clearCache(): bool
+    {
+        $name = $this->makeNamespace($this->supplier->getName(), $this->package);
+
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cargo',
+                    'cabin_data.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    'cargo-' . $name . '.cache.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    'csp.' . $name . '.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    $name . '.motifs.json'
+                ]
+            )
+        );
+        \clearstatcache();
         return true;
     }
 
-    public function clearCache(): bool
+    /**
+     * Create the default configuration
+     *
+     * @param string $nameSpace
+     * @param array $metadata
+     * @return bool
+     */
+    protected function configure(string $nameSpace, array $metadata = []): bool
     {
+        if (!$this->defaultCabinConfig($nameSpace)) {
+            return false;
+        }
+        if (!$this->createEmptyFiles($nameSpace)) {
+            return false;
+        }
+        if (!$this->updateCabinsRegistry($nameSpace, $metadata)) {
+            return false;
+        }
+        if (!$this->createSymlinks($nameSpace)) {
+            return false;
+        }
+        return true;
+    }
 
+    /**
+     * Create the initial symlinks for this Cabin
+     *
+     * @param string $nameSpace
+     * @return bool
+     */
+    protected function createSymlinks(string $nameSpace): bool
+    {
+        $target = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'Cabin',
+                $nameSpace,
+                'config',
+            ]
+        );
+        $link = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'config',
+                'Cabin',
+                $nameSpace
+            ]
+        );
+        if (!\symlink($target, $link)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Create the default configuration
+     *
+     * @param string $nameSpace
+     * @return bool
+     */
+    protected function defaultCabinConfig(string $nameSpace): bool
+    {
+        $twigEnv = \Airship\configWriter(ROOT . '/Cabin/' . $nameSpace . '/config/templates');
+        return \file_put_contents(
+            ROOT . '/Cabin/' . $nameSpace . '/config/config.json',
+            $twigEnv->render('config.twig') // No arguments.
+        ) !== false;
+    }
+
+    /**
+     * Create empty files (motifs.json, etc.)
+     *
+     * @param string $nameSpace
+     * @return bool
+     */
+    protected function createEmptyFiles(string $nameSpace): bool
+    {
+        $dir = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'Cabin',
+                $nameSpace,
+                'config',
+            ]
+        );
+        if (!\file_exists($dir.'/content_security_policy.json')) {
+            if (\file_put_contents($dir . '/content_security_policy.json', '{"inherit": true}') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/gadgets.json')) {
+            if (\file_put_contents($dir . '/gadgets.json', '[]') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/motifs.json')) {
+            if (\file_put_contents($dir . '/motifs.json', '[]') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/twig_vars.json')) {
+            if (\file_put_contents($dir . '/twig_vars.json', '[]') === false) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -77,5 +239,51 @@ class Cabin extends BaseInstaller
                 \trim($cabin, '_')
             ]
         );
+    }
+
+    /**
+     * Add the new cabin to config/cabins.json
+     *
+     * @param string $nameSpace
+     * @param array $metadata
+     * @return bool
+     */
+    protected function updateCabinsRegistry(string $nameSpace, array $metadata): bool
+    {
+        // Default route
+        $defaultPath = $metadata['default_path']
+            ?? '*/' . $this->supplier->getName() . '/' . $this->package;
+
+        $twigEnv = \Airship\configWriter(ROOT . '/config/templates');
+        $cabins = \Airship\loadJSON(ROOT . '/config/cabins.json');
+
+        // We want to load everything before the wildcard entry:
+        if (isset($cabins['*'])) {
+            $newCabins = [];
+            foreach (\array_keys($cabins) as $k) {
+                if ($k !== '*') {
+                    $newCabins[$k] = $cabins[$k];
+                }
+            }
+            $newCabins[$defaultPath] = [
+                'https' => false,
+                'canon_url' => '/' . $this->supplier->getName() . '/' . $this->package,
+                'language' => $metadata['lang'] ?? 'en-us',
+                'name' => $nameSpace
+            ];
+            $newCabins['*'] = $cabins['*'];
+        } else {
+            $newCabins = $cabins;
+            $newCabins[$defaultPath] = [
+                'https' => false,
+                'canon_url' => '/' . $this->supplier->getName() . '/' . $this->package,
+                'language' => $metadata['lang'] ?? 'en-us',
+                'name' => $nameSpace
+            ];
+        }
+        return \file_put_contents(
+            ROOT . '/config/cabins.json',
+            $twigEnv->render('cabins.twig', ['cabins' => $newCabins])
+        ) !== false;
     }
 }

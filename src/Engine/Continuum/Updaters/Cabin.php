@@ -175,10 +175,10 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         );
         $updater->setAlias($this->pharAlias);
 
-        // We need to do this while we're replacing files.
-        $this->bringCabinDown();
-
         $ns = $this->makeNamespace($info->getSupplierName(), $info->getPackageName());
+
+        // We need to do this while we're replacing files.
+        $this->bringCabinDown($ns);
         $oldMetadata = \Airship\loadJSON(ROOT . '/Cabin/' . $ns . '/manifest.json');
 
         // Overwrite files
@@ -193,7 +193,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         unset($updater);
 
         // Now bring it back up.
-        $this->bringCabinBackUp();
+        $this->bringCabinBackUp($ns);
         $this->log(
             'Conclude Cabin updater',
             LogLevel::DEBUG,
@@ -239,8 +239,10 @@ class Cabin extends AutoUpdater implements ContinuumInterface
 
     /**
      * After we finish our update, we should bring the cabin back online:
+     *
+     * @param string $name Cabin name
      */
-    protected function bringCabinBackUp()
+    protected function bringCabinBackUp(string $name = '')
     {
         \unlink(
             \implode(
@@ -248,7 +250,52 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                 [
                     ROOT,
                     'tmp',
-                    'cabin.'.$this->name.'.offline.txt'
+                    'cabin.' . $name . '.offline.txt'
+                ]
+            )
+        );
+        // Clear caches:
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cargo',
+                    'cabin_data.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    'cargo-' . $name . '.cache.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    'csp.' . $name . '.json'
+                ]
+            )
+        );
+        \unlink(
+            \implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    $name . '.motifs.json'
                 ]
             )
         );
@@ -257,8 +304,10 @@ class Cabin extends AutoUpdater implements ContinuumInterface
 
     /**
      * Let's bring the cabin down while we're upgrading:
+     *
+     * @param string $name Cabin name
      */
-    protected function bringCabinDown()
+    protected function bringCabinDown(string $name = '')
     {
         \file_put_contents(
             \implode(
@@ -266,7 +315,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                 [
                     ROOT,
                     'tmp',
-                    'cabin.'.$this->name.'.offline.txt'
+                    'cabin.' . $name . '.offline.txt'
                 ]
             ),
             \date('Y-m-d\TH:i:s')
