@@ -159,7 +159,12 @@ abstract class Installer
             if (!$this->verifyChecksum($install)) {
                 return false;
             }
-            return $this->install();
+            if (!$this->install()) {
+                return false;
+            }
+            // Clear the cache, since we just installed something.
+            $this->clearCache();
+            return true;
         } catch (\Throwable $ex) {
             $this->log(
                 $ex->getMessage(),
@@ -288,7 +293,7 @@ abstract class Installer
      *
      * @return bool
      */
-    abstract public function install(): bool;
+    abstract public function install(InstallFile $fileInfo): bool;
 
     /**
      * Verify that the signature matches

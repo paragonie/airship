@@ -16,7 +16,7 @@ class Motif extends BaseInstaller
     protected $type = 'Motif';
     protected $ext = 'zip';
 
-    public function install(): bool
+    public function install(InstallFile $fileInfo): bool
     {
 
     }

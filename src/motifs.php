@@ -23,7 +23,7 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
     }
     
     // Now let's go set this up...
-    $motifsJSONFile = ROOT . '/config/Cabin/' . CABIN_NAME . '/motifs.json';
+    $motifsJSONFile = ROOT . '/Cabin/' . CABIN_NAME . '/config/motifs.json';
     if (\is_dir(CABIN_DIR.'/Lens/motif') && \is_readable($motifsJSONFile)) {
         $motifs = [];
         $motifsJSONData = \Airship\loadJSON($motifsJSONFile);

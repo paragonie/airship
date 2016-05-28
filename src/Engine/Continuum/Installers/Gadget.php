@@ -16,9 +16,9 @@ class Gadget extends BaseInstaller
     protected $type = 'Gadget';
     protected $ext = 'phar';
 
-    public function install(): bool
+    public function install(InstallFile $fileInfo): bool
     {
-
+        
     }
 
     public function clearCache(): bool

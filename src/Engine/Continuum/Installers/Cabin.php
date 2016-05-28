@@ -16,9 +16,9 @@ class Cabin extends BaseInstaller
     protected $type = 'Cabin';
     protected $ext = 'phar';
 
-    public function install(): bool
+    public function install(InstallFile $fileInfo): bool
     {
-
+        
     }
 
     public function clearCache(): bool
