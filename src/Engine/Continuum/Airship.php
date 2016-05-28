@@ -21,10 +21,27 @@ use \Psr\Log\LogLevel;
  */
 class Airship extends AutoUpdater implements ContinuumInterface
 {
+    /**
+     * @var string
+     */
     protected $pharAlias = 'airship-update.phar';
+
+    /**
+     * @var string
+     */
     protected $name = 'airship'; // Package name
+
+    /**
+     * @var string
+     */
     protected $ext = 'phar';
-    
+
+    /**
+     * Airship constructor.
+     *
+     * @param Hail $hail
+     * @param Supplier $sup
+     */
     public function __construct(Hail $hail, Supplier $sup)
     {
         $this->supplier = $sup;
@@ -38,7 +55,8 @@ class Airship extends AutoUpdater implements ContinuumInterface
      * 1. Check if a new update is available.
      * 2. Download the upload file, store in a temporary file.
      * 3. Verify the signature (via Halite).
-     * 4. If all is well, run the update script.
+     * 4. Verify the update is recorded in Keyggdrasil.
+     * 5. If all is well, run the update script.
      */
     public function autoUpdate()
     {
@@ -67,12 +85,17 @@ class Airship extends AutoUpdater implements ContinuumInterface
                     $updateInfo,
                     'airship_download'
                 );
+                if ($this->bypassSecurityAndJustInstall) {
+                    $this->log('Core update verification cannot be bypassed', LogLevel::ERROR);
+                }
                 /**
                  * Don't proceed unless we've verified the signatures
                  */
                 if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
                     if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
                         $this->install($updateInfo, $updateFile);
+                    } else {
+                        $this->log('Keyggdrasil failed for Airship code update', LogLevel::ERROR);
                     }
                 }
             }

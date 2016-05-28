@@ -13,7 +13,7 @@ use \Airship\Engine\{
 \ignore_user_abort(true);
 \set_time_limit(0);
 
-require_once __DIR__.'/bootstrap.php';
+require_once \dirname(__DIR__).'/bootstrap.php';
 
 if (\is_readable(ROOT . '/config/databases.json')) {
     /**

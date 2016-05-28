@@ -2,11 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Alerts\Hail\{
     NoAPIResponse,
     SignatureFailed
 };
-use Airship\Engine\{
+use \Airship\Engine\{
     Bolt\Log,
     Hail,
     State
@@ -36,6 +37,11 @@ abstract class AutoUpdater
     const TYPE_MOTIF = 'motif';
 
     /**
+     * @var bool
+     */
+    protected $bypassSecurityAndJustInstall = false;
+
+    /**
      * @var Channel[]
      */
     protected static $channels = [];
@@ -49,6 +55,11 @@ abstract class AutoUpdater
      * @var Hail
      */
     protected $hail;
+
+    /**
+     * @var UpdateFile
+     */
+    protected $localUpdateFile;
 
     /**
      * @var string
@@ -122,6 +133,22 @@ abstract class AutoUpdater
     {
         \file_put_contents(ROOT . '/tmp/site_down.txt', \date('Y-m-d\TH:i:s'));
         \clearstatcache();
+    }
+
+    /**
+     * This is for manual installations and update scripts. It should
+     * never be invoked automatically.
+     *
+     * @param bool $set
+     * @return AutoUpdater
+     */
+    public function bypassSecurityAndJustInstall(bool $set = false): self
+    {
+        if ($set) {
+            $this->log('Disabling the security verification', LogLevel::WARNING);
+        }
+        $this->bypassSecurityAndJustInstall = $set;
+        return $this;
     }
 
     /**
@@ -212,6 +239,9 @@ abstract class AutoUpdater
         UpdateInfo $update,
         string $apiEndpoint = 'download'
     ): UpdateFile {
+        if ($this->localUpdateFile instanceof UpdateFile) {
+            return $this->localUpdateFile;
+        }
         try {
             $version = $update->getVersion();
             $body = $this->hail->postReturnBody(
@@ -404,6 +434,29 @@ abstract class AutoUpdater
         throw new NoAPIResponse(
             \trk('errors.hail.no_channel_responded')
         );
+    }
+
+    /**
+     * For CLI usage: Bypass the download process, use a local file instead.
+     *
+     * @param string $path
+     * @param string $version
+     * @return AutoUpdater
+     * @throws FileNotFound
+     */
+    public function useLocalUpdateFile(string $path, string $version = ''): self
+    {
+        if (\file_exists($path)) {
+            throw new FileNotFound();
+        }
+        $hash = File::checksum($path);
+        $this->localUpdateFile = new UpdateFile([
+            'path' => $path,
+            'version' => $version,
+            'hash' => $hash,
+            'size' => \filesize($path)
+        ]);
+        return $this;
     }
 
     /**

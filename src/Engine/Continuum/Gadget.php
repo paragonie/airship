@@ -9,16 +9,48 @@ use \Airship\Engine\Hail;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
+/**
+ * Class Gadget
+ *
+ * This updates a Gadget.
+ *
+ * @package Airship\Engine\Continuum
+ */
 class Gadget extends AutoUpdater implements ContinuumInterface
 {
-    protected $hail;
-    protected $cabin;
-    protected $name;
-    protected $supplier;
-    protected $filePath;
-    protected $manifest;
+    /**
+     * @var array
+     */
+    protected $cabin = [];
+
+    /**
+     * @var string
+     */
+    protected $name = '';
+
+    /**
+     * @var string
+     */
+    protected $filePath = '';
+
+    /**
+     * @var array
+     */
+    protected $manifest = [];
+
+    /**
+     * @var string
+     */
     protected $ext = 'phar';
 
+    /**
+     * Gadget constructor.
+     *
+     * @param Hail $hail
+     * @param array $manifest
+     * @param Supplier|null $supplier
+     * @param string $filePath
+     */
     public function __construct(
         Hail $hail,
         array $manifest = [],
@@ -39,10 +71,17 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      * 1. Check if a new update is available.
      * 2. Download the upload file, store in a temporary file.
      * 3. Verify the signature (via Halite).
-     * 4. If all is well, run the update script.
+     * 4. Verify the update is recorded in Keyggdrasil.
+     * 5. If all is well, run the update script.
      */
     public function autoUpdate()
     {
+        $debugArgs = [
+            'supplier' =>
+                $this->supplier->getName(),
+            'name' =>
+                $this->name
+        ];
         try {
             $updateInfoArray = $this->updateCheck(
                 $this->supplier->getName(),
@@ -51,12 +90,20 @@ class Gadget extends AutoUpdater implements ContinuumInterface
             );
             foreach ($updateInfoArray as $updateInfo) {
                 $updateFile = $this->downloadUpdateFile($updateInfo);
-                /**
-                 * Don't proceed unless we've verified the signatures
-                 */
-                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                        $this->install($updateInfo, $updateFile);
+                $this->log('Downloaded update file', LogLevel::DEBUG, $debugArgs);
+                if ($this->bypassSecurityAndJustInstall) {
+                    $this->log('Gadget update verification bypassed', LogLevel::ALERT, $debugArgs);
+                    $this->install($updateInfo, $updateFile);
+                } else {
+                    /**
+                     * Don't proceed unless we've verified the signatures
+                     */
+                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                            $this->install($updateInfo, $updateFile);
+                        } else {
+                            $this->log('Keyggdrasil check failed for this Gadget', LogLevel::ERROR, $debugArgs);
+                        }
                     }
                 }
             }

@@ -74,7 +74,7 @@ require_once ROOT.'/bootstrap.php';
  */
 $autoUpdater = \Airship\Engine\Gears::get('AutoUpdater', $hail);
 if ($autoUpdater->needsUpdate()) {
-    \shell_exec('php -dphar.readonly=0 '.ROOT.'/continuum.php >/dev/null 2>&1 &');
+    \shell_exec('php -dphar.readonly=0 '.ROOT.'/CommandLine/continuum.php >/dev/null 2>&1 &');
     \file_put_contents(
         ROOT.'/tmp/last_update_check.txt',
         time()

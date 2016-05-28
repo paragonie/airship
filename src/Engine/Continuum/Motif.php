@@ -20,14 +20,39 @@ use \Psr\Log\LogLevel;
  */
 class Motif extends AutoUpdater implements ContinuumInterface
 {
-    protected $hail;
-    protected $cabin;
-    protected $name;
-    protected $supplier;
-    protected $filePath;
-    protected $manifest;
+    /**
+     * @var array
+     */
+    protected $cabin = [];
+
+    /**
+     * @var string
+     */
+    protected $name = '';
+
+    /**
+     * @var string
+     */
+    protected $filePath = '';
+
+    /**
+     * @var array
+     */
+    protected $manifest = [];
+
+    /**
+     * @var string
+     */
     protected $ext = 'zip';
 
+    /**
+     * Motif constructor.
+     *
+     * @param Hail $hail
+     * @param array $manifest
+     * @param Supplier|null $supplier
+     * @param string $filePath
+     */
     public function __construct(
         Hail $hail,
         array $manifest = [],
@@ -48,10 +73,17 @@ class Motif extends AutoUpdater implements ContinuumInterface
      * 1. Check if a new update is available.
      * 2. Download the upload file, store in a temporary file.
      * 3. Verify the signature (via Halite).
-     * 4. If all is well, run the update script.
+     * 4. Verify the update is recorded in Keyggdrasil.
+     * 5. If all is well, run the update script.
      */
     public function autoUpdate()
     {
+        $debugArgs = [
+            'supplier' =>
+                $this->supplier->getName(),
+            'name' =>
+                $this->name
+        ];
         try {
             $updateInfoArray = $this->updateCheck(
                 $this->supplier->getName(),
@@ -60,12 +92,20 @@ class Motif extends AutoUpdater implements ContinuumInterface
             );
             foreach ($updateInfoArray as $updateInfo) {
                 $updateFile = $this->downloadUpdateFile($updateInfo);
-                /**
-                 * Don't proceed unless we've verified the signatures
-                 */
-                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                        $this->install($updateInfo, $updateFile);
+                $this->log('Downloaded Motif update file', LogLevel::DEBUG, $debugArgs);
+                if ($this->bypassSecurityAndJustInstall) {
+                    $this->log('Motif update verification bypassed', LogLevel::ALERT, $debugArgs);
+                    $this->install($updateInfo, $updateFile);
+                } else {
+                    /**
+                     * Don't proceed unless we've verified the signatures
+                     */
+                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                            $this->install($updateInfo, $updateFile);
+                        } else {
+                            $this->log('Keyggdrasil check failed for this Motif', LogLevel::ERROR, $debugArgs);
+                        }
                     }
                 }
             }

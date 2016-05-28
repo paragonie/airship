@@ -12,21 +12,48 @@ use \Psr\Log\LogLevel;
 
 /**
  * Class Cabin
+ *
+ * This updates a Cabin.
+ *
  * @package Airship\Engine\Continuum
  */
 class Cabin extends AutoUpdater implements ContinuumInterface
 {
-    protected $hail;
-    protected $cabin;
-    protected $name;
-    protected $supplier;
-    protected $filePath;
-    protected $manifest;
+    /**
+     * @var array
+     */
+    protected $cabin = [];
+
+    /**
+     * @var string
+     */
+    protected $name = '';
+
+    /**
+     * @var string
+     */
+    protected $filePath = '';
+
+    /**
+     * @var array
+     */
+    protected $manifest = [];
+
+    /**
+     * @var string
+     */
     protected $ext = 'phar';
 
     // These are excluded. See Airship.php instead.
     const AIRSHIP_SPECIAL_CABINS = ['Hull', 'Bridge'];
-    
+
+    /**
+     * Cabin constructor.
+     *
+     * @param Hail $hail
+     * @param array $manifest
+     * @param Supplier $supplier
+     */
     public function __construct(
         Hail $hail,
         array $manifest,
@@ -59,7 +86,8 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      * 1. Check if a new update is available.
      * 2. Download the upload file, store in a temporary file.
      * 3. Verify the signature (via Halite).
-     * 4. If all is well, run the update script.
+     * 4. Verify the update is recorded in Keyggdrasil.
+     * 5. If all is well, run the update script.
      */
     public function autoUpdate()
     {
@@ -82,15 +110,20 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             );
             foreach ($updates as $updateInfo) {
                 $updateFile = $this->downloadUpdateFile($updateInfo);
-                $this->log('Downloaded update file', LogLevel::DEBUG, $debugArgs);
-                /**
-                 * Don't proceed unless we've verified the signatures
-                 */
-                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                        $this->install($updateInfo, $updateFile);
-                    } else {
-                        $this->log('Keyggdrasil check failed', LogLevel::DEBUG, $debugArgs);
+                $this->log('Downloaded Cabin update file', LogLevel::DEBUG, $debugArgs);
+                if ($this->bypassSecurityAndJustInstall) {
+                    $this->log('Cabin update verification bypassed', LogLevel::ALERT, $debugArgs);
+                    $this->install($updateInfo, $updateFile);
+                } else {
+                    /**
+                     * Don't proceed unless we've verified the signatures
+                     */
+                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                            $this->install($updateInfo, $updateFile);
+                        } else {
+                            $this->log('Keyggdrasil check failed for this Cabin', LogLevel::ERROR, $debugArgs);
+                        }
                     }
                 }
             }
