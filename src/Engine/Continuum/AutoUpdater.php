@@ -164,25 +164,36 @@ abstract class AutoUpdater
      */
     public function checkKeyggdrasil(UpdateInfo $info, UpdateFile $file): bool
     {
+        $debugArgs = [
+            'supplier' =>
+                $info->getSupplierName(),
+            'name' =>
+                $info->getPackageName()
+        ];
+        $this->log('Checking Keyggdrasil', LogLevel::DEBUG, $debugArgs);
         $db = \Airship\get_database();
         $merkle = $db->row(
             'SELECT * FROM airship_tree_updates WHERE merkleroot = ?',
             $info->getMerkleRoot()
         );
         if (empty($merkle)) {
+            $this->log('Merkle root not found in tree', LogLevel::DEBUG, $debugArgs);
             // Not found in Keyggdrasil
             return false;
         }
         $data = \Airship\parseJSON($merkle['data'], true);
         if (!\hash_equals($this->type, $data['pkg_type'])) {
+            $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
             // Wrong package type
             return false;
         }
         if (!\hash_equals($info->getSupplierName(), $data['supplier'])) {
+            $this->log('Wrong supplier', LogLevel::DEBUG, $debugArgs);
             // Wrong supplier
             return false;
         }
         if (!\hash_equals($info->getPackageName(), $data['name'])) {
+            $this->log('Wrong package', LogLevel::DEBUG, $debugArgs);
             // Wrong package
             return false;
         }
@@ -276,7 +287,7 @@ abstract class AutoUpdater
     {
         \uasort(
             $updates,
-            function(UpdateInfo $a, UpdateInfo $b): array
+            function(UpdateInfo $a, UpdateInfo $b): int
             {
                 return $a->getVersionExpanded() <=> $b->getVersionExpanded();
             }
@@ -407,6 +418,15 @@ abstract class AutoUpdater
         UpdateInfo $info,
         UpdateFile $file
     ): bool {
+        $debugArgs = [
+            'path' =>
+                $file->getPath(),
+            'supplier' =>
+                $info->getSupplierName(),
+            'name' =>
+                $info->getPackageName()
+        ];
+        $this->log('Checking update signature...', LogLevel::DEBUG, $debugArgs);
         $ret = false;
         foreach ($this->supplier->getSigningKeys() as $key) {
             if ($key['type'] !== 'signing') {
@@ -418,6 +438,7 @@ abstract class AutoUpdater
                 $info->getSignature(true)
             );
         }
+        $this->log('Signature result: ' . ($ret ? 'true' : 'false'), LogLevel::DEBUG, $debugArgs);
         return $ret;
     }
 }

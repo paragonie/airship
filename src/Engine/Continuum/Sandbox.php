@@ -10,7 +10,7 @@ abstract class Sandbox
 {
     /**
      * Require a file from within a Phar
-     * 
+     *
      * @param string $file
      * @param array $previous_metadata
      * @return bool
@@ -18,6 +18,18 @@ abstract class Sandbox
     public static function safeRequire(string $file, array $previous_metadata = []): bool
     {
         return (require $file) === 1;
+    }
+
+    /**
+     * Require a file from within a Phar
+     *
+     * @param string $file
+     * @param array $previous_metadata
+     * @return bool
+     */
+    public static function safeInclude(string $file, array $previous_metadata = []): bool
+    {
+        return (include $file) === 1;
     }
 
     /**

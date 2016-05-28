@@ -8,7 +8,9 @@ use \Airship\Engine\Continuum\{
     Gadget as GadgetUpdater,
     Motif as MotifUpdater
 };
+use \Airship\Engine\Bolt\Log as LogBolt;
 use \Airship\Engine\Bolt\Supplier as SupplierBolt;
+use \Psr\Log\LogLevel;
 
 /**
  * Class Continuum
@@ -19,6 +21,7 @@ use \Airship\Engine\Bolt\Supplier as SupplierBolt;
  */
 class Continuum
 {
+    use LogBolt;
     use SupplierBolt;
 
     protected $hail;
@@ -123,7 +126,7 @@ class Continuum
     public function getCabins(): array
     {
         $cabins = [];
-        foreach (\Airship\list_all_files(ROOT.'/Cabin/') as $file) {
+        foreach (\glob(ROOT.'/Cabin/*') as $file) {
             if (\is_dir($file) && \is_readable($file.'/manifest.json')) {
                 $manifest = \Airship\loadJSON($file.'/manifest.json');
                 $dirName = \preg_replace('#^.+?/([^\/]+)$#', '$1', $file);
@@ -136,6 +139,14 @@ class Continuum
                 }
             }
         }
+        $this->log(
+            'Retrieving cabins',
+            LogLevel::DEBUG,
+            [
+                'cabins' =>
+                    \array_keys($cabins)
+            ]
+        );
         return $cabins;
     }
     

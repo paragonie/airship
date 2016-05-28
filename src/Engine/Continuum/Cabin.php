@@ -63,6 +63,13 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      */
     public function autoUpdate()
     {
+        $debugArgs = [
+            'supplier' =>
+                $this->supplier->getName(),
+            'name' =>
+                $this->name
+        ];
+        $this->log('Begin Cabin auto-update routine', LogLevel::DEBUG, $debugArgs);
         if ($this->isAirshipSpecialCabin()) {
             // This only gets touched by core updates.
             return;
@@ -75,12 +82,15 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             );
             foreach ($updates as $updateInfo) {
                 $updateFile = $this->downloadUpdateFile($updateInfo);
+                $this->log('Downloaded update file', LogLevel::DEBUG, $debugArgs);
                 /**
                  * Don't proceed unless we've verified the signatures
                  */
                 if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
                     if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
                         $this->install($updateInfo, $updateFile);
+                    } else {
+                        $this->log('Keyggdrasil check failed', LogLevel::DEBUG, $debugArgs);
                     }
                 }
             }
@@ -109,26 +119,38 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             );
         }
         $path = $file->getPath();
+        $this->log(
+            'Begin Cabin updater',
+            LogLevel::DEBUG,
+            [
+                'path' =>
+                    $path,
+                'supplier' =>
+                    $info->getSupplierName(),
+                'name' =>
+                    $info->getPackageName()
+            ]
+        );
         $updater = new \Phar(
             $path,
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
         $updater->setAlias($this->pharAlias);
-        $metadata = \json_decode($updater->getMetadata(), true);
+        $metadata = $updater->getMetadata();
 
         // We need to do this while we're replacing files.
         $this->bringCabinDown();
 
-        if (isset($metadata['files'])) {
-            foreach ($metadata['files'] as $fileName) {
-                $this->replaceFile($fileName);
-            }
-        }
-        if (isset($metadata['autorun'])) {
-            foreach ($metadata['autorun'] as $autoRun) {
-                $this->autoRunScript($autoRun);
-            }
-        }
+        $ns = $this->makeNamespace($info->getSupplierName(), $info->getPackageName());
+
+        // Overwrite files
+        $updater->extractTo(ROOT . '/Cabin/' . $ns, null, true);
+
+        // Run the update trigger.
+        Sandbox::safeInclude(
+            'phar://' . $this->pharAlias . '/update_trigger.php',
+            $metadata
+        );
 
         // Free up the updater alias
         $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';
@@ -137,6 +159,18 @@ class Cabin extends AutoUpdater implements ContinuumInterface
 
         // Now bring it back up.
         $this->bringCabinBackUp();
+        $this->log(
+            'Conclude Cabin updater',
+            LogLevel::DEBUG,
+            [
+                'path' =>
+                    $path,
+                'supplier' =>
+                    $info->getSupplierName(),
+                'name' =>
+                    $info->getPackageName()
+            ]
+        );
     }
 
     /**
@@ -203,5 +237,33 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             \date('Y-m-d\TH:i:s')
         );
         \clearstatcache();
+    }
+
+    /**
+     * some-test-user/cabin--for-the-win =>
+     * Some_Test_User__Cabin_For_The_Win
+     *
+     * @param string $supplier
+     * @param string $cabin
+     * @return string
+     */
+    protected function makeNamespace(string $supplier, string $cabin): string
+    {
+        $supplier = \preg_replace('/[^A-Za-z0-9_]/', '_', $supplier);
+        $exp = \explode('_', $supplier);
+        $supplier = \implode('_', \array_map('ucfirst', $exp));
+        $supplier = \preg_replace('/_{2,}/', '_', $supplier);
+
+        $cabin = \preg_replace('/[^A-Za-z0-9_]/', '_', $cabin);
+        $exp = \explode('_', $cabin);
+        $cabin = \implode('_', \array_map('ucfirst', $exp));
+        $cabin = \preg_replace('/_{2,}/', '_', $cabin);
+
+        return \implode('__',
+            [
+                \trim($supplier, '_'),
+                \trim($cabin, '_')
+            ]
+        );
     }
 }
