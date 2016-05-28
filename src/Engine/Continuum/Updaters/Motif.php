@@ -1,14 +1,18 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine\Continuum\Updaters;
 
 use \Airship\Alerts\Continuum\{
     CouldNotUpdate,
     MotifZipFailed
 };
 use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\Contract\ContinuumInterface;
-use \Airship\Engine\Hail;
+use Airship\Engine\{
+    Contract\ContinuumInterface,
+    Continuum\AutoUpdater,
+    Continuum\Supplier,
+    Hail
+};
 use \Psr\Log\LogLevel;
 
 /**

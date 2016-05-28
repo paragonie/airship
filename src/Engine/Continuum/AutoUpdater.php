@@ -8,6 +8,8 @@ use \Airship\Alerts\Hail\{
     SignatureFailed
 };
 use \Airship\Engine\{
+    Continuum\Updaters\UpdateFile,
+    Continuum\Updaters\UpdateInfo,
     Bolt\Log,
     Hail,
     State

@@ -1,11 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine\Continuum\Updaters;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\Contract\ContinuumInterface;
-use \Airship\Engine\Hail;
+use Airship\Engine\{
+    Contract\ContinuumInterface,
+    Continuum\AutoUpdater,
+    Continuum\Sandbox,
+    Continuum\Supplier,
+    Hail
+};
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
@@ -145,13 +150,23 @@ class Gadget extends AutoUpdater implements ContinuumInterface
             ]
         );
 
+        $oldAlias = Base64UrlSafe::encode(\random_bytes(48)) . '.phar';
+        $oldGadget = new \Phar(
+            $this->filePath,
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
+            $oldAlias
+        );
+        $metadata = \json_decode($oldGadget->getMetadata(), true);
+        unset($oldGadget);
+        unset($oldAlias);
+
         // Let's open the update package:
         $newGadget = new \Phar(
             $this->filePath,
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
+            $this->pharAlias
         );
         $newGadget->setAlias($this->pharAlias);
-        $metadata = \json_decode($newGadget->getMetadata(), true);
 
         // We need to do this while we're replacing files.
         $this->bringSiteDown();

@@ -1,11 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Engine\Continuum;
+namespace Airship\Engine\Continuum\Updaters;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\Hail\NoAPIResponse;
 use Airship\Engine\{
-    Contract\ContinuumInterface, Hail, State
+    Contract\ContinuumInterface,
+    Continuum\AutoUpdater,
+    Continuum\Sandbox,
+    Continuum\Supplier,
+    Hail,
+    State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
@@ -169,21 +174,18 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
         $updater->setAlias($this->pharAlias);
-        $metadata = $updater->getMetadata();
 
         // We need to do this while we're replacing files.
         $this->bringCabinDown();
 
         $ns = $this->makeNamespace($info->getSupplierName(), $info->getPackageName());
+        $oldMetadata = \Airship\loadJSON(ROOT . '/Cabin/' . $ns . '/manifest.json');
 
         // Overwrite files
         $updater->extractTo(ROOT . '/Cabin/' . $ns, null, true);
 
         // Run the update trigger.
-        Sandbox::safeInclude(
-            'phar://' . $this->pharAlias . '/update_trigger.php',
-            $metadata
-        );
+        Sandbox::safeInclude('phar://' . $this->pharAlias . '/update_trigger.php', $oldMetadata);
 
         // Free up the updater alias
         $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';

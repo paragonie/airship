@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Engine\Continuum\{
+use \Airship\Engine\Continuum\Updaters\{
     Airship as AirshipUpdater,
     Cabin as CabinUpdater,
     Gadget as GadgetUpdater,
