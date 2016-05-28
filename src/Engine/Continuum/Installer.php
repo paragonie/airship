@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Alerts\Hail\SignatureFailed;
 use \Airship\Engine\{
@@ -12,7 +13,7 @@ use \Airship\Engine\{
     State
 };
 use \GuzzleHttp\Exception\TransferException;
-use ParagonIE\Halite\File;
+use \ParagonIE\Halite\File;
 use \ParagonIE\Halite\Util;
 use \Psr\Log\LogLevel;
 
@@ -28,6 +29,14 @@ abstract class Installer
     use SupplierBolt;
     use LogBolt;
 
+    /**
+     * @var bool
+     */
+    protected $bypassSecurityAndJustInstall = false;
+
+    /**
+     * @var Channel[]
+     */
     private static $channels;
 
     /**
@@ -39,6 +48,11 @@ abstract class Installer
      * @var Hail
      */
     protected $hail;
+
+    /**
+     * @var InstallFile
+     */
+    protected $localInstallFile;
 
     /**
      * @var Supplier
@@ -75,6 +89,24 @@ abstract class Installer
     }
 
     /**
+     * This is for manual installations and update scripts. It should
+     * never be invoked automatically.
+     *
+     * @param bool $set
+     * @return Installer
+     */
+    public function bypassSecurityAndJustInstall(bool $set = false): self
+    {
+        if ($set) {
+            $this->log('Disabling the security verification', LogLevel::WARNING);
+        }
+        $this->bypassSecurityAndJustInstall = $set;
+        return $this;
+    }
+
+    /**
+     * Clear the caches related to the new extension.
+     *
      * @return bool
      */
     abstract public function clearCache(): bool;
@@ -88,6 +120,9 @@ abstract class Installer
      */
     public function download(array $update = []): InstallFile
     {
+        if ($this->localInstallFile instanceof InstallFile) {
+            return $this->localInstallFile;
+        }
         // If this was not supplied, we need to get it.
         if (empty($update)) {
             $update = $this->getPackageData();
@@ -159,7 +194,7 @@ abstract class Installer
             if (!$this->verifyChecksum($install)) {
                 return false;
             }
-            if (!$this->install()) {
+            if (!$this->install($install)) {
                 return false;
             }
             // Clear the cache, since we just installed something.
@@ -296,6 +331,34 @@ abstract class Installer
     abstract public function install(InstallFile $fileInfo): bool;
 
     /**
+     * For CLI usage: Bypass the download process, use a local file instead.
+     *
+     * @param string $path
+     * @param string $version
+     * @return Installer
+     * @throws FileNotFound
+     */
+    public function useLocalInstallFile(
+        string $path,
+        string $version = ''
+    ): self {
+        if (\file_exists($path)) {
+            throw new FileNotFound();
+        }
+        $hash = File::checksum($path);
+        $this->localInstallFile = new InstallFile(
+            $this->supplier,
+            [
+                'path' => $path,
+                'version' => $version,
+                'hash' => $hash,
+                'size' => \filesize($path)
+            ]
+        );
+        return $this;
+    }
+
+    /**
      * Verify that the signature matches
      *
      * @param InstallFile $file
@@ -310,7 +373,6 @@ abstract class Installer
      * Verify that the file has not modified since it was stored
      *
      * @param InstallFile $file
-     * @param string $checksum
      * @return bool
      */
     public static function verifyChecksum(InstallFile $file): bool
@@ -328,22 +390,35 @@ abstract class Installer
      */
     public function verifyMerkleRoot(InstallFile $file): bool
     {
+        $debugArgs = [
+            'supplier' =>
+                $this->supplier->getName(),
+            'name' =>
+                $this->package
+        ];
         $db = \Airship\get_database();
-        $merkle = $db->row('SELECT * FROM airship_tree_updates WHERE merkleroot = ?', $file->getMerkleRoot());
+        $merkle = $db->row(
+            'SELECT * FROM airship_tree_updates WHERE merkleroot = ?',
+            $file->getMerkleRoot()
+        );
         if (empty($merkle)) {
+            $this->log('Merkle root not found in tree', LogLevel::DEBUG, $debugArgs);
             // Not found in Keyggdrasil
             return false;
         }
         $data = \Airship\parseJSON($merkle['data'], true);
         if (!\hash_equals($this->type, $data['pkg_type'])) {
+            $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
             // Wrong package type
             return false;
         }
         if (!\hash_equals($this->supplier->getName(), $data['supplier'])) {
+            $this->log('Wrong supplier', LogLevel::DEBUG, $debugArgs);
             // Wrong supplier
             return false;
         }
         if (!\hash_equals($this->package, $data['name'])) {
+            $this->log('Wrong package', LogLevel::DEBUG, $debugArgs);
             // Wrong package
             return false;
         }
