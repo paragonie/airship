@@ -1,1 +1,13 @@
-{# Placeholder -- extra Cabin configuration options are rendered by this template. #}
+{
+    "board": {
+        "enabled": {{ config['board']['enabled'] ? 'true' : 'false' }},
+        "captcha": {{ config['board']['captcha'] ? 'true' : 'false' }}
+    },
+    "file": {
+        "cache": {{ config['file']['cache'] }}
+    },
+    "recaptcha": {
+        "secret-key": {{ config['recaptcha']['secret-key']|je }},
+        "site-key": {{ config['recaptcha']['site-key']|je }}
+    }
+}

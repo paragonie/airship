@@ -1,1 +1,16 @@
-{# Placeholder -- extra Cabin configuration options are rendered by this template. #}
+{
+    "blog": {
+        "per_page": {{ config['blog']['comments']['per_page']|je }},
+        "comments": {
+            "enabled": {{ config['blog']['comments']['enabled'] ? 'true' : 'false' }},
+            "guests": {{ config['blog']['comments']['guests'] ? 'true' : 'false' }}
+        }
+    },
+    "file": {
+        "cache": {{ config['file']['cache']|je }}
+    },
+    "recaptcha": {
+        "secret-key": {{ config['recaptcha']['secret-key']|je }},
+        "site-key": {{ config['recaptcha']['site-key']|je }}
+    }
+}
