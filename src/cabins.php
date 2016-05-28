@@ -50,7 +50,8 @@ if (false && \file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
                 [
                     ROOT,
                     'config',
-                    'Cabin'
+                    'Cabin',
+                    $cabinName
                 ]
             );
             if (!\is_link($startLink)) {
