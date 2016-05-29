@@ -235,6 +235,37 @@ abstract class Installer
     }
 
     /**
+     * Is this a special Airship cabin? Return just the name.
+     * Otherwise, return the namespace.
+     *
+     * @param string $cabinName
+     * @return string
+     */
+    public function expandCabinName(string $cabinName): string
+    {
+        if (\strpos($cabinName, '/') !== false) {
+            list ($supplier, $package) = \explode('/', $cabinName);
+            if (\strtolower($supplier) === 'paragonie') {
+                switch (\strtolower($package)) {
+                    case 'hull':
+                    case 'bridge':
+                        return \ucfirst($package);
+                }
+            }
+        } else {
+            switch (\strtolower($cabinName)) {
+                case 'hull':
+                case 'bridge':
+                    return \ucfirst($cabinName);
+            }
+        }
+        return \trim(
+            \preg_replace('/[^A-Za-z0-9\_]/', '_', $cabinName),
+            '_'
+        );
+    }
+
+    /**
      * Get metadata about the package we're installing.
      *
      * @param string $minVersion

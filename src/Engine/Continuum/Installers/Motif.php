@@ -125,14 +125,12 @@ class Motif extends BaseInstaller
         }
 
         // Grab metadata
-        $metadata = \Airship\loadJSON(
-            $zip->getArchiveComment(\ZipArchive::FL_UNCHANGED)
+        $metadata = \Airship\parseJSON(
+            $zip->getArchiveComment(\ZipArchive::FL_UNCHANGED),
+            true
         );
         if (isset($metadata['cabin'])) {
-            $cabin = \trim(
-                \preg_replace('/[^A-Za-z0-9\_]/', '_', $metadata['cabin']),
-                '_'
-            );
+            $cabin = $this->expandCabinName($metadata['cabin']);
             if (!\is_dir(ROOT . '/Cabin/' . $cabin)) {
                 $this->log(
                     'Could not install; cabin "' . $cabin . '" is not installed.',
