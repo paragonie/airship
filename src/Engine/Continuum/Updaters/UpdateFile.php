@@ -6,13 +6,31 @@ use \ParagonIE\Halite\File;
 
 /**
  * Class UpdateFile
+ *
+ * Encapsulates an update file (.phar or .zip)
+ *
  * @package Airship\Engine\Continuum
  */
 class UpdateFile
 {
+    /**
+     * @var string
+     */
     protected $path;
+
+    /**
+     * @var int
+     */
     protected $size;
+
+    /**
+     * @var string
+     */
     protected $hash;
+
+    /**
+     * @var string
+     */
     protected $version;
 
     /**

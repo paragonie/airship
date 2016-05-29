@@ -6,17 +6,46 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
  * Class UpdateInfo
+ *
+ * Contains metadata about an update.
+ *
  * @package Airship\Engine\Continuum
  */
 class UpdateInfo
 {
+    /**
+     * @var string
+     */
     protected $channel;
+
+    /*
+     * @var array
+     */
     protected $releaseInfo;
+
+    /**
+     * @var string
+     */
     protected $checksum;
+
+    /**
+     * @var array
+     */
     protected $response;
+
+    /**
+     * @var string
+     */
     protected $merkleRoot;
 
+    /**
+     * @var string
+     */
     protected $supplierName;
+
+    /**
+     * @var string
+     */
     protected $packageName;
 
     /**
@@ -24,6 +53,8 @@ class UpdateInfo
      * @param array $json
      * @param string $channelURL
      * @param SignaturePublicKey $channelPublicKey
+     * @param string $supplierName
+     * @param string $packageName
      */
     public function __construct(
         array $json,

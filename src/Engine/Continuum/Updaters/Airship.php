@@ -64,13 +64,16 @@ class Airship extends AutoUpdater implements ContinuumInterface
     {
         $state = State::instance();
         try {
-            $updates = $this->updateCheck(
+            /**
+             * @var UpdateInfo[]
+             */
+            $updateInfoArray = $this->updateCheck(
                 $state->universal['airship']['trusted-supplier'],
                 $this->name,
                 \AIRSHIP_VERSION,
                 'airship_version'
             );
-            foreach ($updates as $updateInfo) {
+            foreach ($updateInfoArray as $updateInfo) {
                 if (!$this->checkVersionSettings($updateInfo, \AIRSHIP_VERSION)) {
                     $this->log(
                         'Skipping update',
@@ -83,13 +86,18 @@ class Airship extends AutoUpdater implements ContinuumInterface
                     );
                     continue;
                 }
+                /**
+                 * @var UpdateFile
+                 */
                 $updateFile = $this->downloadUpdateFile(
                     $updateInfo,
                     'airship_download'
                 );
                 if ($this->bypassSecurityAndJustInstall) {
+                    // I'm sorry, Dave. I'm afraid I can't do that.
                     $this->log('Core update verification cannot be bypassed', LogLevel::ERROR);
                 }
+
                 /**
                  * Don't proceed unless we've verified the signatures
                  */
@@ -97,15 +105,17 @@ class Airship extends AutoUpdater implements ContinuumInterface
                     if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
                         $this->install($updateInfo, $updateFile);
                     } else {
-                        $this->log('Keyggdrasil failed for Airship code update', LogLevel::ERROR);
+                        $this->log('Keyggdrasil failed for Airship core update', LogLevel::ALERT);
                     }
+                } else {
+                    $this->log('Invalid signature for this Airship core update', LogLevel::ALERT);
                 }
             }
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
                 'Automatic update failure: NO API Response.',
-                LogLevel::CRITICAL,
+                LogLevel::ERROR,
                 \Airship\throwableToArray($ex)
             );
         }
@@ -132,7 +142,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
         $updater->setAlias($this->pharAlias);
-        $metadata = \json_decode($updater->getMetadata(), true);
+        $metadata = $updater->getMetadata();
 
         // We need to do this while we're replacing files.
         $this->bringSiteDown();
@@ -168,6 +178,9 @@ class Airship extends AutoUpdater implements ContinuumInterface
         if (\file_exists(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup')) {
             \unlink(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup');
         }
+
+        // Make backup copies of the old file, just in case someone
+        // decided to edit the core files against medical advice.
         \rename(
             ROOT . DIRECTORY_SEPARATOR . $filename,
             ROOT . DIRECTORY_SEPARATOR . $filename . '.backup'

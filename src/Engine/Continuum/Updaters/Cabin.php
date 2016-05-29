@@ -73,6 +73,9 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     }
 
     /**
+     * Is this cabin part of the Airship core? (They don't
+     * get automatically updated separate from the core.)
+     *
      * @return bool
      */
     protected function isAirshipSpecialCabin(): bool
@@ -108,35 +111,45 @@ class Cabin extends AutoUpdater implements ContinuumInterface
             return;
         }
         try {
+            /**
+             * @var UpdateInfo[]
+             */
             $updates = $this->updateCheck(
                 $this->supplier->getName(),
                 $this->name,
                 $this->manifest['version']
             );
             foreach ($updates as $updateInfo) {
+                /**
+                 * @var UpdateFile
+                 */
                 $updateFile = $this->downloadUpdateFile($updateInfo);
                 $this->log('Downloaded Cabin update file', LogLevel::DEBUG, $debugArgs);
+
                 if ($this->bypassSecurityAndJustInstall) {
                     $this->log('Cabin update verification bypassed', LogLevel::ALERT, $debugArgs);
                     $this->install($updateInfo, $updateFile);
-                } else {
-                    /**
-                     * Don't proceed unless we've verified the signatures
-                     */
-                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                            $this->install($updateInfo, $updateFile);
-                        } else {
-                            $this->log('Keyggdrasil check failed for this Cabin', LogLevel::ERROR, $debugArgs);
-                        }
+                    return;
+                }
+
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                        $this->install($updateInfo, $updateFile);
+                    } else {
+                        $this->log('Keyggdrasil check failed for this Cabin', LogLevel::ALERT, $debugArgs);
                     }
+                } else {
+                    $this->log('Signature check failed for this Cabin', LogLevel::ALERT, $debugArgs);
                 }
             }
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
                 'Automatic update failure: NO API Response.',
-                LogLevel::CRITICAL,
+                LogLevel::ERROR,
                 \Airship\throwableToArray($ex)
             );
         }

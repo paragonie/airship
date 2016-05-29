@@ -88,35 +88,45 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                 $this->name
         ];
         try {
+            /**
+             * @var UpdateInfo[]
+             */
             $updateInfoArray = $this->updateCheck(
                 $this->supplier->getName(),
                 $this->name,
                 $this->manifest['version']
             );
             foreach ($updateInfoArray as $updateInfo) {
+                /**
+                 * @var UpdateFile
+                 */
                 $updateFile = $this->downloadUpdateFile($updateInfo);
                 $this->log('Downloaded update file', LogLevel::DEBUG, $debugArgs);
+
                 if ($this->bypassSecurityAndJustInstall) {
                     $this->log('Gadget update verification bypassed', LogLevel::ALERT, $debugArgs);
                     $this->install($updateInfo, $updateFile);
-                } else {
-                    /**
-                     * Don't proceed unless we've verified the signatures
-                     */
-                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                            $this->install($updateInfo, $updateFile);
-                        } else {
-                            $this->log('Keyggdrasil check failed for this Gadget', LogLevel::ERROR, $debugArgs);
-                        }
+                    return;
+                }
+
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                        $this->install($updateInfo, $updateFile);
+                    } else {
+                        $this->log('Keyggdrasil check failed for this Gadget', LogLevel::ALERT, $debugArgs);
                     }
+                } else {
+                    $this->log('Signature check failed for this Gadget', LogLevel::ALERT, $debugArgs);
                 }
             }
         } catch (NoAPIResponse $ex) {
             // We should log this.
             $this->log(
                 'Automatic update failure: NO API Response.',
-                LogLevel::CRITICAL,
+                LogLevel::ERROR,
                 \Airship\throwableToArray($ex)
             );
         }
@@ -136,6 +146,8 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                 'Checksum mismatched'
             );
         }
+
+        // Create a backup of the old Gadget:
         \rename($this->filePath, $this->filePath.'.backup');
         \rename($file->getPath(), $this->filePath);
 
@@ -150,13 +162,14 @@ class Gadget extends AutoUpdater implements ContinuumInterface
             ]
         );
 
+        // Get metadata from the old version of this Gadget:
         $oldAlias = Base64UrlSafe::encode(\random_bytes(48)) . '.phar';
         $oldGadget = new \Phar(
             $this->filePath,
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
-            $oldAlias
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
-        $metadata = \json_decode($oldGadget->getMetadata(), true);
+        $oldGadget->setAlias($oldAlias);
+        $oldMetadata = $oldGadget->getMetadata();
         unset($oldGadget);
         unset($oldAlias);
 
@@ -173,7 +186,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
 
         Sandbox::safeRequire(
             'phar://' . $this->pharAlias . '/update_trigger.php',
-            $metadata
+            $oldMetadata
         );
 
         // Free up the updater alias
@@ -186,6 +199,8 @@ class Gadget extends AutoUpdater implements ContinuumInterface
     }
 
     /**
+     * Store cabin association
+     *
      * @param string $supplier
      * @param string $name
      * @return Gadget
