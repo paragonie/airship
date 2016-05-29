@@ -1,6 +1,0 @@
-:443
-log /var/www/airship/access.log
-fastcgi / /run/php/php7.0-fpm.sock php
-rewrite {
-  to {path} {path}/ /index.php?{query}
-}

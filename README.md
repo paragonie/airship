@@ -15,6 +15,10 @@ non-free software product.
 * PECL Libsodium 1.0.6 or newer
 * Libsodium 1.0.10 or newer
 
+## Documentation
+
+See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
+
 ## Customizing Your Airship
 
 Airship extensions come in three flavors:
