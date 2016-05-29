@@ -26,8 +26,7 @@ class Cabin extends BaseInstaller
     public function clearCache(): bool
     {
         $name = $this->makeNamespace($this->supplier->getName(), $this->package);
-
-        \unlink(
+        $toDelete = [
             \implode(
                 DIRECTORY_SEPARATOR,
                 [
@@ -36,9 +35,7 @@ class Cabin extends BaseInstaller
                     'cache',
                     'cargo-' . $name . '.cache.json'
                 ]
-            )
-        );
-        \unlink(
+            ),
             \implode(
                 DIRECTORY_SEPARATOR,
                 [
@@ -47,9 +44,7 @@ class Cabin extends BaseInstaller
                     'cache',
                     'csp.' . $name . '.json'
                 ]
-            )
-        );
-        \unlink(
+            ),
             \implode(
                 DIRECTORY_SEPARATOR,
                 [
@@ -59,7 +54,13 @@ class Cabin extends BaseInstaller
                     $name . '.motifs.json'
                 ]
             )
-        );
+        ];
+
+        foreach ($toDelete as $file) {
+            if (\file_exists($file)) {
+                \unlink($file);
+            }
+        }
         \clearstatcache();
         return parent::clearCache();
     }
@@ -124,6 +125,9 @@ class Cabin extends BaseInstaller
             if (\file_put_contents($dir . '/twig_vars.json', '[]') === false) {
                 return false;
             }
+        }
+        if (!\is_dir(ROOT . '/Cabin/' . $nameSpace . '/Lens/motif')) {
+            \mkdir(ROOT . '/Cabin/' . $nameSpace . '/Lens/motif', 0775);
         }
         return true;
     }
@@ -196,13 +200,13 @@ class Cabin extends BaseInstaller
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
         $updater->setAlias($alias);
-        $metadata = \Airship\parseJSON($updater->getMetadata(), true);
+        $metadata = $updater->getMetadata();
 
         // Overwrite files
         $updater->extractTo(ROOT . '/Cabin/' . $ns);
 
         // Run the update trigger.
-        Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
+        \shell_exec('php -dphar.readonly=0 ' . ROOT . '/Cabin/' . $ns . '/update_trigger.php >/dev/null 2>&1 &');
 
         // Free up the updater alias
         $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';

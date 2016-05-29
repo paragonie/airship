@@ -124,7 +124,7 @@ abstract class Installer
             if (!\is_dir(ROOT . '/tmp/cache/' . $dir)) {
                 continue;
             }
-            foreach (\list_all_files(ROOT . '/tmp/cache/' . $dir) as $file) {
+            foreach (\Airship\list_all_files(ROOT . '/tmp/cache/' . $dir) as $file) {
                 if ($file === ROOT . '/tmp/cache/' . $dir . '/.gitignore') {
                     continue;
                 }
@@ -154,20 +154,11 @@ abstract class Installer
         }
 
         $supplierName = $this->supplier->getName();
-        $version = $update['version'];
-
-        $data = [];
-        foreach ($update['versions'] as $i => $vData) {
-            if ($vData['version'] === $version) {
-                $data = $vData;
-                break;
-            }
-        }
-        if (empty($data)) {
-            throw new TransferException(
-                'Version ' . $version . ' not found!'
-            );
-        }
+        \uasort($update['versions'], function(array $a, array $b) {
+            return $a['version'] <=> $b['version'];
+        });
+        $data = \array_pop($update['versions']);
+        $version = $data['version'];
 
         $body = $this->hail->postReturnBody(
             $update['channel'] . API::get('download'),
@@ -289,6 +280,7 @@ abstract class Installer
                     $result = $this->hail->postSignedJSON($ch . API::get('version'), $publicKey, $args);
                     // Add the channel to this data...
                     $result['channel'] = $ch;
+                    $result['minimum'] = $minVersion ?? '0.0.0';
                     return $result;
                 } catch (TransferException $ex) {
                     $this->log(
@@ -431,7 +423,9 @@ abstract class Installer
             return false;
         }
         $data = \Airship\parseJSON($merkle['data'], true);
-        if (!\hash_equals($this->type, $data['pkg_type'])) {
+        $instType = \strtolower($this->type);
+        $keyggdrasilType = \strtolower($data['pkg_type']);
+        if (!\hash_equals($instType, $keyggdrasilType)) {
             $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
             // Wrong package type
             return false;

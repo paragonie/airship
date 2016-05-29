@@ -46,10 +46,7 @@ class InstallFile
     public function __construct(Supplier $supplier, array $data)
     {
         $this->hash = File::checksum($data['path']);
-        $this->releaseInfo = \Airship\parseJSON(
-            $data['data']['release_info'],
-            true
-        );
+        $this->releaseInfo = $data['data']['releaseinfo'];
         $this->root = $data['data']['merkle_root'];
         $this->path = $data['path'];
         $this->size = $data['size'] ?? \filesize($this->path);
@@ -129,7 +126,11 @@ class InstallFile
     {
         $result = false;
         foreach ($this->supplier->getSigningKeys() as $key) {
-            $result = $result || File::verify($this->path, $key, $this->releaseInfo['signature']);
+            $result = $result || File::verify(
+                $this->path,
+                $key['key'],
+                $this->releaseInfo['signature']
+            );
             if ($result && $fastExit) {
                 return true;
             }
