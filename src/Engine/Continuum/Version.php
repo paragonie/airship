@@ -118,14 +118,34 @@ class Version
                 $left = $value - ($value % self::GROUP_PATCH);
                 $left %= self::GROUP_MINOR;
                 return intdiv($left, self::GROUP_PATCH);
-            // W...WXXYY[ZZ]
-            case self::GROUP_INCREMENT:
-                $left = $value - ($value % self::GROUP_INCREMENT);
-                return ($left % self::GROUP_PATCH);
             default:
                 throw new \InvalidArgumentException(
                     __METHOD__.': $group must be a constant'
                 );
         }
+    }
+
+    /**
+     * Get the expected next version, based on upgrade type.
+     *
+     *  From '1.4.11':
+     *    (self::GROUP_PATCH) -> '1.4.12'
+     *    (self::GROUP_MINOR) -> '1.5.0'
+     *    (self::GROUP_MAJOR) -> '2.0.0'
+     *
+     * @param int $type
+     * @return string
+     */
+    public function getUpgrade(int $type = self::GROUP_PATCH): string
+    {
+        $value = \Airship\expand_version($this->currentVersion);
+        $value += $type;
+        $value -= ($value % $type);
+        return \implode('.', [
+            self::getGroup($value, self::GROUP_MAJOR),
+            self::getGroup($value, self::GROUP_MINOR),
+            self::getGroup($value, self::GROUP_PATCH)
+        ]);
+
     }
 }

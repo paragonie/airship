@@ -13,6 +13,6 @@ class UtilTest extends PHPUnit_Framework_TestCase
             Util::randomString()
         ];
         
-        $this->assertFalse($sample[0] === $sample[1]);
+        $this->assertNotSame($sample[0], $sample[1]);
     }
 }

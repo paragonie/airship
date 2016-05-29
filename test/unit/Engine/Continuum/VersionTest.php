@@ -84,10 +84,6 @@ class VersionTest extends PHPUnit_Framework_TestCase
             Version::getGroup($u, Version::GROUP_PATCH),
             0
         );
-        $this->assertEquals(
-            Version::getGroup($u, Version::GROUP_INCREMENT),
-            0
-        );
     }
     
     /**
@@ -130,5 +126,22 @@ class VersionTest extends PHPUnit_Framework_TestCase
         
         $this->assertTrue($versions['1.0.0']->isMajorUpgrade('2.0.0'));
         $this->assertTrue($versions['1.0.0']->isMajorUpgrade('2.1.0'));
+    }
+
+    public function testUpgrade()
+    {
+        $versions = $this->demoVersions();
+        $this->assertSame(
+            '1.1.3',
+            $versions['1.1.2']->getUpgrade(Version::GROUP_PATCH)
+        );
+        $this->assertSame(
+            '1.2.0',
+            $versions['1.1.2']->getUpgrade(Version::GROUP_MINOR)
+        );
+        $this->assertSame(
+            '2.0.0',
+            $versions['1.1.2']->getUpgrade(Version::GROUP_MAJOR)
+        );
     }
 }

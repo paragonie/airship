@@ -1,6 +1,8 @@
 <?php
+
 use \Airship\Engine\Database;
 use \Airship\Alerts\Database\DBException;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * @backupGlobals disabled
@@ -103,6 +105,22 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
 
         $count = $db->cell('SELECT count(*) FROM test_values WHERE name = ?', 'def');
         $this->assertNotEquals(\count($rows), $count);
+
+        $value = Base64UrlSafe::encode(
+            \random_bytes(33)
+        );
+        $stored = $db->insertGet(
+            'test_values',
+            [
+                'name' => $value,
+                'foo' => true
+            ],
+            'name'
+        );
+        $this->assertSame(
+            $value,
+            $stored
+        );
 
         $db->commit();
     }

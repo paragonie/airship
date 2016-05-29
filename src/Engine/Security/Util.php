@@ -72,7 +72,7 @@ abstract class Util
      * 
      * @return string
      */
-    public function randomString(
+    public static function randomString(
         int $length = 64,
         string $characters = self::PRINTABLE_ASCII
     ): string {
