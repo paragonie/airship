@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum\Installers;
 
 use \Airship\Engine\Continuum\Installer as BaseInstaller;
-use \Airship\Engine\Continuum\Sandbox;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
@@ -206,7 +205,9 @@ class Cabin extends BaseInstaller
         $updater->extractTo(ROOT . '/Cabin/' . $ns);
 
         // Run the update trigger.
-        \shell_exec('php -dphar.readonly=0 ' . ROOT . '/Cabin/' . $ns . '/update_trigger.php >/dev/null 2>&1 &');
+        if (\file_exists(ROOT . '/Cabin/' . $ns . '/update_trigger.php')) {
+            \shell_exec('php -dphar.readonly=0 ' . ROOT . '/Cabin/' . $ns . '/update_trigger.php >/dev/null 2>&1 &');
+        }
 
         // Free up the updater alias
         $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';

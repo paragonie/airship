@@ -131,7 +131,9 @@ abstract class Installer
                 \unlink($file);
             }
         }
-        \unlink(ROOT . '/tmp/cache/cabin_data.json');
+        if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
+            \unlink(ROOT . '/tmp/cache/cabin_data.json');
+        }
         \clearstatcache();
         return true;
     }

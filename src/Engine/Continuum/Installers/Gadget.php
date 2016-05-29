@@ -56,10 +56,10 @@ class Gadget extends BaseInstaller
         $alias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';
         $phar = new \Phar(
             $fileInfo->getPath(),
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
-            $alias
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
-        $metadata = \Airship\parseJSON($phar->getMetadata(), true);
+        $phar->setAlias($alias);
+        $metadata = $phar->getMetadata();
         unset($phar);
         return $metadata;
     }
@@ -120,7 +120,9 @@ class Gadget extends BaseInstaller
         $phar->setAlias($alias);
 
         // Run the update trigger.
-        Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
+        if (\file_exists('phar://' . $alias . '/update_trigger.php')) {
+            Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
+        }
 
         // Finally, clear the cache files:
         return $this->clearCache();

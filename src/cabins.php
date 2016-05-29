@@ -3,8 +3,13 @@ declare(strict_types=1);
 
 use \Airship\Engine\{
     AutoPilot,
-    Gears
+    Gears,
+    State
 };
+
+/**
+ * @global State $state
+ */
 
 $ap = Gears::getName('AutoPilot');
 if (IDE_HACKS) {
@@ -30,7 +35,7 @@ if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     $active_cabin = null;
     foreach ($cabins as $key => $cabin) {
         try {
-            $cabinName = $cabin['namespace']
+            $cabinName = !empty($cabin['namespace'])
                 ? $cabin['namepace']
                 : $cabin['name'];
 
