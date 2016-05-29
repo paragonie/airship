@@ -89,27 +89,36 @@ class Motif extends AutoUpdater implements ContinuumInterface
                 $this->name
         ];
         try {
+            /**
+             * @var UpdateInfo[]
+             */
             $updateInfoArray = $this->updateCheck(
                 $this->supplier->getName(),
                 $this->name,
                 $this->manifest['version']
             );
             foreach ($updateInfoArray as $updateInfo) {
+                /**
+                 * @var UpdateFile
+                 */
                 $updateFile = $this->downloadUpdateFile($updateInfo);
                 $this->log('Downloaded Motif update file', LogLevel::DEBUG, $debugArgs);
+
                 if ($this->bypassSecurityAndJustInstall) {
                     $this->log('Motif update verification bypassed', LogLevel::ALERT, $debugArgs);
                     $this->install($updateInfo, $updateFile);
-                } else {
-                    /**
-                     * Don't proceed unless we've verified the signatures
-                     */
-                    if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
-                        if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
-                            $this->install($updateInfo, $updateFile);
-                        } else {
-                            $this->log('Keyggdrasil check failed for this Motif', LogLevel::ERROR, $debugArgs);
-                        }
+                    return;
+                }
+
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 * and the relevant entries in Keyggdrasil
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                        $this->install($updateInfo, $updateFile);
+                    } else {
+                        $this->log('Keyggdrasil check failed for this Motif', LogLevel::ERROR, $debugArgs);
                     }
                 }
             }
@@ -162,6 +171,8 @@ class Motif extends AutoUpdater implements ContinuumInterface
     }
 
     /**
+     * Store cabin association
+     *
      * @param string $supplier
      * @param string $name
      * @return Motif
