@@ -19,52 +19,14 @@ class Cabin extends BaseInstaller
     protected $ext = 'phar';
 
     /**
-     * @param InstallFile $fileInfo
-     * @return bool
-     */
-    public function install(InstallFile $fileInfo): bool
-    {
-        $ns = $this->makeNamespace($this->supplier->getName(), $this->package);
-        $alias = 'cabin.' . $this->supplier->getName() . '.' . $this->package . '.phar';
-        $updater = new \Phar(
-            $fileInfo->getPath(),
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
-        );
-        $updater->setAlias($alias);
-        $metadata = \Airship\parseJSON($updater->getMetadata(), true);
-
-        // Overwrite files
-        $updater->extractTo(ROOT . '/Cabin/' . $ns);
-
-        // Run the update trigger.
-        Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
-
-        // Free up the updater alias
-        $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';
-        $updater->setAlias($garbageAlias);
-        unset($updater);
-
-        return $this->configure($ns, $metadata);
-    }
-
-    /**
+     * Clear the cache files related to Cabins.
+     *
      * @return bool
      */
     public function clearCache(): bool
     {
         $name = $this->makeNamespace($this->supplier->getName(), $this->package);
 
-        \unlink(
-            \implode(
-                DIRECTORY_SEPARATOR,
-                [
-                    ROOT,
-                    'tmp',
-                    'cargo',
-                    'cabin_data.json'
-                ]
-            )
-        );
         \unlink(
             \implode(
                 DIRECTORY_SEPARATOR,
@@ -99,7 +61,7 @@ class Cabin extends BaseInstaller
             )
         );
         \clearstatcache();
-        return true;
+        return parent::clearCache();
     }
 
     /**
@@ -122,6 +84,46 @@ class Cabin extends BaseInstaller
         }
         if (!$this->createSymlinks($nameSpace)) {
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * Create empty files (motifs.json, etc.)
+     *
+     * @param string $nameSpace
+     * @return bool
+     */
+    protected function createEmptyFiles(string $nameSpace): bool
+    {
+        $dir = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                ROOT,
+                'Cabin',
+                $nameSpace,
+                'config',
+            ]
+        );
+        if (!\file_exists($dir.'/content_security_policy.json')) {
+            if (\file_put_contents($dir . '/content_security_policy.json', '{"inherit": true}') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/gadgets.json')) {
+            if (\file_put_contents($dir . '/gadgets.json', '[]') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/motifs.json')) {
+            if (\file_put_contents($dir . '/motifs.json', '[]') === false) {
+                return false;
+            }
+        }
+        if (!\file_exists($dir.'/twig_vars.json')) {
+            if (\file_put_contents($dir . '/twig_vars.json', '[]') === false) {
+                return false;
+            }
         }
         return true;
     }
@@ -174,43 +176,40 @@ class Cabin extends BaseInstaller
     }
 
     /**
-     * Create empty files (motifs.json, etc.)
+     * Cabin install process.
      *
-     * @param string $nameSpace
+     * 1. Extract files to proper directory.
+     * 2. Run the update triggers (install hooks and incremental upgrades)
+     * 3. Create/update relevant configuration files.
+     * 4. Create symbolic links.
+     * 5. Clear the cache files.
+     *
+     * @param InstallFile $fileInfo
      * @return bool
      */
-    protected function createEmptyFiles(string $nameSpace): bool
+    public function install(InstallFile $fileInfo): bool
     {
-        $dir = \implode(
-            DIRECTORY_SEPARATOR,
-            [
-                ROOT,
-                'Cabin',
-                $nameSpace,
-                'config',
-            ]
+        $ns = $this->makeNamespace($this->supplier->getName(), $this->package);
+        $alias = 'cabin.' . $this->supplier->getName() . '.' . $this->package . '.phar';
+        $updater = new \Phar(
+            $fileInfo->getPath(),
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
         );
-        if (!\file_exists($dir.'/content_security_policy.json')) {
-            if (\file_put_contents($dir . '/content_security_policy.json', '{"inherit": true}') === false) {
-                return false;
-            }
-        }
-        if (!\file_exists($dir.'/gadgets.json')) {
-            if (\file_put_contents($dir . '/gadgets.json', '[]') === false) {
-                return false;
-            }
-        }
-        if (!\file_exists($dir.'/motifs.json')) {
-            if (\file_put_contents($dir . '/motifs.json', '[]') === false) {
-                return false;
-            }
-        }
-        if (!\file_exists($dir.'/twig_vars.json')) {
-            if (\file_put_contents($dir . '/twig_vars.json', '[]') === false) {
-                return false;
-            }
-        }
-        return true;
+        $updater->setAlias($alias);
+        $metadata = \Airship\parseJSON($updater->getMetadata(), true);
+
+        // Overwrite files
+        $updater->extractTo(ROOT . '/Cabin/' . $ns);
+
+        // Run the update trigger.
+        Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
+
+        // Free up the updater alias
+        $garbageAlias = Base64UrlSafe::encode(\random_bytes(33)) . '.phar';
+        $updater->setAlias($garbageAlias);
+        unset($updater);
+
+        return $this->configure($ns, $metadata);
     }
 
     /**

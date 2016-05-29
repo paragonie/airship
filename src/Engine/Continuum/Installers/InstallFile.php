@@ -45,13 +45,16 @@ class InstallFile
      */
     public function __construct(Supplier $supplier, array $data)
     {
-        $this->supplier = $supplier;
-        $this->path = $data['path'];
-        $this->version = $data['version'];
-        $this->size = $data['size'] ?? \filesize($this->path);
-        $this->hash = File::checksum($this->path);
+        $this->hash = File::checksum($data['path']);
+        $this->releaseInfo = \Airship\parseJSON(
+            $data['data']['release_info'],
+            true
+        );
         $this->root = $data['data']['merkle_root'];
-        $this->releaseInfo = \Airship\parseJSON($data['data']['release_info'], true);
+        $this->path = $data['path'];
+        $this->size = $data['size'] ?? \filesize($this->path);
+        $this->supplier = $supplier;
+        $this->version = $data['version'];
     }
 
     /**

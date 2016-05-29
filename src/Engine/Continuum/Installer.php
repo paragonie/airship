@@ -105,11 +105,36 @@ abstract class Installer
     }
 
     /**
-     * Clear the caches related to the new extension.
+     * We just need to clear the template caches and the cabin data.
      *
      * @return bool
      */
-    abstract public function clearCache(): bool;
+    public function clearCache(): bool
+    {
+        $dirs = [
+            'csp_hash',
+            'csp_static',
+            'html_purifier',
+            'markdown',
+            'rst',
+            'static',
+            'twig'
+        ];
+        foreach ($dirs as $dir) {
+            if (!\is_dir(ROOT . '/tmp/cache/' . $dir)) {
+                continue;
+            }
+            foreach (\list_all_files(ROOT . '/tmp/cache/' . $dir) as $file) {
+                if ($file === ROOT . '/tmp/cache/' . $dir . '/.gitignore') {
+                    continue;
+                }
+                \unlink($file);
+            }
+        }
+        \unlink(ROOT . '/tmp/cache/cabin_data.json');
+        \clearstatcache();
+        return true;
+    }
 
     /**
      * Download the file from the update server.
@@ -385,7 +410,6 @@ abstract class Installer
      * and has the same checksum as the one we calculated.
      *
      * @param InstallFile $file
-     * @param string $checksum
      * @return bool
      */
     public function verifyMerkleRoot(InstallFile $file): bool

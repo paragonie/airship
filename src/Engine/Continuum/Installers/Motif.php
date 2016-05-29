@@ -16,12 +16,19 @@ class Motif extends BaseInstaller
     protected $type = 'Motif';
     protected $ext = 'zip';
 
+    /**
+     * Motif install process.
+     *
+     * 1. Extract files to the appropriate directory.
+     * 2. If this is a cabin-specific motif, update motifs.json.
+     *    Otherwise, it's a global Motif. Enable for all cabins.
+     * 3. Create symbolic links.
+     * 4. Clear cache files.
+     *
+     * @param InstallFile $fileInfo
+     * @return bool
+     */
     public function install(InstallFile $fileInfo): bool
-    {
-
-    }
-
-    public function clearCache(): bool
     {
 
     }
