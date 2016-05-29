@@ -25,13 +25,13 @@ class Motif extends BaseInstaller
      */
     protected function addMotifToCabin(string $cabin): bool
     {
-        if (!\is_dir(ROOT . '/Cabins/' . $cabin)) {
+        if (!\is_dir(ROOT . '/Cabin/' . $cabin)) {
             return false;
         }
         $supplier = $this->supplier->getName();
         $name = $this->package;
 
-        $configFile = ROOT . '/Cabins/' . $cabin . '/config/motifs.json';
+        $configFile = ROOT . '/Cabin/' . $cabin . '/config/motifs.json';
         $config = \Airship\loadJSON($configFile);
 
         $i = 1;
@@ -44,10 +44,45 @@ class Motif extends BaseInstaller
                 $supplier . '/' . $this->package
         ];
 
+        if (!$this->createSymlinks($cabin, $config, $name)) {
+            // This isn't essential.
+            $this->log(
+                'Could not create symlinks for Cabin "' . $cabin . '".',
+                LogLevel::WARNING
+            );
+        }
+
         return \file_put_contents(
             $configFile,
             \json_encode($config, JSON_PRETTY_PRINT)
         ) !== false;
+    }
+
+    /**
+     * Setup the initial symbolic links
+     *
+     * @param string $cabin
+     * @param array $config
+     * @param string $index
+     * @return bool
+     */
+    protected function createSymlinks(string $cabin, array $config, string $index): bool
+    {
+        $res = \symlink(
+            // to:
+            ROOT . '/Motifs/' . $config[$index]['path'] . '/public',
+            // from:
+            ROOT . '/Cabin/' . $cabin . '/public/motif/ ' . $index
+        );
+
+        $res = $res && \symlink(
+            // to:
+            ROOT . '/Motifs/' . $config[$index]['path'] . '/lens',
+            // from:
+            ROOT . '/Cabin/' . $cabin . '/Lens/motif/ ' . $index
+        );
+
+        return $res;
     }
 
     /**
@@ -98,7 +133,7 @@ class Motif extends BaseInstaller
                 \preg_replace('/[^A-Za-z0-9\_]/', '_', $metadata['cabin']),
                 '_'
             );
-            if (!\is_dir(ROOT . '/Cabins/' . $cabin)) {
+            if (!\is_dir(ROOT . '/Cabin/' . $cabin)) {
                 $this->log(
                     'Could not install; cabin "' . $cabin . '" is not installed.',
                     LogLevel::ERROR
@@ -122,7 +157,7 @@ class Motif extends BaseInstaller
         if ($cabin) {
             $this->addMotifToCabin($cabin);
         } else {
-            foreach (\glob(ROOT . '/Cabins/') as $cabin) {
+            foreach (\glob(ROOT . '/Cabin/') as $cabin) {
                 if (\is_dir($cabin)) {
                     $this->addMotifToCabin(
                         \Airship\path_to_filename($cabin)

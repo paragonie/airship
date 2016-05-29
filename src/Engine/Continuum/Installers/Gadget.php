@@ -29,7 +29,7 @@ class Gadget extends BaseInstaller
      */
     public function addToCabin(string $cabin): bool
     {
-        $configFile = ROOT . '/Cabins/' . $cabin . '/config/gadgets.json';
+        $configFile = ROOT . '/Cabin/' . $cabin . '/config/gadgets.json';
         $gadgets = \Airship\loadJSON($configFile);
         $gadgets[] = [
             'active' =>
@@ -85,7 +85,7 @@ class Gadget extends BaseInstaller
         // Move .phar file to its destination.
         if (!empty($metadata['cabin'])) {
             // Cabin-specific gadget
-            $cabin = ROOT . '/Cabins/' . $metadata['cabin'] . '/Gadgets';
+            $cabin = ROOT . '/Cabin/' . $metadata['cabin'] . '/Gadgets';
             if (!\is_dir($cabin)) {
                 $this->log(
                     'Could not install; cabin "' . $metadata['cabin'] . '" is not installed.',
