@@ -1,0 +1,18 @@
+<fieldset>
+    <legend>{{ __("Add a Notary") }}</legend>
+
+    <label for="new_notary">{{ __("Name") }}</label>:
+    <input type="text" name="name" id="name" placeholder="Example Blog" />
+
+    <label for="new_notary">{{ __("Airship URL") }}</label>:
+    <input type="text" name="new_notary" id="new_notary" placeholder="https://example.com" />
+
+    <label for="channel">{{ __("Channel") }}</label>:
+    <select name="channel" id="channel">{% for name, channel in channels %}
+        <option value="{{ name|e('html_attr') }}">{{ name|e('html') }}</option>
+    {% endfor %}</select>
+
+    <button type="submit" name="new_notary_submit" value="1" class="pure-button pure-button-secondary">
+        {{ __("Add Notary") }}
+    </button>
+</fieldset>

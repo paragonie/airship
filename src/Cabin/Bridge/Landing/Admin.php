@@ -2,9 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Engine\State;
+use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use \Airship\Engine\{
+    Hail,
+    Security\Util,
+    State
+};
+use \GuzzleHttp\Client;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -19,10 +24,79 @@ class Admin extends AdminOnly
      */
     private $acct;
 
+    /**
+     * Add a new notary
+     *
+     * @param array $post
+     * @return bool
+     */
+    protected function addNotary(array $channels, array $post): bool
+    {
+        $ch = $post['channel'];
+        if (!isset($channels[$ch])) {
+            return false;
+        }
+        $url = \trim($post['new_notary']);
+        $notaryInfo = $this->notaryDiscovery($url);
+        if (empty($notaryInfo)) {
+            return false;
+        }
+
+        $found = false;
+        foreach ($channels[$ch]['notaries'] as $i => $notary) {
+            if (\in_array($url, $notary['urls'])) {
+                if ($notary['public_key'] === $notaryInfo['public_key']) {
+                    // Duplicate
+                    return false;
+                }
+                $found = true;
+                $channels[$ch]['notaries'][$i]['public_key'] = $notaryInfo['public_key'];
+                break;
+            }
+        }
+        if (!$found) {
+            $channels[$ch]['notaries'][] = [
+                'name' => $post['name'],
+                'urls' => [
+                    $notaryInfo['url']
+                ],
+                'public_key' => $notaryInfo['public_key']
+            ];
+        }
+
+        return \file_put_contents(
+            ROOT . '/config/channel_peers/' . $ch . '.json',
+            \json_encode($channels[$ch]['notaries'], JSON_PRETTY_PRINT)
+        ) !== false;
+    }
+
     public function airshipLand()
     {
         parent::airshipLand();
         $this->acct = $this->blueprint('UserAccounts');
+    }
+
+    /**
+     * Add a new notary
+     *
+     * @param array $post
+     * @return bool
+     */
+    protected function deleteNotary(array $channels, array $post): bool
+    {
+        list ($ch, $idx) = \explode('|', $post['delete_notary']);
+        if (!isset($channels[$ch])) {
+            return false;
+        }
+        $idx += 0;
+
+        if ($channels[$ch]['notaries'][$idx]) {
+            unset($channels[$ch]['notaries'][$idx]);
+        }
+        return \file_put_contents(
+            ROOT . '/config/channel_peers/' . $ch . '.json',
+            \json_encode($channels[$ch]['notaries'], JSON_PRETTY_PRINT)
+        ) !== false;
     }
 
     /**
@@ -67,7 +141,16 @@ class Admin extends AdminOnly
 
         $post = $this->post();
         if (!empty($post)) {
-
+            if (!empty($post['new_notary_submit'])) {
+                $this->addNotary($channels, $post);
+            } elseif (!empty($post['delete_notary'])) {
+                $this->deleteNotary($channels, $post);
+            }
+            foreach ($channels as $chanName => $chanConfig) {
+                $channels[$chanName]['notaries'] = \Airship\loadJSON(
+                    ROOT . '/config/channel_peers/' . $chanName . '.json'
+                );
+            }
         }
         $this->lens('admin_notaries', [
             'channels' => $channels
@@ -115,6 +198,49 @@ class Admin extends AdminOnly
             'config' => $settings,
             'groups' => $this->acct->getGroupTree()
         ]);
+    }
+
+    /**
+     * Discover a new notary, grab its public key, channels, and URL
+     *
+     * @param string $url
+     * @return array
+     */
+    protected function notaryDiscovery(string $url): array
+    {
+        $state = State::instance();
+        if (IDE_HACKS) {
+            $state->hail = new Hail(new Client());
+        }
+        $body = $state->hail->getReturnBody($url);
+        $pos = \strpos($body, '<meta name="airship-notary" content="');
+        if ($pos === false) {
+            // Notary not enabled:
+            return [];
+        }
+        $body = Util::subString($body, $pos + 37);
+        $end = \strpos($body, '"');
+        if (!$end) {
+            // Invalid
+            return [];
+        }
+        $tag = \explode('; ', Util::subString($body, 0, $end));
+        $channel = null;
+        $notary_url = null;
+
+        foreach ($tag as $t) {
+            list ($k, $v) = \explode('=', $t);
+            if ($k === 'channel') {
+                $channel = $v;
+            } elseif ($k === 'url') {
+                $notary_url = $v;
+            }
+        }
+        return [
+            'public_key' => $tag[0],
+            'channel' => $channel,
+            'url' => $notary_url
+        ];
     }
 
     /**

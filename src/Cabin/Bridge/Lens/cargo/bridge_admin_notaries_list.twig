@@ -7,23 +7,27 @@
                 <td>{{ __("Name") }}</td>
                 <td>{{ __("Public Key") }}</td>
                 <td>{{ __("URLs") }}</td>
+                <td>{{ __("Actions") }}</td>
             </tr>
         </thead>
         <tbody>
-            {% for notary in channel.notaries %}
+            {% for idx, notary in channel.notaries %}
             <tr>
-                <td>
-                    {{ notary.name|e('html') }}
-                </td>
-                <td>
-                    {{ notary.public_key|e('html') }}
-                </td>
-                <td>
-                    <ol>
-                    {% for url in notary.urls %}
-                        <li>{{ url|e('html') }}</li>
-                    {% endfor %}
-                    </ol>
+                <td>{{ notary.name|e('html') }}</td>
+                <td class="monospace">{{ notary.public_key|e('html') }}</td>
+                <td>{% if notary.urls|length > 1 %}
+                        <ol>
+                        {% for url in notary.urls %}
+                            <li>{{ url|e('html') }}</li>
+                        {% endfor %}
+                        </ol>
+                    {% else %}
+                        {{ notary.urls[0]|e('html') }}
+                {% endif %}</td>
+                <td class="table-min-width">
+                    <button type="submit" name="delete_notary" value="{{ name ~ "|" ~ idx }}" class="pure-button pure-button-secondary">
+                        <i class="fa fa-remove"></i> Remove
+                    </button>
                 </td>
             </tr>
             {% endfor %}

@@ -1,4 +1,4 @@
-<h1>Notaries</h1>
+<h1>{{ __("Notaries") }}</h1>
 
 <p>
     {{ __(
@@ -6,7 +6,11 @@
         "The more notaries you add, the more resilient your Airship will be to infrastructure attacks."
     ) }}
 </p>
-
-<div id="bridge_admin_notaries_list">
-    {% include cargo("bridge_admin_notaries_list") %}
-</div>
+<form method="post">{{ form_token() }}
+    <div id="bridge_admin_notaries_list">
+        {% include cargo("bridge_admin_notaries_list") %}
+    </div>
+    <div id="bridge_admin_notaries_list">
+        {% include cargo("bridge_admin_notaries_add") %}
+    </div>
+</form>

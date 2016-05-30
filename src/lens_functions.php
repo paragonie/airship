@@ -293,7 +293,7 @@ function display_notary_tag(SignaturePublicKey $pk = null)
                 ->getRawKeyMaterial();
         }
         echo '<meta name="airship-notary" content="' . 
-                Base64::encode($pk) .
+                Base64UrlSafe::encode($pk) .
             '; channel=' . Util::noHTML($notary['channel']) .
             '; url=' . cabin_url('Bridge') . 'notary' .
         '" />';
