@@ -1,15 +1,14 @@
 <?php
 declare(strict_types=1);
-use \Airship\Engine\{
-    Gears,
-    State
-};
+
+use \Airship\Engine\Lens;
+
 /**
  * GLOBAL LENS MODIFICATIONS GO HERE
  * 
  * We can add filters, functions, etc. to the current lens if we want
  * 
- * @globalvar $lens
+ * @global Lens $lens
  */
 
 // Expose PHP's built-in functions as a filter
@@ -103,6 +102,7 @@ $lens->func('can');
 $lens->func('csp_hash');
 $lens->func('csp_hash_str');
 $lens->func('csp_nonce');
+$lens->func('display_notary_tag');
 $lens->func('get_avatar');
 $lens->func('get_languages');
 $lens->func('get_path_url');

@@ -156,7 +156,7 @@ class Landing
             $k = \array_keys($db);
             $r = $k[random_int(0, \count($db) - 1)];
             return $db[$r];
-        } elseif (count($this->airship_databases) === 1) {
+        } elseif (\count($this->airship_databases) > 0) {
             $k = \array_keys($this->airship_databases);
             $db = $this->airship_databases[\array_shift($k)];
             if (\count($db) === 1) {

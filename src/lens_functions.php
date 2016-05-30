@@ -5,6 +5,7 @@ namespace Airship\LensFunctions;
 use \Airship\Engine\{
     Gadgets,
     Gears,
+    Security\Util,
     State
 };
 use \Airship\Engine\Security\Permissions;
@@ -15,7 +16,9 @@ use \ParagonIE\ConstantTime\{
     Base64,
     Base64UrlSafe
 };
-use \ParagonIE\Halite\Util;
+use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use \ParagonIE\Halite\Asymmetric\SignatureSecretKey;
+use \ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Get the base template (normally "base.twig")
@@ -145,7 +148,7 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
 {
     $state = State::instance();
     if (isset($state->CSP)) {
-        $checksum = Util::hash('Content Security Policy Hash:' . $file);
+        $checksum = CryptoUtil::hash('Content Security Policy Hash:' . $file);
         $h1 = substr($checksum, 0, 2);
         $h2 = substr($checksum, 2, 2);
         $fhash = substr($checksum, 4);
@@ -268,6 +271,33 @@ function get_path_url(string $url, bool $includeQuery = false): string
         return $path;
     }
     return '';
+}
+
+/**
+ * Display the notary <meta> tag.
+ *
+ * @param SignaturePublicKey $pk
+ */
+function display_notary_tag(SignaturePublicKey $pk = null)
+{
+    $state = State::instance();
+    $notary = $state->universal['notary'];
+    if (!empty($notary['enabled'])) {
+        if (!$pk) {
+            $sk = $state->keyring['notary.online_signing_key'];
+            if (IDE_HACKS) {
+                $sk = new SignatureSecretKey();
+            }
+            $pk = $sk
+                ->derivePublicKey()
+                ->getRawKeyMaterial();
+        }
+        echo '<meta name="airship-notary" content="' . 
+                Base64::encode($pk) .
+            '; channel=' . Util::noHTML($notary['channel']) .
+            '; url=' . cabin_url('Bridge') . 'notary' .
+        '" />';
+    }
 }
 
 /**
@@ -404,7 +434,7 @@ function render_markdown(string $string = '', bool $return = false): string
         $md = new CommonMarkConverter();
     }
 
-    $checksum = Util::hash('Markdown' . $string);
+    $checksum = CryptoUtil::hash('Markdown' . $string);
 
     $h1 = substr($checksum, 0, 2);
     $h2 = substr($checksum, 2, 2);
@@ -452,7 +482,7 @@ function render_rst(string $string = '', bool $return = false): string
         $rst = new RSTParser();
     }
 
-    $checksum = Util::hash('ReStructuredText' . $string);
+    $checksum = CryptoUtil::hash('ReStructuredText' . $string);
 
     $h1 = substr($checksum, 0, 2);
     $h2 = substr($checksum, 2, 2);
@@ -500,7 +530,7 @@ function purify(string $string = '')
     if ($state === null) {
         $state = State::instance();
     }
-    $checksum = Util::hash('HTML Purifier' . $string);
+    $checksum = CryptoUtil::hash('HTML Purifier' . $string);
 
     $h1 = substr($checksum, 0, 2);
     $h2 = substr($checksum, 2, 2);

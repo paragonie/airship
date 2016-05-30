@@ -103,10 +103,16 @@ $twigEnv = new \Twig_Environment($twigLoader, $twigOpts);
 $twigEnv->addExtension(new \Twig_Extension_Debug());
 
 $lens = \Airship\Engine\Gears::get('Lens', $twigEnv);
+
+// Load the Lens configuration
 include ROOT.'/config/lens.php';
+
+// Load the Cabin-specific filters etc, if applicable:
 if (\file_exists(ROOT.'/Cabin/'.$active['name'].'/lens.php')) {
     include ROOT.'/Cabin/'.$active['name'].'/lens.php';
 }
+
+// Load the template variables for this Cabin:
 if (\file_exists(ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json')) {
     $_settings = \Airship\loadJSON(
         ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json'
@@ -116,6 +122,7 @@ if (\file_exists(ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json')) {
         $_settings
     );
 }
+
 // Now let's load all the lens.php files
 foreach ($lensLoad as $incl) {
     include $incl;

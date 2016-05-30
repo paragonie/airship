@@ -1,12 +1,12 @@
 <?php
 /**
- * GLOBAL LENS DATABASE DRIVERS GO HERE
+ * GLOBAL EXTRA DATABASE DRIVERS GO HERE
  * 
- * @globalvar $db
+ * @global $dbConf
  */
 
 /*
-$db['extra'] = [
+$dbConf['extra'] = [
     \Airship\Engine\Gears::get('Database', 'sqlite:'.ROOT.'/tmp/etilqs.sqlite')
 ];
 */
