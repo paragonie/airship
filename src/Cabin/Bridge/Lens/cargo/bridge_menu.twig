@@ -144,16 +144,19 @@
                         </li>
                     </ul>
                 </li>
+                {#
                 <li>
                     <a href="{{ cabin_url() }}admin/database">
                         <i class="fa fa-database bridge-icon"></i>{{ __("Databases") }}
                     </a>
                 </li>
+                #}
                 <li>
                     <a href="{{ cabin_url() }}admin/extensions">
                         <i class="fa fa-plug bridge-icon"></i>{{ __("Extensions") }}
                     </a>
                     <ul>
+                        {#
                         <li>
                             <a href="{{ cabin_url() }}gadgets">
                                 <i class="fa fa-gears bridge-icon"></i>{{ __("Gadgets") }}
@@ -164,16 +167,19 @@
                                 <i class="fa fa-paint-brush bridge-icon"></i>{{ __("Motifs") }}
                             </a>
                         </li>
+                        #}
                         <li>
                             <a href="{{ cabin_url() }}admin/notaries">
                                 <i class="fa fa-sitemap bridge-icon"></i>{{ __("Notaries") }}
                             </a>
                         </li>
+                        {#
                         <li>
                             <a href="{{ cabin_url() }}admin/skyport">
                                 <i class="fa fa-cloud bridge-icon"></i>{{ __("Skyport Marketplace") }}
                             </a>
                         </li>
+                        #}
                     </ul>
                 </li>
                 {% include cargo("bridge_menu_admin_links") ignore missing %}
