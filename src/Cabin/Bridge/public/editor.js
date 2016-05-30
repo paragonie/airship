@@ -11,7 +11,7 @@ $(document).ready(function() {
     window.richTextUpdate = function(_name, show_after) {
         var prefix = $("#bridge_main_menu_left").data("linkprefix");
         $.post(
-            prefix + "/ajax/rich_text_preview",
+            prefix + "ajax/rich_text_preview",
             {
                 "format": $("#" + richTextLookups[_name]).val(),
                 "body": $("#rich_text_" + _name).val()

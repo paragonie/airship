@@ -536,26 +536,42 @@ function purify(string $string = '')
  * Markdown then HTMLPurifier
  *
  * @param string $string
+ * @param bool $return
  * @return string
  */
-function render_purified_markdown(string $string = '')
+function render_purified_markdown(string $string = '', bool $return = false)
 {
-    echo \Airship\LensFunctions\purify(
+    if ($return) {
+        \ob_start();
+    }
+    \Airship\LensFunctions\purify(
         \Airship\LensFunctions\render_markdown($string, true)
     );
+    if ($return) {
+        return \ob_get_clean();
+    }
+    return null;
 }
 
 /**
  * ReStructuredText then HTMLPurifier
  *
  * @param string $string
+ * @param bool $return
  * @return string
  */
-function render_purified_rest(string $string = '')
+function render_purified_rest(string $string = '', bool $return = false)
 {
-    echo \Airship\LensFunctions\purify(
+    if ($return) {
+        \ob_start();
+    }
+    \Airship\LensFunctions\purify(
         \Airship\LensFunctions\render_rst($string, true)
     );
+    if ($return) {
+        return \ob_get_clean();
+    }
+    return null;
 }
 
 /**

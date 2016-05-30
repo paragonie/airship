@@ -251,8 +251,9 @@ class Ajax extends LoggedInUsersOnly
                 case 'Markdown':
                     \Airship\json_response([
                         'status' => 'OK',
-                        'body' => \Airship\LensFunctions\purify(
-                            \Airship\LensFunctions\render_markdown($_POST['body'] ?? '', true)
+                        'body' => \Airship\LensFunctions\render_purified_markdown(
+                            $_POST['body'] ?? '',
+                            true
                         )
                     ]);
                     break;

@@ -1060,7 +1060,7 @@ select .depth3 {
     padding: 0.5rem;
 }
 #perm_test_results {
-    background-color: #E2E4FB;
+    background-color: #E2E4CB;
     border: 1px solid #000;
     box-shadow: rgba(14, 5, 40, 0.5) 0 0 1rem,  rgba(14, 5, 40, 0.66) 0 0.5rem 1rem;
 }
@@ -1103,7 +1103,7 @@ select .depth3 {
     border: 1px solid #000;
 }
 #perm_test_tree th {
-    background-color: #3F448A;
+    background-color: #6A6046;
     color: #eee;
     border: 1px solid #000;
 }
@@ -1115,12 +1115,12 @@ select .depth3 {
     font-size: 1.5em;
 }
 .read_only .permtable_name {
-    background-color: #7E6BB3 !important;
+    background-color: #F8DFA0 !important;
     white-space: nowrap;
     width: 1px;
 }
 .perm_header .read_only {
-    background-color: #3B4F86 !important;
+    background-color: #4A4026 !important;
 }
 #perms-test {
     border: 1px solid #000;
@@ -1147,28 +1147,28 @@ select .depth3 {
 #perm_edit_tree {
     background-image: -webkit-linear-gradient(
             top,
-            #484e9c 0%,
-            #272d6f 100%
+            #48400c 0%,
+            #2f200f 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            #484e9c 0%,
-            #272d6f 100%
+            #48400c 0%,
+            #2f200f 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            #484e9c 0%,
-            #272d6f 100%
+            #48400c 0%,
+            #2f200f 100%
     );
     background-image: -o-linear-gradient(
             top,
-            #484e9c 0%,
-            #272d6f 100%
+            #48400c 0%,
+            #2f200f 100%
     );
     background-image: linear-gradient(
             top,
-            #484e9c 0%,
-            #272d6f 100%
+            #48400c 0%,
+            #2f200f 100%
     );
     border: 1px solid #000;
 }
@@ -1232,31 +1232,31 @@ select .depth3 {
 }
 .perm_row_user,
 .perm_row_group {
-    background-color: #7E6BB3 !important;
+    background-color: #7E6B03 !important;
     background-image: -webkit-linear-gradient(
         left,
-        rgba(110, 115, 181, 0.83) 0%,
-        rgba(23, 4, 39, 0.5) 100%
+        rgba(110, 115, 81, 0.83) 0%,
+        rgba(23, 11, 4, 0.5) 100%
     );
     background-image: -moz-linear-gradient(
         left,
-        rgba(110, 115, 181, 0.83) 0%,
-        rgba(23, 4, 39, 0.5) 100%
+        rgba(110, 115, 81, 0.83) 0%,
+        rgba(23, 11, 4, 0.5) 100%
     );
     background-image: -ms-linear-gradient(
         left,
-        rgba(110, 115, 181, 0.83) 0%,
-        rgba(23, 4, 39, 0.5) 100%
+        rgba(110, 115, 81, 0.83) 0%,
+        rgba(23, 11, 4, 0.5) 100%
     );
     background-image: -o-linear-gradient(
         left,
-        rgba(110, 115, 181, 0.83) 0%,
-        rgba(23, 4, 39, 0.5) 100%
+        rgba(110, 115, 81, 0.83) 0%,
+        rgba(23, 11, 4, 0.5) 100%
     );
     background-image: linear-gradient(
         left,
-        rgba(110, 115, 181, 0.83) 0%,
-        rgba(23, 4, 39, 0.5) 100%
+        rgba(110, 115, 81, 0.83) 0%,
+        rgba(23, 11, 4, 0.5) 100%
     );
     color: #ddd;
     text-shadow: #000 1px 1px 1px;

@@ -1,7 +1,7 @@
 /**
  * Add a blog post to the list, exclude it (and its children) from being displayed
  *
- * @param object new_item
+ * @param new_item
  */
 window.add_blog_post = function (new_item) {
     $("#blog_series_items_sortable").append(new_item);
@@ -11,7 +11,7 @@ window.add_blog_post = function (new_item) {
 /**
  * Add a series to the list, exclude it (and its children) from being displayed
  *
- * @param object new_item
+ * @param new_item
  */
 window.add_blog_series = function (new_item) {
     $("#blog_series_items_sortable").append(new_item);
@@ -37,7 +37,7 @@ window.update_series_items = function() {
 
 /**
  * Get all the items for a given type
- * @param string type
+ * @param type
  */
 window.get_items = function(type) {
     var res = [];
@@ -55,7 +55,7 @@ window.populate_blogposts_select = function(authorId) {
     window.existing_blogposts = get_items('blogpost');
     var prefix = $("#bridge_main_menu_left").data('linkprefix');
     $.post(
-        prefix + "/ajax/authors_blog_posts",
+        prefix + "ajax/authors_blog_posts",
         {
             "author": authorId,
             "existing": window.existing_blogposts
@@ -82,7 +82,7 @@ window.populate_series_select = function(authorId) {
     }
     var prefix = $("#bridge_main_menu_left").data('linkprefix');
     $.post(
-        prefix + "/ajax/authors_blog_series",
+        prefix + "ajax/authors_blog_series",
         {
             "author": authorId,
             "existing": window.existing_series
@@ -136,7 +136,7 @@ $(document).ready(function() {
             if (addingId > 0) {
                 var prefix = $("#bridge_main_menu_left").data('linkprefix');
                 $.post(
-                    prefix + "/ajax/authors_blog_series",
+                    prefix + "ajax/authors_blog_series",
                     {
                         "add": addingId,
                         "author": authorId,
@@ -165,7 +165,7 @@ $(document).ready(function() {
             if (addingId > 0) {
                 var prefix = $("#bridge_main_menu_left").data('linkprefix');
                 $.post(
-                    prefix + "/ajax/authors_blog_posts",
+                    prefix + "ajax/authors_blog_posts",
                     {
                         "add": addingId,
                         "author": authorId,
