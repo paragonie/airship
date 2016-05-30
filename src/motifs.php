@@ -1,7 +1,11 @@
 <?php
 declare(strict_types=1);
+
+use \Airship\Engine\State;
+
 /**
- * $active is defined before this is loaded.
+ * @global array $active
+ * @global State $state
  *
  * Load this in index.php, or anywhere /AFTER/ the CABIN_DIR constant exists
  */
@@ -48,7 +52,7 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
                 }
                 if (\strpos($motifEnd, ROOT.'/Motifs') === false) {
                     $state->logger->alert(
-                        'Potential directory trasversal in Motif config.',
+                        'Potential directory traversal in Motif config.',
                         [
                             'cabin' => $active['name'],
                             'motif' => $motif,

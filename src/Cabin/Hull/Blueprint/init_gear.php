@@ -9,6 +9,10 @@ if (!\class_exists('BlueprintGear')) {
     Gears::extract('Blueprint', 'BlueprintGear', __NAMESPACE__);
     // Make autocomplete work with existing IDEs:
     if (IDE_HACKS) {
+        /**
+         * Class BlueprintGear
+         * @package Airship\Cabin\Hull\Blueprint
+         */
         class BlueprintGear extends Blueprint
         {
 

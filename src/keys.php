@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use ParagonIE\Halite\KeyFactory;
 
-$key_mgmt_closure = function() {
+$key_management_closure = function() {
     if (!\is_dir(ROOT.'/config/keyring/')) {
         \mkdir(ROOT.'/config/keyring/', 0700);
     }
@@ -93,5 +93,5 @@ $key_mgmt_closure = function() {
     // our singleton.
     $state->keyring = $keys;
 };
-$key_mgmt_closure();
-unset($key_mgmt_closure);
+$key_management_closure();
+unset($key_management_closure);

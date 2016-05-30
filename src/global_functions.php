@@ -164,6 +164,14 @@ use \Airship\Engine\{
  * II. TRANSLATION FUNCTIONS
  */
     if (!function_exists('__')) {
+        /**
+         * Translate this string.
+         *
+         * @param string $text
+         * @param string $domain
+         * @param array ...$params
+         * @return string
+         */
         function __(string $text, string $domain = 'default', ...$params)
         {
             static $gear = null;

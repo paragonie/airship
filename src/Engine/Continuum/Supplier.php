@@ -64,6 +64,7 @@ class Supplier
     /**
      * Reload the signing keys
      *
+     * @param array $data
      * @return Supplier
      */
     public function reloadSigningKeys(array $data = []): self

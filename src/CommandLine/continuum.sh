@@ -2,4 +2,4 @@
 
 basedir=$( dirname $( readlink -f ${BASH_SOURCE[0]} ) )
 
-php -dphar.readonly=0 $basedir/continuum.php $*
+php -dphar.readonly=0 ${basedir}/continuum.php $*

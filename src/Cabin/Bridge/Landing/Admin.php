@@ -4,7 +4,6 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Alerts\FileSystem\FileNotFound;
-use Airship\Engine\Continuum\Airship;
 use \Airship\Engine\State;
 
 require_once __DIR__.'/init_gear.php';

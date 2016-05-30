@@ -24,8 +24,15 @@ class Blueprint
      */
     public $db;
 
+    /**
+     * Blueprint constructor.
+     * @param Database|null $db
+     */
     public function __construct(Database $db = null)
     {
+        if (!$db) {
+            $db = \Airship\get_database();
+        }
         $this->db = $db;
     }
     

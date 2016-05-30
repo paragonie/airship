@@ -3,14 +3,18 @@ use \Airship\Engine\LedgerStorage\{
     DBStore,
     FileStore
 };
+use \Airship\Engine\{
+    Gears,
+    State
+};
 
 /**
  * Configure the application event logger here
  */
 $log_setup_closure = function() {
     
-    $state = \Airship\Engine\State::instance();
-    $loggerClass = \Airship\Engine\Gears::getName('Ledger');
+    $state = State::instance();
+    $loggerClass = Gears::getName('Ledger');
     $args = [];
     
     /**
@@ -36,6 +40,9 @@ $log_setup_closure = function() {
                 $path,
                 $state->universal['ledger']['table'] ?? DBStore::DEFAULT_TABLE
             );
+            break;
+        default:
+            throw new \Exception('Invalid logger storage mechansim');
     }
     
     /**

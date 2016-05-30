@@ -2,4 +2,4 @@
 
 basedir=$( dirname $( readlink -f ${BASH_SOURCE[0]} ) )
 
-php $basedir/channel.php $*
+php ${basedir}/channel.php $*

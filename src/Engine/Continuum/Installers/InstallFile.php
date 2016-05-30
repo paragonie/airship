@@ -5,6 +5,13 @@ namespace Airship\Engine\Continuum\Installers;
 use \Airship\Engine\Continuum\Supplier;
 use \ParagonIE\Halite\File;
 
+/**
+ * Class InstallFile
+ *
+ * All of the information pertinent to a file we are installing.
+ *
+ * @package Airship\Engine\Continuum\Installers
+ */
 class InstallFile
 {
     /**

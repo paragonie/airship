@@ -101,6 +101,8 @@ class Database implements DBInterface
      * Flatten an array into a DSN string and driver
      * 
      * @param array $dbConf
+     * @param string $username
+     * @param string $password
      * @return array [$dsn, $driver]
      * @throws DBAlert\DBException
      */
@@ -809,9 +811,11 @@ class Database implements DBInterface
     {
         return $this->pdo->errorInfo();
     }
+
     /**
      * Execute an SQL statement and return the number of affected rows
      *
+     * @param string $statement
      * @return int
      */
     public function exec(string $statement): int

@@ -4,6 +4,10 @@ namespace Airship\Alerts\Hail;
 
 use Airship\Alerts\Security\SecurityAlert;
 
+/**
+ * Class SignatureFailed
+ * @package Airship\Alerts\Hail
+ */
 class SignatureFailed extends SecurityAlert
 {
 

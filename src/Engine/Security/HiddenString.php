@@ -16,6 +16,11 @@ class HiddenString
     protected $internalStringValue = '';
     protected $allowInline = false;
 
+    /**
+     * HiddenString constructor.
+     * @param string $value
+     * @param bool $allowInline
+     */
     public function __construct(string $value, bool $allowInline = false)
     {
         $this->internalStringValue = CryptoUtil::safeStrcpy($value);

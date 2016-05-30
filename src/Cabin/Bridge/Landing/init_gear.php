@@ -13,6 +13,10 @@ if (!\class_exists('LandingGear')) {
 
     // Make autocomplete work with existing IDEs:
     if (IDE_HACKS) {
+        /**
+         * Class LandingGearBase
+         * @package Airship\Cabin\Bridge\Landing
+         */
         class LandingGearBase extends Landing { }
     }
 
@@ -48,6 +52,10 @@ if (!\class_exists('LandingGear')) {
 }
 
 if (!\class_exists('LoggedInUsersOnly')) {
+    /**
+     * Class LoggedInUsersOnly
+     * @package Airship\Cabin\Bridge\Landing
+     */
     class LoggedInUsersOnly extends LandingGear
     {
         /**
@@ -70,6 +78,10 @@ if (!\class_exists('LoggedInUsersOnly')) {
     }
 }
 if (!\class_exists('AdminOnly')) {
+    /**
+     * Class AdminOnly
+     * @package Airship\Cabin\Bridge\Landing
+     */
     class AdminOnly extends LoggedInUsersOnly
     {
         /**

@@ -230,7 +230,7 @@ function csp_nonce(string $dir = 'script-src'): string
             return (string) $state->CSP->nonce($dir);
         }
     }
-    return 'noCSPinstalled';
+    return 'noCSPInstalled';
 }
 
 /**

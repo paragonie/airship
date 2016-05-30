@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 
+use Airship\Engine\State;
+
+/**
+ * @global array $active
+ * @global State $state
+ */
+
 foreach (['Hull', 'Bridge'] as $cabinName) {
     $cabinDir = ROOT . '/Cabin/' . $cabinName;
     // Let's make sure our directories exist:

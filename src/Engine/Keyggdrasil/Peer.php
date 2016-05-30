@@ -20,6 +20,10 @@ class Peer
     private $publicKey;
     private $urls = [];
 
+    /**
+     * Peer constructor.
+     * @param array $config
+     */
     public function __construct(array $config = [])
     {
         $this->name = $config['name'];

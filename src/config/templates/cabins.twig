@@ -32,7 +32,7 @@
             '{hex}'
     */
 {% for route, cabin in cabins %}
-        {{ route|je }}: {
+    {{ route|je }}: {
             // Only respond over HTTPS (recommended!):
             "https": {{ cabin.https ? 'true' : 'false' }},
             // Used in cross-cabin hyperlinks:

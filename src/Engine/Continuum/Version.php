@@ -17,7 +17,11 @@ class Version
     const GROUP_INCREMENT =       1;
     
     protected $currentVersion;
-    
+
+    /**
+     * Version constructor.
+     * @param string $currentVersion
+     */
     public function __construct(string $currentVersion)
     {
         $this->currentVersion = $currentVersion;

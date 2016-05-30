@@ -380,6 +380,7 @@ abstract class Installer
     /**
      * Install the file. This is type-specific, so we leave it abstract here.
      *
+     * @param InstallFile $fileInfo
      * @return bool
      */
     abstract public function install(InstallFile $fileInfo): bool;

@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 use \Airship\Engine\{
     Gears,
-    Keyggdrasil
+    Keyggdrasil,
+    State
 };
 
 /**
  * Keyggdrasil updater -- either throw this in a cronjob or let it get
  * triggered every time a page loads after enough time has elapsed
+ *
+ * @global State $state
  */
 \ignore_user_abort(true);
 \set_time_limit(0);

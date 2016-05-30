@@ -2,6 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Contract;
 
+/**
+ * Interface LedgerStorageInterface
+ *
+ * Describes the interface Ledger uses to store log messages.
+ *
+ * @package Airship\Engine\Contract
+ */
 interface LedgerStorageInterface
 {
     /**

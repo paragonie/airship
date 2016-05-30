@@ -6,6 +6,10 @@ use \Airship\Engine\{
     State
 };
 
+/**
+ * @global State $state
+ */
+
 // Always check for changes to channel keys before initiating update
 require_once __DIR__.'/channel.php';
 

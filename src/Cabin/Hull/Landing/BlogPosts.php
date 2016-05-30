@@ -4,7 +4,6 @@ namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Alerts\Router\EmulatePageNotFound;
 use \Airship\Cabin\Hull\Blueprint\Blog;
-use \Airship\Engine\Lens;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -452,7 +451,8 @@ class BlogPosts extends LandingGear
     public function readPost(string $year, string $month, string $slug)
     {
         $blogPost = $this->blog->getBlogPost($year, $month, $slug);
-        if ($post = $this->post()) {
+        $post = $this->post();
+        if ($post) {
             if ($this->addComment($post, (int) $blogPost['postid'])) {
                 if (!$this->isLoggedIn()) {
                     $this->storeLensVar(

@@ -182,7 +182,7 @@ class Landing
         if (!empty($cArgs)) {
             $cache = Util::hash($name.':'.\json_encode($cArgs));
         } else {
-            $cArgs = array();
+            $cArgs = [];
             $cache = Util::hash($name.'[]');
         }
 

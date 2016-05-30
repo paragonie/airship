@@ -17,7 +17,13 @@ class FileStore implements LedgerStorageInterface
     protected $basedir;
     protected $fileFormat;
     protected $timeFormat;
-    
+
+    /**
+     * FileStore constructor.
+     * @param string $baseDirectory
+     * @param string $logfileFormat
+     * @param string $timeFormat
+     */
     public function __construct(
         string $baseDirectory = '',
         string $logfileFormat = self::FILE_FORMAT,

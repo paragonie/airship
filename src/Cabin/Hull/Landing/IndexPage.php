@@ -6,6 +6,10 @@ use Airship\Cabin\Hull\Blueprint\Blog;
 
 require_once __DIR__.'/init_gear.php';
 
+/**
+ * Class IndexPage
+ * @package Airship\Cabin\Hull\Landing
+ */
 class IndexPage extends LandingGear
 {
     /**

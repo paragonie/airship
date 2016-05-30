@@ -2,19 +2,31 @@
 declare(strict_types=1);
 namespace Airship\Installer;
 
+/**
+ * Class Commands
+ * @package Airship\Installer
+ */
 class Commands
 {
+    /**
+     * Commands constructor.
+     * @param array $argv
+     */
     public function __construct(array $argv = [])
     {
         $args = \array_slice($argv, 2);
         switch ($argv[1]) {
             case 'reset':
-                return $this->reset(...$args);
+                $this->reset(...$args);
+                break;
             default:
-                return $this->usage($argv[1], ...$args);
+                $this->usage($argv[1], ...$args);
         }
     }
-    
+
+    /**
+     * @param array ...$args
+     */
     public function reset(...$args)
     {
         \file_put_contents(
@@ -29,7 +41,11 @@ class Commands
             ROOT.'/public/launch.php'
         );
     }
-    
+
+    /**
+     * @param $command
+     * @param array ...$args
+     */
     public function usage($command, ...$args)
     {
         

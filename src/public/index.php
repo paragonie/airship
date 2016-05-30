@@ -1,8 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Gears;
-use \Airship\Engine\Cache\File as FileCache;
+use \Airship\Engine\{
+    Database,
+    Gears,
+    Cache\File as FileCache,
+    State
+};
+
+/**
+ * @global array $active
+ * @global Database[] $dbPool
+ * @global State $state
+ */
 
 // Are we still installing?
 if (
@@ -115,13 +125,15 @@ if (!empty($state->universal['debug'])) {
 
         // Show previous throwables as well:
         $n = 1;
-        while ($e = $e->getPrevious()) {
+        $e = $e->getPrevious();
+        while ($e) {
             echo "\n", \str_repeat('#', 80), "\n";
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",
                 $e->getCode(), "\n\n",
                 $e->getTraceAsString();
             ++$n;
+            $e = $e->getPrevious();
         }
     }
     // This is just for benchmarking purposes:

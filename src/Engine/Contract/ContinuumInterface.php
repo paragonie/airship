@@ -7,6 +7,10 @@ use \Airship\Engine\Continuum\Updaters\{
     UpdateInfo
 };
 
+/**
+ * Interface ContinuumInterface
+ * @package Airship\Engine\Contract
+ */
 interface ContinuumInterface
 {
     /**

@@ -253,8 +253,10 @@ function expand_version(string $version): int
 function get_ancestors(string $class): array
 {
     $classes = [$class];
-    while ($class = \get_parent_class($class)) {
+    $class = \get_parent_class($class);
+    while ($class) {
         $classes[] = $class;
+        $class = \get_parent_class($class);
     }
     return $classes;
 }
@@ -286,7 +288,7 @@ function get_caller_namespace(int $offset = 0): string
 /**
  * Get a database class
  * 
- * @staticvar array $_cache
+ * @static array $_cache
  * 
  * @param string $id Database identifier
  * @return Database
@@ -674,15 +676,18 @@ function slugFromTitle(string $title): string
 /**
  * @param string $prefix  Prefix
  * @param string $ext     File extension
- * @param string $dir     WHich directory?
+ * @param string $dir     Which directory?
  * @return string
  */
-function tempnam(string $prefix, string $ext, string $dir = ''): string
-{
+function tempnam(
+    string $prefix = 'airship-',
+    string $ext = '',
+    string $dir = ''
+): string {
     if (empty($dir)) {
         $dir = \sys_get_temp_dir();
     }
-    $temp = \tempnam($dir, 'airship-');
+    $temp = \tempnam($dir, $prefix);
     \unlink($temp);
     return $temp . '.' . $ext;
 }
@@ -709,7 +714,7 @@ function throwableToArray(\Throwable $ex): array
 }
 
 /**
- * Invoke all of the tighten[Boltnamegoeshere]Bolt() methods automatically
+ * Invoke all of the tighten[BoltNameGoesHere]Bolt() methods automatically
  *
  * @param object $obj
  */
@@ -724,7 +729,7 @@ function tightenBolts($obj)
 }
 
 /**
- * Create a unique ID (e.g. for perma-links)
+ * Create a unique ID (e.g. for permalinks)
  *
  * @param int $length
  * @return string

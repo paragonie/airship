@@ -191,7 +191,7 @@ class AutoPilot implements RouterInterface
             $uri = $_SERVER['REQUEST_URI'] ?? '';
         }
         if (empty($scheme)) {
-            $scheme = self::isHTTPSconnection()
+            $scheme = self::isHTTPSConnection()
                 ? 'https'
                 : 'http';
         }

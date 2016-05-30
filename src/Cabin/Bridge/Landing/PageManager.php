@@ -468,7 +468,7 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
-
+            return;
         }
         $this->lens('pages/page_history_diff', [
             'left' => $left,

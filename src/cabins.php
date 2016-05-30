@@ -36,7 +36,7 @@ if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     foreach ($cabins as $key => $cabin) {
         try {
             $cabinName = !empty($cabin['namespace'])
-                ? $cabin['namepace']
+                ? $cabin['namespace']
                 : $cabin['name'];
 
             $cabin['data'] = \Airship\loadJSON(

@@ -802,7 +802,7 @@ select .depth3 {
 #bridge_tag_list .table-cell {
     background-color: rgba(255, 255, 255, 0.1);
     border: 0px solid rgba(0, 0, 0, 0.5);
-    border-width-top: 1px;
+    border-top-width: 1px;
     padding: 2px;
 }
 #bridge_author_list .table-row:nth-child(2n),
