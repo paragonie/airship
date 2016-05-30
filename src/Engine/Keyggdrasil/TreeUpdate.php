@@ -10,7 +10,7 @@ use \Airship\Engine\Continuum\{
     Channel,
     Supplier
 };
-use Airship\Engine\State;
+use \Airship\Engine\State;
 use \ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
@@ -29,6 +29,7 @@ class TreeUpdate
     const ACTION_REVOKE_KEY = 'REVOKE';
     const ACTION_CORE_UPDATE = 'CORE';
     const ACTION_PACKAGE_UPDATE = 'PACKAGE';
+
     const KEY_TYPE_MASTER = 'master';
     const KEY_TYPE_SIGNING = 'sub';
 

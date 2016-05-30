@@ -9,8 +9,12 @@ use \Airship\Alerts\{
 use \ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
- * The gears class contains a bunch of methods for the plugin system 
+ * Class Gears
+ *
+ * The gears class contains a bunch of methods for the plugin system
  * (Airship Gears)
+ *
+ * @package Airship\Engine
  */
 abstract class Gears
 {

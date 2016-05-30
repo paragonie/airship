@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Contract;
 
-use \Airship\Engine\Continuum\{
+use \Airship\Engine\Continuum\Updaters\{
     UpdateFile,
     UpdateInfo
 };
@@ -23,7 +23,8 @@ interface ContinuumInterface
      * Download an update into a temp file
      *
      * @param UpdateInfo $update
-     * @return array
+     * @param string $apiEndpoint
+     * @return UpdateFile
      */
     public function downloadUpdateFile(UpdateInfo $update, string $apiEndpoint = 'download'): UpdateFile;
 

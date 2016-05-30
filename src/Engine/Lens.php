@@ -16,7 +16,14 @@ class Lens
 {
     use LogBolt;
 
+    /**
+     * @var \Twig_Environment
+     */
     private $twigEnv;
+
+    /**
+     * @var array
+     */
     private $stored = [];
 
     /**

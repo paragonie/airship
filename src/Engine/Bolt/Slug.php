@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use Airship\Engine\Database;
-
 /**
  * Trait Slug
  *
@@ -21,8 +19,11 @@ trait Slug
      * @param string $column Which column to check for duplicates?
      * @return string
      */
-    protected function makeGenericSlug(string $title, string $table, string $column = 'slug'): string
-    {
+    protected function makeGenericSlug(
+        string $title,
+        string $table,
+        string $column = 'slug'
+    ): string {
         if (IDE_HACKS) {
             $this->db = \Airship\get_database();
         }
@@ -31,6 +32,7 @@ trait Slug
             ' WHERE ' .
                 $this->db->escapeIdentifier($column) .
             ' = ?';
+
         $slug = $base_slug = \Airship\slugFromTitle($title);
         $i = 1;
         while ($this->db->cell($query, $slug) > 0) {

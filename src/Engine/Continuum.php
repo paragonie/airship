@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use \Airship\Engine\Continuum\Supplier;
 use \Airship\Engine\Continuum\Updaters\{
     Airship as AirshipUpdater,
     Cabin as CabinUpdater,
@@ -10,6 +11,7 @@ use \Airship\Engine\Continuum\Updaters\{
 };
 use \Airship\Engine\Bolt\Log as LogBolt;
 use \Airship\Engine\Bolt\Supplier as SupplierBolt;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \Psr\Log\LogLevel;
 
 /**
@@ -24,9 +26,20 @@ class Continuum
     use LogBolt;
     use SupplierBolt;
 
+    /**
+     * @var Hail
+     */
     protected $hail;
+
+    /**
+     * @var Supplier[]
+     */
     public $supplierCache;
-    
+
+    /**
+     * Continuum constructor.
+     * @param Hail|null $hail
+     */
     public function __construct(Hail $hail = null)
     {
         $config = State::instance();
@@ -228,16 +241,17 @@ class Continuum
         }
         return $motifs;
     }
-    
+
     /**
      * Get metadata from the Phar
-     * 
+     *
      * @param string $file
      * @return array
      */
     public function getPharManifest(string $file): array
     {
         $phar = new \Phar($file);
+        $phar->setAlias(Base64UrlSafe::encode(\random_bytes(33)));
         $meta = $phar->getMetadata();
         if (empty($meta)) {
             return [];

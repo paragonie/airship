@@ -9,7 +9,6 @@ use \Airship\Engine\Bolt\{
     Log as LogBolt,
     Security as SecurityBolt
 };
-use \Airship\Engine\Cache\File;
 use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Security\CSRF;
 use \ParagonIE\CSPBuilder\CSPBuilder;

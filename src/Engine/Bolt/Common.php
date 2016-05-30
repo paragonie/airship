@@ -3,8 +3,10 @@ declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
 use \Airship\Alerts\CabinNotFound;
-use Airship\Engine\AutoPilot;
-use \Airship\Engine\State;
+use \Airship\Engine\{
+    AutoPilot,
+    State
+};
 
 /**
  * Trait Common

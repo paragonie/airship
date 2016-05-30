@@ -7,6 +7,7 @@ use \Airship\Alerts\Router\{
     FallbackLoop
 };
 use \Airship\Engine\Contract\RouterInterface;
+use \ParagonIE\CSPBuilder\CSPBuilder;
 
 /**
  * Class AutoPilot
@@ -17,15 +18,44 @@ use \Airship\Engine\Contract\RouterInterface;
  */
 class AutoPilot implements RouterInterface
 {
-    // Current request path
+    /**
+     * @var string Current request path
+     */
     public static $mypath = '*';
+
+    /**
+     * @var string
+     */
     public static $path = '*';
+
+    /**
+     * @var string
+     */
     public static $active_cabin;
+
+    /**
+     * @var string
+     */
     public static $patternPrefix = '';
 
+    /**
+     * @var CSPBuilder
+     */
     protected $CSPBuilder;
+
+    /**
+     * @var array
+     */
     protected $cabin = [];
+
+    /**
+     * @var Lens
+     */
     protected $lens;
+
+    /**
+     * @var Database[]
+     */
     protected $databases;
 
     /**
@@ -220,8 +250,11 @@ class AutoPilot implements RouterInterface
                 self::$mypath = $path;
                 self::$path = \substr($_SERVER['REQUEST_URI'], \strlen(self::$patternPrefix) + 1);
                 try {
+                    // Attempt to serve the page:
                     return $this->serve($landing, \array_slice($args, 1));
                 } catch (EmulatePageNotFound $ex) {
+                    // If this exception is throw, we will attempt to serve
+                    // the fallback route (which might end up with a 404 page)
                     return $this->serveFallback();
                 }
             }
@@ -273,9 +306,11 @@ class AutoPilot implements RouterInterface
     public function testCabinForUrl(string $url): string
     {
         $state = State::instance();
+
         $scheme = \parse_url($url, PHP_URL_SCHEME);
         $hostname = \parse_url($url, PHP_URL_HOST);
         $path = \parse_url($url, PHP_URL_PATH) ?? '/';
+
         foreach ($state->cabins as $k => $cabin) {
             if (self::isActiveCabinKey(
                 $k,
@@ -311,7 +346,7 @@ class AutoPilot implements RouterInterface
     }
 
     /**
-     * Actually serve the routes
+     * Actually serve the routes. Called by route() above.
      * 
      * @param array $route
      * @param array $args
@@ -357,7 +392,8 @@ class AutoPilot implements RouterInterface
             $this->databases,
             self::$patternPrefix
         );
-        
+
+        // Tighten the Bolts!
         \Airship\tightenBolts($landing);
 
         if (!\method_exists($landing, $method)) {
@@ -376,7 +412,7 @@ class AutoPilot implements RouterInterface
     /**
      * This serves the fallback route, if it's defined.
      *
-     * The fallbackroute handles:
+     * The fallback route handles:
      *
      * - Custom pages (if any exist), or
      * - Redirects
@@ -418,7 +454,7 @@ class AutoPilot implements RouterInterface
      */
     protected static function forceHTTPS(string $scheme = ''): bool
     {
-        if (!self::isHTTPSconnection($scheme)) {
+        if (!self::isHTTPSConnection($scheme)) {
             // Should we redirect to an HTTPS endpoint?
             \Airship\redirect(
                 'https://'.$_SERVER['HTTP_HOST'].'/'.$_SERVER['REQUEST_URI'],
@@ -434,7 +470,7 @@ class AutoPilot implements RouterInterface
      * @param string $scheme
      * @return bool
      */
-    public static function isHTTPSconnection(string $scheme = ''): bool
+    public static function isHTTPSConnection(string $scheme = ''): bool
     {
         if (empty($scheme)) {
             $scheme = $_SERVER['HTTPS'] ?? false;

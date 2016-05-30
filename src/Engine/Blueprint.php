@@ -19,6 +19,9 @@ class Blueprint
     use LogBolt;
     use SecurityBolt;
 
+    /**
+     * @var Database
+     */
     public $db;
 
     public function __construct(Database $db = null)

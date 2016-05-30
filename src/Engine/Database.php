@@ -4,7 +4,6 @@ namespace Airship\Engine;
 
 use \Airship\Alerts\Database as DBAlert;
 use \Airship\Engine\Contract\DBInterface;
-use MongoDB\BSON\Type;
 
 /**
  * Class Database

@@ -91,22 +91,6 @@ class Keyggdrasil
     }
 
     /**
-     * We're storing a new Airship core update in the database.
-     *
-     * @param Channel $chan
-     * @param TreeUpdate $update
-     */
-    protected function airshipUpdate(Channel $chan, TreeUpdate $update)
-    {
-        $supplier = $update->getSupplier();
-        $name = $supplier->getName();
-
-        /**
-         * @todo insert into airship_package_updates
-         */
-    }
-
-    /**
      * Does this peer notary see the same Merkle root?
      *
      * @param Peer $peer
@@ -346,31 +330,10 @@ class Keyggdrasil
                 $this->insertKey($chan, $update);
             } elseif ($update->isRevokeKey()) {
                 $this->revokeKey($chan, $update);
-            } elseif ($update->isPackageUpdate()) {
-                $this->packageUpdate($chan, $update);
-            } elseif ($update->isAirshipUpdate()) {
-                $this->airshipUpdate($chan, $update);
             }
         }
         return $this->db->commit();
     }
-
-    /**
-     * We're storing the checksum of a new package update
-     *
-     * @param Channel $chan
-     * @param TreeUpdate $update
-     */
-    protected function packageUpdate(Channel $chan, TreeUpdate $update)
-    {
-        $supplier = $update->getSupplier();
-        $name = $supplier->getName();
-
-        /**
-         * @todo insert into airship_package_updates
-         */
-    }
-
 
     /**
      * We're storing a new public key for this supplier.

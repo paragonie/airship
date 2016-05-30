@@ -2,9 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Alerts\Hail\SignatureFailed;
+use \Airship\Alerts\{
+    FileSystem\FileNotFound,
+    Hail\NoAPIResponse,
+    Hail\SignatureFailed
+};
 use \Airship\Engine\{
     Bolt\Log as LogBolt,
     Bolt\Supplier as SupplierBolt,
@@ -13,8 +15,10 @@ use \Airship\Engine\{
     State
 };
 use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\Halite\File;
-use \ParagonIE\Halite\Util;
+use \ParagonIE\Halite\{
+    File,
+    Util
+};
 use \Psr\Log\LogLevel;
 
 /**

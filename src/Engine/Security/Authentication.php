@@ -4,12 +4,15 @@ namespace Airship\Engine\Security;
 
 use \Airship\Alerts\Security\LongTermAuthAlert;
 use \Airship\Engine\Contract\DBInterface;
-use \Airship\Engine\Database;
-use \ParagonIE\Halite\{
-    Symmetric\EncryptionKey,
-    Password
+use \ParagonIE\ConstantTime\{
+    Base64,
+    Binary
 };
-use \ParagonIE\ConstantTime\Base64;
+use \ParagonIE\Halite\{
+    Password,
+    Symmetric\EncryptionKey,
+    Util as CryptoUtil
+};
 
 /**
  * Class Authentication
@@ -30,8 +33,13 @@ class Authentication
      */
     const SELECTOR_BYTES = 12;
     const VALIDATOR_BYTES = 33;
-    
+    const LONG_TERM_AUTH_BYTES = 45;
+
+    /**
+     * @var DBInterface
+     */
     protected $db;
+
     protected $dummyHash;
     /**
      * $this->tableConfig contains all of the selectors (table/column names)
@@ -71,12 +79,8 @@ class Authentication
         // 504 bits of entropy; good luck
         $dummy = Base64::encode(\random_bytes(63));
         $this->dummyHash = Password::hash($dummy, $this->key);
-        
-        if (!empty($db)) {
-            $this->db = $db;
-        } else {
-            $this->db = \Airship\get_database();
-        }
+
+        $this->db = $db ?? \Airship\get_database();
     }
     
     /**
@@ -145,7 +149,7 @@ class Authentication
         
         // Let's fetch the user data from the database
         $user = $this->db->row(
-            'SELECT * FROM '.$table.' WHERE '.$f['username'].' = ?',
+            'SELECT * FROM ' . $table . ' WHERE ' . $f['username'] . ' = ?',
             $username
         );
         if (empty($user)) {
@@ -166,11 +170,11 @@ class Authentication
     /**
      * Authenticate a user by a long-term authentication token (e.g. a cookie).
      * 
-     * @param string $token = '
-     * @return mixed int (success) or FALSE (failure)
+     * @param string $token
+     * @return mixed int
      * @throws LongTermAuthAlert
      */
-    public function loginByToken(string $token = '')
+    public function loginByToken(string $token = ''): int
     {
         $table = $this->db->escapeIdentifier(
             $this->tableConfig['table']['longterm']
@@ -185,22 +189,22 @@ class Authentication
 
         $decoded = Base64::decode($token);
         if ($decoded === false) {
-            return false;
-        } elseif (
-            \mb_strlen($decoded, '8bit')
-                !== 
-            (self::SELECTOR_BYTES + self::VALIDATOR_BYTES)
-        ) {
-            return false;
+            throw new LongTermAuthAlert(
+                \trk('errors.security.invalid_persistent_token')
+            );
+        } elseif (Binary::safeStrlen($decoded) !== self::LONG_TERM_AUTH_BYTES) {
+            throw new LongTermAuthAlert(
+                \trk('errors.security.invalid_persistent_token')
+            );
         }
-        $sel = \mb_substr($decoded, 0, self::SELECTOR_BYTES, '8bit');
-        $val = \Sodium\crypto_generichash(
-            \mb_substr($decoded, self::SELECTOR_BYTES, null, '8bit')
+        $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
+        $val = CryptoUtil::raw_hash(
+            Binary::safeSubstr($decoded, self::SELECTOR_BYTES)
         );
         \Sodium\memzero($decoded);
         
         $record = $this->db->row(
-            'SELECT * FROM '.$table.' WHERE '.$f['selector'].' = ?',
+            'SELECT * FROM ' . $table . ' WHERE ' . $f['selector'] . ' = ?',
             Base64::encode($sel)
         );
         if (empty($record)) {
@@ -229,14 +233,10 @@ class Authentication
         $decoded = Base64::decode($token);
         if ($decoded === false) {
             return false;
-        } elseif (
-            \mb_strlen($decoded, '8bit')
-                !==
-            (self::SELECTOR_BYTES + self::VALIDATOR_BYTES)
-        ) {
+        } elseif (Binary::safeStrlen($decoded) !== self::LONG_TERM_AUTH_BYTES) {
             return false;
         }
-        $sel = \mb_substr($decoded, 0, self::SELECTOR_BYTES, '8bit');
+        $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
         \Sodium\memzero($decoded);
 
         // Delete the old token

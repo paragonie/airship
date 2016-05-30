@@ -76,11 +76,12 @@ abstract class Gadgets
     public static function unloadNextCargo(string $name)
     {
         $state = State::instance();
-        $iter = $state->cargoIterator;
-        if (isset($iter[$name])) {
-            $cargo = self::unloadCargo($name, $iter[$name]);
-            ++$iter[$name];
-            $state->cargoIterator = $iter;
+        $iterate = $state->cargoIterator;
+
+        if (isset($iterate[$name])) {
+            $cargo = self::unloadCargo($name, $iterate[$name]);
+            ++$iterate[$name];
+            $state->cargoIterator = $iterate;
             return $cargo;
         }
         return [];

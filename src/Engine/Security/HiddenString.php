@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use ParagonIE\Halite\Util;
+use ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Class HiddenString
@@ -18,7 +18,7 @@ class HiddenString
 
     public function __construct(string $value, bool $allowInline = false)
     {
-        $this->internalStringValue = Util::safeStrcpy($value);
+        $this->internalStringValue = CryptoUtil::safeStrcpy($value);
         $this->allowInline = $allowInline;
     }
 
@@ -52,7 +52,7 @@ class HiddenString
      */
     public function getString(): string
     {
-        return Util::safeStrcpy($this->internalStringValue);
+        return CryptoUtil::safeStrcpy($this->internalStringValue);
     }
 
     /**
@@ -63,7 +63,7 @@ class HiddenString
     public function __toString(): string
     {
         if ($this->allowInline) {
-            return Util::safeStrcpy($this->internalStringValue);
+            return CryptoUtil::safeStrcpy($this->internalStringValue);
         }
         return '';
     }

@@ -7,7 +7,7 @@ use \Airship\Alerts\Continuum\{
     MotifZipFailed
 };
 use \Airship\Alerts\Hail\NoAPIResponse;
-use Airship\Engine\{
+use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
     Continuum\Supplier,

@@ -31,7 +31,7 @@ interface RouterInterface
     ): bool;
 
     /**
-     * 
+     * This method should fly your guest to their designated landing.
      */
     public function route();
 }

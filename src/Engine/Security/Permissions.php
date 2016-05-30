@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
+use \Airship\Alerts\Database\NotImplementedException;
 use \Airship\Engine\{
     AutoPilot,
     Database,
     State,
     Contract\DBInterface
 };
-use \Airship\Alerts\Database\NotImplementedException;
 
 /**
  * Class Permissions

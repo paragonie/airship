@@ -77,8 +77,16 @@ class File implements CacheInterface
         $path = $this->getRelativePath($key);
 
         // Let's make sure both directories exist
-        $dirs = self::getRelativeHash($this->baseDir . DIRECTORY_SEPARATOR . $key);
-        $dirName = \implode(DIRECTORY_SEPARATOR, [$this->baseDir, $dirs[0]]);
+        $dirs = self::getRelativeHash(
+            $this->baseDir . DIRECTORY_SEPARATOR . $key
+        );
+        $dirName = \implode(
+            DIRECTORY_SEPARATOR,
+            [
+                $this->baseDir,
+                $dirs[0]
+            ]
+        );
         if (!\is_dir($dirName)) {
             \mkdir($dirName, self::PERMS);
         }
@@ -103,8 +111,10 @@ class File implements CacheInterface
      * @return string|array
      * @throws InvalidType
      */
-    public static function getRelativeHash(string $preHash, bool $asString = false)
-    {
+    public static function getRelativeHash(
+        string $preHash,
+        bool $asString = false
+    ) {
         $state = State::instance();
         $cacheKey = $state->keyring['cache.hash_key'];
 

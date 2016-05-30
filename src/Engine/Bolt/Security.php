@@ -2,16 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use Airship\Engine\{
-    AutoPilot, Gears, Security\Authentication, Security\Permissions, State
+use \Airship\Engine\{
+    AutoPilot,
+    Gears,
+    Security\Authentication,
+    Security\Permissions,
+    State
 };
 use \Airship\Alerts\Security\LongTermAuthAlert;
 use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Alerts\Security\UserNotLoggedIn;
-use \ParagonIE\Halite\{
-    Cookie,
-    Symmetric\EncryptionKey
-};
+use \ParagonIE\Halite\Cookie;
 use \Psr\Log\LogLevel;
 
 /**
@@ -37,13 +38,13 @@ trait Security
     public $airship_perms;
 
     /**
-     * After loading the Security bolt in place, configure it
-     * 
+     * After loading the Security bolt in place, configure it.
      */
     public function tightenSecurityBolt()
     {
         static $tightened = false;
         if ($tightened) {
+            // This was already run once.
             return;
         }
         $state = State::instance();
@@ -68,25 +69,25 @@ trait Security
      * Perform a permissions check
      *
      * @param string $action action label (e.g. 'read')
-     * @param string $context_id context regex (in perm_contexts)
+     * @param string $context context regex (in perm_contexts)
      * @param string $cabin (defaults to current cabin)
-     * @param integer $user_id (defaults to current user)
+     * @param integer $userID (defaults to current user)
      * @return boolean
      */
     public function can(
         string $action,
-        string $context_id = '',
+        string $context = '',
         string $cabin = '',
-        int $user_id = 0
+        int $userID = 0
     ): bool {
         if (!($this->airship_perms instanceof Permissions)) {
             $this->tightenSecurityBolt();
         }
         return $this->airship_perms->can(
             $action,
-            $context_id,
+            $context,
             $cabin,
-            $user_id
+            $userID
         );
     }
 
@@ -146,6 +147,9 @@ trait Security
             // We're logged in!
             return true;
         } elseif (isset($_COOKIE[$token_idx])) {
+            // We're not logged in, but we have a long-term
+            // authentication token, so we should do an automatic
+            // login and, if successful, respond affirmatively.
             $token = $this->airship_cookie->fetch($token_idx);
             if (!empty($token)) {
                 return $this->doAutoLogin($token, $uid_idx, $token_idx);
@@ -184,7 +188,7 @@ trait Security
             if (IDE_HACKS) {
                 $autoPilot = new AutoPilot();
             }
-            $httpsOnly = (bool) $autoPilot::isHTTPSconnection();
+            $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 
             // Rotate the authentication token:
             $this->airship_cookie->store(
@@ -226,6 +230,8 @@ trait Security
 
     /**
      * Completely wipe all authentication mechanisms (Session, Cookie)
+     *
+     * @return bool
      */
     public function completeLogOut(): bool
     {

@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use Airship\Alerts\Hail\SignatureFailed;
-use GuzzleHttp\{
+use \Airship\Alerts\Hail\SignatureFailed;
+use \GuzzleHttp\{
     Client,
     ClientInterface,
     Exception\TransferException,
@@ -73,8 +73,8 @@ class Hail
         $fp = \fopen($filename, 'wb');
         $opts = $this->params($params, $url);
 
-        $opts[CURLOPT_FOLLOWLOCATION] = true;
-        $opts[CURLOPT_FILE] = $fp;
+        $opts[\CURLOPT_FOLLOWLOCATION] = true;
+        $opts[\CURLOPT_FILE] = $fp;
 
         $result = $this->client->post($url, $opts);
 
@@ -106,7 +106,7 @@ class Hail
      */
     public function getJSON(string $url, array $params = [])
     {
-        $this->parseJSON(
+        return \Airship\parseJSON(
             $this->get($url, $params),
             true
         );
@@ -134,13 +134,13 @@ class Hail
      *
      * @param string $url
      * @param array $params
-     * @return ResponseInterface
+     * @return string
      * @throws TransferException
      */
     public function getReturnBody(
         string $url,
         array $params = []
-    ): ResponseInterface {
+    ): string {
         $response = $this->client->get(
             $url,
             $this->params($params, $url)
@@ -173,6 +173,7 @@ class Hail
         if ($response instanceof Response) {
             return $this->parseSignedJSON($response, $publicKey);
         }
+        return null;
     }
 
     /**
@@ -237,15 +238,14 @@ class Hail
     }
 
     /**
-     * Parse an usigned JSON response
+     * Parse a signed JSON response
      *
      * @param Response $response
-     * @param SignaturePublicKey $publicKey
      * @return mixed
      * @throws SignatureFailed
      * @throws TransferException
      */
-    public function parseJSON(Response $response, SignaturePublicKey $publicKey)
+    public function parseJSON(Response $response)
     {
         $code = $response->getStatusCode();
         if ($code >= 200 && $code < 300) {
@@ -330,7 +330,7 @@ class Hail
      */
     public function postJSON(string $url, array $params = [])
     {
-        return $this->parseJSON(
+        return \Airship\parseJSON(
             $this->post($url, $params),
             true
         );
@@ -341,7 +341,7 @@ class Hail
      *
      * @param string $url
      * @param array $params
-     * @return ResponseInterface
+     * @return string
      * @throws TransferException
      */
     public function postReturnBody(

@@ -4,7 +4,7 @@ namespace Airship\Engine\Continuum\Updaters;
 
 use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\Hail\NoAPIResponse;
-use Airship\Engine\{
+use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
     Continuum\Sandbox,

@@ -4,6 +4,7 @@ namespace Airship\Engine\Security;
 
 use \Airship\Alerts\Security\CSRF\InvalidConfig;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Class CSRF
@@ -142,10 +143,9 @@ class CSRF
         } else {
             // We mixed in the client IP address to generate the output
             $expected = Base64UrlSafe::encode(
-                \Sodium\crypto_generichash(
+                CryptoUtil::raw_keyed_hash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
-                    Base64UrlSafe::decode($stored['token']),
-                    \Sodium\CRYPTO_GENERICHASH_BYTES
+                    Base64UrlSafe::decode($stored['token'])
                 )
             );
         }
@@ -185,7 +185,10 @@ class CSRF
      */
     protected function generateToken(string $lockTo = ''): array
     {
-        $index = Base64UrlSafe::encode(\random_bytes(18));
+        // Create a distinct index:
+        do {
+            $index = Base64UrlSafe::encode(\random_bytes(18));
+        } while (isset($_SESSION[$this->sessionIndex][$index]));
         $token = Base64UrlSafe::encode(\random_bytes(33));
 
         $_SESSION[$this->sessionIndex][$index] = [
