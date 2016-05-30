@@ -1,13 +1,18 @@
 CREATE OR REPLACE VIEW view_hull_users_authors AS
     SELECT
         a.*,
-        u.userid,
-        u.default_author_for_user
+        u.uniqueid,
+        j.userid,
+        j.in_charge,
+        j.default_author_for_user
     FROM
         hull_blog_authors a
-    LEFT JOIN
-        hull_blog_author_owners u
-            ON u.authorid = a.authorid
+    JOIN
+        hull_blog_author_owners j
+            ON j.authorid = a.authorid
+    JOIN
+        airship_users u
+            ON j.userid = u.userid
     ;
 
 CREATE OR REPLACE VIEW view_hull_blog_post AS

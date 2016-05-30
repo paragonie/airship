@@ -1,0 +1,77 @@
+<h2>{{ __('Users for Author "%s"', 'default', author.name)|e('html') }}</h2>
+
+{% if form_error %}
+<p class="error">{{ form_error|e('html') }}</p>
+{% endif %}
+<form method="post">{{ form_token() }}
+    {% if inCharge %}
+        {# The form for adding more users to this author profile. #}
+        <fieldset id="bridge_author_users_add">
+            <legend>{{ __("Grant Another User Access to this Author") }}</legend>
+            <div class="table full-width">
+                <label class="table-cell table-min-width" for="user_unique">
+                    {{ __("User's Public ID:") }}
+                </label>
+                <div class="table-cell">
+                    <input class="full-width" id="user_unique" type="text" name="add_user" placeholder="{{
+                        __("Your Public ID is: " ~ user_unique_id())|e('html_attr')
+                    }}" />
+                </div>
+                <div class="table-cell large_checkbox cell-pad-left table-min-width">
+                    <input id="user_in_charge" type="checkbox" name="in_charge" value="1" />
+                    <label for="user_in_charge">{{ __("Grant Owner status to this User") }}</label>
+                </div>
+                <div class="table-cell cell-pad-left table-min-width">
+                    <button type="submit" name="btnAddUser" value="1" class="pure-button pure-button-primary">
+                        {{ __("Add User") }}
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    {% endif %}
+
+{% if users %}
+    <table id="bridge_author_users_list">
+        <thead>
+            <tr>{% if inCharge %}
+                    <th>{{ __("Actions") }}</th>
+                {% endif %}
+                <th>{{ __("User's Public ID") }}</th>
+                <th>{{ __("Owner?") }}</th>
+            </tr>
+        </thead>
+        <tbody>
+{% for user in users%}
+            <tr>{% if inCharge %}
+                <td class="table-min-width cell-pad-right">
+                    <button name="toggle_owner" value="{{ user.uniqueid }}" class="pure-button pure-button-secondary">
+                        {{
+                            (user.in_charge
+                                ? '<i class="fa fa-thumbs-down"></i>' ~ __("Revoke Ownership")
+                                : '<i class="fa fa-thumbs-up"></i>' ~ __("Promote to Owner")
+                            )|raw
+                        }}
+                    </button>
+                    <button name="remove_user" value="{{ user.uniqueid }}" class="pure-button pure-button-primary">
+                        <i class="fa fa-remove"></i>{{ __("Remove User") }}
+                    </button>
+                </td>{% endif %}
+                <td>
+                    <code>{{ user.uniqueid }}</code>
+                </td>
+                <td class="table-min-width text-center">{{
+                    user.in_charge
+                        ? '<i class="fa fa-check"></i> Yes'
+                        : '<i class="fa fa-close"></i> No'
+                    }}</td>
+            </tr>
+{% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+</form>
+
+<hr />
+<p>
+    <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}author">{{ __("Return to the Authors Menu") }}</a>
+</p>

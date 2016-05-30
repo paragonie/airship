@@ -947,6 +947,9 @@ select .depth3 {
 #bridge_files_upload_form {
     margin-top: 1em;
 }
+.cell-pad-left {
+    padding-left: 0.5rem !important;
+}
 .cell-pad-right {
     padding-right: 1ex;
 }
@@ -1396,6 +1399,9 @@ fieldset.preferences > legend {
 .table-pad-right {
     padding-right: 0.5rem;
 }
+.table-pad-left {
+    padding-left: 0.5rem;
+}
 .blog-comment-label {
     padding-top: 0.66ex;
 }
@@ -1523,4 +1529,43 @@ fieldset.preferences > legend {
     background-color: #451d80;
     color :#eee;
     font-weight: bold;
+}
+#bridge_author_users_list {
+    background-image: -webkit-linear-gradient(
+            left,
+            rgba(110, 115, 81, 0.83) 0%,
+            rgba(23, 11, 4, 0.5) 100%
+    );
+    background-image: -moz-linear-gradient(
+            left,
+            rgba(110, 115, 81, 0.83) 0%,
+            rgba(23, 11, 4, 0.5) 100%
+    );
+    background-image: -ms-linear-gradient(
+            left,
+            rgba(110, 115, 81, 0.83) 0%,
+            rgba(23, 11, 4, 0.5) 100%
+    );
+    background-image: -o-linear-gradient(
+            left,
+            rgba(110, 115, 81, 0.83) 0%,
+            rgba(23, 11, 4, 0.5) 100%
+    );
+    background-image: linear-gradient(
+            left,
+            rgba(110, 115, 81, 0.83) 0%,
+            rgba(23, 11, 4, 0.5) 100%
+    );
+    border: 1px solid #000;
+    border-collapse: separate;
+    border-spacing: 2px;
+    margin: 1em;
+}
+#bridge_author_users_list th {
+    background-color: #D0D0C8;
+    padding: 0.5ex;
+}
+#bridge_author_users_list td {
+    background-color: #E0E0D8;
+    padding: 0.5ex 1ex;
 }

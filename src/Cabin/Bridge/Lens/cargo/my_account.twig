@@ -4,7 +4,15 @@
         <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
     {% endif %}
     <fieldset>
-        <label>General Information</label>
+        <legend>General Information</legend>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="real_name">{{ __("Public ID") }}:</label>
+            </div>
+            <div class="form-column">
+                <code>{{ user_unique_id()|e('html') }}</code>
+            </div>
+        </div>
         <div class="form-row">
             <div class="form-column">
                 <label for="real_name">{{ __("Real Name") }}:</label>
@@ -21,9 +29,17 @@
                 <input type="text" id="email" name="email" value="{{ account.email|e('html_attr') }}" placeholder="Optional" />
             </div>
         </div>
+        <div class="form-row">
+            <div class="form-column">
+                <label for="email">{{ __("Email Address") }}:</label>
+            </div>
+            <div class="form-column">
+                <input type="text" id="email" name="email" value="{{ account.email|e('html_attr') }}" placeholder="Optional" />
+            </div>
+        </div>
     </fieldset>
     <fieldset>
-        <label>Security Information</label>
+        <legend>Security Information</legend>
         <div class="form-row">
             <div class="form-column">
                 <label for="username">{{ __("Userame") }}:</label>
@@ -43,7 +59,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <label>Custom Profile Fields</label>
+        <legend>Custom Profile Fields</legend>
         {% include cargo("bridge_account_custom_fields") ignore missing %}
     </fieldset>
     <hr class="bridge-hr" />

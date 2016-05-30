@@ -115,6 +115,7 @@ $lens->func('user_author_ids');
 $lens->func('user_display_name');
 $lens->func('user_motif');
 $lens->func('user_name');
+$lens->func('user_unique_id');
 
 $lens_edited = true;
 

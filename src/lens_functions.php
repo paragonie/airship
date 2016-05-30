@@ -708,3 +708,22 @@ function user_name(int $userId = null): string
         $userId
     );
 }
+
+/**
+ * Get the user's public display name.
+ *
+ * @param int|null $userId
+ * @return string
+ * @throws \Airship\Alerts\Database\DBException
+ */
+function user_unique_id(int $userId = null): string
+{
+    if (empty($userId)) {
+        $userId = \Airship\LensFunctions\userid();
+    }
+    $db = \Airship\get_database();
+    return $db->cell(
+        'SELECT uniqueid FROM airship_users WHERE userid = ?',
+        $userId
+    );
+}

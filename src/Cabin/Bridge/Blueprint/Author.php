@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
+use \Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
 use \Airship\Engine\Bolt\{
     Orderable,
     Slug
@@ -22,6 +23,47 @@ class Author extends BlueprintGear
 {
     use Orderable;
     use Slug;
+
+    /**
+     * Add a user, given its unique id.
+     *
+     * @param int $authorId
+     * @param string $uniqueId
+     * @param bool $inCharge
+     * @return bool
+     * @throws UserFeedbackException
+     */
+    public function addUserByUniqueId(
+        int $authorId,
+        string $uniqueId,
+        bool $inCharge = false
+    ): bool {
+        $this->db->beginTransaction();
+        $userID = (int) $this->db->cell(
+            'SELECT userid FROM airship_users WHERE uniqueid = ?',
+            $uniqueId
+        );
+
+        if (empty($userID)) {
+            throw new UserFeedbackException(
+                'There is no user with this Public ID.'
+            );
+        }
+        if ($this->userHasAccess($authorId, $userID)) {
+            throw new UserFeedbackException(
+                'This User already has access to this Author.'
+            );
+        }
+        $this->db->insert(
+            'hull_blog_author_owners',
+            [
+                'authorid' => $authorId,
+                'userid' => $userID,
+                'in_charge' => $inCharge
+            ]
+        );
+        return $this->db->commit();
+    }
 
     /**
      * Create a new Author profile
@@ -110,11 +152,11 @@ class Author extends BlueprintGear
      * @param string $dir
      * @return array
      */
-    public function getForUser(int $userid, string $sortby = 'name', string $dir = 'ASC'): array
+    public function getForUser(int $userId, string $sortby = 'name', string $dir = 'ASC'): array
     {
         $authors = $this->db->run(
             'SELECT * FROM view_hull_users_authors WHERE userid = ?' . $this->orderBy($sortby, $dir, ['name', 'created']),
-            $userid
+            $userId
         );
         if (empty($authors)) {
             return [];
@@ -210,12 +252,120 @@ class Author extends BlueprintGear
     }
 
     /**
+     * Get the users
+     *
+     * @param int $authorId
+     * @param string $sortby
+     * @param string $dir
+     * @return array
+     */
+    public function getUsersForAuthor(int $authorId): array
+    {
+        $queryString = 'SELECT
+                *
+            FROM
+                view_hull_users_authors  
+            WHERE
+                authorid = ? 
+            ORDER BY
+                in_charge ASC, uniqueid ASC';
+
+        $authors = $this->db->run(
+            $queryString,
+            $authorId
+        );
+        if (empty($authors)) {
+            return [];
+        }
+        return $authors;
+    }
+
+    /**
      * 
      * @return int
      */
     public function numAuthors(): int
     {
         return (int) $this->db->cell('SELECT count(authorid) FROM hull_blog_authors');
+    }
+
+    /**
+     * Remove a user from this author
+     *
+     * @param int $authorId
+     * @param string $uniqueId
+     * @return bool
+     * @throws UserFeedbackException
+     */
+    public function removeUserByUniqueId(
+        int $authorId,
+        string $uniqueId
+    ): bool {
+        $this->db->beginTransaction();
+        $userID = (int) $this->db->cell(
+            'SELECT userid FROM airship_users WHERE uniqueid = ?',
+            $uniqueId
+        );
+
+        if (empty($userID)) {
+            throw new UserFeedbackException(
+                'There is no user with this Public ID.'
+            );
+        }
+        if (!$this->userHasAccess($authorId, $userID)) {
+            throw new UserFeedbackException(
+                "This User doesn't have access to this Author."
+            );
+        }
+        $this->db->delete(
+            'hull_blog_author_owners',
+            [
+                'authorid' => $authorId,
+                'userid' => $userID
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
+     * Toggle the 'owner' flag.
+     *
+     * @param int $authorId
+     * @param string $uniqueId
+     * @return bool
+     * @throws UserFeedbackException
+     */
+    public function toggleOwnerStatus(
+        int $authorId,
+        string $uniqueId
+    ): bool {
+        $this->db->beginTransaction();
+        $userID = (int) $this->db->cell(
+            'SELECT userid FROM airship_users WHERE uniqueid = ?',
+            $uniqueId
+        );
+
+        if (empty($userID)) {
+            throw new UserFeedbackException(
+                'There is no user with this Public ID.'
+            );
+        }
+        if (!$this->userHasAccess($authorId, $userID)) {
+            throw new UserFeedbackException(
+                "This User doesn't have access to this Author."
+            );
+        }
+        $this->db->update(
+            'hull_blog_author_owners',
+            [
+                'in_charge' => !$this->userIsOwner($authorId, $userID)
+            ],
+            [
+                'authorid' => $authorId,
+                'userid' => $userID
+            ]
+        );
+        return $this->db->commit();
     }
 
     /**
@@ -247,5 +397,43 @@ class Author extends BlueprintGear
         );
 
         return $this->db->commit();
+    }
+
+    /**
+     * Is this user an owner of the given
+     *
+     * @param int $authorId
+     * @param int $userId
+     * @return bool
+     */
+    public function userHasAccess(int $authorId, int $userId = 0): bool
+    {
+        if ($userId < 1) {
+            $userId = $this->getActiveUserId();
+        }
+        return $this->db->cell(
+            'SELECT count(*) FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
+            $authorId,
+            $userId
+        ) > 0;
+    }
+
+    /**
+     * Is this user an owner of the given
+     *
+     * @param int $authorId
+     * @param int $userId
+     * @return bool
+     */
+    public function userIsOwner(int $authorId, int $userId = 0): bool
+    {
+        if ($userId < 1) {
+            $userId = $this->getActiveUserId();
+        }
+        return $this->db->cell(
+            'SELECT in_charge FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
+            $authorId,
+            $userId
+        );
     }
 }

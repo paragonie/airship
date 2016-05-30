@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint as BP;
+use \Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
 use \Airship\Engine\Bolt\Orderable as OrderableBolt;
 
 require_once __DIR__.'/init_gear.php';
@@ -147,15 +148,66 @@ class Author extends LoggedInUsersOnly
     public function users(string $authorId = '')
     {
         $authorId += 0; // Coerce to int
-
-        if (!$this->isSuperUser()) {
+        if ($this->isSuperUser()) {
+            $inCharge = true;
+        } else {
             $authorsForUser = $this->author->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             // Check
             if (!\in_array($authorId, $authorsForUser)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/author/');
+                \Airship\redirect($this->airship_cabin_prefix . '/author');
             }
+            $inCharge = $this->author->userIsOwner($authorId);
+        }
+
+        // Only someone in charge can add/remove users:
+        if ($inCharge) {
+            $post = $this->post();
+            if ($post) {
+                if ($this->manageAuthorUsers($authorId, $post)) {
+                    \Airship\redirect($this->airship_cabin_prefix . '/author/users/' . $authorId);
+                }
+            }
+        }
+
+        $this->lens('author/users', [
+            'author' => $this->author->getById($authorId),
+            'inCharge' => $inCharge,
+            'users' => $this->author->getUsersForAuthor($authorId)
+        ]);
+    }
+
+    /**
+     * Add/remove users, toggle ownership status.
+     *
+     * @param int $authorId
+     * @param array $post
+     * @return bool
+     */
+    protected function manageAuthorUsers(int $authorId, array $post): bool
+    {
+        try {
+            if (!empty($post['btnAddUser'])) {
+                return $this->author->addUserByUniqueId(
+                    $authorId,
+                    $post['add_user'],
+                    !empty($post['in_charge'])
+                );
+            } elseif (!empty($post['remove_user'])) {
+                return $this->author->removeUserByUniqueId(
+                    $authorId,
+                    $post['remove_user']
+                );
+            } elseif (!empty($post['toggle_owner'])) {
+                return $this->author->toggleOwnerStatus(
+                    $authorId,
+                    $post['toggle_owner']
+                );
+            }
+        } catch (UserFeedbackException $ex) {
+            $this->storeLensVar('form_error', (string) $ex);
+            return false;
         }
     }
 }
