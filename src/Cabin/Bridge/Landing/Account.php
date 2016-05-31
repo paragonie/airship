@@ -234,7 +234,7 @@ class Account extends LandingGear
                 'Changing password for user, ' . $account['username'],
                 LogLevel::WARNING
             );
-            $this->acct->setPassphrase($post['passphrase'], $_SESSION[$idx]);
+            $this->acct->setPassphrase(new HiddenString($post['passphrase']), $_SESSION[$idx]);
             unset($post['username'], $post['passphrase']);
         }
 
