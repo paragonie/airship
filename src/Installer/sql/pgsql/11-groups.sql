@@ -40,7 +40,7 @@ RETURNS TABLE (parent BIGINT) AS $$
                 g.inherits
             FROM airship_groups g
             JOIN parents p
-                ON g.inherits = p.groupid
+                ON p.inherits = g.groupid
         )
     )
     SELECT $1
