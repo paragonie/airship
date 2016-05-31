@@ -425,7 +425,10 @@ class Blog extends BlueprintGear
      */
     public function getBlogPostById(int $postId): array
     {
-        $post = $this->db->row('SELECT * FROM view_hull_blog_post WHERE postid = ?', $postId);
+        $post = $this->db->row(
+            'SELECT * FROM view_hull_blog_post WHERE postid = ?',
+            $postId
+        );
         if (empty($post)) {
             return [];
         }
@@ -440,7 +443,10 @@ class Blog extends BlueprintGear
      */
     public function getBlogPostLatestVersion(int $postId): array
     {
-        $post = $this->db->row(\Airship\queryString('blog.posts.latest_version'), $postId);
+        $post = $this->db->row(
+            \Airship\queryString('blog.posts.latest_version'),
+            $postId
+        );
         if (empty($post)) {
             return [];
         }
@@ -727,7 +733,10 @@ class Blog extends BlueprintGear
      */
     public function getTagInfo(int $tagId): array
     {
-        $tagInfo = $this->db->row('SELECT * FROM hull_blog_tags WHERE tagid = ?', $tagId);
+        $tagInfo = $this->db->row(
+            'SELECT * FROM hull_blog_tags WHERE tagid = ?',
+            $tagId
+        );
         if (empty($tagInfo)) {
             return [];
         }

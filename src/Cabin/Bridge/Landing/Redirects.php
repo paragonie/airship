@@ -28,7 +28,13 @@ class Redirects extends LoggedInUsersOnly
      */
     public function forCabin(string $cabin = '')
     {
-
+        $this->lens(
+            'redirect_for_cabin',
+            [
+                'cabin' => $cabin,
+                'redirects' => $this->pg->getRedirectsForCabin($cabin)
+            ]
+        );
     }
 
     /**

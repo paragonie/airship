@@ -1,0 +1,42 @@
+{% set can_update = can_update() %}{% set can_delete = can_delete() %}
+<a href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/new" class="pure-button pure-button-primary">
+    <i class="fa fa-plus"></i> New Redirect
+</a>
+<hr />
+{% if redirects %}
+<div class="table full-width">
+    <div class="table-row table-header">
+        <div class="table-cell">{{ __("Actions") }}</div>
+        <div class="table-cell">{{ __("Path") }}</div>
+        <div class="table-cell">{{ __("Destination") }}</div>
+    </div>
+    {% for redir in redirects %}
+    <div class="table-row table-body-row">
+        <div class="table-cell table-min-width table-pad-right">
+            {% if can_update %}
+            <a class="pure-button pure-button-primary" href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/edit/{{ redir.redirectid }}">
+                <i class="fa fa-pencil"></i>
+                Edit
+            </a>
+            {% endif %}
+            {% if can_delete %}
+            <a class="pure-button pure-button-secondary" href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/delete/{{ redir.redirectid }}">
+                <i class="fa fa-remove"></i>
+                Delete
+            </a>
+            {% endif %}
+        </div>
+        <div class="table-cell monospace">
+            {{ redir.oldpath|e('html') }}
+        </div>
+        <div class="table-cell monospace">
+            {{ redir.newpath|e('html') }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p>
+        {{ __("There are no redirects for this Cabin.") }}
+    </p>
+{% endif %}

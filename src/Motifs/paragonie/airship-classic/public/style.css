@@ -659,6 +659,7 @@ a:hover .bridge-icon {
 .bridge_file_options input[type=checkbox],
 .bridge_page_options input[type=checkbox],
 .large_checkbox input[type=checkbox],
+input[type=checkbox].large_checkbox,
 .form-metadata-wrapper legend input[type=checkbox] {
     zoom: 1.33;
     transform: scale(1.33);
@@ -1568,4 +1569,19 @@ fieldset.preferences > legend {
 #bridge_author_users_list td {
     background-color: #E0E0D8;
     padding: 0.5ex 1ex;
+}
+.bottom-pad {
+    padding-bottom: 0.5ex;
+}
+#bridge_redirects_for_cabin .table-header .table-cell {
+    background-color: #210;
+    color: #eee;
+    font-weight: bold;
+    padding: 0.5ex;
+}
+#bridge_redirects_for_cabin .table-body-row .table-cell {
+    padding: 0.5ex;
+}
+#bridge_redirects_for_cabin .table-body-row:nth-child(2n+1) {
+    background-color: rgba(51, 48, 0, 0.1);
 }

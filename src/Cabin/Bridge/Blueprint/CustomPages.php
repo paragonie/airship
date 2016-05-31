@@ -542,6 +542,24 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * Get the redirects for this particular cabin.
+     *
+     * @param string $cabin
+     * @return array
+     */
+    public function getRedirectsForCabin(string $cabin): array
+    {
+        $redirects = $this->db->run(
+            'SELECT * FROM airship_custom_redirect WHERE cabin = ? ORDER BY oldpath ASC',
+            $cabin
+        );
+        if (empty($redirects)) {
+            return [];
+        }
+        return $redirects;
+    }
+
+    /**
      * List all of the custom pages contained within a given cabin and directory
      *
      * @param string $dir
