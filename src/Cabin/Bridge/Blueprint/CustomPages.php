@@ -264,6 +264,7 @@ class CustomPages extends HullCustomPages
      */
     public function deletePage(int $pageId): bool
     {
+        $this->db->beginTransaction();
         $this->db->delete(
             'airship_custom_page_version',
             [
@@ -276,7 +277,25 @@ class CustomPages extends HullCustomPages
                 'pageid' => $pageId
             ]
         );
-        return true;
+        return $this->db->commit();
+    }
+
+    /**
+     * Delete a redirect.
+     *
+     * @param int $redirectID
+     * @return bool
+     */
+    public function deleteRedirect(int $redirectID): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'airship_custom_redirect',
+            [
+                'redirectid' => $redirectID
+            ]
+        );
+        return $this->db->commit();
     }
 
     /**

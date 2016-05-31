@@ -33,6 +33,8 @@
     redirect to the new URL to prevent visitors from getting an unfortunate
     HTTP 404 error. This allows you to funnel traffic towards a meaningful
     destination.
+  * Implemented the redirect management section. Now you can edit/delete custom
+    URL redirects (some of which are created when you delete/rename content).
 
 ## Version 0.1.0 - 2016-04-05
 

@@ -1,0 +1,8 @@
+{% extends base_template() %}
+
+{% block main %}
+    <h2>{{ __("Delete Redirect for " ~ cabin|e('html')) }}</h2>
+    <div id="bridge_redirect_edit">
+        {% include cargo("bridge_redirect_delete") ignore missing %}
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<form method="post">{{ form_token() }}
+    <div class="table full-width bottom-pad">
+        <div class="table-row">
+            <label class="table-cell table-min-width bottom-pad" for="old_url">{{ __("Old URL") }}:</label>
+            <div class="table-cell monospace">
+                {{ redirect["oldpath"] }}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell table-min-width" for="new_url">{{ __("New URL") }}:</label>
+            <div class="table-cell monospace">
+                {{ redirect["newpath"] }}
+            </div>
+        </div>
+    </div>
+    <button class="pure-button pure-button-primary">
+        <i class="fa fa-remove"></i> {{ __("Delete Redirect") }}
+    </button>
+    <a href="{{ cabin_url() }}redirects/{{ cabin|e('html_attr') }}" class="pure-button pure-button-tertiary">
+        {{ __("Cancel") }}
+    </a>
+</form>

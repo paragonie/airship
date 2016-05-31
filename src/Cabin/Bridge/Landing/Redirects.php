@@ -30,8 +30,44 @@ class Redirects extends LoggedInUsersOnly
         $this->pg = $this->blueprint('CustomPages');
     }
 
+    /**
+     * Delete an existing redirect
+     *
+     * @param string $cabin
+     * @param string $redirectId
+     */
+    public function deleteRedirect(string $cabin, string $redirectId)
+    {
+        $cabins = $this->getCabinNamespaces();
+        if (!\in_array($cabin, $cabins) && !$this->can('delete')) {
+            \Airship\redirect($this->airship_cabin_prefix . '/redirects');
+        }
+        $post = $this->post();
+        $redirectId += 0;
+        $redirect = $this->pg->getRedirect($cabin, $redirectId);
+
+        if (empty($redirect)) {
+            \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+        }
+        if ($post) {
+            if ($this->pg->deleteRedirect($redirectId)) {
+                \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+            }
+        }
+        $this->lens(
+            'redirect/delete',
+            [
+                'cabin' => $cabin,
+                'redirect' => $redirect
+            ]
+        );
+    }
 
     /**
+     * Edit a redirect.
+     *
+     * @param string $cabin
+     * @param string $redirectId
      * @route redirects/{string}/edit/{id}
      */
     public function editRedirect(string $cabin, string $redirectId)
@@ -59,7 +95,7 @@ class Redirects extends LoggedInUsersOnly
             }
         }
         $this->lens(
-            'redirect_edit',
+            'redirect/edit',
             [
                 'cabin' => $cabin,
                 'redirect' => $redirect
@@ -68,8 +104,10 @@ class Redirects extends LoggedInUsersOnly
     }
 
     /**
-     * @route redirects/{string}
+     * List all of the redirects for a given cabin
+     *
      * @param string $cabin
+     * @route redirects/{string}
      */
     public function forCabin(string $cabin = '')
     {
@@ -78,7 +116,7 @@ class Redirects extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->lens(
-            'redirect_for_cabin',
+            'redirect/for_cabin',
             [
                 'cabin' => $cabin,
                 'redirects' => $this->pg->getRedirectsForCabin($cabin)
@@ -87,6 +125,8 @@ class Redirects extends LoggedInUsersOnly
     }
 
     /**
+     * Serve a submenu of available cabins
+     *
      * @route redirects
      */
     public function index()
@@ -100,6 +140,9 @@ class Redirects extends LoggedInUsersOnly
     }
 
     /**
+     * Create a new redirect
+     *
+     * @param string $cabin
      * @route redirects/{string}/new
      */
     public function newRedirect(string $cabin)
@@ -132,7 +175,7 @@ class Redirects extends LoggedInUsersOnly
             }
         }
         $this->lens(
-            'redirect_new',
+            'redirect/new',
             [
                 'cabin' => $cabin
             ]
