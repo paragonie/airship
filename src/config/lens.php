@@ -97,6 +97,7 @@ $lens->func('base_template');
 $lens->func('form_token');
 $lens->func('motifs');
 $lens->func('cabin_config');
+$lens->func('cabin_custom_config');
 $lens->func('cabin_url');
 $lens->func('can');
 $lens->func('csp_hash');

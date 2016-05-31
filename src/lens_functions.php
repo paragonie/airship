@@ -49,6 +49,17 @@ function cabin_config(string $name = \CABIN_NAME): array
 }
 
 /**
+ * READ-ONLY access to the cabin settings
+ *
+ * @param string $name
+ * @return array
+ */
+function cabin_custom_config(string $name = \CABIN_NAME): array
+{
+    return \Airship\loadJSON(ROOT . '/Cabin/' . $name . '/config/config.json');
+}
+
+/**
  * Get the canon URL for a given Cabin
  *
  * @param string $cabin

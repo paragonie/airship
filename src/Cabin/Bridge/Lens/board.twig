@@ -2,6 +2,7 @@
 {% set title = __("Boarding") %}
 
 {% block content %}
+    {% if cabin_custom_config()['board']['enabled'] %}
     <div class="width50 center">
     <h2>{{ __("Register a New Account") }}</h2>
     {%  if post_response %}
@@ -53,6 +54,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block page_js %}

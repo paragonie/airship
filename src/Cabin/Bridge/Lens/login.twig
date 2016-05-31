@@ -44,7 +44,7 @@
                     </div>
                 </form>
             </fieldset>
-            {% if cabin_config()['board']['enabled'] %}
+            {% if cabin_custom_config()['board']['enabled'] %}
                 <hr />
                 <a href="{{ cabin_url('Bridge')|e('html_attr') }}board" class="pure-button pure-button-secondary">
                     <i class="fa fa-user-plus"></i>
