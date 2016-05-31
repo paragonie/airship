@@ -534,6 +534,9 @@ function redirect(
     string $destination,
     array $params = []
 ) {
+    if (empty($destination)) {
+        $destination = '/';
+    }
     if (empty($params)) {
         \header('Location: '.$destination);
     } else {
