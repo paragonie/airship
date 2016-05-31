@@ -590,3 +590,6 @@ label.required-form::after {
 .min-width-100 {
     min-width: 100px;
 }
+.bottom-extra-pad {
+    padding-bottom: 1.5ex;
+}

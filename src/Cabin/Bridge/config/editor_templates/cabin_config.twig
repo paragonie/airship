@@ -1,1 +1,110 @@
-{# @todo #}
+{#
+            {% include cargo("bridge_cabin_config") with {
+                "config_extra": config.cabin_extra,
+                "motifs": config.motifs,
+                "twig_vars": config["twig_vars"]
+            } %}
+#}
+<div class="table table-pad-1 full-width">
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_title">
+                {{ __("Page Title") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_title"
+                    type="text"
+                    name="twig_vars[title]"
+                    value="{{ twig_vars['title']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_tagline">
+                {{ __("Tagline") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_tagline"
+                    type="text"
+                    name="twig_vars[tagline]"
+                    value="{{ twig_vars['tagline']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            {{ __("Registration:") }}
+        </div>
+        <div class="table-cell full-width">
+            <input
+                {% if config_extra['board']['enabled'] %}checked="checked"{% endif %}
+                id="board_enabled"
+                type="checkbox"
+                class="large_checkbox"
+                name="config_extra[board][enabled]"
+            />
+            <label for="board_enabled">{{ __("Enable registration?") }}</label>
+
+            <br />
+
+            <input
+                {% if config_extra['board']['captcha'] %}checked="checked"{% endif %}
+                id="board_captcha"
+                type="checkbox"
+                class="large_checkbox"
+                name="config_extra[board][captcha]"
+            />
+            <label for="board_captcha">{{ __("Require a CAPTCHA to register?") }}</label>
+
+            <br />
+
+            <fieldset>
+                <legend>{{ __("ReCAPTCHA Settings") }}</legend>
+                <label for="recaptcha_secret_key">{{ __("ReCAPTCHA Secret Key") }}:</label><br />
+                <input
+                        class="full-width"
+                        id="recaptcha_secret_key"
+                        type="text"
+                        name="config_extra[recaptcha][secret-key]"
+                        value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
+                />
+
+                <hr />
+                
+                <label for="recaptcha_site_key">{{ __("ReCAPTCHA Site Key") }}:</label><br />
+                <input
+                        class="full-width"
+                        id="recaptcha_site_key"
+                        type="text"
+                        name="config_extra[recaptcha][site-key]"
+                        value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
+                /><br />
+            </fieldset>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="file_cache">
+                {{ __("File Cache") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                id="file_cache"
+                type="text"
+                name="config_extra[file][cache]"
+                value="{{ config_extra['file']['cache']|e('html_attr') }}"
+            /> (seconds)
+        </div>
+    </div>
+</div>

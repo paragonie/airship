@@ -51,6 +51,9 @@ class Account extends LandingGear
             // You're already logged in!
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        if (!$this->config('board.enabled')) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
 
         $p = $this->post();
         if (!empty($p)) {

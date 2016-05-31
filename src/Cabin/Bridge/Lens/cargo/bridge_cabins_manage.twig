@@ -9,7 +9,13 @@
         </div>
         <h3>{{ __("Cabin Configuration") }}</h3>
         <div id="config">
-            {% include cargo("bridge_cabin_config") with {
+            {% set tryInclude = {
+                0: "cabin_links/" ~ name ~ "/cabin_config.twig"
+            }|merge(
+                cargo("bridge_cabin_config")
+            ) %}
+            {% include tryInclude with {
+                "cabin": name,
                 "config_extra": config.cabin_extra,
                 "motifs": config.motifs,
                 "twig_vars": config["twig_vars"]

@@ -1,1 +1,176 @@
-{# @todo #}
+{#
+            {% include cargo("bridge_cabin_config") with {
+                "config_extra": config.cabin_extra,
+                "motifs": config.motifs,
+                "twig_vars": config["twig_vars"]
+            } %}
+#}
+<div class="table table-pad-1 full-width">
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_title">
+                {{ __("Page Title") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_title"
+                    type="text"
+                    name="twig_vars[title]"
+                    value="{{ twig_vars['title']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_tagline">
+                {{ __("Tagline") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_tagline"
+                    type="text"
+                    name="twig_vars[tagline]"
+                    value="{{ twig_vars['tagline']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top bottom-extra-pad">
+            <label for="twigvars_tagline">
+                {{ __("Navigation Bar") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            <div
+                data-name="twig_vars[navbar]"
+                class="dynamic_navigation"
+                id="twig_vars_navbar"
+            >{{ twig_vars['navbar']|json_encode }}</div>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_blog_title">
+                {{ __("Blog Header") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_blog_title"
+                    type="text"
+                    name="twig_vars[blog][title]"
+                    value="{{ twig_vars['blog']['title']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_blog_title">
+                {{ __("Blog Sub-Header") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    class="full-width"
+                    id="twigvars_blog_tagline"
+                    type="text"
+                    name="twig_vars[blog][tagline]"
+                    value="{{ twig_vars['blog']['tagline']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top bottom-extra-pad">
+            <label for="blog_per_page">
+                {{ __("Posts Per Page") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            <input
+                    id="blog_per_page"
+                    type="text"
+                    name="config_extra[blog][per_page]"
+                    value="{{ config_extra['blog']['per_page']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            {{ __("Comments:") }}
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
+                    id="blog_comments_enabled"
+                    type="checkbox"
+                    class="large_checkbox"
+                    name="config_extra[blog][comments][enabled]"
+            />
+            <label for="blog_comments_enabled">{{ __("Allow Comments?") }}</label>
+
+            <br />
+
+            <input
+                    {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
+                    id="blog_recaptcha_enabled"
+                    type="checkbox"
+                    class="large_checkbox"
+                    name="config_extra[blog][comments][recaptcha]"
+            />
+            <label for="blog_recaptcha_enabled">{{ __("Require ReCAPTCHA?") }}</label>
+
+            <br />
+
+            <fieldset>
+                <legend>{{ __("ReCAPTCHA Settings") }}</legend>
+                <label for="recaptcha_secret_key">{{ __("ReCAPTCHA Secret Key") }}:</label><br />
+                <input
+                        class="full-width"
+                        id="recaptcha_secret_key"
+                        type="text"
+                        name="config_extra[recaptcha][secret-key]"
+                        value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
+                />
+
+                <hr />
+
+                <label for="recaptcha_site_key">{{ __("ReCAPTCHA Site Key") }}:</label><br />
+                <input
+                        class="full-width"
+                        id="recaptcha_site_key"
+                        type="text"
+                        name="config_extra[recaptcha][site-key]"
+                        value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
+                /><br />
+            </fieldset>
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="file_cache">
+                {{ __("File Cache") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                    id="file_cache"
+                    type="text"
+                    name="config_extra[file][cache]"
+                    value="{{ config_extra['file']['cache']|e('html_attr') }}"
+            /> (seconds)
+        </div>
+    </div>
+</div>

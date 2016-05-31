@@ -19,9 +19,8 @@
     <div class="table-cell">
         <input
                 id="csp_inherit_box"
-                data-key="{{ key|e('html_attr') }}"
                 type="checkbox"
-                name="content_security_policy[{{ key|e('html') }}][inherit]"
+                name="content_security_policy[inherit]"
                 value="1"
                 {% if csp['inherit'] %}
                     checked="checked"
