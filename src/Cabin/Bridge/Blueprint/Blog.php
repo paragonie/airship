@@ -264,7 +264,9 @@ class Blog extends BlueprintGear
                 $blogUrl = \implode('/', [
                     'blog',
                     $blogPost['blogyear'],
-                    $blogPost['blogmonth'],
+                    $blogPost['blogmonth'] > 9
+                        ? $blogPost['blogmonth']
+                        : '0' . $blogPost['blogmonth'],
                     $blogPost['slug']
                 ]);
                 try {
