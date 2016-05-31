@@ -94,6 +94,10 @@ class Account extends LandingGear
      */
     public function login()
     {
+        if ($this->isLoggedIn())  {
+            // You're already logged in!
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
         $p = $this->post();
         if (!empty($p)) {
             return $this->processLogin($p);
