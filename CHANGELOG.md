@@ -6,9 +6,10 @@
     both acceptable ways to access the bridge (this decision is left to user
     configuration, of course).
   * Bump minimum Halite version to `2.1`.
-  * Implemented Keyggdrasil, an Airship-exclusive protocol that allows us to 
-    guarantee that all Airships have the same public key and package update
-    history. This is accomplished by a peer verification mechanism.
+  * Implemented [Keyggdrasil](https://paragonie.com/blog/2016/05/keyggdrasil-continuum-cryptography-powering-cms-airship),
+    an Airship-exclusive protocol that allows us to guarantee that all Airships
+    have the same public key and package update history. This is accomplished
+    by a peer verification mechanism.
   * Improved Airship Installer workflow.
   * Added command line scripts to install new Cabins, Gadgets, and Motifs.
   * Allow users to select their preferred Motif for each Cabin.
