@@ -28,6 +28,10 @@
   * Lots of reorganization, refactoring, and clean-up.
   * Moved the [CMS Airship Documentation](https://github.com/paragonie/airship-docs)
     to its own dedicated git repository.
+  * When you change a blog post's slug, you can optionally create an HTTP 301
+    redirect to the new URL to prevent visitors from getting an unfortunate
+    HTTP 404 error. This allows you to funnel traffic towards a meaningful
+    destination.
 
 ## Version 0.1.0 - 2016-04-05
 

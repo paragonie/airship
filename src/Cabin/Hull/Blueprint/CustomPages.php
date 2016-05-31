@@ -303,7 +303,11 @@ class CustomPages extends BlueprintGear
         if (empty($lookup)) {
             return false;
         }
-        \Airship\redirect($lookup['newpath']); // Exits
+        // Internal redirects only. Don't create open redirect vulnerabilities.
+        \Airship\redirect(
+            \Airship\LensFunctions\cabin_url($lookup['cabin']) .
+            \trim($lookup['newpath'], '/')
+        ); // Exits
         return true;
     }
 }
