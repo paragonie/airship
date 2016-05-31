@@ -1,0 +1,8 @@
+{% extends base_template() %}
+
+{% block main %}
+    <h2>{{ __("Create Redirect for " ~ cabin|e('html')) }}</h2>
+    <div id="bridge_redirect_new">
+        {% include cargo("bridge_redirect_new") ignore missing %}
+    </div>
+{% endblock %}

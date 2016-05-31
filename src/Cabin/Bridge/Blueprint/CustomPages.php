@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
+use Airship\Alerts\Database\QueryError;
 use \Airship\Cabin\Hull\Blueprint\CustomPages as HullCustomPages;
 use \Airship\Cabin\Hull\Exceptions\{
     CustomPageCollisionException,
@@ -156,21 +157,57 @@ class CustomPages extends HullCustomPages
      * @param string $cabin
      * @return bool
      */
+    public function createDifferentCabinRedirect(
+        string $oldURL,
+        string $newURL,
+        string $cabin
+    ): bool {
+        $this->db->beginTransaction();
+        try {
+            $this->db->insert(
+                'airship_custom_redirect',
+                [
+                    'oldpath' => $oldURL,
+                    'newpath' => $newURL,
+                    'cabin' => $cabin,
+                    'same_cabin' => false
+                ]
+            );
+        } catch (QueryError $e) {
+            $this->db->rollBack();
+            return false;
+        }
+        return $this->db->commit();
+    }
+
+    /**
+     * Create a redirect
+     *
+     * @param string $oldURL
+     * @param string $newURL
+     * @param string $cabin
+     * @return bool
+     */
     public function createSameCabinRedirect(
         string $oldURL,
         string $newURL,
         string $cabin
     ): bool {
         $this->db->beginTransaction();
-        $this->db->insert(
-            'airship_custom_redirect',
-            [
-                'oldpath' => $oldURL,
-                'newpath' => $newURL,
-                'cabin' => $cabin,
-                'same_cabin' => true
-            ]
-        );
+        try {
+            $this->db->insert(
+                'airship_custom_redirect',
+                [
+                    'oldpath' => $oldURL,
+                    'newpath' => $newURL,
+                    'cabin' => $cabin,
+                    'same_cabin' => true
+                ]
+            );
+        } catch (QueryError $e) {
+            $this->db->rollBack();
+            return false;
+        }
         return $this->db->commit();
     }
 
@@ -547,6 +584,25 @@ class CustomPages extends HullCustomPages
      * @param string $cabin
      * @return array
      */
+    public function getRedirect(string $cabin, int $redirectID): array
+    {
+        $redirect = $this->db->row(
+            'SELECT * FROM airship_custom_redirect WHERE cabin = ? AND redirectid = ? ORDER BY oldpath ASC',
+            $cabin,
+            $redirectID
+        );
+        if (empty($redirect)) {
+            return [];
+        }
+        return $redirect;
+    }
+
+    /**
+     * Get the redirects for this particular cabin.
+     *
+     * @param string $cabin
+     * @return array
+     */
     public function getRedirectsForCabin(string $cabin): array
     {
         $redirects = $this->db->run(
@@ -754,6 +810,34 @@ class CustomPages extends HullCustomPages
         if ($publish) {
             // Nuke the page cache
             $this->clearPageCache();
+        }
+        return $this->db->commit();
+    }
+
+    /**
+     * @param int $redirectID
+     * @param array $post
+     * @return bool
+     */
+    public function updateRedirect(int $redirectID, array $post): bool
+    {
+        $this->db->beginTransaction();
+        $sameCabin = !\preg_match('#^https?://#', $post['new_url']);
+        try {
+            $this->db->update(
+                'airship_custom_redirect',
+                [
+                    'oldpath' => $post['old_url'],
+                    'newpath' => $post['new_url'],
+                    'same_cabin' => !$sameCabin
+                ],
+                [
+                    'redirectid' => $redirectID
+                ]
+            );
+        } catch (QueryError $e) {
+            $this->db->rollBack();
+            return false;
         }
         return $this->db->commit();
     }

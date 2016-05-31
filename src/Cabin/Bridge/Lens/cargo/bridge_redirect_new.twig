@@ -1,0 +1,29 @@
+<form method="post">{{ form_token() }}
+    <div class="table full-width bottom-pad">
+        <div class="table-row">
+            <label class="table-cell table-min-width bottom-pad" for="old_url">{{ __("Old URL") }}:</label>
+            <div class="table-cell table-min-width text-right">
+                {{ cabin_url(cabin) }}
+            </div>
+            <div class="table-cell">
+                <input class="full-width" type="text" name="old_url" placeholder="bridge/redirects/{{ cabin|e('html_attr') }}/new" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell table-min-width" for="new_url">{{ __("New URL") }}:</label>
+            <div class="table-cell table-min-width">
+                (Relative or absolute)
+            </div>
+            <div class="table-cell">
+                <input class="full-width" type="text" name="new_url" placeholder="https://example.com" />
+            </div>
+        </div>
+    </div>
+    <button class="pure-button pure-button-primary">
+        <i class="fa fa-save"></i> {{ __("Create Redirect") }}
+    </button>
+    <a href="{{ cabin_url() }}redirects/{{ cabin|e('html_attr') }}" class="pure-button pure-button-tertiary">
+        {{ __("Cancel") }}
+    </a>
+</form>

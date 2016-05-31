@@ -54,6 +54,7 @@ CREATE TABLE airship_custom_redirect (
 );
 CREATE INDEX ON airship_custom_redirect(cabin);
 CREATE INDEX ON airship_custom_redirect(oldpath);
+CREATE UNIQUE INDEX ON airship_custom_redirect(cabin, oldpath, newpath);
 
 DROP TRIGGER IF EXISTS update_airship_custom_dir_modtime ON airship_custom_dir;
 CREATE TRIGGER update_airship_custom_dir_modtime
