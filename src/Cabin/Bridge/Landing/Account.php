@@ -264,6 +264,8 @@ class Account extends LandingGear
      */
     protected function processBoard(array $post = [])
     {
+        $state = State::instance();
+
         if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
             $this->lens('board', [
                 'post_response' => [
@@ -294,7 +296,10 @@ class Account extends LandingGear
             exit;
         }
 
-        $this->acct->createUser($post);
+        $userID = $this->acct->createUser($post);
+        $idx = $state->universal['session_index']['user_id'];
+        $_SESSION[$idx] = $userID;
+
         \Airship\redirect($this->airship_cabin_prefix);
     }
     
