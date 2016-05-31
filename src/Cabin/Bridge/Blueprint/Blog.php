@@ -425,7 +425,7 @@ class Blog extends BlueprintGear
      */
     public function getBlogPostById(int $postId): array
     {
-        $post = $this->db->row('SELECT * FROM hull_blog_posts WHERE postid = ?', $postId);
+        $post = $this->db->row('SELECT * FROM view_hull_blog_post WHERE postid = ?', $postId);
         if (empty($post)) {
             return [];
         }
@@ -1076,6 +1076,45 @@ class Blog extends BlueprintGear
         }
         if ($post['format'] !== $old['format']) {
             $postUpdates['format'] = (string) $post['format'];
+        }
+        if ($post['slug'] !== $old['slug']) {
+            $bm = (string) $old['blogmonth'] < 10
+                    ? '0' . $old['blogmonth']
+                    : $old['blogmonth'];
+            $exists = $this->db->cell(
+                'SELECT count(*) FROM view_hull_blog_list WHERE blogmonth = ? AND blogyear = ? AND slug = ?',
+                $old['blogyear'],
+                $bm,
+                $post['slug']
+            );
+            if ($exists > 0) {
+                // Slug collision
+                return false;
+            }
+            $postUpdates['slug'] = (string) $post['slug'];
+            if (!empty($post['redirect_slug'])) {
+                $oldUrl = \implode('/', [
+                    'blog',
+                    $old['blogyear'],
+                    $bm,
+                    $old['slug']
+                ]);
+                $newUrl = \implode('/', [
+                    'blog',
+                    $old['blogyear'],
+                    $bm,
+                    $post['slug']
+                ]);
+                $this->db->insert(
+                    'airship_custom_redirect',
+                    [
+                        'oldpath' => $oldUrl,
+                        'newpath' => $newUrl,
+                        'cabin' => $this->cabin,
+                        'same_cabin' => true
+                    ]
+                );
+            }
         }
         if ($post['category'] !== $old['category']) {
             $postUpdates['category'] = (int) $post['category'];

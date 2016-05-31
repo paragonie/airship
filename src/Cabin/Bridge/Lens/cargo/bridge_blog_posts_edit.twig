@@ -1,17 +1,28 @@
 <h3>{{ __("Edit Blog Post") }}</h3>
 <form method="post">{{ form_token() }}
-    <div class="table">
+    <div class="table full-width">
 
         <div class="table-row">
-            <label class="table-cell" for="blog_post_title">{{ __("Post Title") }}:</label>
-            <div class="table-cell">
-                <input type="text" name="title" value="{{ _POST.title|default(blogpost.title)|e('html_attr') }}" />
+            <label class="table-cell table-min-width" for="blog_post_title">{{ __("Post Title") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input class="full-width" id="blog_post_title" type="text" name="title" value="{{ _POST.title|default(blogpost.title)|e('html_attr') }}" />
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_slug">{{ __("Slug") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input class="full-width" id="blog_post_slug" type="text" name="slug" data-original="{{ blogpost.slug|e('html_attr') }}" value="{{ _POST.slug|default(blogpost.slug)|e('html_attr') }}" />
+                <div id="blog_post_slug_checkbox_wrapper">
+                    <input type="checkbox" class="large_checkbox" name="redirect_slug" pattern="^[a-z0-9][a-z0-9\-]+$" id="redirect_slug" value="1" />
+                    <label for="redirect_slug">{{ __("Redirect the old URL to the new destination?") }}</label>
+                </div>
             </div>
         </div>
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
-            <div class="table-cell">
+            <div class="table-cell bottom-pad">
                 <select name="category" id="blog_post_category" class="treeselect">
                     <option value="0"> -None- </option>
                     {% for category in categories %}
@@ -23,7 +34,7 @@
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
-            <div class="table-cell">
+            <div class="table-cell bottom-pad">
             {% if is_admin() %}
                 <select name="author" id="blog_post_author" required="required" pattern="^\d+$">
                     <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
@@ -46,23 +57,29 @@
         </div>
 
         <div class="table-row">
-            <label class="table-cell" for="format">{{ __("Post Format") }}:</label>
-            <div class="table-cell">
+            <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
+            <div class="table-cell bottom-pad">
                 {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default(latest.format)} %}
             </div>
         </div>
 
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
-            <div class="table-cell bridge_blog_post_tags">
+            <div class="table-cell bridge_blog_post_tags bottom-pad">
                 {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default(blogpost.tags)} %}
             </div>
         </div>
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_description">{{ __("Description") }}:</label>
-            <div class="table-cell">
-                <input type="text" name="description" placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}" value="{{ _POST.description|default(blogpost.description)|e('html_attr') }}" />
+            <div class="table-cell bottom-pad">
+                <input
+                    class="full-width"
+                    type="text"
+                    name="description"
+                    placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
+                    value="{{ _POST.description|default(blogpost.description)|e('html_attr') }}"
+                />
             </div>
         </div>
 
