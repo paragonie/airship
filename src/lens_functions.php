@@ -37,7 +37,7 @@ function base_template()
  * @param string $name
  * @return array
  */
-function cabin_config(string $name): array
+function cabin_config(string $name = \CABIN_NAME): array
 {
     $state = State::instance();
     foreach ($state->cabins as $route => $cabin) {

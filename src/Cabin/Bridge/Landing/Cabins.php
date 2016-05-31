@@ -34,6 +34,9 @@ class Cabins extends LoggedInUsersOnly
      */
     protected function ensureCabinLinkExists(string $cabin): bool
     {
+        if (!\is_dir(ROOT . '/Cabin/Bridge/Lens/cabin_links/')) {
+            \mkdir(ROOT . '/Cabin/Bridge/Lens/cabin_links/', 0775);
+        }
         if (!\is_link(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
             if (\file_exists(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
                 \unlink(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin);
