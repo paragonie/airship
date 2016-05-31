@@ -124,6 +124,17 @@
             <br />
 
             <input
+                    {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
+                    id="blog_comments_guests"
+                    type="checkbox"
+                    class="large_checkbox"
+                    name="config_extra[blog][comments][guests]"
+            />
+            <label for="blog_comments_guests">{{ __("Allow Guests to Comment?") }}</label>
+
+            <br />
+
+            <input
                     {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
                     id="blog_recaptcha_enabled"
                     type="checkbox"

@@ -1,7 +1,7 @@
-{% if config.blog.comments.enabled %}
+{% if cabin_custom_config()['blog']['comments']['enabled'] %}
     <h3>{{ __("Leave a Comment") }}</h3>
     <div id="blog_comments_form">
-    {% if userid() or config.blog.comments.guests %}
+    {% if userid() or cabin_custom_config()['blog']['comments']['guests'] %}
         {% if blog_success %}{#
             #}<p class="blog-comment-success">{{ __(blog_success) }}</p>{#
         #}{% elseif blog_error %}{#
