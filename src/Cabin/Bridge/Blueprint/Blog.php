@@ -268,7 +268,11 @@ class Blog extends BlueprintGear
                     $blogPost['slug']
                 ]);
                 try {
-                    $cabin = $this->getCabinNameFromURL($formData['redirect_url']);
+                    if (\preg_match('#^https?://#', $formData['redirect_url'])) {
+                        $cabin = $this->getCabinNameFromURL($formData['redirect_url']);
+                    } else {
+                        $cabin = $this->cabin;
+                    }
                     $this->db->insert(
                         'airship_custom_redirect',
                         [
