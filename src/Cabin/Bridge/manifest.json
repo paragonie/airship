@@ -93,6 +93,8 @@
 
         "cabins/manage{_string}":
             ["Cabins", "manage"],
+        "cabin/{string}":
+            ["Cabins", "cabinMenu"],
         "cabins":
             ["Cabins", "index"],
 

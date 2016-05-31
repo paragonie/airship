@@ -1,0 +1,32 @@
+<h2>{{ __("Cabin: ")|e('html') ~ name }}</h2>
+
+<ul>
+    {% if can_read("cabins/manage/ ~ cabin") %}
+        <li>
+            <a href="{{ cabin_url() }}cabins/manage/{{ name|e('url') }}">
+                {{ __("Manage") }}
+            </a>
+        </li>
+    {% endif %}
+    {% if can_read("pages/" ~ cabin) %}
+        <li>
+            <a href="{{ cabin_url() }}pages/{{ name|e('url') }}">
+                {{ __("Web Pages") }}
+            </a>
+        </li>
+    {% endif %}
+    {% if can_read("redirects/" ~ cabin) %}
+        <li>
+            <a href="{{ cabin_url() }}redirects/{{ name|e('url') }}">
+                {{ __("Redirects") }}
+            </a>
+        </li>
+    {% endif %}
+    {% if is_admin() %}
+        <li>
+            <a href="{{ cabin_url() }}file_manager/{{ name|e('url') }}">
+                {{ __("Files") }}
+            </a>
+        </li>
+    {% endif %}
+</ul>

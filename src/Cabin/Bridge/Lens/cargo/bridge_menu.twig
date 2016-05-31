@@ -70,12 +70,18 @@
             </a>
             <ul>
             {% for cabin in state.cabins %}
-                {% if can_read("cabins/manage/" ~ cabin.name) %}
-                    <li>
-                        <a href="{{ cabin_url() }}cabins/manage/{{ cabin.name|e('url') }}">
-                            <i class="fa fa-home bridge-icon"></i>{{ cabin.name|e('html') }}
-                        </a>
+                <li>
+                    <a href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}">
+                        <i class="fa fa-home bridge-icon"></i>{{ cabin.name|e('html') }}
+                    </a>
                     <ul>
+                        {% if can_read("cabins/manage/ ~ cabin.name") %}
+                            <li>
+                                <a href="{{ cabin_url() }}cabins/manage/{{ cabin.name|e('url') }}">
+                                    <i class="fa fa-edit bridge-icon"></i>{{ __("Manage") }}
+                                </a>
+                            </li>
+                        {% endif %}
                         {% if can_read("pages/" ~ cabin.name) %}
                             <li>
                                 <a href="{{ cabin_url() }}pages/{{ cabin.name|e('url') }}">
@@ -98,8 +104,7 @@
                             </li>
                         {% endif %}
                     </ul>
-                    </li>
-                {% endif %}
+                </li>
             {% endfor %}</ul>
         </li>
     {% endif %}{# TODO BEFORE v1.0.0

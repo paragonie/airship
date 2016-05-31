@@ -14,6 +14,42 @@ require_once __DIR__.'/init_gear.php';
 class Cabins extends LoggedInUsersOnly
 {
     /**
+     * @route cabin/{string}
+     */
+    public function cabinMenu(string $cabinName = '')
+    {
+        if (!$this->isLoggedIn()) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        if (!$this->can('read')) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        if (!\in_array($cabinName, $this->getCabinNamespaces())) {
+            // Invalid cabin name
+            \Airship\redirect($this->airship_cabin_prefix . '/cabins');
+        }
+
+        $cabin = \Airship\loadJSON(
+            ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'cabins.json'
+        );
+        foreach ($cabin as $path => $data) {
+            if ($data['name'] === $cabinName) {
+                $settings['cabin'] = $data;
+                $settings['cabin']['path'] = $path;
+                break;
+            }
+        }
+        if (empty($settings['cabin'])) {
+            // Cabin not found
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        $this->lens('cabins_menu', [
+            'name' => $cabinName,
+            'config' => $settings
+        ]);
+    }
+
+    /**
      * @route cabins
      */
     public function index()

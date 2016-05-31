@@ -7,6 +7,40 @@
 
 <ul>
     {% for cabin in cabins %}
-    <li><a href="{{ cabin_url() }}cabins/manage/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a></li>
+        <li>
+            <a href="{{ cabin_url() }}cabin/{{ cabin|e('url') }}">
+                {{ cabin|e('html') }}
+            </a>
+            <ul>
+                {% if can_read("cabins/manage/ ~ cabin") %}
+                    <li>
+                        <a href="{{ cabin_url() }}cabins/manage/{{ cabin|e('url') }}">
+                            {{ __("Manage") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can_read("pages/" ~ cabin) %}
+                    <li>
+                        <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}">
+                            {{ __("Web Pages") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if can_read("redirects/" ~ cabin) %}
+                    <li>
+                        <a href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}">
+                            {{ __("Redirects") }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_admin() %}
+                    <li>
+                        <a href="{{ cabin_url() }}file_manager/{{ cabin|e('url') }}">
+                            {{ __("Files") }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
     {% endfor %}
 </ul>
