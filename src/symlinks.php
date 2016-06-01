@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 
+use \Airship\Engine\State;
+
 /**
  * @global array $active The active cabin configuration
  * @const string CABIN_DIR
+ * @global State $state
  */
 
 // Let's make sure we populate the symlinks

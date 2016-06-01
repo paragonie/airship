@@ -7,6 +7,10 @@ use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
 require_once __DIR__.'/init_gear.php';
 
+/**
+ * Class MyFiles
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class MyFiles extends FileManager
 {
     /**

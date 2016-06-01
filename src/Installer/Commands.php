@@ -17,7 +17,7 @@ class Commands
         $args = \array_slice($argv, 2);
         switch ($argv[1]) {
             case 'reset':
-                $this->reset(...$args);
+                $this->reset(s);
                 break;
             default:
                 $this->usage($argv[1], ...$args);
@@ -25,9 +25,9 @@ class Commands
     }
 
     /**
-     * @param array ...$args
+     * 
      */
-    public function reset(...$args)
+    public function reset()
     {
         \file_put_contents(
             ROOT.'/tmp/installing.json',

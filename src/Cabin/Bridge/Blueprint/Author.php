@@ -147,7 +147,7 @@ class Author extends BlueprintGear
     /**
      * Get all of the authors available for this user to post under
      *
-     * @param int $userid
+     * @param int $userId
      * @param string $sortby
      * @param string $dir
      * @return array
@@ -255,8 +255,6 @@ class Author extends BlueprintGear
      * Get the users
      *
      * @param int $authorId
-     * @param string $sortby
-     * @param string $dir
      * @return array
      */
     public function getUsersForAuthor(int $authorId): array

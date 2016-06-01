@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use \Airship\Engine\State;
+/**
+ * @global State $state
+ */
+
 // Start the session
 if (!\session_id()) {
     $session_config = [
@@ -12,8 +17,10 @@ if (!\session_id()) {
         'cookie_httponly' => true
     ];
     if (isset($state->session_config)) {
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
         \session_start($state->session_config + $session_config);
     } else {
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
         \session_start($session_config);
     }
 }

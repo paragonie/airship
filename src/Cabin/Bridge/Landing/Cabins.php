@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Engine\State;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -14,6 +13,7 @@ require_once __DIR__.'/init_gear.php';
 class Cabins extends LoggedInUsersOnly
 {
     /**
+     * @param string $cabinName
      * @route cabin/{string}
      */
     public function cabinMenu(string $cabinName = '')

@@ -9,10 +9,13 @@ use \Airship\Cabin\Bridge\Blueprint\{
     Permissions,
     UserAccounts
 };
-use \Airship\Engine\State;
 
 require_once __DIR__.'/init_gear.php';
 
+/**
+ * Class Ajax
+ * @package Airship\Cabin\Bridge\Landing
+ */
 class Ajax extends LoggedInUsersOnly
 {
 

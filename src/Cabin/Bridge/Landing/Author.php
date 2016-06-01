@@ -207,7 +207,7 @@ class Author extends LoggedInUsersOnly
             }
         } catch (UserFeedbackException $ex) {
             $this->storeLensVar('form_error', (string) $ex);
-            return false;
         }
+        return false;
     }
 }

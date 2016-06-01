@@ -87,8 +87,9 @@ class Files extends BlueprintGear
      * @param string $cabin
      * @param string $root
      * @param string $subdirectory
+     * @return bool
      */
-    public function deleteDir(string $cabin, string $root, string $subdirectory)
+    public function deleteDir(string $cabin, string $root, string $subdirectory): bool
     {
         $dir = empty($root)
             ? $subdirectory

@@ -127,6 +127,9 @@ if (!empty($state->universal['debug'])) {
         $n = 1;
         $e = $e->getPrevious();
         while ($e) {
+            if (IDE_HACKS) {
+                $e = new \Exception('');
+            }
             echo "\n", \str_repeat('#', 80), "\n";
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",

@@ -352,7 +352,7 @@ class Account extends LandingGear
                 if (IDE_HACKS) {
                     $autoPilot = new AutoPilot();
                 }
-                $httpsOnly = (bool) $autoPilot::isHTTPSconnection();
+                $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
                 
                 $this->airship_cookie->store(
                     $state->universal['cookie_index']['auth_token'],

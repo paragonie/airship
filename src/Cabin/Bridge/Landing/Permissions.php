@@ -168,6 +168,11 @@ class Permissions extends AdminOnly
         );
     }
 
+    /**
+     * @param string $cabin
+     * @param array $post
+     * @return bool
+     */
     protected function processCabinSubmenu(string $cabin, array $post): bool
     {
         if (!empty($post['create_context']) && !empty($post['new_context'])) {

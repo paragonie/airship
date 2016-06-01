@@ -1,8 +1,15 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\AutoPilot;
+use \Airship\Engine\{
+    AutoPilot,
+    State
+};
 use \ParagonIE\CSPBuilder\CSPBuilder;
+
+/**
+ * @global State $state
+ */
 
 $cspCacheFile = ROOT . '/tmp/cache/csp.' . AutoPilot::$active_cabin . '.json';
 

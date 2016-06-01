@@ -601,6 +601,7 @@ class CustomPages extends HullCustomPages
      * Get the redirects for this particular cabin.
      *
      * @param string $cabin
+     * @param int $redirectID
      * @return array
      */
     public function getRedirect(string $cabin, int $redirectID): array

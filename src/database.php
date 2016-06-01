@@ -4,8 +4,13 @@ declare(strict_types=1);
 use \Airship\Alerts\Database\DBException;
 use \Airship\Engine\{
     Database,
-    Gears
+    Gears,
+    State
 };
+
+/**
+ * @global State $state
+ */
 
 $dbgear = Gears::getName('Database');
 $databases = \Airship\loadJSON(ROOT.'/config/databases.json');

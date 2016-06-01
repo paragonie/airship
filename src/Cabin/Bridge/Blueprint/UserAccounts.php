@@ -7,6 +7,7 @@ use \Airship\Alerts\Security\UserNotFound;
 use Airship\Engine\{
     Bolt\Security as SecurityBolt,
     Security\HiddenString,
+    Security\Util,
     State
 };
 use \Psr\Log\LogLevel;
@@ -430,7 +431,7 @@ class UserAccounts extends BlueprintGear
      */
     public function isUsernameInvalid(string $username): bool
     {
-        return false;
+        return Util::stringLength($username) > 2;
     }
     
     /**

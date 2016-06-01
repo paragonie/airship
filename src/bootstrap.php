@@ -1,9 +1,14 @@
 <?php
 declare(strict_types=1);
 
+use \Airship\Engine\State;
+
 if (!\defined('ROOT')) {
     require_once __DIR__.'/preload.php';
 }
+/**
+ * @global State $state
+ */
 
 /**
  * 1. Load all of the gears.
