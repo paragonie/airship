@@ -50,8 +50,30 @@
             <select class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
                 <option value="en-us">English (U.S.)</option>
             </select>
-            
+
+            <hr />
+
         </div>
+
+        <fieldset class="cabin bridge">
+            <legend>Extra Configuration</legend>
+            {% set form_key_config = "config_extra[Bridge]" %}
+            {% set form_key_twig = "twig_vars[Bridge]" %}
+            {% set config_extra = {
+                "board": {
+                    "enabled": true,
+                    "captcha": true
+                },
+                "file": {
+                    "cache": 900
+                }
+            } %}
+            {% set twig_vars = {
+                "title": "Airship Blog",
+                "tagline": "Even the sky shall not limit you."
+            } %}
+            {% include "cabin_links/Bridge/cabin_config.twig" %}
+        </fieldset>
     </fieldset>
     
     <hr />
@@ -83,8 +105,57 @@
             <select class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
                 <option value="en-us">English (U.S.)</option>
             </select>
-            
+
+
+            <hr />
+
         </div>
+
+        <fieldset class="cabin hull">
+            <legend>Extra Configuration</legend>
+            {% set form_key_config = "config_extra[Hull]" %}
+            {% set form_key_twig = "twig_vars[Hull]" %}
+            {% set config_extra = {
+                "blog": {
+                    "per_page": "20",
+                    "comments": {
+                        "enabled": true,
+                        "guests": true,
+                        "recaptcha": true
+                    }
+                },
+                "file": {
+                    "cache": 900
+                }
+            } %}
+            {% set twig_vars = {
+                "title": "Airship 0.1",
+                "tagline": "Even the sky shall not limit you!",
+                "navbar": [
+                    {
+                        "url": "~\/",
+                        "label": "Home"
+                    },
+                    {
+                        "url": "~\/about",
+                        "label": "About"
+                    },
+                    {
+                        "url": "~\/contact",
+                        "label": "Contact"
+                    },
+                    {
+                        "url": "~\/blog",
+                        "label": "Blog"
+                    }
+                ],
+                "blog": {
+                    "title": "My Blog",
+                    "tagline": "Something classy goes here"
+                }
+            } %}
+            {% include "cabin_links/Hull/cabin_config.twig" %}
+        </fieldset>
     </fieldset>
     
     <hr />

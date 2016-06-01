@@ -23,7 +23,7 @@ if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     // Load the cabins from cache
     $config = \Airship\loadJSON(ROOT.'/tmp/cache/cabin_data.json');
     foreach ($config['cabins'] as $key => $cabin) {
-        if ($ap::isActiveCabinKey($key, $cabin['https'])) {
+        if ($ap::isActiveCabinKey($key, !empty($cabin['https']))) {
             $state->active_cabin = $key;
             break;
         }

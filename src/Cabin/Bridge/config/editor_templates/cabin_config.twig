@@ -5,6 +5,8 @@
                 "twig_vars": config["twig_vars"]
             } %}
 #}
+{% if not form_key_config %}{% set form_key_config = "config_extra" %}{% endif %}
+{% if not form_key_twig %}{% set form_key_config = "twig_vars" %}{% endif %}
 <div class="table table-pad-1 full-width">
 
     <div class="table-row">
@@ -18,7 +20,7 @@
                     class="full-width"
                     id="twigvars_title"
                     type="text"
-                    name="twig_vars[title]"
+                    name="{{ form_key_twig }}[title]"
                     value="{{ twig_vars['title']|e('html_attr') }}"
             />
         </div>
@@ -35,7 +37,7 @@
                     class="full-width"
                     id="twigvars_tagline"
                     type="text"
-                    name="twig_vars[tagline]"
+                    name="{{ form_key_twig }}[tagline]"
                     value="{{ twig_vars['tagline']|e('html_attr') }}"
             />
         </div>
@@ -51,7 +53,7 @@
                 id="board_enabled"
                 type="checkbox"
                 class="large_checkbox"
-                name="config_extra[board][enabled]"
+                name="{{ form_key_config }}[board][enabled]"
             />
             <label for="board_enabled">{{ __("Enable registration?") }}</label>
 
@@ -62,7 +64,7 @@
                 id="board_captcha"
                 type="checkbox"
                 class="large_checkbox"
-                name="config_extra[board][captcha]"
+                name="{{ form_key_config }}[board][captcha]"
             />
             <label for="board_captcha">{{ __("Require a CAPTCHA to register?") }}</label>
 
@@ -75,7 +77,7 @@
                         class="full-width"
                         id="recaptcha_secret_key"
                         type="text"
-                        name="config_extra[recaptcha][secret-key]"
+                        name="{{ form_key_config }}[recaptcha][secret-key]"
                         value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
                 />
 
@@ -86,7 +88,7 @@
                         class="full-width"
                         id="recaptcha_site_key"
                         type="text"
-                        name="config_extra[recaptcha][site-key]"
+                        name="{{ form_key_config }}[recaptcha][site-key]"
                         value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
                 /><br />
             </fieldset>
@@ -102,7 +104,7 @@
             <input
                 id="file_cache"
                 type="text"
-                name="config_extra[file][cache]"
+                name="{{ form_key_config }}[file][cache]"
                 value="{{ config_extra['file']['cache']|e('html_attr') }}"
             /> (seconds)
         </div>

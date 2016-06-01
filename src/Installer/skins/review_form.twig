@@ -79,8 +79,19 @@
             <option {% if cabins.Bridge.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
         </select>
 
-
     </div>
+
+    <hr />
+
+    <fieldset class="cabin bridge">
+        <legend>Extra Configuration</legend>
+        {% include "cabin_links/Bridge/cabin_config.twig" with {
+            "config_extra": config_extra.Bridge,
+            "twig_vars": twig_vars.Bridge,
+            "form_key_config": "config_extra[Bridge]",
+            "form_key_twig": "twig_vars[Bridge]"
+        } %}
+    </fieldset>
 </fieldset>
 
 <fieldset class="cabin hull">
@@ -112,6 +123,18 @@
         </select>
 
     </div>
+
+    <hr />
+
+    <fieldset class="cabin hull">
+        <legend>Extra Configuration</legend>
+        {% include "cabin_links/Hull/cabin_config.twig" with {
+            "config_extra": config_extra.Hull,
+            "twig_vars": twig_vars.Hull,
+            "form_key_config": "config_extra[Hull]",
+            "form_key_twig": "twig_vars[Hull]"
+        } %}
+    </fieldset>
 </fieldset>
 
 <h3>Advanced Configuration</h3>

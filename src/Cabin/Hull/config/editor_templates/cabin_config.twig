@@ -5,6 +5,8 @@
                 "twig_vars": config["twig_vars"]
             } %}
 #}
+{% if not form_key_config %}{% set form_key_config = "config_extra" %}{% endif %}
+{% if not form_key_twig %}{% set form_key_config = "twig_vars" %}{% endif %}
 <div class="table table-pad-1 full-width">
 
     <div class="table-row">
@@ -18,7 +20,7 @@
                     class="full-width"
                     id="twigvars_title"
                     type="text"
-                    name="twig_vars[title]"
+                    name="{{ form_key_twig }}[title]"
                     value="{{ twig_vars['title']|e('html_attr') }}"
             />
         </div>
@@ -35,7 +37,7 @@
                     class="full-width"
                     id="twigvars_tagline"
                     type="text"
-                    name="twig_vars[tagline]"
+                    name="{{ form_key_twig }}[tagline]"
                     value="{{ twig_vars['tagline']|e('html_attr') }}"
             />
         </div>
@@ -50,10 +52,11 @@
         </div>
         <div class="table-cell full-width bottom-extra-pad">
             <div
-                data-name="twig_vars[navbar]"
+                data-name="{{ form_key_twig }}[navbar]"
+                data-idprefix="hull_navbar"
                 class="dynamic_navigation"
                 id="twig_vars_navbar"
-            >{{ twig_vars['navbar']|json_encode }}</div>
+            >{{ (twig_vars['navbar'] ? twig_vars['navbar']|json_encode : '[]')|raw }}</div>
         </div>
     </div>
 
@@ -68,7 +71,7 @@
                     class="full-width"
                     id="twigvars_blog_title"
                     type="text"
-                    name="twig_vars[blog][title]"
+                    name="{{ form_key_twig }}[blog][title]"
                     value="{{ twig_vars['blog']['title']|e('html_attr') }}"
             />
         </div>
@@ -85,7 +88,7 @@
                     class="full-width"
                     id="twigvars_blog_tagline"
                     type="text"
-                    name="twig_vars[blog][tagline]"
+                    name="{{ form_key_twig }}[blog][tagline]"
                     value="{{ twig_vars['blog']['tagline']|e('html_attr') }}"
             />
         </div>
@@ -101,7 +104,7 @@
             <input
                     id="blog_per_page"
                     type="text"
-                    name="config_extra[blog][per_page]"
+                    name="{{ form_key_config }}[blog][per_page]"
                     value="{{ config_extra['blog']['per_page']|e('html_attr') }}"
             />
         </div>
@@ -117,7 +120,7 @@
                     id="blog_comments_enabled"
                     type="checkbox"
                     class="large_checkbox"
-                    name="config_extra[blog][comments][enabled]"
+                    name="{{ form_key_config }}[blog][comments][enabled]"
             />
             <label for="blog_comments_enabled">{{ __("Allow Comments?") }}</label>
 
@@ -128,7 +131,7 @@
                     id="blog_comments_guests"
                     type="checkbox"
                     class="large_checkbox"
-                    name="config_extra[blog][comments][guests]"
+                    name="{{ form_key_config }}[blog][comments][guests]"
             />
             <label for="blog_comments_guests">{{ __("Allow Guests to Comment?") }}</label>
 
@@ -139,7 +142,7 @@
                     id="blog_recaptcha_enabled"
                     type="checkbox"
                     class="large_checkbox"
-                    name="config_extra[blog][comments][recaptcha]"
+                    name="{{ form_key_config }}[blog][comments][recaptcha]"
             />
             <label for="blog_recaptcha_enabled">{{ __("Require ReCAPTCHA?") }}</label>
 
@@ -152,7 +155,7 @@
                         class="full-width"
                         id="recaptcha_secret_key"
                         type="text"
-                        name="config_extra[recaptcha][secret-key]"
+                        name="{{ form_key_config }}[recaptcha][secret-key]"
                         value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
                 />
 
@@ -163,7 +166,7 @@
                         class="full-width"
                         id="recaptcha_site_key"
                         type="text"
-                        name="config_extra[recaptcha][site-key]"
+                        name="{{ form_key_config }}[recaptcha][site-key]"
                         value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
                 /><br />
             </fieldset>
@@ -179,7 +182,7 @@
             <input
                     id="file_cache"
                     type="text"
-                    name="config_extra[file][cache]"
+                    name="{{ form_key_config }}[file][cache]"
                     value="{{ config_extra['file']['cache']|e('html_attr') }}"
             /> (seconds)
         </div>

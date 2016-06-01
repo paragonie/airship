@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * @global array $active The active cabin configuration
+ * @const string CABIN_DIR
+ */
+
 // Let's make sure we populate the symlinks
 if (\is_dir(CABIN_DIR.'/public')) {
     if (!\is_link(ROOT.'/public/static/'.$active['name'])) {

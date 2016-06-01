@@ -118,13 +118,23 @@ $twigEnv->addFilter(
 
 $twigEnv->addFunction(
     new Twig_SimpleFunction(
-        'form_token', 
+        'form_token',
         function($lockTo = '') {
             static $csrf = null;
             if ($csrf === null) {
                 $csrf = new \Airship\Engine\Security\CSRF;
             }
             return $csrf->insertToken($lockTo);
+        }
+    )
+);
+
+$twigEnv->addFunction(
+    new Twig_SimpleFunction(
+        '__',
+        function(string $str = '') {
+            // Not translating here.
+            return $str;
         }
     )
 );
@@ -151,6 +161,8 @@ try {
         die("Cannot create " . ROOT . '/tmp/installing.json');
     }
 }
+
+require_once ROOT . "/Installer/symlinks.php";
 
 $installer = new \Airship\Installer\Install(
     $twigEnv,

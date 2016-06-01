@@ -220,6 +220,8 @@ class Install
     protected function processCabins(array $post = [])
     {
         $this->data['cabins'] = $post['cabin'];
+        $this->data['config_extra'] = $post['config_extra'];
+        $this->data['twig_vars'] = $post['twig_vars'];
         $this->data['step'] = 4;
         \Airship\redirect('/');
     }
@@ -353,6 +355,21 @@ class Install
                 'canon_url' => $conf['canon_url'],
                 'name' => $name
             ];
+
+            \file_put_contents(
+                ROOT . '/Cabin/' . $name . '/config/config.json',
+                \json_encode(
+                    $this->data['config_extra'][$name] ?? [],
+                    JSON_PRETTY_PRINT
+                )
+            );
+            \file_put_contents(
+                ROOT . '/Cabin/' . $name . '/config/twig_vars.json',
+                \json_encode(
+                    $this->data['twig_vars'][$name] ?? [],
+                    JSON_PRETTY_PRINT
+                )
+            );
         }
         return $twig->render('cabins.twig', [
             'cabins' => $cabins
