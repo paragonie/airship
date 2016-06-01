@@ -149,22 +149,13 @@ class Cabins extends LoggedInUsersOnly
             DIRECTORY_SEPARATOR . $cabinName .
             DIRECTORY_SEPARATOR . 'config.json'
         );
-        /*
-        @todo Implement these before second beta
-
         $settings['gadgets'] = \Airship\loadJSON(
             ROOT . DIRECTORY_SEPARATOR . 'config' .
             DIRECTORY_SEPARATOR . 'Cabin'.
             DIRECTORY_SEPARATOR . $cabinName .
             DIRECTORY_SEPARATOR . 'gadgets.json'
         );
-        $settings['motifs'] = \Airship\loadJSON(
-            ROOT . DIRECTORY_SEPARATOR . 'config' .
-            DIRECTORY_SEPARATOR . 'Cabin'.
-            DIRECTORY_SEPARATOR . $cabinName .
-            DIRECTORY_SEPARATOR . 'motifs.json'
-        );
-        */
+        $settings['motifs'] = $this->getCabinsMotifs($cabinName);
         $settings['twig_vars'] = \Airship\loadJSON(
             ROOT . DIRECTORY_SEPARATOR . 'config' .
             DIRECTORY_SEPARATOR . 'Cabin'.
@@ -325,5 +316,30 @@ class Cabins extends LoggedInUsersOnly
             $this->airship_cabin_prefix . '/cabins/manage/' . $cabinName
         );
         return true;
+    }
+
+    /**
+     * Get all of the motifs that belong to a particular cabin
+     *
+     * @param string $cabin
+     * @return array
+     */
+    protected function getCabinsMotifs(string $cabin): array
+    {
+        $config = \Airship\loadJSON(
+            ROOT . DIRECTORY_SEPARATOR . 'config' .
+            DIRECTORY_SEPARATOR . 'Cabin'.
+            DIRECTORY_SEPARATOR . $cabin .
+            DIRECTORY_SEPARATOR . 'motifs.json'
+        );
+        $motifs = [];
+        foreach ($config as $name => $conf) {
+            $json = \Airship\loadJSON(ROOT . '/Motifs/' . $conf['path'] . '/motif.json');
+            $motifs[$name] = [
+                'path' => $conf['path'],
+                'config' => $json
+            ];
+        }
+        return $motifs;
     }
 }

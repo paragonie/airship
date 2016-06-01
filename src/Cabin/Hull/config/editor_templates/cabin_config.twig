@@ -6,8 +6,32 @@
             } %}
 #}
 {% if not form_key_config %}{% set form_key_config = "config_extra" %}{% endif %}
-{% if not form_key_twig %}{% set form_key_config = "twig_vars" %}{% endif %}
+{% if not form_key_twig %}{% set form_key_twig = "twig_vars" %}{% endif %}
 <div class="table table-pad-1 full-width">
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_active_motif">
+                {{ __("Active Motif") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <select
+                    class="full-width"
+                    id="twigvars_active_motif"
+                    type="text"
+                    name="{{ form_key_twig }}[active-motif]"
+                    value="{{ twig_vars['active-motif']|e('html_attr') }}"
+            >{% for name, motif in motifs %}
+                    <option value="{{ name|e('html_attr') }}">
+                        {% if motif.config["display_name"] %}
+                            {{ motif.config["display_name"]|e('html') }}
+                        {% else %}
+                            {{ motif.config.supplier|e('html') ~ "/" ~ motif.config.name|e('html') }}
+                        {% endif %}</option>
+                {% endfor %}</select>
+        </div>
+    </div>
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
