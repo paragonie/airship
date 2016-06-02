@@ -1,0 +1,6 @@
+{% extends base_template() %}
+{% set title = __("Photos for Author ") %}
+
+{% block main %}
+    {% include cargo("bridge_authors_photos") ignore missing %}
+{% endblock %}

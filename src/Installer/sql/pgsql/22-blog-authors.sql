@@ -29,12 +29,20 @@ ALTER TABLE hull_blog_series ADD
 
 CREATE INDEX ON hull_blog_authors (authorid);
 
+CREATE TABLE hull_blog_photo_contexts (
+    contextid BIGSERIAL PRIMARY KEY,
+    label TEXT,
+    display_name TEXT
+);
+CREATE UNIQUE INDEX ON hull_blog_photo_contexts (label);
+
 CREATE TABLE hull_blog_author_photos (
     photoid BIGSERIAL PRIMARY KEY,
     author BIGINT REFERENCES hull_blog_authors (authorid),
     file BIGINT REFERENCES airship_files (fileid),
-    selected_comment BOOLEAN DEFAULT FALSE,
-    selected_bio BOOLEAN DEFAULT FALSE,
+    context BIGINT REFERENCES hull_blog_photo_contexts (contextid),
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
+
+CREATE UNIQUE INDEX ON hull_blog_author_photos (author, context);

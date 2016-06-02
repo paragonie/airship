@@ -39,6 +39,7 @@ class AuthorFiles extends FileManager
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
+            $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
         }
         if (empty($_GET['file'])) {
             return $this->commonConfirmDeleteDir($dir, $cabin);
@@ -55,6 +56,7 @@ class AuthorFiles extends FileManager
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
+        $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
 
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -72,6 +74,7 @@ class AuthorFiles extends FileManager
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
+        $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
 
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -89,6 +92,7 @@ class AuthorFiles extends FileManager
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
+        $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
 
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {

@@ -43,6 +43,8 @@
 
         "author/users/{id}":
             ["Author", "users"],
+        "author/photos/{id}":
+            ["Author", "photos"],
         "author/edit/{id}":
             ["Author", "edit"],
         "author/new":

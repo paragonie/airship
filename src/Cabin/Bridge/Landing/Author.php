@@ -24,6 +24,9 @@ class Author extends LoggedInUsersOnly
      */
     private $author;
 
+    /**
+     * The Airship post-constructor
+     */
     public function airshipLand()
     {
         parent::airshipLand();
@@ -102,6 +105,8 @@ class Author extends LoggedInUsersOnly
                 $dir
             );
         }
+
+        // We're just grabbing counts here:
         foreach ($authors as $idx => $auth) {
             $authors[$idx]['num_users'] = $this->author->getNumUsersForAuthor(
                 $auth['authorid']
@@ -137,6 +142,46 @@ class Author extends LoggedInUsersOnly
             'sort' => $sort,
             'dir' => $dir
         ]);
+    }
+
+    /**
+     * Manage your author profile's photos
+     *
+     * @param string $authorId
+     * @route author/photos/{id}
+     */
+    public function photos(string $authorId = '')
+    {
+        $authorId = (int) $authorId;
+        if (!$this->isSuperUser()) {
+            $authorsForUser = $this->author->getAuthorIdsForUser(
+                $this->getActiveUserId()
+            );
+            if (!\in_array($authorId, $authorsForUser)) {
+                \Airship\redirect($this->airship_cabin_prefix . '/author');
+            }
+        }
+        $author = $this->author->getById($authorId);
+        $contexts = $this->author->getPhotoContexts();
+        $photos = $this->author->getAvailablePhotos($authorId);
+
+        $post = $this->post();
+        if ($post) {
+            if ($this->saveAuthorPhotos($authorId, $post)) {
+                \Airship\redirect($this->airship_cabin_prefix . '/author/photos/' . $authorId);
+            }
+        }
+        $this->lens(
+            'author/photos',
+            [
+                'author' =>
+                    $author,
+                'contexts' =>
+                    $contexts,
+                'photos' =>
+                    $photos
+            ]
+        );
     }
 
     /**
@@ -209,5 +254,17 @@ class Author extends LoggedInUsersOnly
             $this->storeLensVar('form_error', (string) $ex);
         }
         return false;
+    }
+
+    /**
+     * Save the author's photo settings
+     *
+     * @param int $authorId
+     * @param array $post
+     * @return bool
+     */
+    protected function saveAuthorPhotos(int $authorId, array $post): bool
+    {
+
     }
 }

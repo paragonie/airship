@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
 use \Airship\Engine\Bolt\{
+    Common,
     Orderable,
     Slug
 };
@@ -21,8 +22,11 @@ require_once __DIR__.'/init_gear.php';
  */
 class Author extends BlueprintGear
 {
+    use Common;
     use Orderable;
     use Slug;
+
+    protected $photosDir = 'photos';
 
     /**
      * Add a user, given its unique id.
@@ -37,9 +41,10 @@ class Author extends BlueprintGear
         int $authorId,
         string $uniqueId,
         bool $inCharge = false
-    ): bool {
+    ): bool
+    {
         $this->db->beginTransaction();
-        $userID = (int) $this->db->cell(
+        $userID = (int)$this->db->cell(
             'SELECT userid FROM airship_users WHERE uniqueid = ?',
             $uniqueId
         );
@@ -81,17 +86,17 @@ class Author extends BlueprintGear
         );
         $authorId = $this->db->insertGet(
             'hull_blog_authors', [
-                'name' =>
-                    $post['name'],
-                'byline' =>
-                    $post['byline'] ?? '',
-                'bio_format' =>
-                    $post['format'] ?? 'Markdown',
-                'biography' =>
-                    $post['biography'] ?? '',
-                'slug' =>
-                    $slug
-            ],
+            'name' =>
+                $post['name'],
+            'byline' =>
+                $post['byline'] ?? '',
+            'bio_format' =>
+                $post['format'] ?? 'Markdown',
+            'biography' =>
+                $post['biography'] ?? '',
+            'slug' =>
+                $slug
+        ],
             'authorid'
         );
         $this->db->insert(
@@ -121,15 +126,6 @@ class Author extends BlueprintGear
     }
 
     /**
-     * @param int $authorId
-     * @return array
-     */
-    public function getById(int $authorId): array
-    {
-        return $this->db->row('SELECT * FROM hull_blog_authors WHERE authorid = ?', $authorId);
-    }
-
-    /**
      * Get all of the authors available for this user to post under
      *
      * @param int $userid
@@ -142,6 +138,67 @@ class Author extends BlueprintGear
             return [];
         }
         return $authors;
+    }
+
+    /**
+     * Get all of the photos in the various
+     *
+     * 1. Get the directories for each cabin.
+     * 2. Get all of the file IDs for these directories.
+     *    Our SQL query should automatically draw in the "context" parameter.
+     *
+     * @param int $authorID
+     * @return array
+     */
+    public function getAvailablePhotos(int $authorID): array
+    {
+        $slug = $this->db->cell('SELECT slug FROM hull_blog_authors WHERE authorid = ?', $authorID);
+        $directoryIDs = [];
+        foreach ($this->getCabinNames() as $cabin) {
+            $cabinDir = $this->getPhotoDirectory($slug, $cabin);
+            if (!empty($cabinDir)) {
+                $directoryIDs []= $cabinDir;
+            }
+        }
+        if (empty($directoryIDs)) {
+            return [];
+        }
+        $files = $this->db->run(
+            "SELECT
+                 f.*,
+                 p.context
+             FROM 
+                 airship_files f
+             LEFT JOIN
+                 hull_blog_author_photos p
+                 ON p.file = f.fileid
+             WHERE
+                 (f.type LIKE 'image/%' OR f.type LIKE 'x-image/%') 
+                     AND
+                 f.directory IN " . $this->db->escapeValueSet($directoryIDs, 'int')
+        );
+        if (empty($files)) {
+            return [];
+        }
+        return $files;
+    }
+
+    /**
+     * Get an author by its ID
+     *
+     * @param int $authorId
+     * @return array
+     */
+    public function getById(int $authorId): array
+    {
+        $author = $this->db->row(
+            'SELECT * FROM hull_blog_authors WHERE authorid = ?',
+            $authorId
+        );
+        if (empty($author)) {
+            return [];
+        }
+        return $author;
     }
 
     /**
@@ -234,6 +291,60 @@ class Author extends BlueprintGear
             return $num;
         }
         return 0;
+    }
+
+    /**
+     * Get the available photo contexts
+     *
+     * @return array
+     */
+    public function getPhotoContexts(): array
+    {
+        $result = $this->db->run('SELECT * FROM hull_blog_photo_contexts ORDER BY display_name ASC');
+        if (empty($result)) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
+     * Get photos directory ID
+     *
+     * @param $slug
+     * @param $cabin
+     * @return int
+     */
+    protected function getPhotoDirectory($slug, $cabin): int
+    {
+        // Start with the cabin
+        $root = $this->db->cell(
+            'SELECT directoryid FROM airship_dirs WHERE cabin = ? AND name = ? AND parent IS NULL',
+            $cabin,
+            'author'
+        );
+        if (empty($root)) {
+            return 0;
+        }
+
+        $myBaseDir = $this->db->cell(
+            'SELECT directoryid FROM airship_dirs WHERE name = ? AND parent = ?',
+            $slug,
+            $root
+        );
+        if (empty($myBaseDir)) {
+            return 0;
+        }
+
+
+        $photoDir = $this->db->cell(
+            'SELECT directoryid FROM airship_dirs WHERE name = ? AND parent = ?',
+            $this->photosDir,
+            $myBaseDir
+        );
+        if (empty($photoDir)) {
+            return 0;
+        }
+        return $photoDir;
     }
 
     /**
