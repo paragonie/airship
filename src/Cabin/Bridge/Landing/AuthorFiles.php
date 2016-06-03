@@ -143,6 +143,13 @@ class AuthorFiles extends FileManager
     {
         $this->authorId = $authorId;
         $this->authorSlug = $this->author->getSlug($authorId);
+        $this->storeLensVar(
+            'header',
+            \__(
+                'Files for Author "%s"', 'default',
+                $this->author->getName($authorId)
+            )
+        );
         $this->root_dir = 'author/' . $this->authorSlug;
         $this->path_middle = 'author/files/' . $authorId;
         $this->storeLensVar('path_middle', $this->path_middle);

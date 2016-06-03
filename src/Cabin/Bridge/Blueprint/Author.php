@@ -283,6 +283,21 @@ class Author extends BlueprintGear
     }
 
     /**
+     * Get the author's name
+     *
+     * @param int $authorId
+     * @return string
+     */
+    public function getName(int $authorId): string
+    {
+        $slug = $this->db->cell('SELECT name FROM hull_blog_authors WHERE authorid = ?', $authorId);
+        if (!empty($slug)) {
+            return $slug;
+        }
+        return '';
+    }
+
+    /**
      * Get the number of photos uploaded for this author
      *
      * @param int $authorId

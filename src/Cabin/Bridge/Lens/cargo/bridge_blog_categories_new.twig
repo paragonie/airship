@@ -1,3 +1,4 @@
+<h2>{{ __("Create a New Blog Post Category")|e('html') }}</h2>
 <div id="bridge_blog_category_add">
     <form method="post">{{ form_token() }}
         <div class="table full-width table-pad-1">
@@ -37,6 +38,7 @@
                 <i class="fa fa-check"></i>
                 {{  __("Create New Category") }}
             </button>
+            <a href="{{ cabin_url() }}blog/category" class="pure-button pure-button-tertiary">Cancel</a>
         </fieldset>
     </form>
 </div>

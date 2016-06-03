@@ -1,8 +1,9 @@
 {% if can_create() %}
-<a href="{{ cabin_url() }}blog/series/new" class="pure-button pure-button-secondary">
+<a href="{{ cabin_url() }}blog/series/new" class="pure-button pure-button-secondary float-right">
     <i class="fa fa-list-alt"></i>
     {{ __("New Series") }}
 </a>
+<h2 class="bottom-pad">{{ __("Series") }}</h2>
 <hr />
 {% endif %}
 {% if series %}
@@ -47,3 +48,11 @@
 {% else %}
     <p>{{ __("There are no series available.") }}</p>
 {% endif %}
+<p>
+    {% if can_create() %}
+    <a href="{{ cabin_url() }}blog/series/new" class="pure-button pure-button-secondary">
+        <i class="fa fa-list-alt"></i>
+        {{ __("New Series") }}
+    </a>
+    {% endif %}
+</p>

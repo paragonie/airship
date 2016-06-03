@@ -1,4 +1,4 @@
-
+<h2>{{ __("Comments") }}</h2>
 <div class="table" id="bridge_comments_list">
     <div class="table-row table-header">
         <div class="table-cell"></div>
@@ -12,7 +12,7 @@
         <div class="table-cell">
             {{ __("Date") }}
         </div>
-        <div class="table-cell">
+        <div class="table-cell table-min-width">
             {{ __("Approved") }}
         </div>
     </div>
@@ -45,7 +45,7 @@
             <div class="table-cell">
                 {{ comment.created|date(config.format|default('Y-m-d g:i:s A')) }}
             </div>
-            <div class="table-cell">
+            <div class="table-cell text-center">
                 {% if comment.approved %}
                     <i title="Yes" class="fa fa-check blog-comment-approved"></i>
                 {% else %}

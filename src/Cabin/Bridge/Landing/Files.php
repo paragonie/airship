@@ -29,6 +29,7 @@ class Files extends FileManager
             'uploaded_by' => $userId
         ];
         $this->storeLensVar('path_middle', $this->path_middle);
+        $this->storeLensVar('header', 'Files');
     }
 
     /**

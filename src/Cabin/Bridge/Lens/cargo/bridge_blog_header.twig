@@ -1,6 +1,7 @@
 {% if can_create() %}
-<a class="pure-button pure-button-secondary" href="{{ cabin_url() }}blog/post/new">
+<a class="pure-button float-right pure-button-secondary" href="{{ cabin_url() }}blog/post/new">
     <i class="fa fa-pencil-square-o"></i>
     {{ __("Draft a New Blog Post") }}
 </a>
 {% endif %}
+<h2 class="bottom-pad">{{ __("Blog Posts")|e('html') }}</h2>

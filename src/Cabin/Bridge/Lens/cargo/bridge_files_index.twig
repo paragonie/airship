@@ -1,3 +1,4 @@
+{% if header %}<h2>{{ header|e('html') }}</h2>{% endif %}
 {% if form_status %}
     <p class="form_status_{{ form_status.status|e('html_attr') }}">{{ form_status.message|e('html') }}</p>
 {% endif %}
