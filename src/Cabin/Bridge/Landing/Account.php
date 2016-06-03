@@ -359,7 +359,7 @@ class Account extends LandingGear
                     $this->airship_auth->createAuthToken($userID),
                     \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                     '/',
-                    '',
+                    $state->universal['session_config']['cookie_domain'] ?? '',
                     $httpsOnly ?? false,
                     true
                 );
