@@ -69,9 +69,6 @@ if (!\ISCLI) {
     }
 }
 
-// Let's start our session:
-require_once ROOT.'/session.php';
-
 // Let's set the current language:
 $lang = \preg_replace_callback(
     '#([A-Za-z]+)\-([a-zA-Z]+)#',
@@ -168,3 +165,6 @@ $hail = \Airship\Engine\Gears::get(
     new \GuzzleHttp\Client($state->universal['guzzle'])
 );
 $state->hail = $hail;
+
+// Let's start our session:
+require_once ROOT.'/session.php';

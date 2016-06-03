@@ -8,6 +8,9 @@ use \Airship\Engine\State;
 
 // Start the session
 if (!\session_id()) {
+    if (!isset($state)) {
+        $state = State::instance();
+    }
     $session_config = [
         // Prevent uninitialized sessions from being accepted
         'use_strict_mode' => true,
