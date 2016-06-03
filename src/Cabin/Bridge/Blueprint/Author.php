@@ -26,6 +26,9 @@ class Author extends BlueprintGear
     use Orderable;
     use Slug;
 
+    /**
+     * @var string
+     */
     protected $photosDir = 'photos';
 
     /**
@@ -140,6 +143,12 @@ class Author extends BlueprintGear
         return $authors;
     }
 
+    public function getPhotoDirName(): string
+    {
+        return $this->photosDir;
+    }
+
+
     /**
      * Get all of the photos in the various
      *
@@ -148,16 +157,66 @@ class Author extends BlueprintGear
      *    Our SQL query should automatically draw in the "context" parameter.
      *
      * @param int $authorID
+     * @param string $context
      * @return array
      */
-    public function getAvailablePhotos(int $authorID): array
+    public function getPhotoData(int $authorID, string $context): array
+    {
+        $file = $this->db->row(
+            "SELECT
+                 f.fileid,
+                 f.filename,
+                 a.slug
+             FROM
+                 hull_blog_author_photos p
+             JOIN
+                 hull_blog_authors a
+                 ON p.author = a.authorid
+             JOIN
+                 hull_blog_photo_contexts c
+                 ON p.context = c.contextid
+             JOIN
+                 airship_files f
+                 ON p.file = f.fileid
+             WHERE
+                 c.label = ? AND a.authorid = ?
+             ",
+            $context,
+            $authorID
+        );
+        if (empty($file)) {
+            return [];
+        }
+        return $file;
+    }
+
+    /**
+     * Get all of the photos in the various
+     *
+     * 1. Get the directories for each cabin.
+     * 2. Get all of the file IDs for these directories.
+     *    Our SQL query should automatically draw in the "context" parameter.
+     *
+     * @param int $authorID
+     * @param string $cabin
+     * @param bool $includeId
+     * @return array
+     */
+    public function getAvailablePhotos(int $authorID, string $cabin = '', bool $includeId = false): array
     {
         $slug = $this->db->cell('SELECT slug FROM hull_blog_authors WHERE authorid = ?', $authorID);
         $directoryIDs = [];
-        foreach ($this->getCabinNames() as $cabin) {
+        if (empty($cabin)) {
+            foreach ($this->getCabinNames() as $cabin) {
+                $cabinDir = $this->getPhotoDirectory($slug, $cabin);
+                if (!empty($cabinDir)) {
+                    $directoryIDs [] = $cabinDir;
+                }
+            }
+        } else {
             $cabinDir = $this->getPhotoDirectory($slug, $cabin);
             if (!empty($cabinDir)) {
-                $directoryIDs []= $cabinDir;
+                $directoryIDs [] = $cabinDir;
             }
         }
         if (empty($directoryIDs)) {
@@ -165,7 +224,8 @@ class Author extends BlueprintGear
         }
         $files = $this->db->run(
             "SELECT
-                 f.*,
+                 " . ($includeId ? 'f.fileid,' : '') . "
+                 f.filename,
                  p.context
              FROM 
                  airship_files f
@@ -180,6 +240,7 @@ class Author extends BlueprintGear
         if (empty($files)) {
             return [];
         }
+        
         return $files;
     }
 
@@ -292,6 +353,19 @@ class Author extends BlueprintGear
         }
         return 0;
     }
+    /**
+     * Get the available photo contexts
+     *
+     * @return int
+     */
+    public function getPhotoContextId(string $label): int
+    {
+        $result = $this->db->cell('SELECT contextid FROM hull_blog_photo_contexts WHERE label = ?', $label);
+        if (empty($result)) {
+            return 0;
+        }
+        return $result;
+    }
 
     /**
      * Get the available photo contexts
@@ -310,11 +384,11 @@ class Author extends BlueprintGear
     /**
      * Get photos directory ID
      *
-     * @param $slug
-     * @param $cabin
+     * @param string $slug
+     * @param string $cabin
      * @return int
      */
-    protected function getPhotoDirectory($slug, $cabin): int
+    protected function getPhotoDirectory(string $slug, string $cabin): int
     {
         // Start with the cabin
         $root = $this->db->cell(
@@ -434,6 +508,71 @@ class Author extends BlueprintGear
             ]
         );
         return $this->db->commit();
+    }
+
+    /**
+     * @param int $authorId
+     * @param string $context
+     * @param string $cabin
+     * @param string $filename
+     * @return bool
+     */
+    public function savePhotoChoice(
+        int $authorId,
+        string $context,
+        string $cabin,
+        string $filename
+    ): bool {
+        $this->db->beginTransaction();
+
+        $contextId = $this->getPhotoContextId($context);
+        if (empty($filename)) {
+            $this->db->delete(
+                'hull_blog_author_photos',
+                [
+                    'context' => $contextId,
+                    'author' => $authorId
+                ]
+            );
+            return $this->db->commit();
+        }
+
+        $options = $this->getAvailablePhotos($authorId, $cabin, true);
+
+        $exists = $this->db->cell(
+            'SELECT count(*) FROM hull_blog_author_photos WHERE author = ? AND context = ?',
+            $authorId,
+            $contextId
+        ) > 0;
+        foreach ($options as $opt) {
+            if ($opt['filename'] === $filename) {
+                if ($exists) {
+                    $this->db->update(
+                        'hull_blog_author_photos',
+                        [
+                            'file' => $opt['fileid']
+                        ],
+                        [
+                            'author' => $authorId,
+                            'context' => $contextId
+                        ]
+                    );
+                } else {
+                    $this->db->insert(
+                        'hull_blog_author_photos',
+                        [
+                            'context' => $contextId,
+                            'author' => $authorId,
+                            'file' => $opt['fileid']
+                        ]
+                    );
+                }
+                return $this->db->commit();
+            }
+        }
+
+        $this->db->rollBack();
+        return false;
     }
 
     /**

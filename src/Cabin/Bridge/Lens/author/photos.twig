@@ -4,3 +4,6 @@
 {% block main %}
     {% include cargo("bridge_authors_photos") ignore missing %}
 {% endblock %}
+{% block page_js %}
+    <script src="{{ "/static/Bridge/author_photos.js"|cachebust }}"></script>
+{% endblock %}

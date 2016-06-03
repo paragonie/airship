@@ -13,9 +13,9 @@
         {{ data.created }}
     </div>
     {% if data.author %}
-        <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" />
+        <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" class="blog-comment-avatar" />
     {% elseif data.metadata.email %}
-        <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" />
+        <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" class="blog-comment-avatar" />
     {% endif %}
     <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
 </div>

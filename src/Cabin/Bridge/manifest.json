@@ -23,6 +23,12 @@
             ["Ajax", "getSeriesForAuthor"],
         "ajax/authors_blog_posts":
             ["Ajax", "getBlogPostsForAuthor"],
+        "ajax/authors_get_photo":
+            ["Ajax", "getAuthorsPhoto"],
+        "ajax/authors_photo_available":
+            ["Ajax", "getAuthorsAvailablePhotos"],
+        "ajax/authors_save_photo":
+            ["Ajax", "saveAuthorsPhoto"],
         "ajax/get_perms_user":
             ["Ajax", "getPermsForUser"],
         "ajax/perm_test":

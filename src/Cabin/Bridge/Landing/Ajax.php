@@ -3,11 +3,8 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Alerts\CabinNotFound;
-use \Airship\Cabin\Bridge\Blueprint\{
-    Author,
-    Blog,
-    Permissions,
-    UserAccounts
+use Airship\Cabin\Bridge\Blueprint\{
+    Author, Blog, Files, Permissions, UserAccounts
 };
 
 require_once __DIR__.'/init_gear.php';
@@ -18,6 +15,95 @@ require_once __DIR__.'/init_gear.php';
  */
 class Ajax extends LoggedInUsersOnly
 {
+    /**
+     * @route ajax/authors_get_photo
+     */
+    public function getAuthorsPhoto()
+    {
+        $auth_bp = $this->blueprint('Author');
+        $file_bp = $this->blueprint('Files');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $auth_bp = new Author($db);
+            $file_bp = new Files($db);
+        }
+        $authorId = (int) $_POST['author'];
+        if (!$this->isSuperUser()) {
+            $authors = $auth_bp->getAuthorIdsForUser(
+                $this->getActiveUserId()
+            );
+            if (!\in_array($authorId, $authors)) {
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__('You do not have permission to access this author\'s posts.')
+                ]);
+            }
+        }
+        if (!\Airship\all_keys_exist(['context', 'author'], $_POST)) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Insufficient parameters'
+            ]);
+        }
+        $file = $auth_bp->getPhotoData($authorId, $_POST['context']);
+        if (empty($file)) {
+            // No file selected
+            \Airship\json_response([
+                'status' => 'OK',
+                'message' => '',
+                'photo' => null
+            ]);
+        }
+        $cabin = $file_bp->getFilesCabin((int) $file['fileid']);
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => '',
+            'photo' =>
+                \Airship\LensFunctions\cabin_url($cabin) .
+                    'files/author/' .
+                    $file['slug'] . '/' .
+                    $auth_bp->getPhotoDirName() . '/' .
+                    $file['filename']
+        ]);
+    }
+
+    /**
+     * @route ajax/authors_photo_available
+     */
+    public function getAuthorsAvailablePhotos()
+    {
+        $auth_bp = $this->blueprint('Author');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $auth_bp = new Author($db);
+        }
+
+        $authorId = (int) ($_POST['author'] ?? 0);
+        if (!$this->isSuperUser()) {
+            $authors = $auth_bp->getAuthorIdsForUser(
+                $this->getActiveUserId()
+            );
+            if (!\in_array($authorId, $authors)) {
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__('You do not have permission to access this author\'s posts.')
+                ]);
+            }
+        }
+
+        if (empty($_POST['cabin']) || !$authorId === 0) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Insufficient parameters'
+            ]);
+        }
+
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => '',
+            'photos' => $auth_bp->getAvailablePhotos($authorId, $_POST['cabin'])
+        ]);
+    }
 
     /**
      * @route ajax/authors_blog_posts
@@ -92,8 +178,8 @@ class Ajax extends LoggedInUsersOnly
         );
 
         \Airship\json_response($response);
-
     }
+
     /**
      * @route ajax/get_perms_user
      */
@@ -366,6 +452,54 @@ class Ajax extends LoggedInUsersOnly
         \Airship\json_response([
             'status' => 'OK',
             'message' => $body,
+        ]);
+    }
+
+    /**
+     * @route ajax/authors_save_photo
+     */
+    public function saveAuthorsPhoto()
+    {
+        $auth_bp = $this->blueprint('Author');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $auth_bp = new Author($db);
+        }
+        $authorId = (int) $_POST['author'];
+        if (!$this->isSuperUser()) {
+            $authors = $auth_bp->getAuthorIdsForUser(
+                $this->getActiveUserId()
+            );
+            if (!\in_array($authorId, $authors)) {
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__('You do not have permission to access this author\'s posts.')
+                ]);
+            }
+        }
+        if (!\Airship\all_keys_exist(['cabin', 'context', 'author', 'filename'], $_POST)) {
+            \Airship\json_response([
+                'keys' => array_keys($_POST),
+                'status' => 'ERROR',
+                'message' => 'Insufficient parameters'
+            ]);
+        }
+        $result = $auth_bp->savePhotoChoice(
+            $authorId,
+            $_POST['context'],
+            $_POST['cabin'],
+            $_POST['filename']
+        );
+        if (!$result) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Could not save photo choice.',
+                'photo' => null
+            ]);
+        }
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => 'Saved!',
         ]);
     }
 }

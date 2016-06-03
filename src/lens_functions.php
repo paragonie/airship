@@ -148,7 +148,7 @@ function cargo(...$args)
 }
 
 /**
- * Content-Security-Policy hash
+ * Content-Security-Policy hash a file
  *
  * @param string $file
  * @param string $dir
@@ -210,7 +210,7 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
 }
 
 /**
- * Content-Security-Policy hash
+ * Content-Security-Policy hash a string
  *
  * @param string $str
  * @param string $dir
@@ -312,9 +312,7 @@ function display_notary_tag(SignaturePublicKey $pk = null)
 }
 
 /**
- * Get supported languages.
- *
- * @todo separate this out
+ * Get supported languages. Eventually there will be more than one.
  */
 function get_languages(): array
 {
@@ -328,11 +326,66 @@ function get_languages(): array
  *
  * @param int $authorId
  * @param string $which
+ * @param string $cabin
  * @return string
  */
 function get_avatar(int $authorId, string $which): string
 {
-    return '';
+    static $cache = [];
+    static $db = null;
+    if (!$db) {
+        $db = \Airship\get_database();
+    }
+    // If someone comments 100 times, we only want to look up their avatar once.
+    $key = CryptoUtil::hash(
+        \http_build_query([
+            'author' => $authorId,
+            'which' => $which
+        ])
+    );
+    if (!isset($cache[$key])) {
+        $file = $db->row(
+            "SELECT
+             f.*,
+             a.slug
+         FROM
+             hull_blog_author_photos p
+         JOIN
+             hull_blog_authors a
+             ON p.author = a.authorid
+         JOIN
+             hull_blog_photo_contexts c
+             ON p.context = c.contextid
+         JOIN
+             airship_files f
+             ON p.file = f.fileid
+         WHERE
+             c.label = ? AND a.authorid = ?",
+            $which,
+            $authorId
+        );
+        if (empty($file)) {
+            $cache[$key] = '';
+        } else {
+            if (empty($file['directory'])) {
+                $cabin = $file['cabin'];
+            }  else {
+                $dirId = $file['directory'];
+                do {
+                    $dir = $db->row("SELECT parent, cabin FROM airship_dirs WHERE directoryid = ?", $dirId);
+                    $dirId = $dir['parent'];
+                } while (!empty($dirId));
+                $cabin = $dir['cabin'];
+            }
+            $cache[$key] = \Airship\LensFunctions\cabin_url($cabin) .
+                'files/author/' .
+                $file['slug'] .
+                '/photos/' .
+                $file['filename'];
+        }
+    }
+
+    return $cache[$key];
 }
 
 /**

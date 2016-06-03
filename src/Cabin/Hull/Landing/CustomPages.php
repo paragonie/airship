@@ -82,6 +82,7 @@ class CustomPages extends LandingGear
             );
         }
 
+        \header('HTTP/1.1 404 Not Found');
         // Finally: Return a 4o4
         $this->lens('404');
         return;

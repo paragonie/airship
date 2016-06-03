@@ -1,1 +1,66 @@
-{# @todo 20160602#}
+<h2>Photos for Author "{{ author.name|e('html') }}"</h2>
+<p>
+    {{ __(
+        "First, select a context to see the current selected photo. Then, select a Cabin. " ~
+        "Finally, select the new photo you want to use in this context."
+    ) }}
+</p>
+<div id="photo-selector" data-authorid="{{ author.authorid|e('html_attr') }}" data-authorslug="{{ author.slug|e('html_attr') }}">
+    <div id="three-way-split" class="full-width">
+        <div class="table-row">
+            <div class="table-cell"><strong>{{ __("Context") }}</strong></div>
+            <div class="table-cell"><strong>{{ __("Cabin") }}</strong></div>
+            <div class="table-cell"></div>
+        </div>
+        <div class="table-row">
+            <ul id="photo-selector-contexts" class="table-min-width">
+                {% for c in contexts %}
+                    <li>
+                        <a
+                                class="photo-selector-context"
+                                data-context="{{ c.label|e('html') }}"
+                                id="photo-selector-context-{{ c.label|e('html') }}"
+                        >
+                            {{ c["display_name"]|e('html') }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul id="photo-selector-cabins" class="table-min-width">
+                {% for c in cabins %}
+                    <li>
+                        <a
+                                class="photo-selector-cabin"
+                                data-url="{{ cabin_url(c)|e('html_attr') }}"
+                                data-cabin="{{ c|e('html_attr') }}"
+                                id="photo-selector-cabin-{{ c|e('html_attr') }}"
+                        >
+                            {{ c|e('html') }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div id="photo-selector-available">
+                <div id="photo-selector-links">
+                    <a target="_blank" id="directory-source"><i class="fa fa-upload"></i> {{ __("Upload Files") }}</a>
+                        &bull;
+                    <a id="photo-select-refresh"><i class="fa fa-refresh"></i> {{ __("Refresh") }}</a>
+                </div>
+                <select id="selected-filename"></select>
+                <button id="change-photo-btn" type="button" class="pure-button pure-button-primary">
+                    {{ __("Confirm") }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="table full-width">
+        <div class="table-row table-header">
+            <div class="table-cell table50">{{ __("Photo for this Context:") }}</div>
+            <div class="table-cell table50">{{ __("Selection Preview:") }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-cell" id="photo-selector-current"></div>
+            <div class="table-cell" id="photo-selector-selected"></div>
+        </div>
+    </div>
+</div>

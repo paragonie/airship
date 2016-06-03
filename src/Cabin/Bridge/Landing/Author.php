@@ -163,14 +163,8 @@ class Author extends LoggedInUsersOnly
         }
         $author = $this->author->getById($authorId);
         $contexts = $this->author->getPhotoContexts();
-        $photos = $this->author->getAvailablePhotos($authorId);
+        $cabins = $this->getCabinNames();
 
-        $post = $this->post();
-        if ($post) {
-            if ($this->saveAuthorPhotos($authorId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/author/photos/' . $authorId);
-            }
-        }
         $this->lens(
             'author/photos',
             [
@@ -178,8 +172,8 @@ class Author extends LoggedInUsersOnly
                     $author,
                 'contexts' =>
                     $contexts,
-                'photos' =>
-                    $photos
+                'cabins' =>
+                    $cabins
             ]
         );
     }

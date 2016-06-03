@@ -1,5 +1,5 @@
 <h3 id="about-the-author">About the Author</h3>
-{% set avatar = get_avatar(author.authorid, 'profile') %}
+{% set avatar = get_avatar(author.authorid, 'bio') %}
 {% if avatar %}
     <img src="{{ avatar }}" alt="{{ author.name|e }} Photo" class="author_photo" />
 {% endif %}

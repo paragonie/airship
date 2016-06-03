@@ -1585,3 +1585,107 @@ fieldset.preferences > legend {
 #bridge_redirects_for_cabin .table-body-row:nth-child(2n+1) {
     background-color: rgba(51, 48, 0, 0.1);
 }
+#photo-selector-available {
+    padding: 4px;
+}
+#photo-selector a {
+    cursor: pointer;
+}
+#photo-selector-cabins a,
+#photo-selector-contexts a {
+    display: block;
+    color: gold;
+    padding: 4px;
+    text-decoration: underline;
+}
+#photo-selector-cabins a.active,
+#photo-selector-contexts a.active {
+    color: #FFC;
+    text-decoration: none;
+}
+#photo-selector-contexts .active {
+    background-color: #3A2F02;
+    cursor: default;
+    font-weight: bold;
+    padding: 8px 4px;
+    text-shadow: #000 1px 1px 0;
+}
+#photo-selector-cabins .active {
+    background-color: #303030;
+    cursor: default;
+    font-weight: bold;
+    padding: 8px 4px;
+    text-shadow: #000 1px 1px 0, #000 1px 1px 1px, #000 1px 1px 2px;
+}
+#photo-selector-cabins {
+    background-image: -webkit-linear-gradient(
+            top,
+            rgba(127, 127, 127, 0.5) 0%,
+            rgba(127, 127, 127, 0) 100%
+    );
+    background-image: -moz-linear-gradient(
+            top,
+            rgba(127, 127, 127, 0.5) 0%,
+            rgba(127, 127, 127, 0) 100%
+    );
+    background-image: -ms-linear-gradient(
+            top,
+            rgba(127, 127, 127, 0.5) 0%,
+            rgba(127, 127, 127, 0) 100%
+    );
+    background-image: -o-linear-gradient(
+            top,
+            rgba(127, 127, 127, 0.5) 0%,
+            rgba(127, 127, 127, 0) 100%
+    );
+    background-image: linear-gradient(
+            top,
+            rgba(127, 127, 127, 0.5) 0%,
+            rgba(127, 127, 127, 0) 100%
+    );
+    background-color: #000;
+}
+#photo-selector-contexts {
+    background-image: -webkit-linear-gradient(
+            top,
+            rgba(204, 192, 127, 0.4) 0%,
+            rgba(204, 192, 127, 0.2) 100%
+    );
+    background-image: -moz-linear-gradient(
+            top,
+            rgba(204, 192, 127, 0.4) 0%,
+            rgba(204, 192, 127, 0.2) 100%
+    );
+    background-image: -ms-linear-gradient(
+            top,
+            rgba(204, 192, 127, 0.4) 0%,
+            rgba(204, 192, 127, 0.2) 100%
+    );
+    background-image: -o-linear-gradient(
+            top,
+            rgba(204, 192, 127, 0.4) 0%,
+            rgba(204, 192, 127, 0.2) 100%
+    );
+    background-image: linear-gradient(
+            top,
+            rgba(204, 192, 127, 0.4) 0%,
+            rgba(204, 192, 127, 0.2) 100%
+    );
+    background-color: #000;
+}
+#photo-selector-current,
+#photo-selector-selected {
+    width: 50%;
+}
+#photo-selector-current img,
+#photo-selector-selected img {
+    max-width: calc(100% - 20px);
+}
+.author_photo {
+    width: 150px;
+    max-height: 200px;
+}
+.blog-comment-avatar {
+    width: 100px;
+    max-height: 100px;
+}

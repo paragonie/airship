@@ -593,3 +593,16 @@ label.required-form::after {
 .bottom-extra-pad {
     padding-bottom: 1.5ex;
 }
+
+#three-way-split {
+    display: table;
+}
+#three-way-split ul {
+    display: table-cell;
+    list-style: none;
+    padding: 0;
+    vertical-align: top;
+}
+#three-way-split ul li a {
+    cursor: pointer;
+}

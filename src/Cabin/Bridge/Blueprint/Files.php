@@ -273,6 +273,24 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Given a directory ID, get its cabin.
+     *
+     * @param int $directoryId
+     * @return string
+     */
+    public function getDirectoryCabin(int $directoryId): string
+    {
+        do {
+            $parent = $this->db->row(
+                "SELECT parent, cabin FROM airship_dirs WHERE directoryid = ?",
+                $directoryId
+            );
+            $directoryId = $parent['parent'];
+        } while ($directoryId !== null);
+        return $parent['cabin'];
+    }
+
+    /**
      * Get a directory ID, should it exist.
      *
      * @param array $parts
@@ -388,6 +406,22 @@ class Files extends BlueprintGear
             }
         }
         return $children;
+    }
+
+    /**
+     * Given a file ID, get its Cabin
+     *
+     * @param int $fileId
+     * @return string
+     * @throws \Airship\Alerts\Database\QueryError
+     */
+    public function getFilesCabin(int $fileId): string
+    {
+        $fileInfo = $this->db->row('SELECT directory, cabin FROM airship_files WHERE fileid = ?', $fileId);
+        if (empty($fileInfo['directory'])) {
+            return $fileInfo['cabin'];
+        }
+        return $this->getDirectoryCabin((int) $fileInfo['directory']);
     }
 
     /**
