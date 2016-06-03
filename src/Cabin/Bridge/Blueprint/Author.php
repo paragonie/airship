@@ -125,7 +125,7 @@ class Author extends BlueprintGear
      */
     public function getAll(string $sortby = 'name', string $dir = 'ASC'): array
     {
-        return $this->db->run('SELECT * FROM view_hull_users_authors ' . $this->orderBy($sortby, $dir, ['name', 'created']));
+        return $this->db->run('SELECT * FROM hull_blog_authors ' . $this->orderBy($sortby, $dir, ['name', 'created']));
     }
 
     /**
