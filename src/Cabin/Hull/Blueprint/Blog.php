@@ -34,8 +34,15 @@ class Blog extends BlueprintGear
             : null;
 
         if (!empty($post['author'])) {
+            $authors = $this->getAuthorsForUser($this->getActiveUserId());
+            if (!\in_array($post['author'], $authors)) {
+                $this->db->rollBack();
+                return false;
+            }
+            $author = $post['author'];
             $metadata = null;
         } else {
+            $author = null;
             $metadata = \json_encode([
                 'name' => $post['name'],
                 'email' => $post['email'],
@@ -51,6 +58,7 @@ class Blog extends BlueprintGear
             [
                 'blogpost' => $blogPostId,
                 'replyto' => $replyTo,
+                'author' => $author,
                 'approved' => $published ?? false,
                 'metadata' => $metadata
             ],

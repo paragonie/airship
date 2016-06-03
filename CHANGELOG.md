@@ -26,6 +26,8 @@
   * Users can now delete blog posts.
   * Users can now diff two versions of a blog post.
   * Users can now add/remove other users to the same Author.
+  * Users can now selected uploaded image files to use for biography images and
+    avatars to accompany their blog comments.
   * Lots of reorganization, refactoring, and clean-up.
   * Moved the [CMS Airship Documentation](https://github.com/paragonie/airship-docs)
     to its own dedicated git repository.
