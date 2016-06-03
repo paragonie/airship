@@ -31,6 +31,7 @@
         "channel": {{ universal["notary"]["channel"]|je }},
         "enabled": {{ universal["notary"]["enabled"] ? 'true' : 'false' }}
     },
+    "session_config": {{ universal["session_config"]|je }},
     "session_index": {
         "user_id": {{ universal["session_index"]["user_id"]|je }},
         "logout_token": {{ universal["session_index"]["logout_token"]|je }}

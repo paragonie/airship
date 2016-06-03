@@ -16,13 +16,16 @@ if (!\session_id()) {
         // The session ID cookie should be inaccessible to JavaScript
         'cookie_httponly' => true
     ];
-    if (isset($state->session_config)) {
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        \session_start($state->session_config + $session_config);
-    } else {
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        \session_start($session_config);
+    if (isset($state->universal['session_config'])) {
+        $session_config = $state->universal['session_config'] + $session_config;
+        if (isset($session_config['cookie_domain'])) {
+            if ($session_config['cookie_domain'] === '*' || $session_config['cookie_domain'] === '') {
+                unset($session_config['cookie_domain']);
+            }
+        }
     }
+    /** @noinspection PhpMethodParametersCountMismatchInspection */
+    \session_start($session_config);
 }
 
 if (empty($_SESSION['created_canary'])) {

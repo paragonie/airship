@@ -1,7 +1,24 @@
 {
   "name": "paragonie/airship",
   "description": "PHP7 Content Management Platform - 'The sky is only the beginning'",
-  "license": "GPL3",
+  "license": [
+    "GPL-3.0+",
+    "proprietary"
+  ],
+  "authors": [
+    {
+      "name": "Paragon Initiative Enterprises",
+      "email": "info@paragonie.com",
+      "homepage": "https://paragonie.com",
+      "role": "Development Team"
+    }
+  ],
+  "support": {
+    "email": "security@paragonie.com",
+    "issues": "https://github.com/paragonie/airship/issues",
+    "source": "https://github.com/paragonie/airship",
+    "docs": "https://github.com/paragonie/airship-docs"
+  },
   "keywords": [
     "Airship",
     "blog",
@@ -13,6 +30,8 @@
     "secure",
     "self-updating"
   ],
+  "homepage": "https://paragonie.com/project/airship",
+  "type": "project",
   "require-dev": {
     "phpunit/phpunit": "*"
   },
