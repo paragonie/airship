@@ -12,12 +12,12 @@
             {% if userid() %}
                 <div class="form-row">
                     <div class="form-column blog-comment-label">
-                        <label for="author">{{ __("Pen Name") }}:</label>
+                        <label for="author">{{ __("Author")|e('html') }}:</label>
                     </div>
                     <div class="form-column blog-comment-author-wrapper">
-                        <select name="author">
+                        <select id="blog-reply-author" name="author">
                             <option value="">Name / URL</option>
-                            <optgroup label="{{ __("Pen Names") }}">
+                            <optgroup label="{{ __("Author")|e('html_attr') }}">
                             {% for author in user_authors() %}
                                 <option{#
                                     #} class="select-author-name"{#
@@ -25,11 +25,11 @@
                                     #} value="{{ author.authorid|e('html_attr') }}">{{ author.name|e('html') }}</option>
                             {% endfor %}
                             </optgroup>
-                        </select>
+                        </select> <a href="{{ cabin_url('Bridge') }}author">{{ __("Create a New Author") }}</a>
                     </div>
                 </div>
             {% endif %}
-            <div class="form-row">
+            <div class="form-row guest-comment-field">
                 <div class="form-column blog-comment-label">
                     <label for="name"{% if not userid() %} class="required-form"{% endif %}>{{ __("Your Name") }}</label>:
                 </div>
@@ -37,7 +37,7 @@
                     <input type="text" name="name" placeholder="Public Name" {% if not userid() %} required="required"{% endif %} value="{{ _POST.name|e('html_attr') }}" />
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row guest-comment-field">
                 <div class="form-column blog-comment-label">
                     <label for="email"{% if not userid() %} class="required-form"{% endif %}>{{ __("Email Address") }}</label>:
                 </div>
@@ -45,7 +45,7 @@
                     <input type="text" name="email" placeholder="test@example.com" {% if not userid() %} required="required"{% endif %} value="{{ _POST.email|e('html_attr') }}" />
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row guest-comment-field">
                 <div class="form-column blog-comment-label">
                     <label for="url">{{ __("Your Website") }}</label>:
                 </div>

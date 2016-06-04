@@ -5,3 +5,7 @@
 
     {% include cargo("blog_comments") ignore missing %}
 {% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Hull/comments.js"|cachebust }}"></script>
+{% endblock %}

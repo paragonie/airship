@@ -10,12 +10,22 @@
                 {{ data.metadata.name|e('html') }}
             {% endif %}
         {% endif %}
-        {{ data.created }}
+        <time id="comment-{{ data.commentid }}" datetime="{{ data.created }}">{{ data.created|date('M j, Y H:i A') }}</time>
+        <a class="comment-link" href="#comment-{{ data.commentid }}"><i class="fa fa-link"></i> Link</a>
+        <a class="reply-link" data-replyto="{{ data.commentid }}"><i class="fa fa-comment"></i> {{ __("Reply") }}</a>
     </div>
+    <div class="blog-comment-table">
     {% if data.author %}
-        <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" class="blog-comment-avatar" />
+        <div class="table-cell table-min-width">
+            <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" class="blog-comment-avatar" />
+        </div>
     {% elseif data.metadata.email %}
-        <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" class="blog-comment-avatar" />
+        <div class="table-cell table-min-width">
+            <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" class="blog-comment-avatar" />
+        </div>
     {% endif %}
-    <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
+        <div class="table-cell">
+            <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
+        </div>
+    </div>
 </div>

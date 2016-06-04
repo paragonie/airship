@@ -1,12 +1,24 @@
-<h3 id="about-the-author">About the Author</h3>
+<h2 id="about-the-author">About the Author</h2>
 {% set avatar = get_avatar(author.authorid, 'bio') %}
-{% if avatar %}
-    <img src="{{ avatar }}" alt="{{ author.name|e }} Photo" class="author_photo" />
-{% endif %}
-<h4 class="nomargin"><a href="/blog/author/{{ author.slug|e('url') }}">{{ author.name|e }}</a></h4>
-<div id="author_byline">{{ author.byline|default("")|CleanMarkdown }}</div>
-{% if author.bio %}
-<div id="author_bio">
-    {{ author.bio|default("")|CleanMarkdown }}
+<div id="author-wrap">
+    {% if avatar %}
+    <div class="author_photo_wrapper">
+        <img src="{{ avatar }}" alt="{{ author.name|e }} Photo" class="author_photo" />
+    </div>
+    {% endif %}
+    <div class="author_extra">
+        <h4 class="nomargin"><a href="/blog/author/{{ author.slug|e('url') }}">{{ author.name|e }}</a></h4>
+        <div id="author_byline">{{ author.byline|default("")|CleanMarkdown }}</div>
+        {% if author.biography %}
+        <div id="author_bio">
+            {% if author["bio_format"] == "Markdown" %}
+                {{ author.biography|default("")|CleanMarkdown }}
+            {% elseif author["bio_format"] == "RST" %}
+                {{ author.biography|default("")|CleanRST }}
+            {% else %}
+                {{ author.biography|purify }}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endif %}

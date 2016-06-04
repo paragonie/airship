@@ -1,7 +1,7 @@
     {% if blogpost %}
         <div class="blog-post blog-read-post">
             <div class="blogpost_header">
-                <h2 class="blog-post-title">{{ blogpost.title|e }} </h2>
+                <h1 class="blog-post-title">{{ blogpost.title|e }} </h1>
                 <p class="blog-post-meta">
                     <time datetime="{{ blogpost.published|date('Y-m-d H:i:s') }}">
                         {{ blogpost.published|date("F j, Y g:i a") }}
