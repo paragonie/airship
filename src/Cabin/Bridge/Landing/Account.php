@@ -129,6 +129,31 @@ class Account extends LandingGear
     }
 
     /**
+     * @route my/account
+     */
+    public function my()
+    {
+        if (!$this->isLoggedIn())  {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        $account = $this->acct->getUserAccount($this->getActiveUserId());
+        $p = $this->post();
+        if (!empty($p)) {
+            $this->processAccountUpdate($p, $account);
+            exit;
+        }
+        $this->lens('my_account', ['account' => $account]);
+    }
+
+    /**
+     * @route my
+     */
+    public function myIndex()
+    {
+        \Airship\redirect($this->airship_cabin_prefix . '/my/account');
+    }
+
+    /**
      * Allows users to select which Motif to use
      *
      * @route my/preferences
@@ -167,31 +192,6 @@ class Account extends LandingGear
             'motifs' =>
                 $motifs
         ]);
-    }
-
-    /**
-     * @route my/account
-     */
-    public function my()
-    {
-        if (!$this->isLoggedIn())  {
-            \Airship\redirect($this->airship_cabin_prefix);
-        }
-        $account = $this->acct->getUserAccount($this->getActiveUserId());
-        $p = $this->post();
-        if (!empty($p)) {
-            $this->processAccountUpdate($p, $account);
-            exit;
-        }
-        $this->lens('my_account', ['account' => $account]);
-    }
-
-    /**
-     * @route my
-     */
-    public function myIndex()
-    {
-        \Airship\redirect($this->airship_cabin_prefix . '/my/account');
     }
 
     /**
