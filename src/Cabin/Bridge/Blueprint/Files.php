@@ -118,7 +118,7 @@ class Files extends BlueprintGear
                 'file' => null
             ],
             [
-                'fileid' => $fileInfo['fileid']
+                'file' => $fileInfo['fileid']
             ]
         );
         $this->db->delete(
