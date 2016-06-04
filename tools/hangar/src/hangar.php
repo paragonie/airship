@@ -7,7 +7,7 @@ use \ParagonIE\Halite\Halite;
 /**
  * This script is the entry point for all Hangar commands.
  */
-\define('AIRSHIP_ROOT', __DIR__);
+\define('HANGAR_ROOT', __DIR__);
 $homeDir = isset($_SERVER['HOME'])
     ? $_SERVER['HOME']
     : \posix_getpwuid(posix_getuid())['dir'];
@@ -27,10 +27,10 @@ require \dirname(__DIR__)."/vendor/autoload.php";
 /**
  * 2. Load the configuration
  */
-if (\is_readable(AIRSHIP_LOCAL_CONFIG."/config.json")) {
+if (\is_readable(AIRSHIP_LOCAL_CONFIG."/hangar.json")) {
     // Allow people to edit the JSON config and define their own locations
     $config = \json_decode(
-        \file_get_contents(AIRSHIP_LOCAL_CONFIG."/config.json"),
+        \file_get_contents(AIRSHIP_LOCAL_CONFIG."/hangar.json"),
         true
     );
 } else {

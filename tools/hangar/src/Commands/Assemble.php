@@ -141,10 +141,11 @@ class Assemble extends SessionCommand
             $this->pharAlias
         );
         $phar->buildFromDirectory($workspace);
-        $metaData = $this->getMetadata();
+        $metaData = $this->getRawMetadata();
         $metaData['commit'] = $this->getGitCommitHash();
         $phar->setMetadata($metaData);
 
+        echo 'Built at: ', AIRSHIP_LOCAL_CONFIG . DIRECTORY_SEPARATOR . $this->pharname, "\n";
         echo 'Git commit for this build: ', $metaData['commit'], "\n";
         return $this->cleanupWorkspace($workspace);
     }
@@ -230,6 +231,14 @@ class Assemble extends SessionCommand
     }
 
     /**
+     * @return string
+     */
+    protected function getRawMetadata(): array
+    {
+        return $this->metadata;
+    }
+
+    /**
      * Place all the files in a workspace directory to prepare for Phar assembly.
      *
      * @param string $workspace
@@ -274,7 +283,7 @@ class Assemble extends SessionCommand
      */
     public function getGitCommitHash(): string
     {
-        $projectRoot = $this->config['dir'];
+        $projectRoot = $this->session['dir'];
         if (!\is_dir($projectRoot . '/.git')) {
             throw new \Exception(".git directory not found!");
         }
