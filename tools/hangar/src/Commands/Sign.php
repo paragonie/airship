@@ -48,6 +48,22 @@ class Sign extends Command
                     $level = KeyFactory::SENSITIVE;
                     break;
             }
+        } elseif (isset($this->config['keytype'])) {
+            switch (isset($this->config['keytype'])) {
+                case 'fast':
+                case 'i':
+                case 'interactive':
+                case 'weak':
+                    $level = KeyFactory::INTERACTIVE;
+                    break;
+                case 'm':
+                case 'moderate':
+                    $level = KeyFactory::MODERATE;
+                    break;
+                default:
+                    $level = KeyFactory::SENSITIVE;
+                    break;
+            }
         } else {
             $level = KeyFactory::SENSITIVE;
         }
@@ -75,6 +91,9 @@ class Sign extends Command
         }
         \file_put_contents($file.'.sig', $signature);
         echo 'File signed: ' . $file.'.sig', "\n";
+        echo 'Public key: ' . \Sodium\bin2hex(
+            $sign_kp->getPublicKey()->getRawKeyMaterial()
+        ), "\n";
         return true;
     }
 

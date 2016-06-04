@@ -98,21 +98,6 @@ class Hail
     }
 
     /**
-     * Perform a GET request, get a decoded JSON response.
-     *
-     * @param string $url
-     * @param array $params
-     * @return mixed
-     */
-    public function getJSON(string $url, array $params = [])
-    {
-        return \Airship\parseJSON(
-            $this->get($url, $params),
-            true
-        );
-    }
-
-    /**
      * Perform a GET request, asynchronously
      *
      * @param string $url
@@ -126,6 +111,21 @@ class Hail
         return $this->client->getAsync(
             $url,
             $this->params($params, $url)
+        );
+    }
+
+    /**
+     * Perform a GET request, get a decoded JSON response.
+     *
+     * @param string $url
+     * @param array $params
+     * @return mixed
+     */
+    public function getJSON(string $url, array $params = [])
+    {
+        return \Airship\parseJSON(
+            $this->getReturnBody($url, $params),
+            true
         );
     }
 
@@ -151,7 +151,6 @@ class Hail
         }
         throw new TransferException();
     }
-
     /**
      * Perform a GET request, get a decoded JSON response.
      * Internally verifies an Ed25519 signature.
@@ -331,7 +330,7 @@ class Hail
     public function postJSON(string $url, array $params = [])
     {
         return \Airship\parseJSON(
-            $this->post($url, $params),
+            $this->postReturnBody($url, $params),
             true
         );
     }
