@@ -111,6 +111,16 @@ class Files extends BlueprintGear
         if (\file_exists(\AIRSHIP_UPLOADS . $fileInfo['realname'])) {
             \unlink(\AIRSHIP_UPLOADS . $fileInfo['realname']);
         }
+        // Remove associations with this file
+        $this->db->update(
+            'hull_blog_author_photos',
+            [
+                'file' => null
+            ],
+            [
+                'fileid' => $fileInfo['fileid']
+            ]
+        );
         $this->db->delete(
             'airship_files',
             [
