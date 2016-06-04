@@ -41,6 +41,7 @@ class Sign extends Command
                     $level = KeyFactory::INTERACTIVE;
                     break;
                 case 'm':
+                case 'signing':
                 case 'moderate':
                     $level = KeyFactory::MODERATE;
                     break;
@@ -49,7 +50,7 @@ class Sign extends Command
                     break;
             }
         } elseif (isset($this->config['keytype'])) {
-            switch (isset($this->config['keytype'])) {
+            switch ($this->config['keytype']) {
                 case 'fast':
                 case 'i':
                 case 'interactive':
@@ -57,6 +58,7 @@ class Sign extends Command
                     $level = KeyFactory::INTERACTIVE;
                     break;
                 case 'm':
+                case 'signing':
                 case 'moderate':
                     $level = KeyFactory::MODERATE;
                     break;
