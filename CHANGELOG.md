@@ -1,4 +1,4 @@
-## Version 0.2.0 - Not Released Yet
+## Version 0.2.0 - 2016-06-03
 
   * Added a WYSIWYG editor (dubbed "Rich Text" to users).
   * Fix CSS and symlink issues from first squashed commit.
@@ -37,6 +37,7 @@
     destination.
   * Implemented the redirect management section. Now you can edit/delete custom
     URL redirects (some of which are created when you delete/rename content).
+  * Greatly improved the comment system; now you may reply to other comments.
 
 ## Version 0.1.0 - 2016-04-05
 

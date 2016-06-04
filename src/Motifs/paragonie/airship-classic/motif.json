@@ -1,10 +1,10 @@
 {
   "supplier": "paragonie",
   "name": "airship-classic",
-  "display_name": "Airship Classic v0.1.0",
+  "display_name": "Airship Classic v0.2.0",
   "base_template": null,
   "css": [
     "style.css"
   ],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
