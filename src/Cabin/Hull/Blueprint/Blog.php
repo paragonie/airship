@@ -33,6 +33,15 @@ class Blog extends BlueprintGear
             )
             : null;
 
+        // Enforce maximum comment reply depth.
+        if ($replyTo) {
+            $depth = $this->getCommentDepth($replyTo);
+            $conf = \Airship\LensFunctions\cabin_custom_config();
+            if ($depth + 1 > $conf['blog']['comments']['depth_max']) {
+                $replyTo = null;
+            }
+        }
+
         if (!empty($post['author'])) {
             $authors = $this->getAuthorsForUser($this->getActiveUserId());
             if (!\in_array($post['author'], $authors)) {
@@ -412,6 +421,19 @@ class Blog extends BlueprintGear
             throw new EmulatePageNotFound();
         }
         return $this->getSnippet($this->postProcess($post), true);
+    }
+
+    /**
+     * @param int $commentId
+     * @return int
+     */
+    public function getCommentDepth(int $commentId): int
+    {
+        $parent = $this->db->cell('SELECT replyto FROM hull_blog_comments WHERE commentid = ?', $commentId);
+        if (!$parent) {
+            return 0;
+        }
+        return 1 + $this->getCommentDepth($parent);
     }
 
     /**

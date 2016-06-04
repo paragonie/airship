@@ -1713,6 +1713,9 @@ fieldset.preferences > legend {
     box-shadow: rgba(0, 0, 0, 0.5) 0 0 1ex;
     margin: 1ex;
 }
+.blog-comment-avatar-container {
+    padding: 1ex 0 0 1ex;
+}
 ol.blog_comment_child {
     list-style-type: none;
     padding: 0 0 0 2rem;
@@ -1724,41 +1727,47 @@ ol.blog_comments {
 ol.blog_comments li {
     background-image: -webkit-linear-gradient(
             top,
-            rgba(51, 51, 33, 0.3) 0%,
-            rgba(0, 0, 0, 0.01) 100%
+            rgba(51, 51, 33, 0.25) 0%,
+            rgba(0, 0, 0, 0.03) 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            rgba(51, 51, 33, 0.3) 0%,
-            rgba(0, 0, 0, 0.01) 100%
+            rgba(51, 51, 33, 0.25) 0%,
+            rgba(0, 0, 0, 0.03) 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            rgba(51, 51, 33, 0.3) 0%,
-            rgba(0, 0, 0, 0.01) 100%
+            rgba(51, 51, 33, 0.25) 0%,
+            rgba(0, 0, 0, 0.03) 100%
     );
     background-image: -o-linear-gradient(
             top,
-            rgba(51, 51, 33, 0.3) 0%,
-            rgba(0, 0, 0, 0.01) 100%
+            rgba(51, 51, 33, 0.25) 0%,
+            rgba(0, 0, 0, 0.03) 100%
     );
     background-image: linear-gradient(
             top,
-            rgba(51, 51, 33, 0.3) 0%,
-            rgba(0, 0, 0, 0.01) 100%
+            rgba(51, 51, 33, 0.25) 0%,
+            rgba(0, 0, 0, 0.03) 100%
     );
-    padding: 1ex 0 1ex 1ex;
+    padding: 0;
 }
 ol.blog_comments li a {
-    color: #704114;
+    color: #331d09;
     transition: color 0.25s;
 }
 ol.blog_comments li a:visited {
-    color: #704114;
+    color: #331d09;
 }
 ol.blog_comments li a:active,
 ol.blog_comments li a:hover {
-    color: #331d09;
+    color: #704114;
+}
+ol.blog_comments li + li,
+ol.blog_comments li li {
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.25);
+    border-width: 1px 0 0 0;
 }
 .blog-comment-meta {
     padding-right: 1em;

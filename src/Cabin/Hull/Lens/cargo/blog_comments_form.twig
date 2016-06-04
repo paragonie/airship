@@ -34,7 +34,14 @@
                     <label for="name"{% if not userid() %} class="required-form"{% endif %}>{{ __("Your Name") }}</label>:
                 </div>
                 <div class="form-colum blog-comment-name-wrapper">
-                    <input type="text" name="name" placeholder="Public Name" {% if not userid() %} required="required"{% endif %} value="{{ _POST.name|e('html_attr') }}" />
+                    <input{#
+                        #} id="blog-comment-name"{#
+                        #} type="text"{#
+                        #} name="name"{#
+                        #} placeholder="Public Name"{#
+                        #}{% if not userid() %} required="required"{% endif %}{#
+                        #} value="{{ _POST.name|e('html_attr') }}"{#
+                    #} />
                 </div>
             </div>
             <div class="form-row guest-comment-field">
@@ -42,7 +49,14 @@
                     <label for="email"{% if not userid() %} class="required-form"{% endif %}>{{ __("Email Address") }}</label>:
                 </div>
                 <div class="form-column blog-comment-email-wrapper">
-                    <input type="text" name="email" placeholder="test@example.com" {% if not userid() %} required="required"{% endif %} value="{{ _POST.email|e('html_attr') }}" />
+                    <input{#
+                        #} id="blog-comment-email"{#
+                        #} type="text"{#
+                        #} name="email"{#
+                        #} placeholder="test@example.com"{#
+                        #}{% if not userid() %} required="required"{% endif %}{#
+                        #} value="{{ _POST.email|e('html_attr') }}"{#
+                    #} />
                 </div>
             </div>
             <div class="form-row guest-comment-field">
@@ -50,7 +64,7 @@
                     <label for="url">{{ __("Your Website") }}</label>:
                 </div>
                 <div class="form-column blog-comment-url-wrapper">
-                    <input type="text" name="url" placeholder="https://yourdomain.com" value="{{ _POST.url|e('html_attr') }}" />
+                    <input id="blog-comment-url" type="text" name="url" placeholder="https://yourdomain.com" value="{{ _POST.url|e('html_attr') }}" />
                 </div>
             </div>
             <div class="form-row">
@@ -58,7 +72,14 @@
                     <label for="url">{{ __("Your Message") }}</label>:
                 </div>
                 <div class="form-column blog-comment-textarea-wrapper">
-                    <textarea required="required" name="message" class="blog-comment-textarea">{{ _POST.message|e('html') }}</textarea>
+                    <textarea{#
+                        #} required="required"{#
+                        #} name="message"{#
+                        #} class="blog-comment-textarea"{#
+                        #} placeholder="Markdown is supported."{#
+                    #}>{#
+                        #}{{ _POST.message|e('html') }}{#
+                    #}</textarea>
                 </div>
             </div>
 

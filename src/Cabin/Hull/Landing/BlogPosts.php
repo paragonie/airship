@@ -76,6 +76,14 @@ class BlogPosts extends LandingGear
                 return false;
             }
         }
+        $msg = \trim($post['message']);
+        if (\strlen($msg) < 2) {
+            $this->storeLensVar(
+                'blog_error',
+                \__('The comment you attempted to leave is much too short.')
+            );
+            return false;
+        }
 
         $published = false;
         $can_comment = false;
@@ -460,6 +468,10 @@ class BlogPosts extends LandingGear
                         \__('Your comment has been submitted successfully, but it will not appear it has been approved by the crew.')
                     );
                 }
+                unset($_POST['name']);
+                unset($_POST['email']);
+                unset($_POST['url']);
+                unset($_POST['message']);
             }
         }
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;

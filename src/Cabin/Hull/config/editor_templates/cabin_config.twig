@@ -124,12 +124,28 @@
                 {{ __("Posts Per Page") }}:
             </label>
         </div>
-        <div class="table-cell full-width bottom-extra-pad">
+        <div class="table-cell full-width">
             <input
                     id="blog_per_page"
                     type="text"
                     name="{{ form_key_config }}[blog][per_page]"
                     value="{{ config_extra['blog']['per_page']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top bottom-extra-pad">
+            <label for="blog_per_page">
+                {{ __("Maximum Comment Depth") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            <input
+                    id="blog_per_page"
+                    type="text"
+                    name="{{ form_key_config }}[blog][comments][depth_max]"
+                    value="{{ config_extra['blog']['comments']['depth_max']|e('html_attr') }}"
             />
         </div>
     </div>

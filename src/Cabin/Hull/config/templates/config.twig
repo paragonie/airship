@@ -2,6 +2,7 @@
     "blog": {
         "per_page": {{ config['blog']['comments']['per_page']|je }},
         "comments": {
+            "depth_max": {{ config['blog']['comments']['comments']['depth_max']|je }},
             "enabled": {{ config['blog']['comments']['enabled'] ? 'true' : 'false' }},
             "guests": {{ config['blog']['comments']['guests'] ? 'true' : 'false' }}
         }

@@ -2,8 +2,10 @@
 <div class="blog-comment-display">
     <div class="blog-comment-meta">
         {% if data.authorname %}
+            {% set name = data.authorname %}
             <a href="/blog/author/{{ data.authorslug|e('url') }}">{{ data.authorname|e('html') }}</a>
         {% elseif data.metadata %}
+            {% set name = data.metadata.name %}
             {% if data.metadata.url %}
                 <a href="{{ data.metadata.url|e('html_attr') }}">{{ data.metadata.name|e('html') }}</a>
             {% else %}
@@ -12,17 +14,36 @@
         {% endif %}
         <time id="comment-{{ data.commentid }}" datetime="{{ data.created }}">{{ data.created|date('M j, Y H:i A') }}</time>
         <a class="comment-link" href="#comment-{{ data.commentid }}"><i class="fa fa-link"></i> Link</a>
-        <a class="reply-link" data-replyto="{{ data.commentid }}"><i class="fa fa-comment"></i> {{ __("Reply") }}</a>
+        {% if depth + 1 < cabin_custom_config()['blog']['comments']['depth_max'] %}
+            <a{#
+                #} href="#reply-to"{#
+                #} class="reply-link"{#
+                #} data-author="{{ name|e('html_attr') }}"{#
+                #} data-replyto="{{ data.commentid }}"{#
+            #}>{#
+                #}<i class="fa fa-comment"></i> {{ __("Reply") }}{#
+            #}</a>
+        {% endif %}
     </div>
     <div class="blog-comment-table">
     {% if data.author %}
-        <div class="table-cell table-min-width">
-            <img src="{{ get_avatar(data.author, 'comment') }}" alt="{{ data.authorname|e('html_attr') }}" title="{{ data.authorname|e('html_attr') }}" class="blog-comment-avatar" />
-        </div>
+        <div class="table-cell table-min-width blog-comment-avatar-container">{#
+            #}<img{#
+                #} src="{{ get_avatar(data.author, 'comment') }}"{#
+                #} alt="{{ data.authorname|e('html_attr') }}"{#
+                #} title="{{ data.authorname|e('html_attr') }}"{#
+                #} class="blog-comment-avatar"{#
+            #} />{#
+        #}</div>
     {% elseif data.metadata.email %}
-        <div class="table-cell table-min-width">
-            <img src="{{ data.metadata.email|gravatar }}" alt="{{ data.metadata.name|e('html_attr') }}" title="{{ data.metadata.name|e('html_attr') }}" class="blog-comment-avatar" />
-        </div>
+        <div class="table-cell table-min-width blog-comment-avatar-container">{#
+            #}<img{#
+                #} src="{{ data.metadata.email|gravatar }}"{#
+                #} alt="{{ data.authorname|e('html_attr') }}"{#
+                #} title="{{ data.authorname|e('html_attr') }}"{#
+                #} class="blog-comment-avatar"{#
+            #} />{#
+        #}</div>
     {% endif %}
         <div class="table-cell">
             <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
