@@ -1,3 +1,8 @@
+## Version 0.2.1 - 2016-06-04
+
+  * Bugfix: The Airship Installer failed to assign a default "guest group"
+    which caused file downloads to fail when not authenticated.
+
 ## Version 0.2.0 - 2016-06-03
 
   * Added a WYSIWYG editor (dubbed "Rich Text" to users).
