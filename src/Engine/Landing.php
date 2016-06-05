@@ -37,26 +37,37 @@ class Landing
      * @var string
      */
     protected $airship_http_method;
+
     /**
      * @var array
      */
     protected $airship_config = [];
+
     /**
      * @var string
      */
     protected $airship_cabin_prefix;
+
     /**
      * @var CSRF
      */
     protected $airship_csrf;
+
     /**
      * @var DBInterface[][]
      */
     protected $airship_databases;
+
     /**
      * @var Lens
      */
     protected $airship_lens_object;
+
+    /**
+     * @var array
+     */
+    protected $airship_lens_override = [];
+
     /**
      * @var array
      */
@@ -241,6 +252,17 @@ class Landing
         }
         return $config;
     }
+    /**
+     * Render a Lens as text, return a string
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @return string
+     */
+    protected function getLensAsText(string $name, ...$cArgs): string
+    {
+        return $this->airship_lens_object->render($name, ...$cArgs);
+    }
 
     /**
      * Get the name of the current namespace
@@ -263,19 +285,21 @@ class Landing
      */
     protected function lens(string $name, ...$cArgs): bool
     {
+        if (isset($this->airship_lens_override[$name])) {
+            $name = $this->airship_lens_override[$name];
+        }
         return $this->airship_lens_object->display($name, ...$cArgs);
     }
 
     /**
-     * Render a Lens as text, return a string
+     * Override a lens with a different lens. (Meant for Gadgets.)
      *
-     * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
-     * @return string
+     * @param string $oldLens
+     * @param string $newLens
      */
-    protected function getLensAsText(string $name, ...$cArgs): string
+    protected function overrideLens(string $oldLens, string $newLens)
     {
-        return $this->airship_lens_object->render($name, ...$cArgs);
+        $this->airship_lens_override[$oldLens] = $newLens;
     }
 
     /**
