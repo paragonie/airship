@@ -149,13 +149,7 @@ class Account extends LandingGear
         $account = $this->acct->getUserAccount($this->getActiveUserId());
         $gpg_public_key = '';
         if (!empty($account['gpg_public_key'])) {
-            $state = State::instance();
-            try {
-                $gpg_public_key = \trim(
-                    $state->gpgMailer->export($account['gpg_public_key'])
-                );
-            } catch (\Crypt_GPG_Exception $ex) {
-            }
+            $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
         }
         $p = $this->post();
         if (!empty($p)) {
@@ -275,10 +269,29 @@ class Account extends LandingGear
     }
 
     /**
+     * Return the public key corresponding to a fingerprint
+     *
+     * @param string $fingerprint
+     * @return string
+     */
+    protected function getGPGPublicKey(string $fingerprint): string
+    {
+        $state = State::instance();
+        try {
+            return \trim(
+                $state->gpgMailer->export($fingerprint)
+            );
+        } catch (\Crypt_GPG_Exception $ex) {
+            return '';
+        }
+    }
+
+    /**
      * Process a user account update
      *
      * @param array $post
      * @param array $account
+     * @param string $gpg_public_key
      */
     protected function processAccountUpdate(
         array $post = [],
@@ -293,9 +306,10 @@ class Account extends LandingGear
             $post['username'] = $account['username'];
             if ($this->acct->isPasswordWeak($post)) {
                 $this->lens('my_account', [
+                    'account' => $account,
+                    'gpg_public_key' => $gpg_public_key,
                     'post_response' => [
                         'message' => \__('Supplied password is too weak.'),
-                        'gpg_public_key' => $gpg_public_key,
                         'status' => 'error'
                     ]
                 ]);
@@ -312,11 +326,14 @@ class Account extends LandingGear
         }
 
         if ($this->acct->updateAccountInfo($post, $account)) {
+            // Refresh:
+            $account = $this->acct->getUserAccount($this->getActiveUserId());
+            $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
             $this->lens('my_account', [
-                'account' => $post,
+                'account' => $account,
+                'gpg_public_key' => $gpg_public_key,
                 'post_response' => [
                     'message' => \__('Account was saved successfully.'),
-                    'gpg_public_key' => $gpg_public_key,
                     'status' => 'success'
                 ]
             ]);
@@ -324,9 +341,9 @@ class Account extends LandingGear
         }
         $this->lens('my_account', [
             'account' => $post,
+            'gpg_public_key' => $gpg_public_key,
             'post_response' => [
                 'message' => \__('Account was not saved successfully.'),
-                'gpg_public_key' => $gpg_public_key,
                 'status' => 'error'
             ]
         ]);
