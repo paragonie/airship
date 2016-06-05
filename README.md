@@ -5,9 +5,11 @@
 Airship is a content management/blogging platform and application development
 framework written for PHP 7. Requires [libsodium](https://download.libsodium.org/doc/).
 
-Airship is Free Software developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com);
-commercial license are available if you would like to use Airship in a
-non-free software product.
+Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
+(GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
+
+[Commercial license are available for purchase](https://paragonie.com/contact)
+if your company requires one.
 
 ## Minimum Requirements
 
