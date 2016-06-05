@@ -514,7 +514,7 @@ class Account extends LandingGear
      */
     protected function processRecoveryToken(string $token)
     {
-        if (Util::stringLength($token) < 76) {
+        if (Util::stringLength($token) < UserAccounts::RECOVERY_CHAR_LENGTH) {
             \Airship\redirect($this->airship_cabin_prefix . '/login');
         }
         $selector = Util::subString($token, 0, 32);
