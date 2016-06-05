@@ -15,6 +15,9 @@
         "auth_token": {{ universal["cookie_index"]["auth_token"]|je }}
     },
     "debug": {{ universal.debug ? 'true' : 'false' }},
+    "email": {
+        "from": {{ universal["email"]["from"]|je }}
+    },
     "guest_groups": {{ universal["guest_groups"]|je(1) }},
     "ledger": {
     {% if universal.ledger.driver == "file" %}{#

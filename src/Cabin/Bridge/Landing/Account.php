@@ -228,6 +228,10 @@ class Account extends LandingGear
         if ($this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $enabled = $this->config('password-reset.enabled');
+        if (empty($enabled)) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
         $post = $this->post();
         if ($post) {
             if ($this->processRecoverAccount($post)) {
@@ -468,7 +472,7 @@ class Account extends LandingGear
             );
             return false;
         }
-        if (!$recoverInfo['can_reset'] || empty($recoverInfo['email'])) {
+        if (!$recoverInfo['allow_reset'] || empty($recoverInfo['email'])) {
             // Opted out or no email address? Act like the user doesn't exist.
             return false;
         }
@@ -483,18 +487,27 @@ class Account extends LandingGear
             $state->gpgMailer = new GPGMailer($state->mailer);
         }
 
+        if ($state->universal['debug']) {
+            // Not in production
+            $this->log($token, LogLevel::DEBUG);
+        }
+
         $message = (new Message())
             ->addTo($recoverInfo['email'], $post['username'])
             ->setSubject('Password Reset')
             ->setFrom($state->universal['email']['from'] ?? 'no-reply@' . $_SERVER['HTTP_HOST'])
             ->setBody($this->recoveryMessage($token));
 
-        if (!empty($recoverInfo['gpg_public_key'])) {
-            // This will be encrypted with the user's public key:
-            $state->gpgMailer->send($message, $recoverInfo['gpg_public_key']);
-        } else {
-            // This will be sent as-is:
-            $state->mailer->send($message);
+        try {
+            if (!empty($recoverInfo['gpg_public_key'])) {
+                // This will be encrypted with the user's public key:
+                $state->gpgMailer->send($message, $recoverInfo['gpg_public_key']);
+            } else {
+                // This will be sent as-is:
+                $state->mailer->send($message);
+            }
+        } catch (\Zend\Mail\Exception\InvalidArgumentException $ex) {
+            return false;
         }
         return true;
     }
@@ -506,13 +519,17 @@ class Account extends LandingGear
      */
     protected function processRecoveryToken(string $token)
     {
-        if (Util::stringLength($token) < 78) {
+        if (Util::stringLength($token) < 76) {
             \Airship\redirect($this->airship_cabin_prefix . '/login');
         }
         $selector = Util::subString($token, 0, 32);
         $validator = Util::subString($token, 32);
-        
-        $recoveryInfo = $this->db->getRecoveryData($selector);
+
+        $ttl = (int) $this->config('password-reset.ttl');
+        if (empty($ttl)) {
+            \Airship\redirect($this->airship_cabin_prefix . '/login');
+        }
+        $recoveryInfo = $this->acct->getRecoveryData($selector, $ttl);
         if (empty($recoveryInfo)) {
             \Airship\redirect($this->airship_cabin_prefix . '/login');
         }
@@ -520,7 +537,7 @@ class Account extends LandingGear
             $validator,
             CryptoUtil::raw_hash('' . $recoveryInfo['userid'])
         );
-        if (\hash_equals($recoveryInfo['hashedToken'], $calc)) {
+        if (\hash_equals($recoveryInfo['hashedtoken'], $calc)) {
             $state = State::instance();
             $idx = $state->universal['session_index']['user_id'];
             $_SESSION[$idx] = (int) $recoveryInfo['userid'];

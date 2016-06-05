@@ -604,10 +604,7 @@ class Database implements DBInterface
             }
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
-            throw new DBAlert\QueryError(
-                $e->getMessage(),
-                (int) $e->getCode()
-            );
+            throw new DBAlert\QueryError($e->getMessage());
         }
     }
 

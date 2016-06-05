@@ -1,3 +1,11 @@
+## Version 0.3.0 - Not Released Yet
+
+  * Implemented a secure account recovery implementation, wherein users can
+    opt out of account recovery entirely, or supply a GPG public key. We send a
+    random, short-lived token to the email address on file (since Airship
+    doesn't store plaintext passwords). If a GPG public key is available, their
+    account recovery email will be encrypted by GnuPG.
+
 ## Version 0.2.1 - 2016-06-04
 
   * Bugfix: The Airship Installer failed to assign a default "guest group"

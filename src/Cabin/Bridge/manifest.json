@@ -138,6 +138,8 @@
         "file_manager":
             ["Files", "selectCabin"],
 
+        "forgot\\-password/{string}":
+            ["Account", "recoverAccount"],
         "forgot\\-password":
             ["Account", "recoverAccount"],
 

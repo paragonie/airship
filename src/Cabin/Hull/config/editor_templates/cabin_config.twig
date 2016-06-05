@@ -1,10 +1,3 @@
-{#
-            {% include cargo("bridge_cabin_config") with {
-                "config_extra": config.cabin_extra,
-                "motifs": config.motifs,
-                "twig_vars": config["twig_vars"]
-            } %}
-#}
 {% if not form_key_config %}{% set form_key_config = "config_extra" %}{% endif %}
 {% if not form_key_twig %}{% set form_key_twig = "twig_vars" %}{% endif %}
 <div class="table table-pad-1 full-width">
@@ -19,11 +12,10 @@
             <select
                     class="full-width"
                     id="twigvars_active_motif"
-                    type="text"
                     name="{{ form_key_twig }}[active-motif]"
-                    value="{{ twig_vars['active-motif']|e('html_attr') }}"
             >{% for name, motif in motifs %}
-                    <option value="{{ name|e('html_attr') }}">
+                    <option value="{{ name|e('html_attr') }}"{#
+                    #}{% if name == twig_vars['active-motif'] %} selected="selected"{% endif %}>
                         {% if motif.config["display_name"] %}
                             {{ motif.config["display_name"]|e('html') }}
                         {% else %}
@@ -155,6 +147,7 @@
             {{ __("Comments:") }}
         </div>
         <div class="table-cell full-width">
+            <input type="hidden" name="meta_checkboxes[blog][comments]" value="enabled" />
             <input
                     {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
                     id="blog_comments_enabled"
@@ -166,6 +159,7 @@
 
             <br />
 
+            <input type="hidden" name="meta_checkboxes[blog][guests]" value="enabled" />
             <input
                     {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
                     id="blog_comments_guests"
@@ -177,8 +171,9 @@
 
             <br />
 
+            <input type="hidden" name="meta_checkboxes[blog][recaptcha]" value="enabled" />
             <input
-                    {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
+                    {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
                     id="blog_recaptcha_enabled"
                     type="checkbox"
                     class="large_checkbox"

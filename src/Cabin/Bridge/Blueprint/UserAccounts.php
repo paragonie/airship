@@ -91,7 +91,7 @@ class UserAccounts extends BlueprintGear
             [
                 'userid' => $userID,
                 'selector' => $selector,
-                'hashedToken' => $hashedToken
+                'hashedtoken' => $hashedToken
             ]
         );
         if (!$this->db->commit()) {
@@ -261,18 +261,38 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * Get the data necessary to recover an account.
+     *
      * @param string $selector
      * @return array
      */
-    public function getRecoveryData(string $selector): array
+    public function getRecoveryData(string $selector, int $maxTokenLife): array
     {
+        if ($maxTokenLife < 10) {
+            $maxTokenLife = '0' . $maxTokenLife;
+        }
+        $dateTime = new \DateTime('now');
+        $dateTime->sub(
+            new \DateInterval('PT' . $maxTokenLife . 'S')
+        );
         $result = $this->db->row(
-            'SELECT * FROM airship_user_recovery WHERE selector = ?',
-            $selector
+            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created < ?',
+            $selector,
+            $dateTime->format('Y-m-d\TH:i:s')
         );
         if (empty($result)) {
             return [];
         }
+
+        // Clean up:
+        /*
+        $this->db->delete(
+            'airship_user_recovery',
+            [
+                'selector' => $selector
+            ]
+        );
+        */
         return $result;
     }
 
@@ -359,12 +379,12 @@ class UserAccounts extends BlueprintGear
      */
     public function getRecoveryInfo(string $username): array
     {
-        $userID = $this->getUserByUsername($username);
+        $userID = $this->getUserIDByUsername($username);
         if (empty($userID)) {
             throw new UserNotFound();
         }
         return $this->db->row(
-            'SELECT userid, email, can_reset, gpg_public_key FROM airship_users WHERE userid = ?',
+            'SELECT userid, email, allow_reset, gpg_public_key FROM airship_users WHERE userid = ?',
             $userID
         );
     }
@@ -425,13 +445,11 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
-     * Get a user account, given a username
-     *
      * @param string $username
-     * @param bool $includeExtra
-     * @return array
+     * @return int
+     * @throws UserNotFound
      */
-    public function getUserByUsername(string $username, bool $includeExtra = false): array
+    public function getUserIDByUsername(string $username): int
     {
         $userId = $this->db->cell(
             'SELECT
@@ -442,6 +460,26 @@ class UserAccounts extends BlueprintGear
                  '.$this->e($this->f['username']).' = ?',
             $username
         );
+        if (empty($userId)) {
+            throw new UserNotFound();
+        }
+        return $userId;
+    }
+
+    /**
+     * Get a user account, given a username
+     *
+     * @param string $username
+     * @param bool $includeExtra
+     * @return array
+     */
+    public function getUserByUsername(string $username, bool $includeExtra = false): array
+    {
+        try {
+            $userId = $this->getUserIDByUsername($username);
+        } catch (UserNotFound $ex) {
+            return [];
+        }
         if (empty($userId)) {
             return [];
         }

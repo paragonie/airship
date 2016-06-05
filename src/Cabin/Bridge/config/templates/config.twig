@@ -3,6 +3,10 @@
         "enabled": {{ config['board']['enabled'] ? 'true' : 'false' }},
         "captcha": {{ config['board']['captcha'] ? 'true' : 'false' }}
     },
+    "password-reset": {
+        "enabled": {{ config['password-reset']['enabled'] ? 'true' : 'false' }},
+        "ttl": {{ config['password-reset']['ttl']|je }}
+    },
     "file": {
         "cache": {{ config['file']['cache'] }}
     },

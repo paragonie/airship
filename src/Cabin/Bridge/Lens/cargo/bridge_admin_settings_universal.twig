@@ -3,7 +3,7 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
-            <label for="ledger_details" id="ledger_details_label">
+            <label for="trusted_supplier">
                 {{ __("Trusted Supplier") }}:
             </label>
         </div>
@@ -146,16 +146,32 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
-            <label for="ledger_driver">
+            <label for="guest_groups">
                 {{ __("Guest Groups") }}:
             </label>
         </div>
         <div class="table-cell">
-            <select name="universal[guest_groups][]" id="guest_groups" multiple="multiple">
+            <select id="guest_groups" name="universal[guest_groups][]" id="guest_groups" multiple="multiple">
                 {% for g in groups %}
                     {{ grpmac.selectBox(g, universal["guest_groups"]) }}
                 {% endfor %}
             </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="email_from">
+                {{  __("Send Emails From") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                    id="email_from"
+                    type="text"
+                    name="universal[email]from]"
+                    value="{{ universal['email']['from']|e('html_attr') }}"
+            />
         </div>
     </div>
 
