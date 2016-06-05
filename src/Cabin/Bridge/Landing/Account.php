@@ -487,11 +487,6 @@ class Account extends LandingGear
             $state->gpgMailer = new GPGMailer($state->mailer);
         }
 
-        if ($state->universal['debug']) {
-            // Not in production
-            $this->log($token, LogLevel::DEBUG);
-        }
-
         $message = (new Message())
             ->addTo($recoverInfo['email'], $post['username'])
             ->setSubject('Password Reset')

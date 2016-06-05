@@ -285,14 +285,12 @@ class UserAccounts extends BlueprintGear
         }
 
         // Clean up:
-        /*
         $this->db->delete(
             'airship_user_recovery',
             [
                 'selector' => $selector
             ]
         );
-        */
         return $result;
     }
 
