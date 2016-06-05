@@ -277,7 +277,7 @@ class UserAccounts extends BlueprintGear
             new \DateInterval('PT' . $maxTokenLife . 'S')
         );
         $result = $this->db->row(
-            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created < ?',
+            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created > ?',
             $selector,
             $dateTime->format('Y-m-d\TH:i:s')
         );

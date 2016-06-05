@@ -5,6 +5,7 @@
     random, short-lived token to the email address on file (since Airship
     doesn't store plaintext passwords). If a GPG public key is available, their
     account recovery email will be encrypted by GnuPG.
+  * Gadgets can also override the selected Lens, transparently.
 
 ## Version 0.2.1 - 2016-06-04
 
