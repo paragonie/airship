@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use Airship\Alerts\GearNotFound;
+use \Airship\Alerts\GearNotFound;
 use \Airship\Alerts\Router\{
     EmulatePageNotFound,
     FallbackLoop

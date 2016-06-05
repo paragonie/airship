@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use Airship\Alerts\GearNotFound;
+use \Airship\Alerts\GearNotFound;
 use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,

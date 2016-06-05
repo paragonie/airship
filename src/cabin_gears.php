@@ -22,5 +22,3 @@ $cabinGearsClosure = function() {
 };
 $cabinGearsClosure();
 unset($cabinGearsClosure);
-
-$state = \Airship\Engine\State::instance();
