@@ -5,6 +5,7 @@
     {% endif %}
     <fieldset>
         <legend>General Information</legend>
+        <div class="table full-width">
         <div class="form-row">
             <div class="form-column">
                 <label for="real_name">{{ __("Public ID") }}:</label>
@@ -31,11 +32,20 @@
         </div>
         <div class="form-row">
             <div class="form-column">
-                <label for="email">{{ __("Email Address") }}:</label>
             </div>
             <div class="form-column">
-                <input type="text" id="email" name="email" value="{{ account.email|e('html_attr') }}" placeholder="Optional" />
+                <input id="allow_reset" type="checkbox" name="allow_reset" value="1" {% if account.allow_reset %} checked="checked"{% endif %} />
+                <label for="allow_reset">{{ __("Allow Password Reset (Requires Email Address)") }}</label>
             </div>
+        </div>
+        <div class="form-row ">
+            <div class="form-column">
+                <label for="email">{{ __("GnuPG Public Key") }}:</label>
+            </div>
+            <div class="form-column">
+                <textarea name="gpg_public_key" class="gpg-textarea">{{ gpg_public_key|e('html_attr') }}</textarea>
+            </div>
+        </div>
         </div>
     </fieldset>
     <fieldset>

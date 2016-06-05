@@ -3,3 +3,9 @@
 
 <label for="email">{{ __("Email Address") }}:</label>
 <input type="text" id="email" name="email" placeholder="user@example.com" class="pure-input-1" />
+
+<input id="allow_reset" type="checkbox" name="allow_reset" value="1" checked="checked" />
+<label for="allow_reset" class="inblock">{{ __("Allow Password Reset (Requires Email Address)") }}</label>
+<br />
+<label for="gpg_public_key">{{ __("GnuPG Public Key") }}:</label>
+<textarea class="gpg-textarea" name="gpg_public_key" id="gpg_public_key" placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----"></textarea>

@@ -2,16 +2,26 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Alerts\Security\UserNotFound;
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Engine\{
     AutoPilot,
     Bolt\Security,
     Gears,
     Security\HiddenString,
+    Security\Util,
     State
 };
-use \ParagonIE\Halite\Alerts\InvalidMessage;
+use \ParagonIE\GPGMailer\GPGMailer;
+use \ParagonIE\Halite\{
+    Alerts\InvalidMessage,
+    Util as CryptoUtil
+};
 use \Psr\Log\LogLevel;
+use \Zend\Mail\{
+    Message,
+    Transport\Sendmail
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -137,12 +147,28 @@ class Account extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $account = $this->acct->getUserAccount($this->getActiveUserId());
+        $gpg_public_key = '';
+        if (!empty($account['gpg_public_key'])) {
+            $state = State::instance();
+            try {
+                $gpg_public_key = \trim(
+                    $state->gpgMailer->export($account['gpg_public_key'])
+                );
+            } catch (\Crypt_GPG_Exception $ex) {
+            }
+        }
         $p = $this->post();
         if (!empty($p)) {
-            $this->processAccountUpdate($p, $account);
+            $this->processAccountUpdate($p, $account, $gpg_public_key);
             exit;
         }
-        $this->lens('my_account', ['account' => $account]);
+        $this->lens(
+            'my_account',
+            [
+                'account' => $account,
+                'gpg_public_key' => $gpg_public_key
+            ]
+        );
     }
 
     /**
@@ -197,12 +223,51 @@ class Account extends LandingGear
     /**
      * @route recover-account
      */
-    public function recoverAccount()
+    public function recoverAccount(string $token = '')
     {
         if ($this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $post = $this->post();
+        if ($post) {
+            if ($this->processRecoverAccount($post)) {
+                \Airship\redirect($this->airship_cabin_prefix . '/login');
+            } else {
+                $this->storeLensVar(
+                    'form_message',
+                    \__("User doesn't exist or opted out of account recovery.")
+                );
+            }
+        }
+        if (!empty($token)) {
+            $this->processRecoveryToken($token);
+        }
         $this->lens('recover_account');
+    }
+
+    /**
+     * Is this motif part of this cabin?
+     *
+     * @param array $motifs
+     * @param string $supplier
+     * @param string $motifName
+     * @return bool
+     */
+    protected function findMotif(
+        array $motifs,
+        string $supplier,
+        string $motifName
+    ): bool {
+        foreach ($motifs as $id => $data) {
+            if (
+                $data['config']['supplier'] === $supplier
+                &&
+                $data['config']['name'] === $motifName
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -211,8 +276,11 @@ class Account extends LandingGear
      * @param array $post
      * @param array $account
      */
-    protected function processAccountUpdate(array $post = [], array $account = [])
-    {
+    protected function processAccountUpdate(
+        array $post = [],
+        array $account = [],
+        string $gpg_public_key = ''
+    ) {
         $state = State::instance();
         $idx = $state->universal['session_index']['user_id'];
 
@@ -223,6 +291,7 @@ class Account extends LandingGear
                 $this->lens('my_account', [
                     'post_response' => [
                         'message' => \__('Supplied password is too weak.'),
+                        'gpg_public_key' => $gpg_public_key,
                         'status' => 'error'
                     ]
                 ]);
@@ -243,6 +312,7 @@ class Account extends LandingGear
                 'account' => $post,
                 'post_response' => [
                     'message' => \__('Account was saved successfully.'),
+                    'gpg_public_key' => $gpg_public_key,
                     'status' => 'success'
                 ]
             ]);
@@ -252,6 +322,7 @@ class Account extends LandingGear
             'account' => $post,
             'post_response' => [
                 'message' => \__('Account was not saved successfully.'),
+                'gpg_public_key' => $gpg_public_key,
                 'status' => 'error'
             ]
         ]);
@@ -377,6 +448,99 @@ class Account extends LandingGear
     }
 
     /**
+     * Process account recovery
+     *
+     * @param array $post
+     * @return bool
+     */
+    protected function processRecoverAccount(array $post): bool
+    {
+        try {
+            $recoverInfo = $this->acct->getRecoveryInfo($post['forgot_passphrase_for']);
+        } catch (UserNotFound $ex) {
+            // Username not found. Is this a harvester?
+            $this->log(
+                'Password reset attempt for nonexistent user.',
+                LogLevel::NOTICE,
+                [
+                    'username' => $post['forgot_passphrase_for']
+                ]
+            );
+            return false;
+        }
+        if (!$recoverInfo['can_reset'] || empty($recoverInfo['email'])) {
+            // Opted out or no email address? Act like the user doesn't exist.
+            return false;
+        }
+        $token = $this->acct->createRecoveryToken((int) $recoverInfo['userid']);
+        if (empty($token)) {
+            return false;
+        }
+
+        $state = State::instance();
+        if (IDE_HACKS) {
+            $state->mailer = new Sendmail();
+            $state->gpgMailer = new GPGMailer($state->mailer);
+        }
+
+        $message = (new Message())
+            ->addTo($recoverInfo['email'], $post['username'])
+            ->setSubject('Password Reset')
+            ->setFrom($state->universal['email']['from'] ?? 'no-reply@' . $_SERVER['HTTP_HOST'])
+            ->setBody($this->recoveryMessage($token));
+
+        if (!empty($recoverInfo['gpg_public_key'])) {
+            // This will be encrypted with the user's public key:
+            $state->gpgMailer->send($message, $recoverInfo['gpg_public_key']);
+        } else {
+            // This will be sent as-is:
+            $state->mailer->send($message);
+        }
+        return true;
+    }
+
+    /**
+     * If the token is valid, log in as the user.
+     *
+     * @param string $token
+     */
+    protected function processRecoveryToken(string $token)
+    {
+        if (Util::stringLength($token) < 78) {
+            \Airship\redirect($this->airship_cabin_prefix . '/login');
+        }
+        $selector = Util::subString($token, 0, 32);
+        $validator = Util::subString($token, 32);
+        
+        $recoveryInfo = $this->db->getRecoveryData($selector);
+        if (empty($recoveryInfo)) {
+            \Airship\redirect($this->airship_cabin_prefix . '/login');
+        }
+        $calc = CryptoUtil::keyed_hash(
+            $validator,
+            CryptoUtil::raw_hash('' . $recoveryInfo['userid'])
+        );
+        if (\hash_equals($recoveryInfo['hashedToken'], $calc)) {
+            $state = State::instance();
+            $idx = $state->universal['session_index']['user_id'];
+            $_SESSION[$idx] = (int) $recoveryInfo['userid'];
+            \Airship\redirect($this->airship_cabin_prefix . '/my/account');
+        }
+        \Airship\redirect($this->airship_cabin_prefix . '/login');
+    }
+
+    /**
+     * @param string $token
+     * @return string
+     */
+    protected function recoveryMessage(string $token): string
+    {
+        return \__("To recover your account, visit the URL below.") . "\n\n" .
+            \Airship\LensFunctions\cabin_url() . 'forgot-password/' . $token . "\n\n" .
+            \__("This access token will expire in an hour.");
+    }
+
+    /**
      * Save a user's preferences
      *
      * @param array $prefs
@@ -412,31 +576,6 @@ class Account extends LandingGear
                 'status' => 'success'
             ]);
             return true;
-        }
-        return false;
-    }
-
-    /**
-     * Is this motif part of this cabin?
-     *
-     * @param array $motifs
-     * @param string $supplier
-     * @param string $motifName
-     * @return bool
-     */
-    protected function findMotif(
-        array $motifs,
-        string $supplier,
-        string $motifName
-    ): bool {
-        foreach ($motifs as $id => $data) {
-            if (
-                $data['config']['supplier'] === $supplier
-                    &&
-                $data['config']['name'] === $motifName
-            ) {
-                return true;
-            }
         }
         return false;
     }

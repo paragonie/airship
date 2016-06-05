@@ -99,9 +99,10 @@ $autoPilot->setActiveCabin($active, $state->active_cabin);
 \define('CABIN_NAME', $active['name']);
 \define('CABIN_DIR', ROOT.'/Cabin/'.$active['name']);
 
-require ROOT.'/symlinks.php';
-require ROOT.'/motifs.php';
-require ROOT.'/security.php';
+require ROOT . '/symlinks.php';
+require ROOT . '/motifs.php';
+require ROOT . '/security.php';
+require ROOT . '/email.php';
 
 $state->autoPilot = $autoPilot;
 

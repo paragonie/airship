@@ -447,6 +447,9 @@ label.required-form::after {
 .table-cell {
     display: table-cell;
 }
+.inline {
+    display: inline;
+}
 .inline-list {
     display: inline;
     list-style: none;
@@ -481,6 +484,13 @@ label.required-form::after {
     min-width: 20em;
     max-width: 100%;
     width: calc(100% - 1em);
+}
+.gpg-textarea {
+    font-family: monospace;
+    min-height: 8em;
+    min-width: 20em;
+    max-width: 100%;
+    width: 42em;
 }
 #page_history_revision_list .table {
     display: table;

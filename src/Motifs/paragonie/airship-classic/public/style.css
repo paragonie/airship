@@ -1786,9 +1786,9 @@ ol.blog_comments li li {
     box-shadow: rgba(0, 0, 0, 0.5) 0 0.5ex 0.25ex;
     position: relative;
     margin: 1ex;
-    padding: 0 1ex;
+    padding: 0 1em;
 }
-.blog-comment-body:before {
+.blog-comment-body::before {
     border-color: transparent #333;
     border-style: solid;
     border-width: 12px 24px 12px 0;
@@ -1800,7 +1800,7 @@ ol.blog_comments li li {
     top: 13px;
     width: 0;
 }
-.blog-comment-body:after {
+.blog-comment-body::after {
     border-color: transparent #f8f8f8;
     border-style: solid;
     border-width: 9px 21px 9px 0;

@@ -4,12 +4,14 @@ namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Alerts\Database\QueryError;
 use \Airship\Alerts\Security\UserNotFound;
-use Airship\Engine\{
+use \Airship\Engine\{
     Bolt\Security as SecurityBolt,
     Security\HiddenString,
     Security\Util,
     State
 };
+use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\Util as CryptoUtil;
 use \Psr\Log\LogLevel;
 use \ZxcvbnPhp\Zxcvbn;
 
@@ -27,6 +29,8 @@ class UserAccounts extends BlueprintGear
     use SecurityBolt;
 
     const DEFAULT_MIN_SCORE = 3; // for Zxcvbn
+    const RECOVERY_SELECTOR_BYTES = 24;
+    const RECOVERY_TOKEN_BYTES = 33;
 
     protected $table = 'airship_users';
     protected $grouptable = 'airship_users_groups';
@@ -39,6 +43,8 @@ class UserAccounts extends BlueprintGear
         'real_name' => 'real_name',
         'email' => 'email',
         'birthdate' => 'birthdate',
+        'gpg_public_key' => 'gpg_public_key',
+        'allow_reset' => 'allow_reset',
         'custom_fields' => 'custom_fields',
         'superuser' => 'superuser',
         'created' => 'created',
@@ -68,6 +74,33 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * @param int $userID
+     * @return string
+     */
+    public function createRecoveryToken(int $userID): string
+    {
+        $this->db->beginTransaction();
+        $selector = Base64UrlSafe::encode(\random_bytes(static::RECOVERY_SELECTOR_BYTES));
+        $token = Base64UrlSafe::encode(\random_bytes(static::RECOVERY_TOKEN_BYTES));
+        $hashedToken = CryptoUtil::keyed_hash(
+            $token,
+            CryptoUtil::raw_hash('' . $userID)
+        );
+        $this->db->insert(
+            'airship_user_recovery',
+            [
+                'userid' => $userID,
+                'selector' => $selector,
+                'hashedToken' => $hashedToken
+            ]
+        );
+        if (!$this->db->commit()) {
+            return '';
+        }
+        return $selector . $token;
+    }
+
+    /**
      * Create a new user account
      *
      * @param array $post
@@ -76,6 +109,15 @@ class UserAccounts extends BlueprintGear
     public function createUser(array $post = []): int
     {
         $state = State::instance();
+
+        $fingerprint = '';
+        if (!empty($post['gpg_public_key'])) {
+            try {
+                $fingerprint = $state->gpgMailer->import($post['gpg_public_key']);
+            } catch (\Crypt_GPG_Exception $ex) {
+                // We'll fail silently for now.
+            }
+        }
         $this->db->insert($this->table, [
             $this->f['username'] =>
                 $post['username'],
@@ -88,7 +130,11 @@ class UserAccounts extends BlueprintGear
             $this->f['email'] =>
                 $post['email'] ?? '',
             $this->f['display_name'] =>
-                $post['display_name'] ?? ''
+                $post['display_name'] ?? '',
+            $this->f['allow_reset'] =>
+                !empty($post['allow_reset']),
+            $this->f['gpg_public_key'] =>
+                $fingerprint
         ]);
         $userid = $this->db->cell(
             'SELECT
@@ -111,6 +157,15 @@ class UserAccounts extends BlueprintGear
                 ]
             );
         }
+
+        // Create preferences record.
+        $this->db->insert(
+            'airship_user_preferences',
+            [
+                'userid' => $userid,
+                'preferences' => \json_encode($post['preferences'] ?? [])
+            ]
+        );
 
         return $userid;
     }
@@ -206,6 +261,22 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * @param string $selector
+     * @return array
+     */
+    public function getRecoveryData(string $selector): array
+    {
+        $result = $this->db->row(
+            'SELECT * FROM airship_user_recovery WHERE selector = ?',
+            $selector
+        );
+        if (empty($result)) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
      * @param int $groupId
      * @return array
      */
@@ -277,6 +348,25 @@ class UserAccounts extends BlueprintGear
             $groups[$i][$column] = $this->getGroupTree($grp['groupid'], $column, $seen);
         }
         return $groups;
+    }
+
+    /**
+     * Get account recovery information
+     *
+     * @param string $username
+     * @return array
+     * @throws UserNotFound
+     */
+    public function getRecoveryInfo(string $username): array
+    {
+        $userID = $this->getUserByUsername($username);
+        if (empty($userID)) {
+            throw new UserNotFound();
+        }
+        return $this->db->row(
+            'SELECT userid, email, can_reset, gpg_public_key FROM airship_users WHERE userid = ?',
+            $userID
+        );
     }
 
     /**
@@ -431,7 +521,7 @@ class UserAccounts extends BlueprintGear
      */
     public function isUsernameInvalid(string $username): bool
     {
-        return Util::stringLength($username) > 2;
+        return Util::stringLength($username) <= 2;
     }
     
     /**
@@ -538,6 +628,16 @@ class UserAccounts extends BlueprintGear
     public function updateAccountInfo(array $post, array $account)
     {
         $this->db->beginTransaction();
+        $state = State::instance();
+        $fingerprint = '';
+        if (!empty($post['gpg_public_key'])) {
+            $fingerprint = $state->gpgMailer->import($post['gpg_public_key']);
+            try {
+                $fingerprint = $state->gpgMailer->import($post['gpg_public_key']);
+            } catch (\Crypt_GPG_Exception $ex) {
+                // We'll fail silently for now.
+            }
+        }
         $post['custom_fields'] = isset($post['custom_fields'])
             ? \json_encode($post['custom_fields'])
             : '[]';
@@ -550,6 +650,10 @@ class UserAccounts extends BlueprintGear
                     $post['email'] ?? '',
                 $this->f['custom_fields'] =>
                     $post['custom_fields'] ?? '',
+                $this->f['gpg_public_key'] =>
+                    $fingerprint,
+                $this->f['allow_reset'] =>
+                    !empty($post['allow_reset']),
             ], [
                 $this->f['userid'] =>
                     $account[$this->f['userid']]

@@ -7,6 +7,8 @@ CREATE TABLE airship_users (
     uniqueid TEXT,
     real_name TEXT DEFAULT NULL,
     birthdate TIMESTAMP NULL,
+    allow_reset BOOLEAN DEFAULT FALSE,
+    gpg_public_key TEXT,
     custom_fields JSONB NULL,
     superuser BOOLEAN DEFAULT FALSE,
     created TIMESTAMP DEFAULT NOW(),
