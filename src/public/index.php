@@ -94,10 +94,12 @@ if ($autoUpdater->needsUpdate()) {
 /**
  * Let's load the latest gear for our autoloader
  */
-$autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
-$autoPilot->setActiveCabin($active, $state->active_cabin);
 \define('CABIN_NAME', $active['name']);
 \define('CABIN_DIR', ROOT.'/Cabin/'.$active['name']);
+require ROOT . '/cabin_gears.php';
+
+$autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
+$autoPilot->setActiveCabin($active, $state->active_cabin);
 
 require ROOT . '/symlinks.php';
 require ROOT . '/motifs.php';

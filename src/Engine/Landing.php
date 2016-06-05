@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\GearNotFound;
 use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
@@ -193,15 +194,19 @@ class Landing
                 \array_unshift($cArgs, $db);
             }
 
-            if ($name[0] === '\\') {
-                // If you pass a \Absolute\Namespace, we will just use it.
-                $class = $name;
-            } else {
-                // We default to \Current\Application\Namespace\Blueprint\NameHere.
-                $x = \explode('\\', $this->getNamespace());
-                \array_pop($x);
+            try {
+                $class = Gears::getName('Blueprint__' . $name);
+            } catch (GearNotFound $ex) {
+                if ($name[0] === '\\') {
+                    // If you pass a \Absolute\Namespace, we will just use it.
+                    $class = $name;
+                } else {
+                    // We default to \Current\Application\Namespace\Blueprint\NameHere.
+                    $x = \explode('\\', $this->getNamespace());
+                    \array_pop($x);
 
-                $class = \implode('\\', $x).'\\Blueprint\\'.$name;
+                    $class = \implode('\\', $x) . '\\Blueprint\\' . $name;
+                }
             }
             $this->_cache['blueprints'][$cache] = new $class(...$cArgs);
             if (!($this->_cache['blueprints'][$cache] instanceof Blueprint)) {

@@ -219,6 +219,25 @@ abstract class Gears
             self::forge($index, $type);
         }
     }
+
+    /**
+     * Add a new type to the Gears registry
+     *
+     * @param string $index
+     * @param string $type
+     * @return bool
+     */
+    public static function lazyForge(string $index, string $type): bool
+    {
+        $state = State::instance();
+        if (!isset($state->gears[$index])) {
+            $gears = $state->gears;
+            $gears[$index] = $type;
+            $state->gears = $gears;
+            return true;
+        }
+        return false;
+    }
     
     /**
      * Load a file in a way that doesn't allow access to the parent method's

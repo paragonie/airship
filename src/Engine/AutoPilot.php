@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\GearNotFound;
 use \Airship\Alerts\Router\{
     EmulatePageNotFound,
     FallbackLoop
@@ -359,8 +360,12 @@ class AutoPilot implements RouterInterface
         if (count($route) === 1) {
             $route[] = 'index';
         }
-        
-        $class_name = '\\Airship\\Cabin\\'.self::$active_cabin.'\\Landing\\'.$route[0];
+
+        try {
+            $class_name = Gears::getName('Landing__' . $route[0]);
+        } catch (GearNotFound $ex) {
+            $class_name = '\\Airship\\Cabin\\' . self::$active_cabin . '\\Landing\\' . $route[0];
+        }
         $method = $route[1];
 
         if (!\class_exists($class_name)) {
