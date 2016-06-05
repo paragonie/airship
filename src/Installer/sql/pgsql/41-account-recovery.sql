@@ -2,7 +2,7 @@ CREATE TABLE airship_user_recovery (
     tokenid BIGSERIAL PRIMARY KEY,
     userid BIGINT REFERENCES airship_users(userid),
     selector TEXT,
-    hashedToken TEXT,
+    hashedtoken TEXT,
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
