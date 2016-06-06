@@ -24,6 +24,7 @@ CREATE OR REPLACE VIEW view_hull_blog_post AS
             v.published AS latest,
             COALESCE(v.format, p.format) AS format,
             p.status,
+            p.cache,
             p.description,
             p.published,
             p.created,

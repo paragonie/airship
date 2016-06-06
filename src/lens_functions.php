@@ -167,6 +167,10 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
         if (\file_exists(ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2.'/'.$fhash.'.txt')) {
             if ($state->CSP instanceof CSPBuilder) {
                 $prehash = \file_get_contents(ROOT . '/tmp/cache/csp_hash/' . $h1 . '/' . $h2 . '/' . $fhash . '.txt');
+                if (!\is_string($prehash)) {
+                    // Network connection errors
+                    return $file;
+                }
                 $state->CSP->preHash(
                     $dir,
                     $prehash,
@@ -188,6 +192,11 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
             }
         }
         if ($state->CSP instanceof CSPBuilder) {
+            $contents = \file_get_contents($absolute);
+            if (!\is_string($contents)) {
+                // Network connection errors
+                return $file;
+            }
             $preHash = Base64::encode(
                 \hash($algo, \file_get_contents($absolute), true)
             );

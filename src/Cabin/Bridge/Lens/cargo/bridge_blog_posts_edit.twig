@@ -12,9 +12,17 @@
         <div class="table-row">
             <label class="table-cell" for="blog_post_slug">{{ __("Slug") }}:</label>
             <div class="table-cell bottom-pad">
-                <input class="full-width" id="blog_post_slug" type="text" name="slug" data-original="{{ blogpost.slug|e('html_attr') }}" value="{{ _POST.slug|default(blogpost.slug)|e('html_attr') }}" />
+                <input{#
+                    #} class="full-width"{#
+                    #} id="blog_post_slug"{#
+                    #} type="text"{#
+                    #} name="slug"{#
+                    #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
+                    #} value="{{ _POST.slug|default(blogpost.slug)|e('html_attr') }}"{#
+                    #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
+                #} />
                 <div id="blog_post_slug_checkbox_wrapper">
-                    <input type="checkbox" class="large_checkbox" name="redirect_slug" pattern="^[a-z0-9][a-z0-9\-]+$" id="redirect_slug" value="1" />
+                    <input type="checkbox" class="large_checkbox" name="redirect_slug" id="redirect_slug" value="1" />
                     <label for="redirect_slug">{{ __("Redirect the old URL to the new destination?") }}</label>
                 </div>
             </div>
@@ -60,6 +68,21 @@
             <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell bottom-pad">
                 {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default(latest.format)} %}
+            </div>
+        </div>
+
+        <div class="table-row">
+            <label class="table-cell" for="blog_post_cache">{{ __("Cache") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input{#
+                    #} type="checkbox"{#
+                    #} class="large_checkbox"{#
+                    #} id="cache"{#
+                    #} name="cache"{#
+                    #}{% if (_POST.cache or blogpost.cache) %} checked="checked"{% endif %}{#
+                    #} value="1"{#
+                #} />
+                <label for="cache">{{ __("Cache this blog post?") }}</label>
             </div>
         </div>
 

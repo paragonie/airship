@@ -286,7 +286,7 @@ class Blog extends LoggedInUsersOnly
             'pagination' => [
                 'base' => $this->airship_cabin_prefix . '/blog/post',
                 'suffix' => '/',
-                'count' => $this->blog->numPosts(),
+                'count' => $this->blog->numComments(),
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]

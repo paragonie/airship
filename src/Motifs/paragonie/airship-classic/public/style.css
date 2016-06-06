@@ -1827,3 +1827,6 @@ h2#about-the-author {
 h2#comments {
     margin-top: 1ex;
 }
+.blog_tag_checkbox + label{
+    padding-left: 0.5ex;
+}

@@ -52,6 +52,14 @@
         </div>
 
         <div class="table-row">
+            <label class="table-cell" for="blog_post_cache">{{ __("Cache") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input type="checkbox" class="large_checkbox" name="cache" id="cache" value="1" />
+                <label for="cache">{{ __("Cache this blog post?") }}</label>
+            </div>
+        </div>
+
+        <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
             <div class="table-cell bridge_blog_post_tags">
                 {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default([])} %}

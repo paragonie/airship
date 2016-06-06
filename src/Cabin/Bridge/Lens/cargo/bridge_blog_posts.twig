@@ -3,7 +3,9 @@
 </div>
 <div class="table" id="bridge_blog_list">
     <div class="table-row table-header">
-        <div class="table-cell"></div>
+        <div class="table-cell">
+            {{ __("Actions") }}
+        </div>
         <div class="table-cell">
             {{ __("Title") }}
         </div>
@@ -21,10 +23,11 @@
 {% set my_author_ids = user_author_ids() %}
 {% for post in blog_posts %}
     <div class="table-row">
-        <div class="table-cell icons-3">
+        <div class="table-cell table-min-width">
             {% if can_edit or post.author in my_author_ids %}
-            <a{#
+                <a{#
                 #} title="{{ __("Edit Blog Post")|e('html_attr') }}"{#
+                #} class="pure-button pure-button-primary"{#
                 #} href="{{ cabin_url() }}blog/post/edit/{{ post.postid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-pencil"></i>{#
@@ -32,6 +35,7 @@
             {% endif %}
             <a{#
                 #} title="{{ __("Blog Post Revision History")|e('html_attr') }}"{#
+                #} class="pure-button pure-button-secondary"{#
                 #} href="{{ cabin_url() }}blog/post/history/{{ post.postid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-history"></i>{#
@@ -39,6 +43,7 @@
             {% if can_delete or post.author in my_author_ids %}
                 <a{#
                 #} title="{{ __("Delete Blog Post")|e('html_attr') }}"{#
+                #} class="pure-button pure-button-primary"{#
                 #} href="{{ cabin_url() }}blog/post/delete/{{ post.postid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-trash"></i>{#

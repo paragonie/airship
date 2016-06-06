@@ -65,10 +65,8 @@ if (empty($_POST)) {
         }
 
         echo $staticPage;
-        if (!empty($state->universal['debug'])) {
-            // This is just for benchmarking purposes:
-            echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
-        }
+        // This is just for benchmarking purposes:
+        echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
         exit;
     }
     unset($staticCache);
@@ -143,7 +141,7 @@ if (!empty($state->universal['debug'])) {
         }
     }
     // This is just for benchmarking purposes:
-    echo '<!-- ' . \round(\microtime(true) - $start, 5) . ' s -->';
+    echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';
 } else {
     $autoPilot->route();
 }

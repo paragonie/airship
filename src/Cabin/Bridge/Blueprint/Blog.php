@@ -324,6 +324,7 @@ class Blog extends BlueprintGear
             $this->db->rollBack();
             return false;
         }
+        $this->clearBlogCache();
         return $this->db->commit();
     }
 
@@ -1139,6 +1140,9 @@ class Blog extends BlueprintGear
             $now = new \DateTime('now');
             $postUpdates['published'] = $now->format('Y-m-d\TH:i:s');
         }
+        if ($publish) {
+            $postUpdates['cache'] = !empty($post['cache']);
+        }
         if ($post['title'] !== $old['title']) {
             $postUpdates['title'] = (string) $post['title'];
         }
@@ -1189,6 +1193,9 @@ class Blog extends BlueprintGear
                     'tagid' => $ins
                 ]
             );
+        }
+        if ($publish) {
+            $this->clearBlogCache();
         }
         return $this->db->commit();
     }

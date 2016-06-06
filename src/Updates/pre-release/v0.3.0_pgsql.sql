@@ -1,5 +1,53 @@
 ALTER TABLE airship_users ADD gpg_public_key TEXT;
 ALTER TABLE airship_users ADD allow_reset BOOLEAN DEFAULT FALSE;
+ALTER TABLE hull_blog_posts ADD cache boolean DEFAULT FALSE;
+
+DROP VIEW view_hull_blog_post;
+CREATE VIEW view_hull_blog_post AS
+    SELECT DISTINCT ON (p.postid)
+            p.postid,
+            p.shorturl,
+            p.title,
+            v.body,
+            v.published AS latest,
+            COALESCE(v.format, p.format) AS format,
+            p.status,
+            p.cache,
+            p.description,
+            p.published,
+            p.created,
+            p.modified,
+            a.name AS authorname,
+            a.slug AS authorslug,
+            p.author,
+            c.categoryid,
+            c.slug AS categoryslug,
+            COALESCE(c.name, 'Uncategorized') AS categoryname,
+            date_part('year', p.published) AS blogyear,
+            date_part('month', p.published) AS blogmonth,
+            p.slug
+        FROM
+            hull_blog_posts p
+        LEFT JOIN
+            (
+                SELECT
+                    iv.post, iv.body, iv.published, iv.live, iv.format
+                FROM
+                    hull_blog_post_versions iv
+                WHERE
+                    iv.live
+                ORDER BY
+                    iv.published DESC
+            ) v
+                ON v.post = p.postid
+        LEFT JOIN
+            hull_blog_categories c
+                ON p.category = c.categoryid
+        LEFT JOIN
+            hull_blog_authors a
+                ON p.author = a.authorid
+        ORDER BY p.postid ASC, v.published DESC
+    ;
 
 CREATE TABLE airship_user_recovery (
     tokenid BIGSERIAL PRIMARY KEY,

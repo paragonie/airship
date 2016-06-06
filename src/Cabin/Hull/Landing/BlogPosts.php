@@ -479,14 +479,20 @@ class BlogPosts extends LandingGear
         $blogPost['series'] = $this->blog->getPostsSeries((int) $blogPost['postid']);
         $comments =  $this->blog->getCommentTree((int) $blogPost['postid']);
 
-        $this->lens('blog/read', [
+        $args = [
             'pageTitle' => $blogPost['title'],
             'blogpost' => $blogPost,
             'comments' => $comments,
             'author' => $this->blog->getAuthor($blogPost['author']),
             'config' => $this->config(),
             'mathjax' => $mathJAX
-        ]);
+        ];
+        if ($blogPost['cache']) {
+            $args['cached'] = true;
+            $this->stasis('blog/read', $args);
+        } else {
+            $this->lens('blog/read', $args);
+        }
     }
 
     /**

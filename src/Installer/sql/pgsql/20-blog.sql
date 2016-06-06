@@ -31,6 +31,7 @@ CREATE TABLE hull_blog_posts (
     modified TIMESTAMP DEFAULT NOW(),
     published TIMESTAMP DEFAULT NOW(),
     status boolean DEFAULT FALSE,
+    cache boolean DEFAULT FALSE,
     UNIQUE(slug)
 );
 
