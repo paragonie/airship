@@ -40,8 +40,8 @@ foreach ($databases as $label => $dbs) {
                     $conf[] = $dbConf['options'];
                 }
             } elseif (isset($dbConf['options'])) {
-                $conf[1] = null;
-                $conf[2] = null;
+                $conf[1] = '';
+                $conf[2] = '';
                 $conf[3] = $dbConf['options'];
             }
             

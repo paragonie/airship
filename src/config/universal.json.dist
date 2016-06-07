@@ -1,0 +1,42 @@
+{
+    /* Universal Configuration for an Airship deployment */
+    "airship": {
+        "trusted-supplier": "paragonie"
+    },
+    "auto-update": {
+        "ignore-peer-verification": false,
+        "check": 3600,
+        "major": false,
+        "minor": false,
+        "patch": true,
+        "test":  false
+    },
+    "cookie_index": {
+        "auth_token": "airship_token"
+    },
+    "debug": true,
+    "email": {
+        "from": "noreply@travis-ci.org"
+    },
+    "guest_groups": [
+        1
+    ],
+    "ledger": {
+        "driver": "file",
+        "path":   "~\/tmp\/logs"
+    },
+    "guzzle": [],
+    "notary": {
+        "channel": null,
+        "enabled": false
+    },
+    "session_config": {
+    "cookie_domain": ""
+},
+    "session_index": {
+        "user_id": "userid",
+        "logout_token": "logout_token"
+    },
+    "tor-only": false,
+    "twig-cache":  false
+}

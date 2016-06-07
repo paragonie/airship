@@ -33,7 +33,11 @@ class SharedMemory implements CacheInterface
     /**
      * @var string
      */
-    protected $cacheKey;
+    protected $cacheKeyL;
+    /**
+     * @var string
+     */
+    protected $cacheKeyR;
 
     /**
      * @var int
@@ -58,9 +62,14 @@ class SharedMemory implements CacheInterface
         }
 
         // We need a short hash key:
-        $this->cacheKey = CryptoUtil::safeSubstr(
+        $this->cacheKeyL = CryptoUtil::safeSubstr(
             $cacheKey->getRawKeyMaterial(),
             0,
+            \Sodium\CRYPTO_SHORTHASH_KEYBYTES
+        );
+        $this->cacheKeyR = CryptoUtil::safeSubstr(
+            $cacheKey->getRawKeyMaterial(),
+            \Sodium\CRYPTO_SHORTHASH_KEYBYTES,
             \Sodium\CRYPTO_SHORTHASH_KEYBYTES
         );
 
@@ -154,7 +163,8 @@ class SharedMemory implements CacheInterface
     public function getSHMKey(string $lookup): string
     {
         return Base64UrlSafe::encode(
-            \Sodium\crypto_shorthash($lookup, $this->cacheKey)
+            \Sodium\crypto_shorthash($lookup, $this->cacheKeyL) .
+            \Sodium\crypto_shorthash($lookup, $this->cacheKeyR)
         );
     }
 }

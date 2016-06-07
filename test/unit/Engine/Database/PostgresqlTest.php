@@ -17,14 +17,14 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
             return [
                 self::DRIVER . ':host=localhost;dbname=phpunit',
                 'phpunit',
-                'phpunit'
+                ''
             ];
         }
         return [
             'driver' => self::DRIVER,
             'host' => 'localhost',
             'username' => 'phpunit',
-            'password' => 'phpunit',
+            'password' => '',
             'database' => 'phpunit'
         ];
     }

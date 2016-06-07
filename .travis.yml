@@ -8,23 +8,25 @@ env:
 
 before_install:
 - sudo apt-get update
-- sudo apt-get install make build-essential automake php7.0-dev php-pear
+- sudo apt-get install make build-essential automake php5-dev php-pear
 - git clone git://github.com/jedisct1/libsodium.git
 - cd libsodium
 - git checkout 1.0.10
 - ./autogen.sh
-- ./configure && make check
-- sudo make install
+- ./configure > /dev/null
+- echo "Installing libsodium..."
+- sudo make install > /dev/null
 - cd ..
-- pecl install libsodium
-- echo "extension = libsodium.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- /usr/bin/env bash -c "if [ '$DB' = 'pgsql' ]; then psql -c ./test/sql/init/postgresql.sql; then psql -c ./test/sql/init/postgresql-2.sql; fi"
+- echo "Installing ext/sodium..."
+- pecl install libsodium > /dev/null
 
 install:
 
-- composer install
-- composer self-update
 - composer update
-- chmod +x ./test/phpunit.sh
-
-script: ./test/phpunit.sh
+- echo "[]" > ./src/config/gears.json
+- echo "[]" > ./src/config/gadgets.json
+- echo "[]" > ./src/Cabin/Bridge/config/gadgets.json
+- echo "[]" > ./src/Cabin/Hull/config/gadgets.json
+- cp src/config/cabins.json.dist src/config/cabins.json
+- cp src/config/databases.json.dist src/config/databases.json
+- cp src/config/universal.json.dist src/config/universal.json

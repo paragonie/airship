@@ -1,0 +1,10 @@
+{
+    /*
+        "default" is (appropriately) the default database.
+        If no database is labeled "default", then the first one will be used.
+
+        Each database supports an array of possible connection points
+        (for horizontal scaling).
+    */
+            "default": []
+    }

@@ -2,6 +2,8 @@
 
 *The sky is only the beginning.*
 
+[![Build Status](https://travis-ci.org/paragonie/airship.svg?branch=master)](https://travis-ci.org/paragonie/airship)
+
 Airship is a content management/blogging platform and application development
 framework written for PHP 7. Requires [libsodium](https://download.libsodium.org/doc/).
 

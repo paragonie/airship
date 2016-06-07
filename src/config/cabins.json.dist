@@ -1,0 +1,51 @@
+{
+    /*         Placeholders allowed:
+        // These match (but don't capture) an optional / prefix:
+            '{_any}'
+            '{_id}'
+            '{_year}'
+            '{_month}'
+            '{_day}'
+            '{_isodate}'
+            '{_lower}'
+            '{_upper}'
+            '{_page}'
+            '{_slug}'
+            '{_uslug}'
+            '{_lslug}'
+            '{_string}'
+            '{_hex}',
+        // Without the / prefix:
+            '{any}'
+            '{id}'
+            '{year}'
+            '{month}'
+            '{day}'
+            '{isodate}'
+            '{lower}'
+            '{upper}'
+            '{slug}'
+            '{uslug}'
+            '{lslug}'
+            '{string}'
+            '{hex}'
+    */
+    "*\/bridge": {
+            // Only respond over HTTPS (recommended!):
+            "https": false,
+            // Used in cross-cabin hyperlinks:
+            "canon_url": "http:\/\/localhost\/bridge",
+            "language": "en-us",
+            // Must be unique:
+            "name": "Bridge"
+        },
+        "*": {
+            // Only respond over HTTPS (recommended!):
+            "https": false,
+            // Used in cross-cabin hyperlinks:
+            "canon_url": "http:\/\/localhost",
+            "language": "en-us",
+            // Must be unique:
+            "name": "Hull"
+        }
+    }

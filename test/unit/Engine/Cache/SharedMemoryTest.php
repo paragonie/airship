@@ -83,7 +83,7 @@ class SharedMemoryTest extends PHPUnit_Framework_TestCase
         $cacheA = $this->getAdapter();
         $cacheB = $this->getWeakAdapter();
 
-        $this->assertSame('aUJfPrJYEWI=', $cacheA->getSHMKey('apple'));
+        $this->assertSame('aUJfPrJYEWJpQl8-slgRYg==', $cacheA->getSHMKey('apple'));
         $this->assertNotSame($cacheA->getSHMKey('apple'), $cacheB->getSHMKey('apple'));
 
         $cacheC = $this->getRandomAdapter();

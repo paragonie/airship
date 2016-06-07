@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="true"
+         backupStaticAttributes="false"
+         bootstrap="src/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>test/unit</directory>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="Airship Test Suite">
+            <directory suffix="Test.php">./tests/unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./lib</directory>
+        </whitelist>
+    </filter>
+</phpunit>
