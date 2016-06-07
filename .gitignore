@@ -7,6 +7,9 @@
 /src/public/static/Hull
 /src/public/launch.php
 /src/public/robots.txt
+/src/Cabin/*/config/config.json
+/src/Cabin/*/config/gadgets.json
+/src/Cabin/*/config/twig_vars.json
 /src/config/cabins.json
 /src/config/gears.json
 /src/config/databases.json
