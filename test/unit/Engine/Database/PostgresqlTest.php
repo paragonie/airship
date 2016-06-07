@@ -32,7 +32,13 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $config = $this->getConfig(true);
-        $pdo = new \PDO(...$config);
+        try {
+            $pdo = new \PDO(...$config);
+        } catch (\Exception $ex) {
+            return $this->markTestSkipped(
+                'Database not configured'
+            );
+        }
         $db = new Database($pdo, self::DRIVER);
         $this->assertTrue($db instanceof Database);
         $this->assertTrue($db->getDriver() === self::DRIVER);
@@ -40,13 +46,25 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
 
     public function testFactory()
     {
-        $db = Database::factory($this->getConfig());
+        try {
+            $db = Database::factory($this->getConfig());
+        } catch (DBException $ex) {
+            return $this->markTestSkipped(
+                'Database not configured'
+            );
+        }
         $this->assertTrue($db instanceof Database);
     }
 
     public function testShortQueries()
     {
-        $db = Database::factory($this->getConfig());
+        try {
+            $db = Database::factory($this->getConfig());
+        } catch (DBException $ex) {
+            return $this->markTestSkipped(
+                'Database not configured'
+            );
+        }
         $this->assertTrue($db instanceof Database);
 
         $db->beginTransaction();
@@ -127,7 +145,13 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
 
     public function testErrors()
     {
-        $db = Database::factory($this->getConfig());
+        try {
+            $db = Database::factory($this->getConfig());
+        } catch (DBException $ex) {
+            return $this->markTestSkipped(
+                'Database not configured'
+            );
+        }
 
         try {
             $db->insert('test_values', [
@@ -152,7 +176,13 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
 
     public function testZCleanup()
     {
-        $db = Database::factory($this->getConfig());
+        try {
+            $db = Database::factory($this->getConfig());
+        } catch (DBException $ex) {
+            return $this->markTestSkipped(
+                'Database not configured'
+            );
+        }
         $db->safeQuery('DELETE FROM test_values');
     }
 }
