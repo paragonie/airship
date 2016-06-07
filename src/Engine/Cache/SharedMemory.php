@@ -40,6 +40,11 @@ class SharedMemory implements CacheInterface
     protected $cacheKeyR;
 
     /**
+     * @var string
+     */
+    protected $personalization = '';
+
+    /**
      * @var int
      */
     protected $mask;
@@ -54,6 +59,7 @@ class SharedMemory implements CacheInterface
     public function __construct(
         Key $cacheKey = null,
         AuthenticationKey $authKey = null,
+        string $personalization = '',
         int $mask = 0600
     ) {
         if (!$cacheKey) {
@@ -77,6 +83,7 @@ class SharedMemory implements CacheInterface
             $this->authKey = $authKey;
         }
         $this->mask = $mask;
+        $this->personalization = $personalization;
     }
 
     /**
@@ -155,6 +162,18 @@ class SharedMemory implements CacheInterface
     }
 
     /**
+     * Add a prefix to the hash function input
+     *
+     * @param string $string
+     * @return SharedMemory
+     */
+    public function personalize(string $string): self
+    {
+        $this->personalization = $string;
+        return $this;
+    }
+
+    /**
      * Compute an integer key for shared memory
      *
      * @param string $lookup
@@ -163,8 +182,14 @@ class SharedMemory implements CacheInterface
     public function getSHMKey(string $lookup): string
     {
         return Base64UrlSafe::encode(
-            \Sodium\crypto_shorthash($lookup, $this->cacheKeyL) .
-            \Sodium\crypto_shorthash($lookup, $this->cacheKeyR)
+            \Sodium\crypto_shorthash(
+                $this->personalization . $lookup,
+                $this->cacheKeyL
+            ) .
+            \Sodium\crypto_shorthash(
+                $this->personalization . $lookup,
+                $this->cacheKeyR
+            )
         );
     }
 }

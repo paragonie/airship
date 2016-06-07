@@ -8,7 +8,7 @@ use \Airship\Cabin\Hull\Exceptions\{
     CustomPageCollisionException,
     CustomPageNotFoundException
 };
-use \Airship\Engine\Bolt\FileCache;
+use \Airship\Engine\Bolt\Cache;
 use \Psr\Log\LogLevel;
 
 /**
@@ -20,7 +20,7 @@ use \Psr\Log\LogLevel;
  */
 class CustomPages extends HullCustomPages
 {
-    use FileCache;
+    use Cache;
 
     /**
      * Clears the static page cache
@@ -30,6 +30,9 @@ class CustomPages extends HullCustomPages
      */
     public function clearPageCache(): bool
     {
+        if (\extension_loaded('apcu')) {
+            return \apcu_clear_cache();
+        }
         foreach (\Airship\list_all_files(ROOT.'/tmp/cache/static') as $f) {
             if (\preg_match('#/([0-9a-z]+)$#', $f)) {
                 \unlink($f);

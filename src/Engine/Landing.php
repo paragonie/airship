@@ -6,7 +6,7 @@ use \Airship\Alerts\GearNotFound;
 use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
-    FileCache as FileCacheBolt,
+    Cache as CacheBolt,
     Log as LogBolt,
     Security as SecurityBolt
 };
@@ -27,7 +27,7 @@ use \Psr\Log\LogLevel;
 class Landing
 {
     use CommonBolt;
-    use FileCacheBolt;
+    use CacheBolt;
     use LogBolt;
     use SecurityBolt;
 

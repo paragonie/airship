@@ -5,6 +5,7 @@ use \Airship\Engine\{
     Database,
     Gears,
     Cache\File as FileCache,
+    Cache\SharedMemory as MemoryCache,
     State
 };
 
@@ -45,8 +46,15 @@ if (empty($_POST)) {
     /**
      * Let's handle static content caching
      */
-    $staticCache = new FileCache(ROOT.'/tmp/cache/static');
-    $cspCache = new FileCache(ROOT.'/tmp/cache/csp_static');
+    if (\extension_loaded('apcu')) {
+        $staticCache = (new MemoryCache())
+            ->personalize('staticPage:');
+        $cspCache = (new MemoryCache())
+            ->personalize('contentSecurityPolicy:');
+    } else {
+        $staticCache = new FileCache(ROOT . '/tmp/cache/static');
+        $cspCache = new FileCache(ROOT . '/tmp/cache/csp_static');
+    }
     $port = $_SERVER['HTTP_PORT'] ?? '';
     $lookup = $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI'];
     $staticPage = $staticCache->get($lookup);

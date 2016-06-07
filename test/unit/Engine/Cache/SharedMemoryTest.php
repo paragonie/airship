@@ -76,6 +76,20 @@ class SharedMemoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers SharedMemory::personalize()
+     */
+    public function testPersonalSHMKey()
+    {
+        if (!\extension_loaded('apcu')) {
+            $this->markTestSkipped(
+                'APCu is not installed'
+            );
+        }
+        $cache = $this->getAdapter()->personalize('unit test:');
+        $this->assertSame('-h7RIRHuVi_6HtEhEe5WLw==', $cache->getSHMKey('apple'));
+    }
+
+        /**
      * @covers SharedMemory::getSHMKey()
      */
     public function testSHMKey()

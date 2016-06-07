@@ -12,7 +12,7 @@ use \Airship\Engine\Bolt\{
 use \Airship\Cabin\Hull\Exceptions\{
     CustomPageNotFoundException
 };
-use \Airship\Engine\Bolt\FileCache;
+use \Airship\Engine\Bolt\Cache;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -28,7 +28,7 @@ class Blog extends BlueprintGear
     use Common;
     use Orderable;
     use Slug;
-    use FileCache;
+    use Cache;
 
     // Cabin for this blog post (used as a default parameter)
     protected $cabin = 'Hull';
@@ -57,6 +57,9 @@ class Blog extends BlueprintGear
      */
     public function clearBlogCache(): bool
     {
+        if (\extension_loaded('apcu')) {
+            return \apcu_clear_cache();
+        }
         foreach (\Airship\list_all_files(ROOT.'/tmp/cache/static') as $f) {
             if (\preg_match('#/([0-9a-z]+)$#', $f)) {
                 \unlink($f);
