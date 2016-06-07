@@ -1,13 +1,16 @@
 {
     "board": {
-        "enabled": true,
-        "captcha": true
-    },
-    "file": {
-        "cache": 900
+        "enabled": "on"
     },
     "recaptcha": {
-        "secret-key": "6Ldy5BYTAAAAAPBh868BMm2nGZelOUyXJHTUE4no",
-        "site-key": "6Ldy5BYTAAAAACk3Tj8wDUBLcVxSL2JXFBw-Dtj3"
+        "secret-key": "6Ld27iETAAAAAF6tsd5SaoCgc5cFX-tkfHqx7FtX",
+        "site-key": "6Ld27iETAAAAAI51EVcu0nBw2wkxQiZxg1zGv2uI"
+    },
+    "password-reset": {
+        "enabled": "on",
+        "ttl": "30"
+    },
+    "file": {
+        "cache": "900"
     }
 }

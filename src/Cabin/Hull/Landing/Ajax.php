@@ -11,14 +11,17 @@ require_once __DIR__.'/init_gear.php';
 class Ajax extends LandingGear
 {
     /**
-     * @todo
-     *
-     * @param string $year
-     * @param string $month
-     * @param string $slug
-     * @param string $replyTo
+     * @route ajax/blog_load_comments
      */
-    public function blogCommentReply(string $year, string $month, string $slug, string $replyTo)
+    public function loadComments()
+    {
+
+    }
+
+    /**
+     * @route ajax/blog_comment_reply
+     */
+    public function blogCommentReply()
     {
 
     }

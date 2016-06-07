@@ -1,6 +1,11 @@
 {% import "macros/blog_comments.twig" as bcom %}{#
 #}{% if config.blog.comments.enabled %}
-    {% if comments %}
+    {% if cached %}
+        <h2 id="comments">{{ __("Comments") }}</h2>
+            <div id="blog_comments_wrapper" data-cached="1" data-cabinurl="{{ cabin_url() }}" data-uniqueid="{{ blogpost.uniqueid }}">{#
+                #}<em>{{ __("This blog post is cached. Comments are rendered via JavaScript.") }}</em>{#
+            #}</div>{#
+    #}{% elseif comments %}
         <h2 id="comments">{{ __("Comments") }}</h2>
         <div id="blog_comments_wrapper">{#
             #}<ol class="blog_comments">{% for comment in comments %}{#

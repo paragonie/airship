@@ -477,12 +477,10 @@ class BlogPosts extends LandingGear
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;
 
         $blogPost['series'] = $this->blog->getPostsSeries((int) $blogPost['postid']);
-        $comments =  $this->blog->getCommentTree((int) $blogPost['postid']);
 
         $args = [
             'pageTitle' => $blogPost['title'],
             'blogpost' => $blogPost,
-            'comments' => $comments,
             'author' => $this->blog->getAuthor($blogPost['author']),
             'config' => $this->config(),
             'mathjax' => $mathJAX
@@ -491,6 +489,8 @@ class BlogPosts extends LandingGear
             $args['cached'] = true;
             $this->stasis('blog/read', $args);
         } else {
+            $comments = $this->blog->getCommentTree((int) $blogPost['postid']);
+            $args['comments'] = $comments;
             $this->lens('blog/read', $args);
         }
     }

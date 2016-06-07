@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c2292fc9986b5621387da3d007f65c63",
-    "content-hash": "6893e5b775e8a014bc734a42c0e9fa3d",
+    "hash": "abe17696da78acfc6230d4f8ad4529b4",
+    "content-hash": "0296318a7b1456d347703fb2b7a8a785",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -520,20 +520,19 @@
         },
         {
             "name": "paragonie/gpg-mailer",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/gpg-mailer.git",
-                "reference": "dc32c871ada87e70f211ed0928f3a1cdd8df190a"
+                "reference": "fca09e28b403bb4784d03493108556ff53424ce3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/gpg-mailer/zipball/dc32c871ada87e70f211ed0928f3a1cdd8df190a",
-                "reference": "dc32c871ada87e70f211ed0928f3a1cdd8df190a",
+                "url": "https://api.github.com/repos/paragonie/gpg-mailer/zipball/fca09e28b403bb4784d03493108556ff53424ce3",
+                "reference": "fca09e28b403bb4784d03493108556ff53424ce3",
                 "shasum": ""
             },
             "require": {
-                "ext-openssl": "*",
                 "pear/crypt_gpg": "^1.4",
                 "php": "^7.0",
                 "zendframework/zend-mail": "^2.7"
@@ -570,7 +569,7 @@
                 "gpg",
                 "mailer"
             ],
-            "time": "2016-06-05 03:07:41"
+            "time": "2016-06-06 19:50:04"
         },
         {
             "name": "paragonie/halite",
@@ -2398,6 +2397,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.0",
+        "ext-apcu": "^5",
         "ext-openssl": "*",
         "ext-libsodium": "^1.0.6",
         "ext-zip": "*"

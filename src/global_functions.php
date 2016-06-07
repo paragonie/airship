@@ -104,7 +104,7 @@ use \Airship\Engine\{
     }
 
     /**
-     * Returns true if every member of an array is NOT another array
+     * Returns true if every member of an array is a 1-dimensional array.
      *
      * @param array $source
      * @param bool $allow1D Permit non-array children?

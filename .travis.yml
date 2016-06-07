@@ -1,0 +1,30 @@
+language: php
+
+php:
+- 7.0
+
+env:
+- DB=pgsql
+
+before_install:
+- sudo apt-get update
+- sudo apt-get install make build-essential automake php7.0-dev php-pear
+- git clone git://github.com/jedisct1/libsodium.git
+- cd libsodium
+- git checkout 1.0.10
+- ./autogen.sh
+- ./configure && make check
+- sudo make install
+- cd ..
+- pecl install libsodium
+- echo "extension = libsodium.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- /usr/bin/env bash -c "if [ '$DB' = 'pgsql' ]; then psql -c ./test/sql/init/postgresql.sql; then psql -c ./test/sql/init/postgresql-2.sql; fi"
+
+install:
+
+- composer install
+- composer self-update
+- composer update
+- chmod +x ./test/phpunit.sh
+
+script: ./test/phpunit.sh

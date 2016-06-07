@@ -3,7 +3,9 @@
     "route_fallback":
         ["CustomPages", "routeNotFound"],
     "routes": {
-        "ajax/blog_comment_reply/{year}/{month}/{lslug}/{_int}":
+        "ajax/blog_load_comments":
+            ["Ajax", "loadComments"],
+        "ajax/blog_comment_reply":
             ["Ajax", "blogCommentReply"],
         "blog/all":
             ["BlogPosts", "listAll"],

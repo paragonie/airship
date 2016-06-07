@@ -1,16 +1,18 @@
 {
     "blog": {
-        "per_page": 20,
+        "per_page": "20",
         "comments": {
-            "enabled": true,
-            "guests": true
+            "depth_max": "5",
+            "enabled": "on",
+            "guests": "on",
+            "recaptcha": "on"
         }
     },
-    "file": {
-        "cache": 3600
-    },
     "recaptcha": {
-        "secret-key": "6Ldy5BYTAAAAAPBh868BMm2nGZelOUyXJHTUE4no",
-        "site-key": "6Ldy5BYTAAAAACk3Tj8wDUBLcVxSL2JXFBw-Dtj3"
+        "secret-key": "6Ld27iETAAAAAI51EVcu0nBw2wkxQiZxg1zGv2uI",
+        "site-key": "6Ld27iETAAAAAF6tsd5SaoCgc5cFX-tkfHqx7FtX"
+    },
+    "file": {
+        "cache": "3600"
     }
 }

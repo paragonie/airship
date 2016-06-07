@@ -23,6 +23,10 @@ window.replyTo = function(commentId, author) {
     );
 };
 
+window.loadComments = function() {
+    $.post("")
+};
+
 $(document).ready(function() {
     window.changedAuthorSelection();
     $("#blog-reply-author").on('change', window.changedAuthorSelection);
@@ -32,4 +36,8 @@ $(document).ready(function() {
             $(this).data('author')
         );
     });
+    var comment_wrapper = $("#blog_comments_wrapper");
+    if (comment_wrapper.data('cached')) {
+        window.loadComments(comment_wrapper.data('cabinurl'));
+    }
 });
