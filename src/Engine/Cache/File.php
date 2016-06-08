@@ -59,7 +59,10 @@ class File implements CacheInterface
     {
         $path = $this->getRelativePath($key);
         if (@\is_readable($path)) {
-            return \file_get_contents($path);
+            return \json_decode(
+                \file_get_contents($path),
+                true
+            );
         }
         // NULL means nothing was found
         return null;
@@ -99,7 +102,10 @@ class File implements CacheInterface
         }
 
         // Now let's store our data in the file
-        return \file_put_contents($path, $value) !== false;
+        return \file_put_contents(
+            $path,
+            \json_encode($value)
+        ) !== false;
     }
 
     /**

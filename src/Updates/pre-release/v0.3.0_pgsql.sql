@@ -51,7 +51,7 @@ CREATE VIEW view_hull_blog_post AS
 
 CREATE TABLE airship_user_recovery (
     tokenid BIGSERIAL PRIMARY KEY,
-    userid BIGINT REFERENCES airship_users(userid),
+    userid BIGINT REFERENCES airship_users( userid),
     selector TEXT,
     hashedtoken TEXT,
     created TIMESTAMP DEFAULT NOW(),

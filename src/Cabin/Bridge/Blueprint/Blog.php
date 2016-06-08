@@ -571,11 +571,11 @@ class Blog extends BlueprintGear
         }
         if ($includeReplyTo) {
             if (!empty($comment['replyto'])) {
-                $comment['parent'] = $this->getCommentById($comment['replyto'], false);
-                $comment['blog'] = $this->getBlogPostById($comment['blogpost']);
+                $comment['parent'] = $this->getCommentById((int) $comment['replyto'], false);
+                $comment['blog'] = $this->getBlogPostById((int) $comment['blogpost']);
             } else {
                 $comment['parent'] = null;
-                $comment['blog'] = $this->getBlogPostById($comment['blogpost']);
+                $comment['blog'] = $this->getBlogPostById((int) $comment['blogpost']);
             }
         }
         return $comment;
@@ -819,7 +819,7 @@ class Blog extends BlueprintGear
         $bp = [];
         foreach ($comments as $i => $com) {
             if (!\array_key_exists($com['blogpost'], $bp)) {
-                $bp[$com['blogpost']] = $this->getBlogPostById($com['blogpost']);
+                $bp[$com['blogpost']] = $this->getBlogPostById((int) $com['blogpost']);
             }
             $comments[$i]['blog'] = $bp[$com['blogpost']];
         }

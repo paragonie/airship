@@ -24,9 +24,9 @@
         "blog/series/{slug}{_page}":
             ["BlogPosts", "listBySeries"],
         "blog/series/{slug}":
-        ["BlogPosts", "listBySeries"],
+            ["BlogPosts", "listBySeries"],
         "blog/series":
-        ["BlogPosts", "listSeries"],
+            ["BlogPosts", "listSeries"],
         "blog/tag/{lslug}{_page}":
             ["BlogPosts", "listByTag"],
         "blog/tag/{_lslug}":

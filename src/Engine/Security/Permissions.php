@@ -92,6 +92,9 @@ class Permissions
                 }
             }
         } else {
+            if (!$state->universal['guest_groups']) {
+                return false;
+            }
             // Guests can be assigned to groups. This fails closed if they aren't given any.
             foreach ($contexts as $c_id) {
                 $ctx_res = false;

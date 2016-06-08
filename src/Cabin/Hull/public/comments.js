@@ -2,6 +2,9 @@ window.changedAuthorSelection = function() {
     var authorEl = $("#blog-reply-author");
     if (authorEl) {
         var author = authorEl.val();
+        if (typeof author === 'undefined') {
+            return;
+        }
         if (author.length < 1) {
             $(".guest-comment-field").show(200);
             $("#blog-comment-name").attr('required', 'required');
@@ -23,8 +26,18 @@ window.replyTo = function(commentId, author) {
     );
 };
 
-window.loadComments = function() {
-    $.post("")
+window.loadComments = function(cabinURL, uniqueID) {
+    $.post(
+        cabinURL + "ajax/blog_load_comments",
+        {
+            "blogpost": uniqueID
+        },
+        function (response) {
+            if (response.status === "OK") {
+                $("#blog_comments_wrapper").html(response.cached);
+            }
+        }
+    );
 };
 
 $(document).ready(function() {
@@ -38,6 +51,9 @@ $(document).ready(function() {
     });
     var comment_wrapper = $("#blog_comments_wrapper");
     if (comment_wrapper.data('cached')) {
-        window.loadComments(comment_wrapper.data('cabinurl'));
+        window.loadComments(
+            comment_wrapper.data('cabinurl'),
+            comment_wrapper.data('uniqueid')
+        );
     }
 });

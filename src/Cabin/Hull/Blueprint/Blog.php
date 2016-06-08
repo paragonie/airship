@@ -2,7 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Blueprint;
 
-use Airship\Alerts\Router\EmulatePageNotFound;
+use \Airship\Alerts\Router\EmulatePageNotFound;
+use \Airship\Engine\{
+    Cache\File as FileCache,
+    Cache\SharedMemory as MemoryCache,
+    Contract\CacheInterface
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -83,6 +88,13 @@ class Blog extends BlueprintGear
                     'message' => $post['message']
                 ]
             );
+
+            // Get the unique ID for this blog post:
+            $unique = $this->getBlogPostUniqueId($blogPostId);
+
+            // Delete the cached entry:
+            $this->getCommentCache()->delete($unique);
+
             // Hooray!
             return $this->db->commit();
         }
@@ -424,6 +436,56 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Given a blog post ID, just get the unique ID (shorturl)
+     *
+     * @param int $postID
+     * @return string
+     */
+    public function getBlogPostUniqueId(int $postID): string
+    {
+        $unique = $this->db->cell(
+            'SELECT shorturl FROM hull_blog_posts WHERE postid = ?',
+            $postID
+        );
+        if (empty($unique)) {
+            return '';
+        }
+        return $unique;
+    }
+
+    /**
+     * Given a unique ID (shorturl), return the blog post.
+     *
+     * @param string $uniqueID
+     * @return array
+     */
+    public function getBlogPostByUniqueId(string $uniqueID): array
+    {
+        $postID = (int) $this->db->cell(
+            'SELECT postid FROM hull_blog_posts WHERE shorturl = ?',
+            $uniqueID
+        );
+        if (empty($postID)) {
+            return [];
+        }
+        return $this->getBlogPostById($postID);
+    }
+
+    /**
+     * Returns the cache container for blog comments:
+     *
+     * @return CacheInterface
+     */
+    public function getCommentCache(): CacheInterface
+    {
+        if (\extension_loaded('apcu')) {
+            return (new MemoryCache())
+                ->personalize('BlogCommentCache');
+        }
+        return new FileCache(ROOT . '/tmp/cache/comments');
+    }
+
+    /**
      * @param int $commentId
      * @return int
      */
@@ -618,7 +680,7 @@ class Blog extends BlueprintGear
             $blogPostId
         );
         foreach ($comments as $com) {
-            $data = $this->getCommentWithChildren($com['commentid']);
+            $data = $this->getCommentWithChildren((int) $com['commentid']);
             if (!empty($data)) {
                 $tree[] = $data;
             }
@@ -683,7 +745,7 @@ class Blog extends BlueprintGear
             $commentId
         );
         foreach ($children as $child) {
-            $data = $this->getCommentWithChildren($child['commentid']);
+            $data = $this->getCommentWithChildren((int) $child['commentid']);
             if (!empty($data)) {
                 $comment['children'][] = $data;
             }
@@ -730,7 +792,7 @@ class Blog extends BlueprintGear
         foreach ($this->getSeriesForPost($postId) as $ser) {
             if (!empty($ser)) {
                 $series []= $ser;
-                foreach ($this->getSeriesRecursive($ser['seriesid'], [$ser['seriesid']]) as $par) {
+                foreach ($this->getSeriesRecursive((int) $ser['seriesid'], [(int) $ser['seriesid']]) as $par) {
                     if (!empty($par)) {
                         $series [] = $par;
                     }
@@ -752,13 +814,13 @@ class Blog extends BlueprintGear
     protected function getSeriesExtra(array $ser): array
     {
         $ser['prev_link'] = $this->getSeriesLink(
-            $ser['seriesid'],
-            $ser['listorder'],
+            (int) $ser['seriesid'],
+            (int) $ser['listorder'],
             'prev'
         );
         $ser['next_link'] = $this->getSeriesLink(
-            $ser['seriesid'],
-            $ser['listorder'],
+            (int) $ser['seriesid'],
+            (int) $ser['listorder'],
             'next'
         );
         $ser['config'] = \json_decode($ser['config'], true);
