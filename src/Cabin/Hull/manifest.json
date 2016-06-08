@@ -5,8 +5,8 @@
     "routes": {
         "ajax/blog_load_comments":
             ["Ajax", "loadComments"],
-        "ajax/blog_comment_reply":
-            ["Ajax", "blogCommentReply"],
+        "ajax/blog_comment_form":
+            ["Ajax", "blogCommentForm"],
         "blog/all":
             ["BlogPosts", "listAll"],
         "blog/author/{lslug}{_page}":

@@ -31,6 +31,24 @@ class Ajax extends LandingGear
     }
 
     /**
+     * Just get the blog comment reply form on cached pages
+     *
+     * @route ajax/blog_comment_form
+     */
+    public function blogCommentForm()
+    {
+        if (IDE_HACKS) {
+            $this->blog = new Blog();
+        }
+        $this->lens(
+            'blog/comment_form',
+            [
+                'config' => $this->config()
+            ]
+        );
+    }
+
+    /**
      * @route ajax/blog_load_comments
      */
     public function loadComments()

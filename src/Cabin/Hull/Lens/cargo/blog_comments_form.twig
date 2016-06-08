@@ -12,7 +12,7 @@
             {% if userid() %}
                 <div class="form-row">
                     <div class="form-column blog-comment-label">
-                        <label for="author">{{ __("Author")|e('html') }}:</label>
+                        <label for="blog-reply-author">{{ __("Author")|e('html') }}:</label>
                     </div>
                     <div class="form-column blog-comment-author-wrapper">
                         <select id="blog-reply-author" name="author">
@@ -21,7 +21,7 @@
                             {% for author in user_authors() %}
                                 <option{#
                                     #} class="select-author-name"{#
-                                    #}{% if author.default_author_for_user %} selected="true"{% endif %}{#
+                                    #}{% if author.default_author_for_user %} selected="selected"{% endif %}{#
                                     #} value="{{ author.authorid|e('html_attr') }}">{{ author.name|e('html') }}</option>
                             {% endfor %}
                             </optgroup>

@@ -1,7 +1,7 @@
 
 {% if config.blog.comments.enabled %}
-    {% include cargo("blog_read_comments") ignore missing %}
+    <div id="blog-comments-container">{% include cargo("blog_read_comments") ignore missing %}</div>
     {% if userid() or config.blog.comments.guests %}
-        {% include cargo("blog_comments_form") ignore missing %}
+        <div id="blog-comment-form-container">{% include cargo("blog_comments_form") ignore missing %}</div>
     {% endif %}
 {% endif %}

@@ -26,6 +26,16 @@ window.replyTo = function(commentId, author) {
     );
 };
 
+window.getCommentForm = function(cabinURL) {
+    $.get(
+        cabinURL + "ajax/blog_comment_form",
+        {},
+        function (response) {
+            $("#blog-comment-form-container").html(response);
+        }
+    );
+};
+
 window.loadComments = function(cabinURL, uniqueID) {
     $.post(
         cabinURL + "ajax/blog_load_comments",
@@ -34,7 +44,7 @@ window.loadComments = function(cabinURL, uniqueID) {
         },
         function (response) {
             if (response.status === "OK") {
-                $("#blog_comments_wrapper").html(response.cached);
+                $("#blog-comments-container").html(response.cached);
             }
         }
     );
@@ -55,5 +65,6 @@ $(document).ready(function() {
             comment_wrapper.data('cabinurl'),
             comment_wrapper.data('uniqueid')
         );
+        window.getCommentForm(comment_wrapper.data('cabinurl'));
     }
 });
