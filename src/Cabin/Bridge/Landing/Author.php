@@ -58,7 +58,7 @@ class Author extends LoggedInUsersOnly
      */
     public function edit(string $authorId = '')
     {
-        $authorId += 0; // Coerce to int
+        $authorId = (int) $authorId;
 
         if (!$this->isSuperUser()) {
             $authorsForUser = $this->author->getAuthorIdsForUser(
@@ -108,6 +108,7 @@ class Author extends LoggedInUsersOnly
 
         // We're just grabbing counts here:
         foreach ($authors as $idx => $auth) {
+            $auth['authorid'] = (int) $auth['authorid'];
             $authors[$idx]['num_users'] = $this->author->getNumUsersForAuthor(
                 $auth['authorid']
             );
@@ -137,11 +138,14 @@ class Author extends LoggedInUsersOnly
                 break;
         }
 
-        $this->lens('author/index', [
-            'authors' => $authors,
-            'sort' => $sort,
-            'dir' => $dir
-        ]);
+        $this->lens(
+            'author/index',
+            [
+                'authors' => $authors,
+                'sort' => $sort,
+                'dir' => $dir
+            ]
+        );
     }
 
     /**
@@ -186,7 +190,7 @@ class Author extends LoggedInUsersOnly
      */
     public function users(string $authorId = '')
     {
-        $authorId += 0; // Coerce to int
+        $authorId = (int) $authorId;
         if ($this->isSuperUser()) {
             $inCharge = true;
         } else {
@@ -210,11 +214,14 @@ class Author extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('author/users', [
-            'author' => $this->author->getById($authorId),
-            'inCharge' => $inCharge,
-            'users' => $this->author->getUsersForAuthor($authorId)
-        ]);
+        $this->lens(
+            'author/users',
+            [
+                'author' => $this->author->getById($authorId),
+                'inCharge' => $inCharge,
+                'users' => $this->author->getUsersForAuthor($authorId)
+            ]
+        );
     }
 
     /**
@@ -248,17 +255,5 @@ class Author extends LoggedInUsersOnly
             $this->storeLensVar('form_error', (string) $ex);
         }
         return false;
-    }
-
-    /**
-     * Save the author's photo settings
-     *
-     * @param int $authorId
-     * @param array $post
-     * @return bool
-     */
-    protected function saveAuthorPhotos(int $authorId, array $post): bool
-    {
-
     }
 }

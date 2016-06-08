@@ -25,7 +25,7 @@ use \ParagonIE\Halite\{
     Structure\MerkleTree,
     Structure\Node
 };
-use Psr\Http\Message\ResponseInterface;
+use \Psr\Http\Message\ResponseInterface;
 use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';

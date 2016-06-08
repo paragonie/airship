@@ -301,7 +301,10 @@ class UserAccounts extends BlueprintGear
      */
     public function getGroup(int $groupId): array
     {
-        $group = $this->db->row('SELECT * FROM airship_groups WHERE groupid = ?', $groupId);
+        $group = $this->db->row(
+            'SELECT * FROM airship_groups WHERE groupid = ?',
+            $groupId
+        );
         if (empty($group)) {
             return [];
         }
@@ -316,12 +319,15 @@ class UserAccounts extends BlueprintGear
      */
     public function getGroupChildren(int $groupId): array
     {
-        $group = $this->db->first('SELECT groupid FROM airship_groups WHERE inherits = ?', $groupId);
+        $group = $this->db->first(
+            'SELECT groupid FROM airship_groups WHERE inherits = ?',
+            $groupId
+        );
         if (empty($group)) {
             return [];
         }
         foreach ($group as $g) {
-            foreach ($this->getGroupChildren($g) as $c) {
+            foreach ($this->getGroupChildren((int) $g) as $c) {
                 \array_unshift($group, $c);
             }
         }
@@ -343,7 +349,10 @@ class UserAccounts extends BlueprintGear
     ): array {
         if ($parent > 0) {
             if (empty($seen)) {
-                $groups = $this->db->run('SELECT * FROM airship_groups WHERE inherits = ? ORDER BY name ASC', $parent);
+                $groups = $this->db->run(
+                    'SELECT * FROM airship_groups WHERE inherits = ? ORDER BY name ASC',
+                    $parent
+                );
             } else {
                 $groups = $this->db->run(
                     'SELECT * FROM airship_groups WHERE groupid NOT IN ' .
@@ -353,7 +362,9 @@ class UserAccounts extends BlueprintGear
                 );
             }
         } elseif (empty($seen)) {
-            $groups = $this->db->run('SELECT * FROM airship_groups WHERE inherits IS NULL ORDER BY name ASC');
+            $groups = $this->db->run(
+                'SELECT * FROM airship_groups WHERE inherits IS NULL ORDER BY name ASC'
+            );
         } else {
             $groups = $this->db->run(
                 'SELECT * FROM airship_groups WHERE groupid NOT IN ' .
@@ -364,7 +375,11 @@ class UserAccounts extends BlueprintGear
             return [];
         }
         foreach ($groups as $i => $grp) {
-            $groups[$i][$column] = $this->getGroupTree($grp['groupid'], $column, $seen);
+            $groups[$i][$column] = $this->getGroupTree(
+                (int) $grp['groupid'],
+                $column,
+                $seen
+            );
         }
         return $groups;
     }
@@ -493,8 +508,8 @@ class UserAccounts extends BlueprintGear
      */
     public function getUsersGroups(int $userId): array
     {
-        $groups =  $this->db->col(
-            'SELECT groupid FROM '.$this->e($this->grouptable).' WHERE userid = ?', 0,
+        $groups =  $this->db->first(
+            'SELECT groupid FROM '.$this->e($this->grouptable).' WHERE userid = ?',
             $userId
         );
         if (empty($groups)) {
@@ -582,10 +597,7 @@ class UserAccounts extends BlueprintGear
         
         // We're expecing an integer, not a boolean
         if ($num === false) {
-            throw new QueryError(
-                $this->db->errorInfo(),
-                (int) $this->db->errorCode()
-            );
+            throw new QueryError($this->db->errorInfo());
         }
         return $num > 0;
     }

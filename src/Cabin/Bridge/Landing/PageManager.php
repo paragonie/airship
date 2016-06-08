@@ -75,7 +75,7 @@ class PageManager extends LoggedInUsersOnly
                 if ($resp->isSuccess()) {
                     // CAPTCHA verification and CSRF token both passed
                     $this->processDeleteDir(
-                        $page['pageid'],
+                        (int) $page['pageid'],
                         $post,
                         $cabin,
                         $path
@@ -140,7 +140,7 @@ class PageManager extends LoggedInUsersOnly
                 if ($resp->isSuccess()) {
                     // CAPTCHA verification and CSRF token both passed
                     $this->processDeletePage(
-                        $page['pageid'],
+                        (int) $page['pageid'],
                         $post,
                         $cabin,
                         $path
@@ -194,7 +194,7 @@ class PageManager extends LoggedInUsersOnly
         $post = $this->post();
         if (!empty($post)) {
             $this->processEditPage(
-                $page['pageid'],
+                (int) $page['pageid'],
                 $post,
                 $cabin,
                 $path
@@ -425,7 +425,7 @@ class PageManager extends LoggedInUsersOnly
         }
         try {
             $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
-            $history = $this->pg->getHistory($page['pageid']);
+            $history = $this->pg->getHistory((int) $page['pageid']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
@@ -514,14 +514,14 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $prevUnique = $this->pg->getPrevVersionUniqueId(
-            $version['page'],
+            (int) $version['page'],
             $version['versionid']
         );
         $nextUnique = $this->pg->getNextVersionUniqueId(
-            $version['page'],
+            (int) $version['page'],
             $version['versionid']
         );
-        $latestId = $this->pg->getLatestVersionId($version['page']);
+        $latestId = $this->pg->getLatestVersionId((int) $version['page']);
 
         $this->lens('pages/page_history_view', [
             'cabins' => $cabins,
@@ -558,8 +558,12 @@ class PageManager extends LoggedInUsersOnly
      * @param string $dir
      * @return mixed
      */
-    protected function processDeletePage(int $pageId, array $post = [], string $cabin = '', string $dir = ''): bool
-    {
+    protected function processDeletePage(
+        int $pageId,
+        array $post = [],
+        string $cabin = '',
+        string $dir = ''
+    ): bool {
         $this->log(
             'Attempting to delete a page',
             LogLevel::ALERT,
@@ -569,7 +573,7 @@ class PageManager extends LoggedInUsersOnly
                 'dir' => $dir
             ]
         );
-        $oldURL = $this->pg->getPathByPageId($pageId);
+        $oldURL = $this->pg->getPathByPageId((int) $pageId);
         if ($this->pg->deletePage($pageId)) {
             if (!empty($post['create_redirect']) && !empty($post['redirect_to'])) {
                 $this->pg->createSameCabinRedirect(
@@ -667,7 +671,11 @@ class PageManager extends LoggedInUsersOnly
                 ||
             $page['url']       !== $post['url']
         ) {
-            $this->pg->movePage($page['pageid'], $post['url'], $post['directory']);
+            $this->pg->movePage(
+                (int) $page['pageid'],
+                $post['url'],
+                (int) $post['directory']
+            );
             if (!empty($post['create_redirect'])) {
                 $this->pg->createPageRedirect(
                     \Airship\keySlice($page, ['cabin', 'directory', 'url']),

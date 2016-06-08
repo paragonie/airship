@@ -37,10 +37,12 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir, $cabin);
 
         $dir = $this->determinePath($cabin);
+
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
             $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
         }
+
         if (empty($_GET['file'])) {
             return $this->commonConfirmDeleteDir($dir, $cabin);
         }

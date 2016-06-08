@@ -49,11 +49,17 @@ class Permissions extends BlueprintGear
         // Let's grab all the groups with a specific ancestor
         if (empty($parentId)) {
             $groups = $this->db->run(
-                \Airship\queryStringRoot('security.permissions.groups_null', $this->db->getDriver())
+                \Airship\queryStringRoot(
+                    'security.permissions.groups_null',
+                    $this->db->getDriver()
+                )
             );
         } else {
             $groups = $this->db->run(
-                \Airship\queryStringRoot('security.permissions.groups_inherits', $this->db->getDriver()),
+                \Airship\queryStringRoot(
+                    'security.permissions.groups_inherits',
+                    $this->db->getDriver()
+                ),
                 $parentId
             );
         }
@@ -78,7 +84,7 @@ class Permissions extends BlueprintGear
             $grp['inherit'] = $inherited;
 
             // Let's grab the permission data for this particular group
-            $qs = \Airship\queryStringRoot(
+            $sqlQuery = \Airship\queryStringRoot(
                 'security.permissions.groups_qs',
                 $this->db->getDriver(),
                 [
@@ -86,7 +92,7 @@ class Permissions extends BlueprintGear
                 ]
             );
             $pdata = $this->db->run(
-                $qs,
+                $sqlQuery,
                 $cabin,
                 $contextId,
                 $grp['groupid']
@@ -99,9 +105,9 @@ class Permissions extends BlueprintGear
             // Pass onto the next generation
             $grp['children'] = self::buildGroupTree(
                 $cabin,
-                $contextId,
+                (int) $contextId,
                 $actions,
-                $grp['groupid'],
+                (int) $grp['groupid'],
                 $grp['inherit'],
                 $depth + 1
             );
@@ -131,7 +137,7 @@ class Permissions extends BlueprintGear
         foreach ($contexts as $ctx) {
             $return[$ctx] = $this->buildGroupTree(
                 $cabin,
-                $ctx,
+                (int) $ctx,
                 $actions
             );
         }
@@ -159,7 +165,7 @@ class Permissions extends BlueprintGear
         foreach ($contexts as $ctx) {
             $return[$ctx] = $this->buildUserList(
                 $cabin,
-                $ctx,
+                (int) $ctx,
                 $actions
             );
         }
@@ -288,12 +294,16 @@ class Permissions extends BlueprintGear
      * Get information about an action.
      *
      * @param string $cabin
-     * @param string $actionId
+     * @param int $actionId
      * @return array
      */
-    public function getAction(string $cabin, string $actionId): array
+    public function getAction(string $cabin, int $actionId): array
     {
-        $actions = $this->db->row('SELECT * FROM airship_perm_actions WHERE cabin = ? AND actionid = ?', $cabin, $actionId);
+        $actions = $this->db->row(
+            'SELECT * FROM airship_perm_actions WHERE cabin = ? AND actionid = ?',
+            $cabin,
+            $actionId
+        );
         if (empty($actions)) {
             return [];
         }
@@ -308,7 +318,10 @@ class Permissions extends BlueprintGear
      */
     public function getActions(string $cabin): array
     {
-        $actions = $this->db->run('SELECT * FROM airship_perm_actions WHERE cabin = ?', $cabin);
+        $actions = $this->db->run(
+            'SELECT * FROM airship_perm_actions WHERE cabin = ?',
+            $cabin
+        );
         if (empty($actions)) {
             return [];
         }
@@ -319,14 +332,17 @@ class Permissions extends BlueprintGear
      * Get all action labels for a particular cabin.
      *
      * @param string $cabin
-     * @return array
+     * @return string[]
      */
     public function getActionNames(string $cabin): array
     {
         $return = [];
-        $actions = $this->db->run('SELECT actionid, label FROM airship_perm_actions WHERE cabin = ?', $cabin);
+        $actions = $this->db->run(
+            'SELECT actionid, label FROM airship_perm_actions WHERE cabin = ?',
+            $cabin
+        );
         foreach ($actions as $act) {
-            $return[$act['actionid']] = $act['label'];
+            $return[(int) $act['actionid']] = $act['label'];
         }
         return $return;
     }
@@ -405,7 +421,7 @@ class Permissions extends BlueprintGear
     public function getContextIds(
         string $uri = '',
         string $cabin = \CABIN_NAME
-    ) {
+    ): array {
         if (empty($uri)) {
             $uri = AutoPilot::$path;
         }
@@ -713,7 +729,7 @@ class Permissions extends BlueprintGear
             $contextId
         );
         foreach ($groupIds as $group) {
-            $allowed = $this->getGroupPerms($group, $contextId);
+            $allowed = $this->getGroupPerms((int) $group, $contextId);
             foreach ($actions as $act) {
                 $perms[$group][$act] = \in_array($act, $allowed);
             }
@@ -737,7 +753,7 @@ class Permissions extends BlueprintGear
             $contextId
         );
         foreach ($userIds as $user) {
-            $allowed = $this->getUserPerms($user, $contextId);
+            $allowed = $this->getUserPerms((int) $user, $contextId);
             foreach ($actions as $act) {
                 $perms[$user][$act] = \in_array($act, $allowed);
             }

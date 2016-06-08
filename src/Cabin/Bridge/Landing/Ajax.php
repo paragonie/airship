@@ -27,7 +27,7 @@ class Ajax extends LoggedInUsersOnly
             $auth_bp = new Author($db);
             $file_bp = new Files($db);
         }
-        $authorId = (int) $_POST['author'];
+        $authorId = (int) ($_POST['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -124,7 +124,7 @@ class Ajax extends LoggedInUsersOnly
                 'message' => \__('No author selected.')
             ]);
         }
-        $authorId = $_POST['author'] + 0;
+        $authorId = (int) ($_POST['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -144,7 +144,7 @@ class Ajax extends LoggedInUsersOnly
             ]);
         }
         foreach ($existing as $i => $e) {
-            $existing[$i] = $e + 0;
+            $existing[$i] = (int) $e;
         }
         $response = [
             'status' => 'OK'
@@ -154,7 +154,7 @@ class Ajax extends LoggedInUsersOnly
             $newBlogPost = $blog_bp->getBlogPostById($_POST['add'] + 0);
             if (!empty($newBlogPost)) {
                 if ($newBlogPost['author'] === $authorId) {
-                    $existing[] = ($_POST['add'] + 0);
+                    $existing[] = (int) ($_POST['add'] ?? 0);
                     $response['new_item'] = $this->getLensAsText(
                         'ajax/bridge_blog_series_item',
                         [
@@ -186,31 +186,39 @@ class Ajax extends LoggedInUsersOnly
     public function getPermsForUser()
     {
         if (!$this->isSuperUser()) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('You are not an administrator.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('You are not an administrator.')
+                ]
+            );
         }
         if (empty($_POST['username'])) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('You must enter a username.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('You must enter a username.')
+                ]
+            );
         }
         if (empty($_POST['context'])) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('No context provided.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('No context provided.')
+                ]
+            );
         }
         if (empty($_POST['cabin'])) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('No cabin provided.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('No cabin provided.')
+                ]
+            );
         }
         $this->getPermissionsDataForUser(
-            $_POST['context'] + 0,
+            (int) $_POST['context'],
             $_POST['username'],
             $_POST['cabin']
         );
@@ -235,7 +243,7 @@ class Ajax extends LoggedInUsersOnly
                 'message' => \__('No author selected.')
             ]);
         }
-        $authorId = $_POST['author'] + 0;
+        $authorId = (int) ($_POST['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -255,17 +263,18 @@ class Ajax extends LoggedInUsersOnly
             ]);
         }
         foreach ($existing as $i => $e) {
-            $existing[$i] = $e + 0;
+            $existing[$i] = (int) $e;
         }
         $response = [
             'status' => 'OK'
         ];
 
         if (!empty($_POST['add'])) {
-            $newSeries = $blog_bp->getSeries($_POST['add'] + 0);
+            $add = (int) ($_POST['add'] ?? 0);
+            $newSeries = $blog_bp->getSeries($add);
             if (!empty($newSeries)) {
                 if ($newSeries['author'] === $authorId) {
-                    $existing[] = ($_POST['add'] + 0);
+                    $existing[] = $add;
                     $response['new_item'] = $this->getLensAsText(
                         'ajax/bridge_blog_series_item',
                         [
@@ -299,16 +308,20 @@ class Ajax extends LoggedInUsersOnly
     public function permissionTest()
     {
         if (!$this->isSuperUser()) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('You are not an administrator.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('You are not an administrator.')
+                ]
+            );
         }
         if (empty($_POST['url'])) {
-            \Airship\json_response([
-                'status' => 'ERROR',
-                'message' => \__('You must enter a URL.')
-            ]);
+            \Airship\json_response(
+                [
+                    'status' => 'ERROR',
+                    'message' => \__('You must enter a URL.')
+                ]
+            );
         }
         try {
             $cabin = $this->getCabinNameFromURL($_POST['url']);

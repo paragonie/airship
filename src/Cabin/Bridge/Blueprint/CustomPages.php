@@ -243,12 +243,12 @@ class CustomPages extends HullCustomPages
         }
         $cabin = $old['cabin'];
         $oldPath = !empty($old['directory'])
-            ? $this->getPathFromDirectoryId($old['directory'], $cabin)
+            ? $this->getPathFromDirectoryId((int) $old['directory'], $cabin)
             : [];
         $oldPath []= $old['url'];
         $oldURL = \implode('/', $oldPath);
         $newPath = !empty($new['directory'])
-            ? $this->getPathFromDirectoryId($new['directory'], $cabin)
+            ? $this->getPathFromDirectoryId((int) $new['directory'], $cabin)
             : [];
         $newPath []= $new['url'];
         $newURL = \implode('/', $newPath);
@@ -325,7 +325,14 @@ class CustomPages extends HullCustomPages
      */
     public function getCabinForDirectory(int $directoryId): string
     {
-        return $this->db->cell('SELECT cabin FROM airship_custom_dir WHERE directoryid = ?'. $directoryId);
+        $cabin = $this->db->cell(
+            'SELECT cabin FROM airship_custom_dir WHERE directoryid = ?',
+            $directoryId
+        );
+        if (empty($cabin)) {
+            return '';
+        }
+        return $cabin;
     }
 
     /**
@@ -368,7 +375,7 @@ class CustomPages extends HullCustomPages
             try {
                 $br['children'] = $this->getCustomDirChildren(
                     $cabin,
-                    $br['directoryid'],
+                    (int) $br['directoryid'],
                     $selected,
                     $depth + 1
                 );
@@ -389,14 +396,14 @@ class CustomPages extends HullCustomPages
     public function getHistory(int $pageId): array
     {
         return $this->db->run(
-            "SELECT
+            'SELECT
                 *
             FROM
                 airship_custom_page_version
             WHERE
                     page = ?
                 ORDER BY versionid DESC
-            ",
+            ',
             $pageId
         );
     }
@@ -409,7 +416,7 @@ class CustomPages extends HullCustomPages
     public function getLatestVersionId(int $pageId): int
     {
         $latest = $this->db->cell(
-            "SELECT
+            'SELECT
                 versionid
             FROM
                 airship_custom_page_version
@@ -418,7 +425,7 @@ class CustomPages extends HullCustomPages
                 AND published
                 ORDER BY versionid DESC
                 LIMIT 1
-            ",
+            ',
             $pageId
         );
         if (empty($latest)) {
@@ -437,7 +444,7 @@ class CustomPages extends HullCustomPages
     public function getLatestDraft(int $pageId): array
     {
         $latest = $this->db->row(
-            "SELECT
+            'SELECT
                 *
             FROM
                 airship_custom_page_version
@@ -445,7 +452,7 @@ class CustomPages extends HullCustomPages
                     page = ?
                 ORDER BY versionid DESC
                 LIMIT 1
-            ",
+            ',
             $pageId
         );
         if (empty($latest)) {
@@ -501,7 +508,12 @@ class CustomPages extends HullCustomPages
             return [];
         }
         try {
-            $path = \implode('/', $this->getPathFromDirectoryId($page['directory'], $cabin));
+            $path = \implode('/',
+                $this->getPathFromDirectoryId(
+                    (int) $page['directory'],
+                    $cabin
+                )
+            );
             return \trim($path, '/') . '/' . $page['url'];
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
@@ -550,7 +562,7 @@ class CustomPages extends HullCustomPages
     public function getPrevVersionUniqueId(int $pageId, int $currentVersionId): string
     {
         $latest = $this->db->cell(
-            "SELECT
+            'SELECT
                 uniqueid
             FROM
                 airship_custom_page_version
@@ -560,7 +572,7 @@ class CustomPages extends HullCustomPages
                 AND published
                 ORDER BY versionid DESC
                 LIMIT 1
-            ",
+            ',
             $pageId,
             $currentVersionId
         );
@@ -580,7 +592,7 @@ class CustomPages extends HullCustomPages
     public function getNextVersionUniqueId(int $pageId, int $currentVersionId): string
     {
         $latest = $this->db->cell(
-            "SELECT
+            'SELECT
                 uniqueid
             FROM
                 airship_custom_page_version
@@ -590,7 +602,7 @@ class CustomPages extends HullCustomPages
                 AND published
                 ORDER BY versionid DESC
                 LIMIT 1
-            ",
+            ',
             $pageId,
             $currentVersionId
         );

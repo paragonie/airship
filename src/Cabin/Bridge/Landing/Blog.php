@@ -54,10 +54,11 @@ class Blog extends LoggedInUsersOnly
      */
     public function deletePost(string $id)
     {
+        $id = (int) $id;
         // Load Data
-        $blogPost = $this->blog->getBlogPostById((int) $id);
-        $blogPost['tags'] = $this->blog->getTagsForPost((int) $id);
-        $latestVersion = $this->blog->getBlogPostLatestVersion((int) $id);
+        $blogPost = $this->blog->getBlogPostById($id);
+        $blogPost['tags'] = $this->blog->getTagsForPost($id);
+        $latestVersion = $this->blog->getBlogPostLatestVersion($id);
 
         if ($this->isSuperUser()) {
             $authors = $this->author->getAll();
@@ -68,13 +69,13 @@ class Blog extends LoggedInUsersOnly
         }
         $authorsAllowed = [];
         foreach ($authors as $a) {
-            $authorsAllowed[] = $a['authorid'];
+            $authorsAllowed[] = (int) $a['authorid'];
         }
 
         // The 'delete' permission here means "delete any", not just "delete mine":
         if (!$this->can('delete')) {
             // Does this author belong to you?
-            if (!\in_array($blogPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $blogPost['author'], $authorsAllowed)) {
                 // No? Then you don't belong here
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
@@ -88,7 +89,8 @@ class Blog extends LoggedInUsersOnly
             $this->storeLensVar('form_error', \__('An error has occurred.'));
         }
         $this->lens(
-            'blog/posts_delete', [
+            'blog/posts_delete',
+            [
                 'blogpost' => $blogPost,
                 'latest' => $latestVersion
             ]
@@ -103,7 +105,7 @@ class Blog extends LoggedInUsersOnly
      */
     public function editCategory(string $id = '')
     {
-        $id += 0;
+        $id = (int) $id;
         $post = $this->post();
         if (!empty($post)) {
             if ($this->blog->updateCategory($id, $post)) {
@@ -112,10 +114,12 @@ class Blog extends LoggedInUsersOnly
         }
         $category = $this->blog->getCategoryInfo($id);
 
-        $this->lens('blog/category_edit', [
-            'category' => $category,
-            'categories' => $this->blog->getCategoryTree()
-        ]);
+        $this->lens('blog/category_edit',
+            [
+                'category' => $category,
+                'categories' => $this->blog->getCategoryTree()
+            ]
+        );
     }
 
     /**
@@ -126,10 +130,11 @@ class Blog extends LoggedInUsersOnly
      */
     public function editPost(string $id)
     {
+        $id = (int) $id;
         // Load Data
-        $blogPost = $this->blog->getBlogPostById((int) $id);
-        $blogPost['tags'] = $this->blog->getTagsForPost((int) $id);
-        $latestVersion = $this->blog->getBlogPostLatestVersion((int) $id);
+        $blogPost = $this->blog->getBlogPostById($id);
+        $blogPost['tags'] = $this->blog->getTagsForPost($id);
+        $latestVersion = $this->blog->getBlogPostLatestVersion($id);
 
         if ($this->isSuperUser()) {
             $authors = $this->author->getAll();
@@ -140,12 +145,12 @@ class Blog extends LoggedInUsersOnly
         }
         $authorsAllowed = [];
         foreach ($authors as $a) {
-            $authorsAllowed[] = $a['authorid'];
+            $authorsAllowed[] = (int) $a['authorid'];
         }
         // The 'update' permission here means "update any", not just "update mine":
         if (!$this->can('update')) {
             // Does this author belong to you?
-            if (!\in_array($blogPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $blogPost['author'], $authorsAllowed)) {
                 // No? Then you don't belong here
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
@@ -160,7 +165,8 @@ class Blog extends LoggedInUsersOnly
             }
         }
         $this->lens(
-            'blog/posts_edit', [
+            'blog/posts_edit',
+            [
                 'blogpost' => $blogPost,
                 'latest' => $latestVersion,
                 'authors' => $authors,
@@ -177,8 +183,9 @@ class Blog extends LoggedInUsersOnly
      */
     public function editSeries(string $seriesId)
     {
+        $seriesId = (int) $seriesId;
         $author = null;
-        $seriesId += 0;
+
         $series = $this->blog->getSeries($seriesId);
         if (!empty($series['config'])) {
             $series['config'] = \json_decode($series['config'], true);
@@ -191,7 +198,7 @@ class Blog extends LoggedInUsersOnly
         if ($this->isSuperUser()) {
             $authors = $this->author->getAll();
             foreach ($authors as $a) {
-                $authorsAllowed[] = $a['authorid'];
+                $authorsAllowed[] = (int) $a['authorid'];
                 if ($a['authorid'] === $series['author']) {
                     $author = $a;
                 }
@@ -201,12 +208,12 @@ class Blog extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             foreach ($authors as $a) {
-                $authorsAllowed[] = $a['authorid'];
+                $authorsAllowed[] = (int) $a['authorid'];
                 if ($a['authorid'] === $series['author']) {
                     $author = $a;
                 }
             }
-            if (!\in_array($series['author'], $authorsAllowed)) {
+            if (!\in_array((int) $series['author'], $authorsAllowed)) {
                 // You are not allowed
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
             }
@@ -223,7 +230,8 @@ class Blog extends LoggedInUsersOnly
             }
         }
         $this->lens(
-            'blog/series_edit', [
+            'blog/series_edit',
+            [
                 'series' => $series,
                 'series_items' => $series_items,
                 'authors' => $authors,
@@ -240,19 +248,21 @@ class Blog extends LoggedInUsersOnly
      */
     public function editTag(string $id = '')
     {
+        $id = (int) $id;
         if (!$this->can('update')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog/tag');
         }
-        $tag = $this->blog->getTagInfo((int) $id);
+        $tag = $this->blog->getTagInfo($id);
 
         $post = $this->post();
         if (!empty($post)) {
-            if ($this->processEditTag((int) $id, $post)) {
+            if ($this->processEditTag($id, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/tag');
             }
         }
         $this->lens(
-            'blog/tags_edit', [
+            'blog/tags_edit',
+            [
                 'tag' => $tag,
             ]
         );
@@ -265,9 +275,12 @@ class Blog extends LoggedInUsersOnly
      */
     public function listCategories()
     {
-        $this->lens('blog/category', [
-            'categories' => $this->blog->getCategoryTree()
-        ]);
+        $this->lens(
+            'blog/category',
+            [
+                'categories' => $this->blog->getCategoryTree()
+            ]
+        );
     }
 
     /**
@@ -281,16 +294,19 @@ class Blog extends LoggedInUsersOnly
         }
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
-        $this->lens('blog/comments', [
-            'comments' => $this->blog->listComments($offset, $limit),
-            'pagination' => [
-                'base' => $this->airship_cabin_prefix . '/blog/post',
-                'suffix' => '/',
-                'count' => $this->blog->numComments(),
-                'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
-                'per_page' => $limit
+        $this->lens(
+            'blog/comments',
+            [
+                'comments' => $this->blog->listComments($offset, $limit),
+                'pagination' => [
+                    'base' => $this->airship_cabin_prefix . '/blog/post',
+                    'suffix' => '/',
+                    'count' => $this->blog->numComments(),
+                    'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
+                    'per_page' => $limit
+                ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -303,20 +319,23 @@ class Blog extends LoggedInUsersOnly
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
-        $this->lens('blog/posts', [
-            'blog_posts' => $this->blog->listPosts(
-                $this->isSuperUser(),
-                $offset,
-                $limit
-            ),
-            'pagination' => [
-                'base' => $this->airship_cabin_prefix . '/blog/post',
-                'suffix' => '/',
-                'count' => $this->blog->numPosts(),
-                'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
-                'per_page' => $limit
+        $this->lens(
+            'blog/posts',
+            [
+                'blog_posts' => $this->blog->listPosts(
+                    $this->isSuperUser(),
+                    $offset,
+                    $limit
+                ),
+                'pagination' => [
+                    'base' => $this->airship_cabin_prefix . '/blog/post',
+                    'suffix' => '/',
+                    'count' => $this->blog->numPosts(),
+                    'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
+                    'per_page' => $limit
+                ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -340,22 +359,27 @@ class Blog extends LoggedInUsersOnly
         }
         $authors = [];
         foreach ($series as $i => $s) {
+            $s['seriesid'] = (int) $s['seriesid'];
+            $s['author'] = (int) $s['author'];
             if (empty($authors[$s['author']]) && !empty($s['author'])) {
                 $authors[$s['author']] = $this->author->getById($s['author']);
             }
             $series[$i]['author_data'] = $authors[$s['author']];
             $series[$i]['num_items'] = $this->blog->numItemsInSeries($s['seriesid']);
         }
-        $this->lens('blog/series', [
-            'series' => $series,
-            'pagination' => [
-                'base' => $this->airship_cabin_prefix . '/blog/series',
-                'suffix' => '/',
-                'count' => $count,
-                'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
-                'per_page' => $limit
+        $this->lens(
+            'blog/series',
+            [
+                'series' => $series,
+                'pagination' => [
+                    'base' => $this->airship_cabin_prefix . '/blog/series',
+                    'suffix' => '/',
+                    'count' => $count,
+                    'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
+                    'per_page' => $limit
+                ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -373,20 +397,27 @@ class Blog extends LoggedInUsersOnly
             $this->blog->createTag($post);
         }
 
-        $this->lens('blog/tags', [
-            'tags' =>
-                $this->blog->listTags($offset, $limit, $sort, $dir === 'DESC'),
-            'sort' => $sort,
-            'dir' => $dir,
-            'pagination' => [
-                'base' => $this->airship_cabin_prefix . '/blog/tag',
-                'suffix' => '/',
-                'extra_args' => '?sort=' . $sort . '&dir=' . $dir,
-                'count' => $this->blog->numTags(),
-                'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
-                'per_page' => $limit
+        $this->lens(
+            'blog/tags',
+            [
+                'tags' => $this->blog->listTags(
+                    $offset,
+                    $limit,
+                    $sort,
+                    $dir === 'DESC'
+                ),
+                'sort' => $sort,
+                'dir' => $dir,
+                'pagination' => [
+                    'base' => $this->airship_cabin_prefix . '/blog/tag',
+                    'suffix' => '/',
+                    'extra_args' => '?sort=' . $sort . '&dir=' . $dir,
+                    'count' => $this->blog->numTags(),
+                    'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
+                    'per_page' => $limit
+                ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -435,7 +466,7 @@ class Blog extends LoggedInUsersOnly
         if (!empty($post)) {
             $authorsAllowed = [];
             foreach ($authors as $a) {
-                $authorsAllowed[] = $a['authorid'];
+                $authorsAllowed[] = (int) $a['authorid'];
             }
             if ($this->processNewPost($post, $authorsAllowed)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
@@ -471,7 +502,7 @@ class Blog extends LoggedInUsersOnly
         if (!empty($post)) {
             $authorsAllowed = [];
             foreach ($authors as $a) {
-                $authorsAllowed[] = $a['authorid'];
+                $authorsAllowed[] = (int) $a['authorid'];
             }
             if ($this->processNewSeries($post, $authorsAllowed)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
@@ -491,7 +522,7 @@ class Blog extends LoggedInUsersOnly
      */
     public function viewComment(string $commentId = '')
     {
-        $commentId += 0;
+        $commentId = (int) $commentId;
         $post = $this->post();
         if (!empty($post)) {
             switch ($post['comment_btn']) {
@@ -562,7 +593,7 @@ class Blog extends LoggedInUsersOnly
         if (!$this->isSuperUser()) {
             if (!$this->can('delete')) {
                 // Does this author belong to you?
-                if (!\in_array($oldPost['author'], $authorsAllowed)) {
+                if (!\in_array((int) $oldPost['author'], $authorsAllowed)) {
                     return false;
                 }
             }
@@ -599,7 +630,7 @@ class Blog extends LoggedInUsersOnly
                 // Only administrators can transfer ownership; block this request
                 return false;
             }
-            if (!\in_array($oldPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $oldPost['author'], $authorsAllowed)) {
                 // This author is invalid.
                 return false;
             }

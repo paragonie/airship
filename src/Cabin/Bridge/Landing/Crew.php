@@ -65,7 +65,7 @@ class Crew extends AdminOnly
      */
     public function editGroup(string $groupId = '')
     {
-        $groupId += 0;
+        $groupId = (int) $groupId;
         $post = $this->post();
         if (!empty($post)) {
             if ($this->account->editGroup($groupId, $post)) {
@@ -73,12 +73,15 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens('crew/group_edit', [
-            'group' =>
-                $this->account->getGroup($groupId),
-            'allowed_parents' =>
-                $this->account->getGroupTree(0, 'children', [$groupId])
-        ]);
+        $this->lens(
+            'crew/group_edit',
+            [
+                'group' =>
+                    $this->account->getGroup($groupId),
+                'allowed_parents' =>
+                    $this->account->getGroupTree(0, 'children', [$groupId])
+            ]
+        );
     }
 
     /**
@@ -89,7 +92,7 @@ class Crew extends AdminOnly
      */
     public function editUser(string $userId = '')
     {
-        $userId += 0;
+        $userId = (int) $userId;
         $user = $this->account->getUserAccount($userId, true);
         $post = $this->post();
         if ($post) {

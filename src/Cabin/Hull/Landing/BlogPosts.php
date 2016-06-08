@@ -21,7 +21,7 @@ class BlogPosts extends LandingGear
      */
     protected $blog;
 
-    /**
+    /**f
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
@@ -87,7 +87,9 @@ class BlogPosts extends LandingGear
 
         $published = false;
         $can_comment = false;
+
         if ($this->can('publish')) {
+            // No CAPTCHA necessary
             $published = true;
             $can_comment = true;
         } elseif (isset($post['g-recaptcha-response'])) {
@@ -169,8 +171,12 @@ class BlogPosts extends LandingGear
             throw new EmulatePageNotFound();
         }
 
-        $count = $this->blog->countByAuthor($author['authorid'] + 0);
-        $blogRoll = $this->blog->listByAuthor($author['authorid'] + 0, $limit, $offset);
+        $count = $this->blog->countByAuthor((int) $author['authorid']);
+        $blogRoll = $this->blog->listByAuthor(
+            (int) $author['authorid'],
+            $limit,
+            $offset
+        );
 
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
@@ -181,7 +187,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->lens('blog/author', [
+        $this->stasis('blog/author', [
             'author' => $author,
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
@@ -234,7 +240,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->lens('blog/category', [
+        $this->stasis('blog/category', [
             'category' => $category,
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
@@ -259,7 +265,7 @@ class BlogPosts extends LandingGear
         $count = $this->blog->countSeries();
         $series_items = $this->blog->listBaseSeries($limit, $offset);
 
-        $this->lens('blog/series', [
+        $this->stasis('blog/series', [
             'series' => [
                 'name' => \__('Series Index')
             ],
@@ -287,12 +293,14 @@ class BlogPosts extends LandingGear
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
         $series = $this->blog->getSeriesInfo($slug);
-        $count = $this->blog->countBySeries($series['seriesid']);
-        $series_items = $this->blog->listBySeries($series['seriesid'], $limit, $offset);
+        $count = $this->blog->countBySeries((int) $series['seriesid']);
+        $series_items = $this->blog->listBySeries(
+            (int) $series['seriesid'],
+            $limit,
+            $offset
+        );
 
-        # \Airship\json_response($series_items);
-
-        $this->lens('blog/series', [
+        $this->stasis('blog/series', [
             'series' => $series,
             'pageTitle' => $series['name'],
             'series_items' => $series_items,
@@ -318,8 +326,12 @@ class BlogPosts extends LandingGear
 
         $tag = $this->blog->getTag($slug);
 
-        $count = $this->blog->countByTag($tag['tagid']);
-        $blogRoll = $this->blog->listByTag($tag['tagid'], $limit, $offset);
+        $count = $this->blog->countByTag((int) $tag['tagid']);
+        $blogRoll = $this->blog->listByTag(
+            (int) $tag['tagid'],
+            $limit,
+            $offset
+        );
 
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
@@ -330,7 +342,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->lens('blog/tag', [
+        $this->stasis('blog/tag', [
             'blogroll' => $blogRoll,
             'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', $tag['name']),
             'mathjax' => $mathJAX,
@@ -367,7 +379,7 @@ class BlogPosts extends LandingGear
         $dt = new \DateTime("{$year}-{$month}-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
-        $this->lens('blog/list', [
+        $this->stasis('blog/list', [
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
@@ -407,7 +419,7 @@ class BlogPosts extends LandingGear
         $dt = new \DateTime("{$year}-01-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
-        $this->lens('blog/list', [
+        $this->stasis('blog/list', [
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
@@ -440,7 +452,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->lens('blog/index', [
+        $this->stasis('blog/index', [
             'pageTitle' => \__('Blog'),
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX
@@ -472,6 +484,7 @@ class BlogPosts extends LandingGear
                 unset($_POST['email']);
                 unset($_POST['url']);
                 unset($_POST['message']);
+                $_POST = [];
             }
         }
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;

@@ -196,10 +196,13 @@ class Admin extends AdminOnly
             $settings['suppliers'][$name] = \Airship\loadJSON($supplier);
         }
 
-        $this->lens('admin_settings', [
-            'config' => $settings,
-            'groups' => $this->acct->getGroupTree()
-        ]);
+        $this->lens(
+            'admin_settings',
+            [
+                'config' => $settings,
+                'groups' => $this->acct->getGroupTree()
+            ]
+        );
     }
 
     /**

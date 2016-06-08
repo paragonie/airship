@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Alerts\CabinNotFound;
-use Airship\Alerts\Database\DBException;
+use \Airship\Alerts\Database\DBException;
 use \Airship\Engine\Bolt\{
     Common,
     Orderable,
@@ -385,10 +385,12 @@ class Blog extends BlueprintGear
     public function getAllSeries(int $offset, int $limit): array
     {
         $series = $this->db->run(
-            \Airship\queryString('blog.series.list_all', [
-                'offset' => $offset,
-                'limit' => $limit
-            ])
+            \Airship\queryString('blog.series.list_all',
+                [
+                    'offset' => $offset,
+                    'limit' => $limit
+                ]
+            )
         );
         if (empty($series)) {
             return [];
@@ -536,7 +538,10 @@ class Blog extends BlueprintGear
      */
     public function getCategoryInfo(int $categoryId = 0): array
     {
-        $row = $this->db->row("SELECT * FROM hull_blog_categories WHERE categoryid = ?", $categoryId);
+        $row = $this->db->row(
+            'SELECT * FROM hull_blog_categories WHERE categoryid = ?',
+            $categoryId
+        );
         if (empty($row)) {
             return [];
         }
@@ -564,7 +569,10 @@ class Blog extends BlueprintGear
             $commentId
         );
         if (!empty($comment['author'])) {
-            $comment['authorname'] = $this->db->cell('SELECT name FROM hull_blog_authors WHERE authorid = ?', $comment['author']);
+            $comment['authorname'] = $this->db->cell(
+                'SELECT name FROM hull_blog_authors WHERE authorid = ?',
+                $comment['author']
+            );
         }
         if (!empty($comment['metadata'])) {
             $comment['metadata'] = \json_decode($comment['metadata'], true);
@@ -707,16 +715,18 @@ class Blog extends BlueprintGear
             return [];
         }
         $this->db->run(
-            \Airship\queryString('blog.series.tree', [
-                'valueset' => $this->db->escapeValueSet($encountered, 'int')
-            ]),
+            \Airship\queryString('blog.series.tree',
+                [
+                    'valueset' => $this->db->escapeValueSet($encountered, 'int')
+                ]
+            ),
             $current
         );
         if (empty($rows)) {
             return [];
         }
         foreach ($rows as $i => $row) {
-            $rows[$i][$col] = $this->getSeriesTree($row['seriesid'], $col, $depth + 1);
+            $rows[$i][$col] = $this->getSeriesTree((int) $row['seriesid'], $col, $depth + 1);
         }
         return $rows;
     }
@@ -762,7 +772,7 @@ class Blog extends BlueprintGear
     public function getTagsForPost(int $postId): array
     {
         return $this->db->first(
-            "SELECT tagid FROM hull_blog_post_tags WHERE postid = ?",
+            'SELECT tagid FROM hull_blog_post_tags WHERE postid = ?',
             $postId
         );
     }
@@ -819,7 +829,9 @@ class Blog extends BlueprintGear
         $bp = [];
         foreach ($comments as $i => $com) {
             if (!\array_key_exists($com['blogpost'], $bp)) {
-                $bp[$com['blogpost']] = $this->getBlogPostById((int) $com['blogpost']);
+                $bp[$com['blogpost']] = $this->getBlogPostById(
+                    (int) $com['blogpost']
+                );
             }
             $comments[$i]['blog'] = $bp[$com['blogpost']];
         }
@@ -850,10 +862,14 @@ class Blog extends BlueprintGear
         } else {
             // Only show posts that are public or owned by one of the authors this user belongs to
             $posts = $this->db->safeQuery(
-                \Airship\queryString('blog.posts.list_mine', [
-                    'offset' => $offset,
-                    'limit' => $limit
-                ]), [
+                \Airship\queryString(
+                    'blog.posts.list_mine',
+                    [
+                        'offset' => $offset,
+                        'limit' => $limit
+                    ]
+                ),
+                [
                     \Airship\LensFunctions\userid()
                 ]
             );
@@ -876,8 +892,8 @@ class Blog extends BlueprintGear
     {
         $series = $this->db->run(
             'SELECT * FROM hull_blog_posts WHERE author = ? AND postid NOT IN ' .
-            $this->db->escapeValueSet($exclude, 'int') .
-            ' ORDER BY title ASC',
+                $this->db->escapeValueSet($exclude, 'int') .
+                ' ORDER BY title ASC',
             $authorId
         );
         if (empty($series)) {
@@ -893,8 +909,12 @@ class Blog extends BlueprintGear
      * @param bool $desc
      * @return array
      */
-    public function listTags(int $offset, int $limit, string $sort = 'name', bool $desc = false): array
-    {
+    public function listTags(
+        int $offset,
+        int $limit,
+        string $sort = 'name',
+        bool $desc = false
+    ): array {
         $orderBy = $this->orderBy(
             $sort,
             $desc ? 'DESC' : 'ASC',
@@ -1015,9 +1035,11 @@ class Blog extends BlueprintGear
     {
         $this->db->beginTransaction();
         $this->db->update(
-            'hull_blog_comments', [
-            'approved' => true
-        ], [
+            'hull_blog_comments',
+            [
+                'approved' => true
+            ],
+            [
                 'commentid' => $commentId
             ]
         );
@@ -1053,6 +1075,7 @@ class Blog extends BlueprintGear
             'preamble' =>
                 $post['preamble'] ?? ''
         ];
+
         if (!$this->categoryDescendsFrom((int) $post['parent'], $id)) {
             $changes['parent'] = $post['parent'] > 0
                 ? $post['parent']
@@ -1183,7 +1206,8 @@ class Blog extends BlueprintGear
         $tag_del = \array_diff($old['tags'], $post['tags']);
         foreach ($tag_del as $del) {
             $this->db->delete(
-                'hull_blog_post_tags', [
+                'hull_blog_post_tags',
+                [
                     'postid' => $old['postid'],
                     'tagid' => $del
                 ]
@@ -1191,7 +1215,8 @@ class Blog extends BlueprintGear
         }
         foreach ($tag_ins as $ins) {
             $this->db->insert(
-                'hull_blog_post_tags', [
+                'hull_blog_post_tags',
+                [
                     'postid' => $old['postid'],
                     'tagid' => $ins
                 ]

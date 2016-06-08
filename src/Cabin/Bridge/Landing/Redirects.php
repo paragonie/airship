@@ -70,14 +70,13 @@ class Redirects extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
         $post = $this->post();
-        $redirectId += 0;
-        $redirect = $this->pg->getRedirect($cabin, $redirectId);
+        $redirect = $this->pg->getRedirect($cabin, (int) $redirectId);
         if (empty($redirect)) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
         }
         if ($post) {
             if (\Airship\all_keys_exist(['old_url', 'new_url'], $post)) {
-                if ($this->pg->updateRedirect($redirectId, $post)) {
+                if ($this->pg->updateRedirect((int) $redirectId, $post)) {
                     \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
                 } else {
                     $this->storeLensVar(

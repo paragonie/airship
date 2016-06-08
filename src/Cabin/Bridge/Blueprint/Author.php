@@ -88,22 +88,24 @@ class Author extends BlueprintGear
             'slug'
         );
         $authorId = $this->db->insertGet(
-            'hull_blog_authors', [
-            'name' =>
-                $post['name'],
-            'byline' =>
-                $post['byline'] ?? '',
-            'bio_format' =>
-                $post['format'] ?? 'Markdown',
-            'biography' =>
-                $post['biography'] ?? '',
-            'slug' =>
-                $slug
-        ],
+            'hull_blog_authors',
+            [
+                'name' =>
+                    $post['name'],
+                'byline' =>
+                    $post['byline'] ?? '',
+                'bio_format' =>
+                    $post['format'] ?? 'Markdown',
+                'biography' =>
+                    $post['biography'] ?? '',
+                'slug' =>
+                    $slug
+            ],
             'authorid'
         );
         $this->db->insert(
-            'hull_blog_author_owners', [
+            'hull_blog_author_owners',
+            [
                 'authorid' =>
                     $authorId,
                 'userid' =>
@@ -125,7 +127,10 @@ class Author extends BlueprintGear
      */
     public function getAll(string $sortby = 'name', string $dir = 'ASC'): array
     {
-        return $this->db->run('SELECT * FROM hull_blog_authors ' . $this->orderBy($sortby, $dir, ['name', 'created']));
+        return $this->db->run(
+            'SELECT * FROM hull_blog_authors ' .
+                $this->orderBy($sortby, $dir, ['name', 'created'])
+        );
     }
 
     /**
@@ -136,13 +141,21 @@ class Author extends BlueprintGear
      */
     public function getAuthorIdsForUser(int $userid): array
     {
-        $authors = $this->db->col('SELECT authorid FROM view_hull_users_authors WHERE userid = ?', 0, $userid);
+        $authors = $this->db->first(
+            'SELECT authorid FROM view_hull_users_authors WHERE userid = ?',
+            $userid
+        );
         if (empty($authors)) {
             return [];
         }
         return $authors;
     }
 
+    /**
+     * Get the name of the photos directory (usually: "photos")
+     *
+     * @return string
+     */
     public function getPhotoDirName(): string
     {
         return $this->photosDir;
@@ -204,7 +217,10 @@ class Author extends BlueprintGear
      */
     public function getAvailablePhotos(int $authorID, string $cabin = '', bool $includeId = false): array
     {
-        $slug = $this->db->cell('SELECT slug FROM hull_blog_authors WHERE authorid = ?', $authorID);
+        $slug = $this->db->cell(
+            'SELECT slug FROM hull_blog_authors WHERE authorid = ?',
+            $authorID
+        );
         $directoryIDs = [];
         if (empty($cabin)) {
             foreach ($this->getCabinNames() as $cabin) {
@@ -273,7 +289,8 @@ class Author extends BlueprintGear
     public function getForUser(int $userId, string $sortby = 'name', string $dir = 'ASC'): array
     {
         $authors = $this->db->run(
-            'SELECT * FROM view_hull_users_authors WHERE userid = ?' . $this->orderBy($sortby, $dir, ['name', 'created']),
+            'SELECT * FROM view_hull_users_authors WHERE userid = ?' .
+                $this->orderBy($sortby, $dir, ['name', 'created']),
             $userId
         );
         if (empty($authors)) {
@@ -375,7 +392,10 @@ class Author extends BlueprintGear
      */
     public function getPhotoContextId(string $label): int
     {
-        $result = $this->db->cell('SELECT contextid FROM hull_blog_photo_contexts WHERE label = ?', $label);
+        $result = $this->db->cell(
+            'SELECT contextid FROM hull_blog_photo_contexts WHERE label = ?',
+            $label
+        );
         if (empty($result)) {
             return 0;
         }
@@ -389,7 +409,9 @@ class Author extends BlueprintGear
      */
     public function getPhotoContexts(): array
     {
-        $result = $this->db->run('SELECT * FROM hull_blog_photo_contexts ORDER BY display_name ASC');
+        $result = $this->db->run(
+            'SELECT * FROM hull_blog_photo_contexts ORDER BY display_name ASC'
+        );
         if (empty($result)) {
             return [];
         }
@@ -444,7 +466,10 @@ class Author extends BlueprintGear
      */
     public function getSlug(int $authorId): string
     {
-        $slug = $this->db->cell('SELECT slug FROM hull_blog_authors WHERE authorid = ?', $authorId);
+        $slug = $this->db->cell(
+            'SELECT slug FROM hull_blog_authors WHERE authorid = ?',
+            $authorId
+        );
         if (!empty($slug)) {
             return $slug;
         }
@@ -484,7 +509,9 @@ class Author extends BlueprintGear
      */
     public function numAuthors(): int
     {
-        return (int) $this->db->cell('SELECT count(authorid) FROM hull_blog_authors');
+        return (int) $this->db->cell(
+            'SELECT count(authorid) FROM hull_blog_authors'
+        );
     }
 
     /**

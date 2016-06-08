@@ -52,7 +52,7 @@ class PublicFiles extends LandingGear
                 throw new FileNotFound();
             }
             // All text/whatever needs to be text/plain; no HTML or JS payloads allowed
-            if (substr($fileData['type'], 0, 5) === 'text/' || \strpos($fileData['type'], 'application') !== false) {
+            if (\substr($fileData['type'], 0, 5) === 'text/' || \strpos($fileData['type'], 'application') !== false) {
                 $p = \strpos($fileData['type'], ';');
                 if ($p !== false) {
                     $fileData['type'] = 'text/plain; ' .

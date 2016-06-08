@@ -61,7 +61,7 @@ class Files extends FileManager
         }
         if (empty($_GET['file'])) {
             \Airship\redirect(
-                $this->airship_cabin_prefix . '/'.$this->path_middle.'/' . \urlencode($cabin),
+                $this->airship_cabin_prefix . '/' . $this->path_middle . '/' . \urlencode($cabin),
                 [
                     'dir' => $dir
                 ]

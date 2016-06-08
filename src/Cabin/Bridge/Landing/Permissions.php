@@ -63,6 +63,7 @@ class Permissions extends AdminOnly
      */
     public function editAction(string $cabin, string $actionId)
     {
+        $actionId = (int) $actionId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
         }
@@ -93,7 +94,7 @@ class Permissions extends AdminOnly
      */
     public function editContext(string $cabin, string $contextId)
     {
-        $contextId += 0;
+        $contextId = (int) $contextId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
         }
@@ -131,6 +132,7 @@ class Permissions extends AdminOnly
         );
         $users = [];
         foreach ($userPerms as $userid => $userPerm) {
+            $userid = (int) $userid;
             $users[$userid] = $this->users->getUserAccount($userid, true);
             unset($users[$userid]['password']);
         }

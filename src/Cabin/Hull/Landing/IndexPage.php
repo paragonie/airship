@@ -44,7 +44,7 @@ class IndexPage extends LandingGear
             $mathJAX |= \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->lens('index', [
+        $this->stasis('index', [
             'blogposts' => $blogRoll
         ]);
     }

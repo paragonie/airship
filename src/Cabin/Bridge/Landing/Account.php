@@ -259,7 +259,7 @@ class Account extends LandingGear
         foreach ($motifs as $id => $data) {
             if (
                 $data['config']['supplier'] === $supplier
-                &&
+                    &&
                 $data['config']['name'] === $motifName
             ) {
                 return true;
@@ -305,14 +305,17 @@ class Account extends LandingGear
             // Lazy hack
             $post['username'] = $account['username'];
             if ($this->acct->isPasswordWeak($post)) {
-                $this->lens('my_account', [
-                    'account' => $account,
-                    'gpg_public_key' => $gpg_public_key,
-                    'post_response' => [
-                        'message' => \__('Supplied password is too weak.'),
-                        'status' => 'error'
+                $this->lens(
+                    'my_account',
+                    [
+                        'account' => $account,
+                        'gpg_public_key' => $gpg_public_key,
+                        'post_response' => [
+                            'message' => \__('Supplied password is too weak.'),
+                            'status' => 'error'
+                        ]
                     ]
-                ]);
+                );
                 exit;
             }
 
@@ -329,24 +332,30 @@ class Account extends LandingGear
             // Refresh:
             $account = $this->acct->getUserAccount($this->getActiveUserId());
             $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
-            $this->lens('my_account', [
-                'account' => $account,
-                'gpg_public_key' => $gpg_public_key,
-                'post_response' => [
-                    'message' => \__('Account was saved successfully.'),
-                    'status' => 'success'
+            $this->lens(
+                'my_account',
+                [
+                    'account' => $account,
+                    'gpg_public_key' => $gpg_public_key,
+                    'post_response' => [
+                        'message' => \__('Account was saved successfully.'),
+                        'status' => 'success'
+                    ]
                 ]
-            ]);
+            );
             exit;
         }
-        $this->lens('my_account', [
-            'account' => $post,
-            'gpg_public_key' => $gpg_public_key,
-            'post_response' => [
-                'message' => \__('Account was not saved successfully.'),
-                'status' => 'error'
+        $this->lens(
+            'my_account',
+            [
+                'account' => $post,
+                'gpg_public_key' => $gpg_public_key,
+                'post_response' => [
+                    'message' => \__('Account was not saved successfully.'),
+                    'status' => 'error'
+                ]
             ]
-        ]);
+        );
     }
     
     /**
@@ -359,38 +368,47 @@ class Account extends LandingGear
         $state = State::instance();
 
         if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
-            $this->lens('board', [
-                'post_response' => [
-                    'message' => \__('Please fill out the form entirely'),
-                    'status' => 'error'
+            $this->lens(
+                'board',
+                [
+                    'post_response' => [
+                        'message' => \__('Please fill out the form entirely'),
+                        'status' => 'error'
+                    ]
                 ]
-            ]);
+            );
             exit;
         }
 
         if ($this->acct->isUsernameTaken($post['username'])) {
-            $this->lens('board', [
-                'post_response' => [
-                    'message' => \__('Username is not available'),
-                    'status' => 'error'
+            $this->lens(
+                'board',
+                [
+                    'post_response' => [
+                        'message' => \__('Username is not available'),
+                        'status' => 'error'
+                    ]
                 ]
-            ]);
+            );
             exit;
         }
 
         if ($this->acct->isPasswordWeak($post)) {
-            $this->lens('board', [
-                'post_response' => [
-                    'message' => \__('Supplied password is too weak.'),
-                    'status' => 'error'
+            $this->lens(
+                'board',
+                [
+                    'post_response' => [
+                        'message' => \__('Supplied password is too weak.'),
+                        'status' => 'error'
+                    ]
                 ]
-            ]);
+            );
             exit;
         }
 
         $userID = $this->acct->createUser($post);
         $idx = $state->universal['session_index']['user_id'];
-        $_SESSION[$idx] = $userID;
+        $_SESSION[$idx] = (int) $userID;
 
         \Airship\redirect($this->airship_cabin_prefix);
     }
@@ -437,7 +455,7 @@ class Account extends LandingGear
 
         if (!empty($userID)) {
             $idx = $state->universal['session_index']['user_id'];
-            $_SESSION[$idx] = $userID;
+            $_SESSION[$idx] = (int) $userID;
 
             if (!empty($post['remember'])) {
                 $autoPilot = Gears::getName('AutoPilot');
@@ -458,12 +476,15 @@ class Account extends LandingGear
             }
             \Airship\redirect($this->airship_cabin_prefix);
         } else {
-            $this->lens('login', [
-                'post_response' => [
-                    'message' => \__('Incorrect username or passphrase. Please try again.'),
-                    'status' => 'error'
+            $this->lens(
+                'login',
+                [
+                    'post_response' => [
+                        'message' => \__('Incorrect username or passphrase. Please try again.'),
+                        'status' => 'error'
+                    ]
                 ]
-            ]);
+            );
             exit;
         }
     }

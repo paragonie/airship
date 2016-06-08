@@ -202,7 +202,7 @@ class Files extends BlueprintGear
                     'directoryid'
                 );
             } else {
-                $parent = $dir['directoryid'];
+                $parent = (int) $dir['directoryid'];
             }
         }
         return $this->db->commit();
@@ -268,7 +268,7 @@ class Files extends BlueprintGear
         $ret = [];
         foreach ($this->getChildrenOf($parent, $cabin) as $dir) {
             $list = $this->getContentsIterative(
-                $dir['directoryid'],
+                (int) $dir['directoryid'],
                 $path . '/' . $dir['name'],
                 $cabin
             );
@@ -427,11 +427,16 @@ class Files extends BlueprintGear
      */
     public function getFilesCabin(int $fileId): string
     {
-        $fileInfo = $this->db->row('SELECT directory, cabin FROM airship_files WHERE fileid = ?', $fileId);
+        $fileInfo = $this->db->row(
+            'SELECT directory, cabin FROM airship_files WHERE fileid = ?',
+            $fileId
+        );
         if (empty($fileInfo['directory'])) {
             return $fileInfo['cabin'];
         }
-        return $this->getDirectoryCabin((int) $fileInfo['directory']);
+        return $this->getDirectoryCabin(
+            (int) $fileInfo['directory']
+        );
     }
 
     /**
@@ -549,8 +554,15 @@ class Files extends BlueprintGear
             return false;
         }
         // Grab some facts about the existing directory
-        $oldParent = $this->db->cell('SELECT parent FROM airship_dirs WHERE directoryid = ?', $dirId);
-        $dirName = $this->db->cell('SELECT name FROM airship_dirs WHERE directoryid = ?', $dirId);
+        $oldParent = $this->db->cell(
+            'SELECT parent FROM airship_dirs WHERE directoryid = ?',
+            $dirId
+        );
+
+        $dirName = $this->db->cell(
+            'SELECT name FROM airship_dirs WHERE directoryid = ?',
+            $dirId
+        );
 
         // Did we move directories?
         if ($oldParent !== $newDir) {
@@ -924,10 +936,11 @@ class Files extends BlueprintGear
             $this->deleteFile($file);
         }
         foreach ($this->getChildrenOf($directory, $cabin) as $dir) {
-            $this->recursiveDelete($dir['directoryid'], $cabin);
+            $this->recursiveDelete((int) $dir['directoryid'], $cabin);
         }
         $this->db->delete(
-            'airship_dirs', [
+            'airship_dirs',
+            [
                 'directoryid' => $directory
             ]
         );
