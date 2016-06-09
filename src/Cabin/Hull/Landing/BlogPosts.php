@@ -146,10 +146,10 @@ class BlogPosts extends LandingGear
         }
         $args = [
             'pageTitle' => 'All Blog Posts',
-            'blogRoll' => $blogRoll,
+            'blogroll' => $blogRoll,
             'mathjax' => $mathJAX
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/all', $args)
             : $this->lens('blog/all', $args);
     }
@@ -200,7 +200,7 @@ class BlogPosts extends LandingGear
                 'per_page' => $limit
             ]
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/author', $args)
             : $this->lens('blog/author', $args);
     }
@@ -256,7 +256,7 @@ class BlogPosts extends LandingGear
                 'per_page' => $limit
             ]
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/category', $args)
             : $this->lens('blog/category', $args);
     }
@@ -287,7 +287,7 @@ class BlogPosts extends LandingGear
                 'per_page' => $limit
             ]
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/series', $args)
             : $this->lens('blog/series', $args);
     }
@@ -323,7 +323,7 @@ class BlogPosts extends LandingGear
             ]
         ];
 
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/series', $args)
             : $this->lens('blog/series', $args);
     }
@@ -368,7 +368,7 @@ class BlogPosts extends LandingGear
                 'per_page' => $limit
             ]
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/tag', $args)
             : $this->lens('blog/tag', $args);
     }
@@ -414,7 +414,7 @@ class BlogPosts extends LandingGear
                 'per_page' => $limit
             ]
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/list', $args)
             : $this->lens('blog/list', $args);
     }
@@ -457,7 +457,7 @@ class BlogPosts extends LandingGear
             ]
         ];
 
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/list', $args)
             : $this->lens('blog/list', $args);
     }
@@ -482,7 +482,7 @@ class BlogPosts extends LandingGear
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX
         ];
-        $this->config('blog.cache-lists')
+        $this->config('blog.cachelists')
             ? $this->stasis('blog/index', $args)
             : $this->lens('blog/index', $args);
     }
@@ -544,7 +544,7 @@ class BlogPosts extends LandingGear
      */
     protected function getOffsetAndLimit($page = null): array
     {
-        $per_page = $this->config('blog.per_page') ?? 20;
+        $per_page = (int) $this->config('blog.per_page') ?? 20;
         $page = (int) (!empty($page) ? $page : ($_GET['page'] ?? 0));
         if ($page < 1) {
             $page = 1;

@@ -302,6 +302,10 @@ class Cabins extends LoggedInUsersOnly
             'csp.' . $cabinName . '.json'
         );
 
+        if (\extension_loaded('apcu')) {
+            \apcu_clear_cache();
+        }
+
         // Save cabins.json
         \file_put_contents(
             ROOT . $ds . 'config' . $ds . 'cabins.json',
