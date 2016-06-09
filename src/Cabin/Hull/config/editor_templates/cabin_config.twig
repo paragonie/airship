@@ -222,4 +222,20 @@
             /> (seconds)
         </div>
     </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            {{ __("Blog Listings") }}:
+        </div>
+        <div class="table-cell full-width">
+            <input type="hidden" name="meta_checkboxes[blog][cache-lists]" value="enabled" />
+            <input
+                    {% if config_extra['blog']['cache-lists'] %}checked="checked"{% endif %}
+                    id="list_cache"
+                    type="checkbox"
+                    class="large_checkbox"
+                    name="{{ form_key_config }}[blog][cache-lists]"
+            />
+            <label for="list_cache">{{ __("Cache the blog list pages as static HTML?") }}</label>
+        </div>
+    </div>
 </div>

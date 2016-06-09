@@ -144,11 +144,14 @@ class BlogPosts extends LandingGear
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
-        $this->stasis('blog/all', [
+        $args = [
             'pageTitle' => 'All Blog Posts',
             'blogRoll' => $blogRoll,
             'mathjax' => $mathJAX
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/all', $args)
+            : $this->lens('blog/all', $args);
     }
 
     /**
@@ -186,8 +189,7 @@ class BlogPosts extends LandingGear
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
-
-        $this->stasis('blog/author', [
+        $args = [
             'author' => $author,
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
@@ -197,7 +199,10 @@ class BlogPosts extends LandingGear
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/author', $args)
+            : $this->lens('blog/author', $args);
     }
 
     /**
@@ -240,7 +245,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->stasis('blog/category', [
+        $args = [
             'category' => $category,
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
@@ -250,7 +255,10 @@ class BlogPosts extends LandingGear
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/category', $args)
+            : $this->lens('blog/category', $args);
     }
 
     /**
@@ -265,7 +273,7 @@ class BlogPosts extends LandingGear
         $count = $this->blog->countSeries();
         $series_items = $this->blog->listBaseSeries($limit, $offset);
 
-        $this->stasis('blog/series', [
+        $args = [
             'series' => [
                 'name' => \__('Series Index')
             ],
@@ -278,7 +286,10 @@ class BlogPosts extends LandingGear
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/series', $args)
+            : $this->lens('blog/series', $args);
     }
 
     /**
@@ -300,7 +311,7 @@ class BlogPosts extends LandingGear
             $offset
         );
 
-        $this->stasis('blog/series', [
+        $args = [
             'series' => $series,
             'pageTitle' => $series['name'],
             'series_items' => $series_items,
@@ -310,7 +321,11 @@ class BlogPosts extends LandingGear
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/series', $args)
+            : $this->lens('blog/series', $args);
     }
 
     /**
@@ -342,7 +357,7 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->stasis('blog/tag', [
+        $args = [
             'blogroll' => $blogRoll,
             'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', $tag['name']),
             'mathjax' => $mathJAX,
@@ -352,7 +367,10 @@ class BlogPosts extends LandingGear
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/tag', $args)
+            : $this->lens('blog/tag', $args);
     }
 
     /**
@@ -379,7 +397,7 @@ class BlogPosts extends LandingGear
         $dt = new \DateTime("{$year}-{$month}-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
-        $this->stasis('blog/list', [
+        $args = [
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
@@ -395,7 +413,10 @@ class BlogPosts extends LandingGear
                 'page' => $page,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/list', $args)
+            : $this->lens('blog/list', $args);
     }
 
     /**
@@ -419,7 +440,7 @@ class BlogPosts extends LandingGear
         $dt = new \DateTime("{$year}-01-01");
         $page = (int) \ceil($offset / ($limit ?? 1)) + 1;
 
-        $this->stasis('blog/list', [
+        $args = [
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
@@ -434,7 +455,11 @@ class BlogPosts extends LandingGear
                 'page' => $page,
                 'per_page' => $limit
             ]
-        ]);
+        ];
+
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/list', $args)
+            : $this->lens('blog/list', $args);
     }
 
     /**
@@ -452,11 +477,14 @@ class BlogPosts extends LandingGear
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->stasis('blog/index', [
+        $args = [
             'pageTitle' => \__('Blog'),
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX
-        ]);
+        ];
+        $this->config('blog.cache-lists')
+            ? $this->stasis('blog/index', $args)
+            : $this->lens('blog/index', $args);
     }
 
     /**
