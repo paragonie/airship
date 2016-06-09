@@ -455,6 +455,10 @@ class Account extends LandingGear
 
         if (!empty($userID)) {
             $idx = $state->universal['session_index']['user_id'];
+
+            // Regenerate session ID:
+            \session_regenerate_id(true);
+
             $_SESSION[$idx] = (int) $userID;
 
             if (!empty($post['remember'])) {

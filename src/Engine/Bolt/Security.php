@@ -181,6 +181,9 @@ trait Security
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
+            // Regenerate session ID:
+            \session_regenerate_id(true);
+
             // Set session variable
             $_SESSION[$uid_idx] = $userId;
 
