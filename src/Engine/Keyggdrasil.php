@@ -51,14 +51,17 @@ class Keyggdrasil
      * @var Database
      */
     protected $db;
+
     /**
      * @var Hail
      */
     protected $hail;
+
     /**
      * @var Supplier[]
      */
     protected $supplierCache;
+
     /**
      * @var Channel[]
      */
@@ -316,13 +319,15 @@ class Keyggdrasil
         $this->db->beginTransaction();
         foreach ($updates as $update) {
             // Insert the new node in the database:
-            $this->db->insert(
-                'airship_tree_updates', [
+            $treeUpdateID = (int) $this->db->insert(
+                'airship_tree_updates',
+                [
                     'channel' => $chan->getName(),
                     'channelupdateid' => $update->getChannelId(),
                     'data' => $update->getNodeJSON(),
                     'merkleroot' => $update->getRoot()
-                ]
+                ],
+                'treeupdateid'
             );
 
             // Update the JSON files separately:
@@ -330,6 +335,8 @@ class Keyggdrasil
                 $this->insertKey($chan, $update);
             } elseif ($update->isRevokeKey()) {
                 $this->revokeKey($chan, $update);
+            } else {
+                $this->updatePackageQueue($update, $treeUpdateID);
             }
         }
         return $this->db->commit();
@@ -427,6 +434,63 @@ class Keyggdrasil
         // IF we get HERE, we've run out of updates to try.
 
         $this->log('Channel update concluded with no changes', LogLevel::ALERT);
+    }
+
+    /**
+     * We're storing metadata about a package in the database.
+     *
+     * @param TreeUpdate $update
+     * @param int $treeUpdateID
+     */
+    protected function updatePackageQueue(TreeUpdate $update, int $treeUpdateID)
+    {
+        $this->db->beginTransaction();
+        $packageId = $this->db->cell(
+            "SELECT
+                  packageid 
+             FROM
+                  airship_package_cache
+             WHERE 
+                 packagetype = ?
+                 AND supplier = ?
+                 AND name = ? 
+            ",
+            $update->getPackageType(),
+            $update->getSupplierName(),
+            $update->getPackageName()
+        );
+        if (empty($packageId)) {
+            $packageId = $this->db->insertGet(
+                'airship_package_cache',
+                [
+                    'packagetype' =>
+                        $update->getPackageType(),
+                    'supplier' =>
+                        $update->getSupplierName(),
+                    'name' =>
+                        $update->getPackageName()
+                ],
+                'packageid'
+            );
+        }
+        $data = $update->getNodeData();
+        $this->db->insert(
+            'airship_package_versions',
+            [
+                'package' =>
+                    $packageId,
+                'version' =>
+                    $data['version'],
+                'checksum' =>
+                    $data['checksum'],
+                'commithash' =>
+                    $data['commit'],
+                'date_released' =>
+                    $data['date_released']
+                    
+            ]
+        );
+        $this->db->commit();
     }
 
     /**

@@ -37,51 +37,72 @@ class TreeUpdate
      * @var int
      */
     protected $channelId;
+
     /**
      * @var string
      */
     protected $channelName;
+
     /**
      * @var string
      */
     protected $checksum;
+
     /**
      * @var bool
      */
     protected $isNewSupplier = false;
+
     /**
      * @var string
      */
     protected $keyType;
+
     /**
      * @var string|null
      */
     protected $masterSig = null;
+
     /**
      * @var string
      */
     protected $merkleRoot = '';
+
     /**
      * @var string
      */
     protected $newPublicKey = null;
+
+    /**
+     * @var array
+     */
     protected $updateMessage = [];
+
     /**
      * @var array
      */
     protected $stored;
+
+    /**
+     * @var string
+     */
+    protected $packageType;
+
     /**
      * @var Supplier
      */
     protected $supplier;
+
     /**
      * @var SignaturePublicKey
      */
     protected $supplierMasterKeyUsed;
+
     /**
      * @var string
      */
     protected $supplierName;
+
     /**
      * @var bool
      */
@@ -115,6 +136,13 @@ class TreeUpdate
             // This is the JSON message from the tree node, stored as an array:
             $data = \json_decode($updateData['data'], true);
             $this->updateMessage = $data;
+            if ($this->action === self::ACTION_PACKAGE_UPDATE) {
+                $this->packageType = $data['pkg_type'];
+                $this->packageName = $data['name'];
+            } else {
+                $this->packageType = 'Core';
+                $this->packageName = 'Airship';
+            }
 
             if ($this->action === self::ACTION_CORE_UPDATE) {
                 $state = State::instance();
@@ -173,6 +201,34 @@ class TreeUpdate
     public function getNodeJSON(): string
     {
         return \json_encode($this->updateMessage);
+    }
+    /**
+     * @return array
+     */
+    public function getNodeData(): array
+    {
+        return $this->updateMessage;
+    }
+
+    /**
+     * What type of package is this?
+     * Possible values: Core, Cabin, Motif, or Gadget.
+     *
+     * @return string
+     */
+    public function getPackageType(): string
+    {
+        return $this->packageType;
+    }
+
+    /**
+     * What is the name of this package?
+     *
+     * @return string
+     */
+    public function getPackageName(): string
+    {
+        return $this->packageName;
     }
 
     /**

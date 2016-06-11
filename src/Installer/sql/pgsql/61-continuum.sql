@@ -18,6 +18,8 @@ CREATE TABLE airship_package_versions (
     package BIGINT REFERENCES airship_package_cache(packageid),
     version TEXT,
     checksum TEXT,
+    commithash TEXT,
+    date_released TIMESTAMP,
     treeupdateid BIGINT REFERENCES airship_tree_updates(treeupdateid),
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
