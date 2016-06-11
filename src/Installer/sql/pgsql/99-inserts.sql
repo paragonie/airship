@@ -155,7 +155,7 @@ INSERT INTO hull_blog_post_versions (post, body, format, live, published_by) VAL
     1,
     'Hello, world!
 
-Click "Bridge" at the bottom to take control of your Airship.',
+Click "Go to the Bridge" at the bottom to take control of your Airship.',
     'Markdown',
     TRUE,
     1
