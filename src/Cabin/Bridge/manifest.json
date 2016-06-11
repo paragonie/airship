@@ -14,10 +14,24 @@
             ["Admin", "manageNotaries"],
         "admin/settings":
             ["Admin", "manageSettings"],
+        "admin/skyport/install":
+            ["Skyport", "installPackage"],
+        "admin/skyport/update":
+            ["Skyport", "updatePackage"],
         "admin/skyport":
             ["Skyport", "index"],
         "admin":
             ["Admin", "index"],
+
+
+        "ajax/admin/skyport/browse":
+            ["Skyport", "ajaxGetAvailablePackages"],
+        "ajax/admin/skyport/installed":
+            ["Skyport", "ajaxGetInstalledPackages"],
+        "ajax/admin/skyport/stale":
+            ["Skyport", "ajaxGetOutdatedPackages"],
+        "ajax/admin/skyport/view":
+            ["Skyport", "ajaxViewPackageInfo"],
 
         "ajax/authors_blog_series":
             ["Ajax", "getSeriesForAuthor"],

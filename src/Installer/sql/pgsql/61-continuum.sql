@@ -5,6 +5,9 @@ CREATE TABLE airship_package_cache (
     packagetype type_airship_package,
     supplier TEXT,
     name TEXT,
+    installed BOOLEAN DEFAULT FALSE,
+    current_version TEXT,
+    skyport_metadata JSONB,
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );

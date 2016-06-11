@@ -1,5 +1,16 @@
 {% extends base_template() %}
 
 {% block main %}
-    Skyport
+    <h2 class="bottom-pad">{{ __("Skyport - Manage Extensions") }}</h2>
+    <div id="skyport">
+        <div id="skyport-left">
+            {% include cargo("skyport_left") %}
+        </div>
+        <div id="skyport-main">
+            {% include cargo("skyport_main") %}
+        </div>
+    </div>
+{% endblock %}
+{% block page_js %}
+    <script src="{{ "/static/Bridge/skyport.js"|cachebust }}"></script>
 {% endblock %}

@@ -1830,3 +1830,42 @@ h2#comments {
 .blog_tag_checkbox + label{
     padding-left: 0.5ex;
 }
+#skyport {
+    border: 1px solid #000;
+    display: table;
+    width: 100%;
+}
+#skyport-left {
+    background-color: #333;
+    color: #fff;
+    display: table-cell;
+    padding: 1ex;
+    width: 230px;
+    vertical-align: top;
+}
+#skyport-main {
+    background-color: #fff;
+    display: table-cell;
+    padding: 1em;
+    vertical-align: top;
+}
+#skyport-left-menu a {
+    color: gold;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.25s;
+}
+#skyport-left-menu a:hover {
+    color: #EFE5C8;
+}
+#skyport-left-menu {
+    list-style: none;
+    padding: 0;
+}
+#skyport-left-menu ul {
+    list-style: none;
+    padding-left: 1em;
+}
+#skyport-search {
+    color: #333;
+}
