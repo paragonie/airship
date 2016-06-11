@@ -411,17 +411,25 @@ class ChannelUpdates extends BlueprintGear
     protected function storeUpdate(array $nodeData): bool
     {
         $this->db->beginTransaction();
-        $this->db->insert(
+        $treeUpdateID = (int) $this->db->insertGet(
             'airship_tree_updates',
             [
                 'channel' => $this->channel,
                 'channelupdateid' => $nodeData['id'],
                 'data' => $nodeData['data'],
                 'merkleroot' => $nodeData['root']
-            ]
+            ],
+            'treeupdateid'
         );
         $unpacked = \json_decode($nodeData['data'], true);
         switch ($nodeData['stored']['action']) {
+            case 'CORE':
+            case 'PACKAGE':
+                if (!$this->updatePackageQueue($unpacked, $treeUpdateID)) {
+                    $this->db->rollBack();
+                    return false;
+                }
+                break;
             case 'CREATE':
                 if (!$this->insertKey($unpacked, $nodeData)) {
                     $this->db->rollBack();
@@ -440,6 +448,67 @@ class ChannelUpdates extends BlueprintGear
                 return false;
         }
         return $this->db->commit();
+    }
+
+    /**
+     * We're storing metadata about a package in the database.
+     *
+     * @param array $keyData
+     * @param int $treeUpdateID
+     * @return bool
+     * @throws \Airship\Alerts\Database\DBException
+     * @throws \TypeError
+     */
+    protected function updatePackageQueue(array $pkgData, int $treeUpdateID): bool
+    {
+        $this->db->beginTransaction();
+        $packageId = $this->db->cell(
+            "SELECT
+                  packageid 
+             FROM
+                  airship_package_cache
+             WHERE 
+                 packagetype = ?
+                 AND supplier = ?
+                 AND name = ? 
+            ",
+            $pkgData['pkg_type'],
+            $pkgData['supplier'],
+            $pkgData['name']
+        );
+        if (empty($packageId)) {
+            $packageId = $this->db->insertGet(
+                'airship_package_cache',
+                [
+                    'packagetype' =>
+                        $pkgData['pkg_type'],
+                    'supplier' =>
+                        $pkgData['supplier'],
+                    'name' =>
+                        $pkgData['name']
+                ],
+                'packageid'
+            );
+        }
+        $this->db->insert(
+            'airship_package_versions',
+            [
+                'package' =>
+                    $packageId,
+                'version' =>
+                    $pkgData['version'],
+                'checksum' =>
+                    $pkgData['checksum'],
+                'commithash' =>
+                    $pkgData['commit'],
+                'date_released' =>
+                    $pkgData['date_released'],
+                'treeupdateid' =>
+                    $treeUpdateID
+
+            ]
+        );
+        $this->db->commit();
     }
 
     /**

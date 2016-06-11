@@ -486,8 +486,9 @@ class Keyggdrasil
                 'commithash' =>
                     $data['commit'],
                 'date_released' =>
-                    $data['date_released']
-                    
+                    $data['date_released'],
+                'treeupdateid' =>
+                    $treeUpdateID
             ]
         );
         $this->db->commit();
