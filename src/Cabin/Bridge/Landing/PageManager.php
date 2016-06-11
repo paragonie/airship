@@ -38,7 +38,6 @@ class PageManager extends LoggedInUsersOnly
      */
     public function deleteDir(string $cabin = '')
     {
-        $page = [];
         $path = $this->determinePath($cabin);
         if (!\is1DArray($_GET)) {
             \Airship\redirect(
@@ -52,19 +51,26 @@ class PageManager extends LoggedInUsersOnly
         if (!$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        // Split this up
+        $pieces = \explode('/', $path);
+        $dir = \array_shift($pieces);
+        $path = \implode('/', $pieces);
 
         try {
-            $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
+            $dirInfo = $this->pg->getDirInfo($cabin, $path, $dir);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
+            exit;
         }
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
             $this->lens('pages/bad_config');
             exit;
         }
+
+        $post = $this->post();
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
                 $rc = \Airship\getReCaptcha(
@@ -74,22 +80,32 @@ class PageManager extends LoggedInUsersOnly
                 $resp = $rc->verify($post['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
                 if ($resp->isSuccess()) {
                     // CAPTCHA verification and CSRF token both passed
-                    $this->processDeleteDir(
-                        (int) $page['pageid'],
+                    if ($this->processDeleteDir(
+                        (int) $dirInfo['directoryid'],
                         $post,
                         $cabin,
-                        $path
-                    );
+                        $cabins
+                    )) {
+                        // Return to the parent directory.
+                        \Airship\redirect(
+                            $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'),
+                            [
+                                'dir' => $path
+                            ]
+                        );
+                    }
                 }
             }
         }
 
         $this->lens('pages/dir_delete', [
             'cabins' => $cabins,
-            'pageinfo' => $page,
+            'custom_dir_tree' => $this->pg->getCustomDirTree($cabins, 0, (int) $dirInfo['directoryid']),
+            'dirinfo' => $dirInfo,
             'config' => $this->config(),
             // UNTRUSTED, PROVIDED BY THE USER:
-            'dir' => $path,
+            'parent' => $path,
+            'dir' => $dir,
             'cabin' => $cabin,
             'pathinfo' => \Airship\chunk($path)
         ]);
@@ -396,6 +412,7 @@ class PageManager extends LoggedInUsersOnly
             'cabins' => $cabins,
             'pageinfo' => $page,
             // UNTRUSTED, PROVIDED BY THE USER:
+            'all_dirs' => $this->pg->getDirectoryTree(),
             'dir' => $path,
             'cabin' => $cabin,
             'pathinfo' => \Airship\chunk($path)
@@ -445,8 +462,6 @@ class PageManager extends LoggedInUsersOnly
     /**
      * We're going to view a page's history
      *
-     * @todo flush this out 20160225
-     *
      * @route pages/{string}/history/diff/{string}/{string}
      * @param string $cabin
      * @param string $leftUnique
@@ -478,8 +493,6 @@ class PageManager extends LoggedInUsersOnly
 
     /**
      * We're going to view a page's history
-     *
-     * @todo flush this out 20160225
      *
      * @route pages/{string}/history/view/{string}
      * @param string $cabin
@@ -547,6 +560,54 @@ class PageManager extends LoggedInUsersOnly
     {
         $this->httpGetParams($cabin);
         return $_GET['dir'] ?? '';
+    }
+
+    /**
+     * @param int $targetID
+     * @param array $post
+     * @param string $oldCabin
+     * @param array $cabins
+     * @return bool
+     */
+    protected function processDeleteDir(
+        int $targetID,
+        array $post = [],
+        string $oldCabin = '',
+        array $cabins = []
+    ): bool {
+        if (empty($post['move_contents'])) {
+            // Delete everything
+            return $this->pg->recursiveDelete($targetID);
+        }
+        // We're moving the contents
+        if (\is_numeric($post['move_destination'])) {
+            // To a different directory...
+            $destination = (int) $post['move_destination'];
+            $newCabin = $this->pg->getCabinForDirectory($destination);
+            $this->pg->movePagesToDir(
+                $targetID,
+                $destination,
+                !empty($post['create_redirect']),
+                $oldCabin,
+                $newCabin,
+                $this->pg->getDirectoryPieces($destination)
+            );
+        } else {
+            if (!\in_array($post['move_destination'], $cabins)) {
+                // Cabin doesn't exist!
+                return false;
+            }
+            // To the root directory of a different cabin...
+            // To a different directory...
+            $this->pg->movePagesToDir(
+                $targetID,
+                0,
+                !empty($post['create_redirect']),
+                $oldCabin,
+                $post['move_destination']
+            );
+        }
+        return $this->pg->deleteDir($targetID);
     }
 
     /**

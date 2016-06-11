@@ -931,10 +931,10 @@ class Files extends BlueprintGear
      */
     private function recursiveDelete(int $directory, string $cabin): bool
     {
-        $this->db->beginTransaction();
         foreach ($this->getFilesInDirectory($directory) as $file) {
             $this->deleteFile($file);
         }
+        $this->db->beginTransaction();
         foreach ($this->getChildrenOf($directory, $cabin) as $dir) {
             $this->recursiveDelete((int) $dir['directoryid'], $cabin);
         }

@@ -20,6 +20,8 @@ use \Psr\Log\LogLevel;
  */
 class CustomPages extends HullCustomPages
 {
+    const MAX_DEDUP = 100;
+
     use Cache;
 
     /**
@@ -217,15 +219,65 @@ class CustomPages extends HullCustomPages
     /**
      * Redirect a directory, and all of its pages.
      *
-     * @todo Implement
-     *
      * @param array $old
      * @param array $new
      * @return bool
      */
     public function createDirRedirect(array $old, array $new): bool
     {
+        $this->log(
+            'Creating directory redirects',
+            LogLevel::DEBUG,
+            [
+                'old' => $old,
+                'new' => $new
+            ]
+        );
+        $oldDir = !empty($old['path'])
+            ? $this->getParentDirFromStr($old['path'], $old['cabin'])
+            : null;
 
+        foreach ($this->listCustomPagesByDirectoryID($oldDir) as $page) {
+            $_old = [
+                'cabin' => $old['cabin'],
+                'directory' => $page['directory'],
+                'url' => $page['url']
+            ];
+
+            $url = $page['url'];
+            $n = 1;
+
+            // Deduplication
+            do {
+                $_new = [
+                    'cabin' => $new['cabin'],
+                    'directory' => $oldDir,
+                    'url' => $url
+                ];
+                if ($n > self::MAX_DEDUP) {
+                    // Don't let this go on forever.
+                    $this->log(
+                        'Spinner',
+                        LogLevel::DEBUG,
+                        [
+                            'new' => $_new
+                        ]
+                    );
+                    break;
+                }
+                ++$n;
+                $url = $page['url'] . '-' . $n;
+            } while (!$this->createPageRedirect($_old, $_new));
+        }
+
+        foreach ($this->listSubDirectoriesByDirectoryID($oldDir) as $dir) {
+            $_old = $old;
+            $_new = $new;
+            $_old['path'] .= '/' . $dir['url'];
+            $_new['path'] .= '/' . $dir['url'];
+            $this->createDirRedirect($_old, $_new);
+        }
+        return true;
     }
 
 
@@ -234,11 +286,12 @@ class CustomPages extends HullCustomPages
      *
      * @param array $old
      * @param array $new
+     * @param bool $allowCrossCabin
      * @return bool
      */
-    public function createPageRedirect(array $old, array $new): bool
+    public function createPageRedirect(array $old, array $new, bool $allowCrossCabin = false): bool
     {
-        if ($old['cabin'] !== $new['cabin']) {
+        if (!$allowCrossCabin && ($old['cabin'] !== $new['cabin'])) {
             return false;
         }
         $cabin = $old['cabin'];
@@ -284,6 +337,23 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * @param int $directoryID
+     * @return bool
+     * @throws \TypeError
+     */
+    public function deleteDir(int $directoryID): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'airship_custom_dir',
+            [
+                'directoryid' => $directoryID
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Delete a redirect.
      *
      * @param int $redirectID
@@ -306,13 +376,19 @@ class CustomPages extends HullCustomPages
      *
      * @param array $cabins
      * @param int $selected
+     * @param int $skip
      * @return array
      */
-    public function getCustomDirTree(array $cabins, int $selected): array
+    public function getCustomDirTree(array $cabins, int $selected, int $skip = 0): array
     {
         $tree = [];
         foreach ($cabins as $cabin) {
-            $tree[$cabin] = $this->getCustomDirChildren($cabin, 0, $selected);
+            $tree[$cabin] = $this->getCustomDirChildren(
+                $cabin,
+                0,
+                $selected,
+                $skip
+            );
         }
         return $tree;
     }
@@ -338,9 +414,11 @@ class CustomPages extends HullCustomPages
     /**
      * Recursively grab the children of the custom directory tree
      *
-     * @param string $cabin
-     * @param int $directoryId
-     * @param int $selected
+     * @param string $cabin    Cabin
+     * @param int $directoryId Parent directory for which to list directories
+     * @param int $selected    Which directory is selected by default?
+     * @param int $skip        Which directory to skip when recusring
+     *                         (for moving and deleting)
      * @param int $depth
      * @return array
      * @throws CustomPageNotFoundException
@@ -349,6 +427,7 @@ class CustomPages extends HullCustomPages
         string $cabin,
         int $directoryId = 0,
         int $selected = 0,
+        int $skip = 0,
         int $depth = 0
     ): array {
         $level = [];
@@ -373,10 +452,14 @@ class CustomPages extends HullCustomPages
         foreach ($branches as $br) {
             $br['selected'] = $br['directoryid'] === $selected;
             try {
+                if ($skip && $skip === (int) $br['directoryid']) {
+                    continue;
+                }
                 $br['children'] = $this->getCustomDirChildren(
                     $cabin,
                     (int) $br['directoryid'],
                     $selected,
+                    $skip,
                     $depth + 1
                 );
             } catch (CustomPageNotFoundException $e) {
@@ -385,6 +468,27 @@ class CustomPages extends HullCustomPages
             $level[] = $br;
         }
         return $level;
+    }
+
+    /**
+     * @param int $directoryID
+     * @param string $cabin
+     * @return array
+     */
+    public function getDirectoryPieces(int $directoryID): array
+    {
+        $directoryInfo = $this->db->row(
+            'SELECT parent, url FROM airship_custom_dir WHERE directoryid = ?',
+            $directoryID
+        );
+        if (empty($directoryInfo)) {
+            return [];
+        }
+        $pieces = !empty($directoryInfo['parent'])
+            ? $this->getDirectoryPieces((int) $directoryInfo['parent'])
+            : [];
+        \array_unshift($pieces, $directoryInfo['url']);
+        return \array_values($pieces);
     }
 
     /**
@@ -464,6 +568,37 @@ class CustomPages extends HullCustomPages
             $latest['metadata'] = [];
         }
         return $latest;
+    }
+
+    /**
+     * Get information about only this directory
+     *
+     * @param string $cabin
+     * @param string $parent
+     * @param string $name
+     * @return array
+     * @throws CustomPageNotFoundException
+     */
+    public function getDirInfo(string $cabin, string $parent = '', string $name = ''): array
+    {
+        if ($parent === '') {
+            $info = $this->db->row(
+                'SELECT * FROM airship_custom_dir WHERE parent IS NULL AND cabin = ? AND url = ?',
+                $cabin,
+                $name
+            );
+        } else {
+            $parentID = $this->getParentDirFromStr($parent, $cabin);
+            $info = $this->db->row(
+                'SELECT * FROM airship_custom_dir WHERE parent = ? AND url = ?',
+                $parentID,
+                $name
+            );
+        }
+        if (empty($info)) {
+            throw new CustomPageNotFoundException();
+        }
+        return $info;
     }
 
     /**
@@ -673,6 +808,42 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * List all of the custom pages contained within a given directory ID
+     *
+     * @param int $dir
+     * @return array
+     */
+    public function listCustomPagesByDirectoryID(int $dir = 0): array
+    {
+        $pages = $this->db->run(
+            'SELECT * FROM airship_custom_page WHERE directory = ?',
+            $dir
+        );
+        if (empty($pages)) {
+            return [];
+        }
+        return $pages;
+    }
+
+    /**
+     * List all of the subdirectories contained within a given directory ID
+     *
+     * @param int $dir
+     * @return array
+     */
+    public function listSubDirectoriesByDirectoryID(int $dir = 0): array
+    {
+        $dirs = $this->db->run(
+            'SELECT * FROM airship_custom_dir WHERE parent = ?',
+            $dir
+        );
+        if (empty($dirs)) {
+            return [];
+        }
+        return $dirs;
+    }
+
+    /**
      * List all of the subdirectories for a given cabin and directory
      *
      * @param string $dir
@@ -743,6 +914,75 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * @param int $parent
+     * @param int $destinationDir
+     * @param bool $createRedirect
+     * @param string $oldCabin
+     * @param string $newCabin
+     * @param array $pieces
+     * @return bool
+     */
+    public function movePagesToDir(
+        int $parent,
+        int $destinationDir = 0,
+        bool $createRedirect = false,
+        string $oldCabin = '',
+        string $newCabin = '',
+        array $pieces = []
+    ): bool {
+        $this->log(
+            'Moving pages to a new directroy',
+            LogLevel::DEBUG,
+            [
+                'from' => $parent,
+                'to' => $destinationDir,
+                'redirect' => $createRedirect,
+                'oldCabin' => $oldCabin,
+                'newCabin' => $newCabin,
+                'pieces' => $pieces
+            ]
+        );
+
+        $old = [
+            'cabin' => $oldCabin,
+            'path' => \implode('/', $this->getDirectoryPieces($parent))
+        ];
+        $new = [
+            'cabin' => $newCabin,
+            'path' => \implode('/', $pieces)
+        ];
+        if ($createRedirect) {
+            $this->createDirRedirect($old, $new);
+        }
+        foreach ($this->listCustomPagesByDirectoryID($parent) as $page) {
+            $this->movePage(
+                (int) $page['pageid'],
+                $page['url'],
+                $destinationDir
+            );
+        }
+        $this->db->beginTransaction();
+        if ($destinationDir > 0) {
+            $update = [
+                'parent' => null,
+                'cabin' => $newCabin
+            ];
+        } else {
+            $update = [
+                'parent' => $destinationDir
+            ];
+        }
+        $this->db->update(
+            'airship_custom_dir',
+            $update,
+            [
+                'parent' => $parent
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Get the number of custom pages.
      *
      * @param null $published
@@ -757,6 +997,28 @@ class CustomPages extends HullCustomPages
             return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE active');
         }
         return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE NOT active');
+    }
+
+    /**
+     * Delete everything within a given directory
+     *
+     * @param int $directoryID
+     * @return bool
+     */
+    public function recursiveDelete(int $directoryID): bool
+    {
+        if ($directoryID < 1) {
+            return false;
+        }
+        foreach ($this->listCustomPagesByDirectoryID($directoryID) as $pg) {
+            $this->deletePage((int) $pg['pageid']);
+        }
+        foreach ($this->listSubDirectoriesByDirectoryID($directoryID) as $dir) {
+            $this->recursiveDelete(
+                (int) $dir['directoryid']
+            );
+        }
+        return $this->deleteDir($directoryID);
     }
 
     /**

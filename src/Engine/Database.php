@@ -358,6 +358,19 @@ class Database implements DBInterface
     }
 
     /**
+     * Use with SELECT COUNT queries to determine if a record exists.
+     *
+     * @param string $statement SQL query without user data
+     * @param mixed ...$params Parameters
+     * @return mixed
+     */
+    public function exists(string $statement, ...$params): bool
+    {
+        $result = $this->single($statement, $params);
+        return !empty($result);
+    }
+
+    /**
      * Variadic version of $this->column(), with an offset of 0
      *
      * @param string $statement SQL query without user data

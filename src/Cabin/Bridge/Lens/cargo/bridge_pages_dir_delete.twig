@@ -1,0 +1,44 @@
+<h2>{{ __("Are you sure you want to delete this directory?") }}</h2>
+
+<pre>{{ cabin_url(cabin) ~ (parent ? parent ~ "/" ~ dir : dir)|e('html') }}</pre>
+
+<form method="post">{{ form_token() }}
+    <fieldset>
+        <legend>
+            <input type="checkbox" name="move_contents" value="1" id="move_contents" checked="checked" />
+            <label for="move_contents">
+                {{ __("Move contents to another directory?") }}
+            </label>
+        </legend>
+        <p class="nomargin">{{ __(
+            "If you uncheck the above box, the default behavior is to delete everything contained within."
+        ) }}</p>
+        <label for="destination">{{ __("Destination:") }}</label>
+        <select id="destination" name="move_destination">
+            <option value=""></option>
+            {% for cab in cabins %}
+                <!-- {{ custom_dir_tree[cab]|json_encode(constant("JSON_PRETTY_PRINT")) }} -->
+                <option value="{{ cab|e('html_attr') }}" class="depth0" data-cabin="{{ cab|e('html_attr') }}">{{ cab|e('html') }}</option>
+                {% for subdir in custom_dir_tree[cab] %}
+                    {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                {% endfor %}
+            {% endfor %}
+        </select><br />
+        <input type="checkbox" name="create_redirect" value="1" id="create_redirect" />
+        <label for="create_redirect">
+            {{ __("Create redirects from the old URL to the new URL for all contents?") }}
+        </label>
+    </fieldset>
+
+    <label>{{ __("Please verify that you are human") }}:</label>
+    <div class="g-recaptcha" data-sitekey="{{ config.recaptcha["site-key"]|e('html_attr') }}"></div>
+
+    <hr />
+
+    <button type="submit" name="delete_btn" value="confirm" class="pure-button pure-button-secondary">
+        {{  __("Delete Directory") }}
+    </button>
+    <a href="{{ cabin_url() ~ "pages/" ~ cabin|e('html') ~ "?dir=" ~ parent|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+        Cancel
+    </a>
+</form>
