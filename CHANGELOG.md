@@ -5,8 +5,15 @@
     random, short-lived token to the email address on file (since Airship
     doesn't store plaintext passwords). If a GPG public key is available, their
     account recovery email will be encrypted by GnuPG.
+  * Turned all of the Cabin classes into Gears, so that Gadgets can extend
+    their functionality.
   * Gadgets can also override the selected Lens, transparently.
-  
+  * Added the option to cache blog posts and blog listings. If cached, comments
+    will be loaded from AJAX instead of in the page itself. This should allow a
+    single blog post to handle over 10,000 requests per second without a sweat.
+  * Updated jQuery to 3.0.0.
+  * Regenerate session IDs on login. Thanks [@kelunik](https://github.com/kelunik)
+    for bringing this oversight to our attention.
 
 ## Version 0.2.1 - 2016-06-04
 
