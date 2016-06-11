@@ -168,6 +168,9 @@ class Motif extends AutoUpdater implements ContinuumInterface
         if (!$zip->extractTo($dir)) {
             throw new CouldNotUpdate();
         }
+
+        // Make sure we update the version info. in the DB cache:
+        $this->updateDBRecord('Motif', $info);
     }
 
     /**

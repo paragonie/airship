@@ -196,6 +196,9 @@ class Gadget extends AutoUpdater implements ContinuumInterface
 
         // Now bring it back up.
         $this->bringSiteBackUp();
+
+        // Make sure we update the version info. in the DB cache:
+        $this->updateDBRecord('Gadget', $info);
     }
 
     /**

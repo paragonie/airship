@@ -439,6 +439,36 @@ abstract class AutoUpdater
     }
 
     /**
+     * Update the version string in airship_package_cache
+     *
+     * @param string $type
+     * @param UpdateInfo $info
+     * @return bool
+     */
+    public function updateDBRecord(string $type, UpdateInfo $info): bool
+    {
+        $db = \Airship\get_database();
+        $db->beginTransaction();
+        $db->update(
+            'airship_package_cache',
+            [
+                'current_version' =>
+                    $info->getVersion()
+            ],
+            [
+                'packagetype' =>
+                    $type,
+                'supplier' =>
+                    $info->getSupplierName(),
+                'name' =>
+                    $info->getPackageName()
+            ]
+        );
+        return $db->commit();
+    }
+
+
+    /**
      * For CLI usage: Bypass the download process, use a local file instead.
      *
      * @param string $path

@@ -207,6 +207,10 @@ class Cabin extends AutoUpdater implements ContinuumInterface
 
         // Now bring it back up.
         $this->bringCabinBackUp($ns);
+
+        // Make sure we update the version info. in the DB cache:
+        $this->updateDBRecord('Cabin', $info);
+
         $this->log(
             'Conclude Cabin updater',
             LogLevel::DEBUG,
