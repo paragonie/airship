@@ -35,7 +35,46 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetAvailablePackages()
     {
+        $post = $_POST ?? [];
+        $type = '';
+        $headline = 'Available Extensions';
+        if (isset($post['type'])) {
+            switch ($post['type']) {
+                case 'cabin':
+                    $headline = 'Available Cabins';
+                    $type = 'Cabin';
+                    break;
+                case 'gadget':
+                    $headline = 'Available Gadgets';
+                    $type = 'Gadget';
+                    break;
+                case 'motif':
+                    $headline = 'Available Motifs';
+                    $type = 'Motif';
+                    break;
+            }
+        }
+        $query = $post['query'] ?? '';
+        $numAvailable = $this->skyport->countAvailable($type);
+        list($page, $offset) = $this->getPaginated($numAvailable);
 
+        $this->lens(
+            'skyport/list',
+            [
+                'headline' => $headline,
+                'extensions' => $this->skyport->getAvailable(
+                        $type,
+                        $query,
+                        $offset,
+                        $this->perPage
+                    ),
+                'pagination' => [
+                    'count' => $numAvailable,
+                    'page' => $page,
+                    'per_page' => $this->perPage
+                ]
+            ]
+        );
     }
 
     /**

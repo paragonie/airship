@@ -53,7 +53,7 @@ var skyport = {
             function (html) {
                 skyport.lastAjaxPage = [which, type];
                 $("#skyport-main").html(html);
-                skyport.setupPageChangEvents();
+                skyport.setupPageChangeEvents();
             }
         );
     },

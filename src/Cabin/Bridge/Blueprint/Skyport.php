@@ -58,15 +58,40 @@ class Skyport extends BlueprintGear
      * @param int $limit
      * @return array
      */
-    public function getAvailable(string $type = '', int $offset = 0, int $limit): array
-    {
-        if ($type) {
-            $extra  = ' AND packagetype = ?';
+    public function getAvailable(
+        string $type = '',
+        string $query = '',
+        int $offset = 0,
+        int $limit
+    ): array {
+        $extra = '';
+        $args = [];
+
+        if (!empty($type)) {
+            $extra = ' AND packagetype = ?';
             $args = [$type];
-        } else {
-            $extra = '';
-            $args = [];
         }
+        // Search query -- very naive
+        if (!empty($query)) {
+            $query = '%' . \trim($query, '%') . '%';
+            switch ($this->db->getDriver()) {
+                case 'pgsql':
+                    $extra .= " AND (
+                           name LIKE ?
+                        OR supplier LIKE ?
+                        OR skyport_metadata->>'description' LIKE ?
+                        OR skyport_metadata->>'details' LIKE ?
+                        OR skyport_metadata->>'version_control' LIKE ?
+                    )";
+                    $args []= $query;
+                    $args []= $query;
+                    $args []= $query;
+                    $args []= $query;
+                    $args []= $query;
+                break;
+            }
+        }
+
         $exts = $this->db->run('
             SELECT
                 *
