@@ -53,6 +53,34 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * @return int
+     */
+    public function countOutdated(): int
+    {
+        $exts = $this->db->run('
+            SELECT
+                *
+            FROM
+                airship_package_cache
+            WHERE
+                installed
+            ORDER BY
+                packagetype ASC,
+                supplier ASC,
+                name ASC
+        ');
+        $count = 0;
+        foreach ($exts as $ext) {
+            $available = $this->getAvailableUpgrades($ext);
+            if (!empty($available)) {
+                ++$count;
+            }
+        }
+        return $count;
+    }
+
+
+    /**
      * @param string $type
      * @param int $offset
      * @param int $limit
@@ -149,6 +177,16 @@ class Skyport extends BlueprintGear
             return $groups;
         }
         return $exts;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLeftMenu()
+    {
+        return [
+            'needs_update' => $this->countOutdated()
+        ];
     }
 
     /**

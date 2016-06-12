@@ -3,10 +3,11 @@
  */
 var skyport = {
     /* Properties */
-    "lastAjaxPage": [null, null],
-    "page": null,
-    "prefix": "",
-    "query": "",
+    "lastAjaxPage": [null, null], // For updating the search query
+    "page": null,                 // Current page number
+    "prefix": "",                 // Cabin URL prefix
+    "query": "",                  // Search Query
+    "timeout": 900000,            // 900 seconds = 15 minutes
 
     /* Methods */
     "handleLeftLink": function() {
@@ -30,8 +31,7 @@ var skyport = {
 
     "init": function() {
         skyport.prefix = $("#bridge_main_menu_left").data('linkprefix');
-        $(".skyport-left-link").on('click', skyport.handleLeftLink);
-        $("#skyport-search").on('change', skyport.handleSearchChange);
+        skyport.setupLeftLinks();
     },
 
     "loadAjaxPage": function(which, type) {
@@ -58,6 +58,23 @@ var skyport = {
         );
     },
 
+    "refreshLeftMenu": function() {
+        $.get(
+            skyport.prefix + 'ajax/admin/skyport/leftmenu',
+            {},
+            function (html) {
+                $("#skyport-left").html(html);
+                skyport.setupLeftLinks();
+                setTimeout(skyport.refreshLeftMenu, skyport.timeout);
+            }
+        );
+    },
+
+    "setupLeftLinks": function() {
+        $(".skyport-left-link").on('click', skyport.handleLeftLink);
+        $("#skyport-search").on('change', skyport.handleSearchChange);
+    },
+
     "setupPageChangeEvents": function() {
         $(".skyport-page").on('click', function() {
             skyport.page = $(this).data('page');
@@ -72,4 +89,5 @@ var skyport = {
 $(document).ready(function() {
     skyport.init();
     skyport.loadAjaxPage("installed");
+    setTimeout(skyport.refreshLeftMenu, skyport.timeout);
 });

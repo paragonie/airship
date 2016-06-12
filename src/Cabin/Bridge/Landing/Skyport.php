@@ -102,6 +102,19 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * @route ajax/admin/skyport/leftmenu
+     */
+    public function ajaxGetLeftMenu()
+    {
+        $this->lens(
+            'skyport/left',
+            [
+                'left' => $this->skyport->getLeftMenu()
+            ]
+        );
+    }
+
+    /**
      * @route ajax/admin/skyport/stale
      */
     public function ajaxGetOutdatedPackages()
@@ -132,7 +145,12 @@ class Skyport extends AdminOnly
      */
     public function index()
     {
-        $this->lens('skyport');
+        $this->lens(
+            'skyport',
+            [
+                'left' => $this->skyport->getLeftMenu()
+            ]
+        );
     }
 
     /**
