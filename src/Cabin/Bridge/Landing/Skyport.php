@@ -12,6 +12,8 @@ require_once __DIR__.'/init_gear.php';
  */
 class Skyport extends AdminOnly
 {
+    protected $channel = 'paragonie';
+
     /**
      * @var int
      */
@@ -65,7 +67,17 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetOutdatedPackages()
     {
+        if (IDE_HACKS) {
+            $this->skyport = new SkyportBP();
+        }
 
+        $this->lens(
+            'skyport/outdated',
+            [
+                'headline' => 'Outdated Extensions',
+                'extensions' => $this->skyport->getOutdatedPackages()
+            ]
+        );
     }
 
     /**

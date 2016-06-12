@@ -4,7 +4,7 @@
 {% for ext in extensions %}
     <li>
         <div id="extension-{{ ext.packagetype|e('html_attr') }}-{{ ext.supplier|e('html_attr') }}-{{ ext.name|e('html_attr') }}">
-
+            {% include cargo("skyport_package_listing") %}
         </div>
     </li>
 {% endfor %}
