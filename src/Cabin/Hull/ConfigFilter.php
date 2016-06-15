@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Airship\Cabin\Bridge;
+namespace Airship\Cabin\Hull;
 
 use Airship\Engine\Security\Filter\{
     BoolFilter,
@@ -11,7 +11,7 @@ use Airship\Engine\Security\Filter\{
 
 /**
  * Class ConfigFilter
- * @package Airship\Cabin\Bridge
+ * @package Airship\Cabin\Hull
  */
 class ConfigFilter extends InputFilterContainer
 {
@@ -24,16 +24,23 @@ class ConfigFilter extends InputFilterContainer
     {
         $this
             /* config_extra */
-            ->addFilter('config_extra.board.enabled', new BoolFilter())
+            ->addFilter('config_extra.blog.cachelists', new BoolFilter())
+            ->addFilter('config_extra.blog.comments.depth_max', new IntFilter())
+            ->addFilter('config_extra.blog.comments.enabled', new BoolFilter())
+            ->addFilter('config_extra.blog.comments.guests', new BoolFilter())
+            ->addFilter('config_extra.blog.comments.recaptcha', new BoolFilter())
+            ->addFilter('config_extra.blog.per_page', new IntFilter())
+
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
-            ->addFilter('config_extra.password-reset.enabled', new BoolFilter())
-            ->addFilter('config_extra.password-reset.ttl', new IntFilter())
+
             ->addFilter('config_extra.file.cache', new IntFilter())
             /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())
             ->addFilter('twig_vars.title', new StringFilter())
             ->addFilter('twig_vars.tagline', new StringFilter())
+            ->addFilter('twig_vars.blog.title', new StringFilter())
+            ->addFilter('twig_vars.blog.tagline', new StringFilter())
         ;
     }
 }

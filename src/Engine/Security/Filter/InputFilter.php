@@ -82,7 +82,7 @@ class InputFilter implements FilterInterface
         }
 
         if ($this->type === 'int') {
-            if (!\is_numeric($data)) {
+            if (\is_numeric($data)) {
                 $data = (int) $data;
             } elseif (\is_null($data)) {
                 $data = null;

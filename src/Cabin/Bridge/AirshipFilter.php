@@ -70,16 +70,4 @@ class AirshipFilter extends InputFilterContainer
             ->addFilter('universal.twig-cache', new BoolFilter())
         ;
     }
-
-    /**
-     * @param array $dataInput
-     * @return mixed
-     */
-    public function __invoke(array $dataInput = [])
-    {
-        foreach (\array_keys($this->filterMap) as $key) {
-            $dataInput = $this->filterValue($key, $dataInput);
-        }
-        return $dataInput;
-    }
 }

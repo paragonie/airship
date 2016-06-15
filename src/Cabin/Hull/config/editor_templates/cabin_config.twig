@@ -147,7 +147,6 @@
             {{ __("Comments:") }}
         </div>
         <div class="table-cell full-width">
-            <input type="hidden" name="meta_checkboxes[blog][comments]" value="enabled" />
             <input
                     {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
                     id="blog_comments_enabled"
@@ -159,7 +158,6 @@
 
             <br />
 
-            <input type="hidden" name="meta_checkboxes[blog][guests]" value="enabled" />
             <input
                     {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
                     id="blog_comments_guests"
@@ -171,7 +169,6 @@
 
             <br />
 
-            <input type="hidden" name="meta_checkboxes[blog][recaptcha]" value="enabled" />
             <input
                     {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
                     id="blog_recaptcha_enabled"
@@ -227,7 +224,6 @@
             {{ __("Blog Listings") }}:
         </div>
         <div class="table-cell full-width">
-            <input type="hidden" name="meta_checkboxes[blog][cachelists]" value="enabled" />
             <input
                     {% if config_extra['blog']['cachelists'] %}checked="checked"{% endif %}
                     id="list_cache"

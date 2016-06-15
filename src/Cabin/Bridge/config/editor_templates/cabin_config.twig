@@ -65,7 +65,6 @@
             {{ __("Registration:") }}
         </div>
         <div class="table-cell full-width">
-            <input type="hidden" name="meta_checkboxes[board]" value="enabled" />
             <input
                 {% if config_extra['board']['enabled'] %}checked="checked"{% endif %}
                 id="board_enabled"
@@ -77,7 +76,6 @@
 
             <br />
 
-            <input type="hidden" name="meta_checkboxes[board]" value="captcha" />
             <input
                 {% if config_extra['board']['captcha'] %}checked="checked"{% endif %}
                 id="board_captcha"
@@ -118,7 +116,6 @@
             {{ __("Account Recovery:") }}
         </div>
         <div class="table-cell full-width">
-            <input type="hidden" name="meta_checkboxes[password-reset]" value="enabled" />
             <input
                 {% if config_extra['password-reset']['enabled'] %}checked="checked"{% endif %}
                 id="reset_enabled"

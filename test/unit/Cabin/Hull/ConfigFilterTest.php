@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Airship\UnitTests\Cabin\Bridge;
+namespace Airship\UnitTests\Cabin\Hull;
 
-use Airship\Cabin\Bridge\ConfigFilter;
+use Airship\Cabin\Hull\ConfigFilter;
 
 class ConfigFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,44 +11,57 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new ConfigFilter();
         $input = [
             'config_extra' => [
-                'board' => [
-                    'enabled' => 'on'
+                'blog' => [
+                    'cachelists' => '1',
+                    'comments' => [
+                        'depth_max' => 10,
+                        'enabled' => 'on'
+                    ],
+                    'per_page' => 20
                 ],
                 'recaptcha' => [
-                    'secret-key' => 'abc',
-                    'site-key' => 'test'
-                ],
-                'password-reset' => [
-                    'ttl' => '30'
+                    'site-key' => null,
+                    'secret-key' => 'boo'
                 ],
                 'file' => [
-                    'cache' => '900'
+                    'cache' => 10800
                 ]
             ],
             'twig_vars' => [
                 'active-motif' => 'test-motif',
+                'blog' => [
+                    'title' => 'Test!'
+                ],
                 'tagline' => 'test!',
                 'title' => null
             ]
         ];
         $expectedOutput = [
             'config_extra' => [
-                'board' => [
-                    'enabled' => true],
-                'file' => [
-                    'cache' => 900
+                'blog' => [
+                    'cachelists' => true,
+                    'comments' => [
+                        'depth_max' => 10,
+                        'enabled' => true,
+                        'guests' => false,
+                        'recaptcha' => false
+                    ],
+                    'per_page' => 20
                 ],
-                'password-reset' => [
-                    'enabled' => false,
-                    'ttl' => 30
+                'file' => [
+                    'cache' => 10800
                 ],
                 'recaptcha' => [
-                    'secret-key' => 'abc',
-                    'site-key' => 'test'
+                    'secret-key' => 'boo',
+                    'site-key' => ''
                 ]
             ],
             'twig_vars' => [
                 'active-motif' => 'test-motif',
+                'blog' => [
+                    'tagline' => '',
+                    'title' => 'Test!'
+                ],
                 'tagline' => 'test!',
                 'title' => ''
             ]

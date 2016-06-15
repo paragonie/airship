@@ -119,10 +119,18 @@ abstract class InputFilterContainer implements FilterContainerInterface
         );
     }
 
+
     /**
-     * This must be implemented in any InputFilterContainer child classes.
+     * Process the input array.
      *
-     * @return mixed
+     * @param array $dataInput
+     * @return array
      */
-    abstract public function __invoke();
+    public function __invoke(array $dataInput = []): array
+    {
+        foreach (\array_keys($this->filterMap) as $key) {
+            $dataInput = $this->filterValue($key, $dataInput);
+        }
+        return $dataInput;
+    }
 }
