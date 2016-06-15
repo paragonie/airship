@@ -212,6 +212,13 @@ class Cabins extends LoggedInUsersOnly
         $ds = DIRECTORY_SEPARATOR;
         $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
 
+        // Apply the cabin's input filter:
+        if (\class_exists('\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter')) {
+            $filterName = '\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter';
+            $filter = new $filterName;
+            $post = $filter($post);
+        }
+
         // Content-Security-Policy
         $csp = [];
         foreach ($post['content_security_policy'] as $dir => $rules) {
