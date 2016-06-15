@@ -275,6 +275,12 @@ class Admin extends AdminOnly
      */
     protected function saveSettings(array $post = []): bool
     {
+        $filterName = '\\Airship\\Cabin\\' . CABIN_NAME . '\\AirshipFilter';
+        if (\class_exists($filterName)) {
+            $filter = new $filterName;
+            $post = $filter($post);
+        }
+
         $ds = DIRECTORY_SEPARATOR;
         $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
         $csp = [];

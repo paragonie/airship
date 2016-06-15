@@ -64,8 +64,8 @@ abstract class InputFilterContainer implements FilterContainerInterface
                 eval(
                     'if (!isset(' . $var . $append . ')) {' . "\n" .
                     '    ' . $var . $append . ' = null;' . "\n" .
-                    '    \ksort(' . $var . ');' . "\n" .
-                    '}' . "\n"
+                    '}' . "\n" .
+                    '\ksort(' . $var . ');' . "\n"
                 );
                 $var .= $append;
             }

@@ -33,18 +33,17 @@ class ConfigFilterTest extends PHPUnit_Framework_TestCase
         $expectedOutput = [
             'config_extra' => [
                 'board' => [
-                    'enabled' => true
-                ],
-                'recaptcha' => [
-                    'secret-key' => 'abc',
-                    'site-key' => 'test'
+                    'enabled' => true],
+                'file' => [
+                    'cache' => 900
                 ],
                 'password-reset' => [
                     'enabled' => false,
                     'ttl' => 30
                 ],
-                'file' => [
-                    'cache' => 900
+                'recaptcha' => [
+                    'secret-key' => 'abc',
+                    'site-key' => 'test'
                 ]
             ],
             'twig_vars' => [

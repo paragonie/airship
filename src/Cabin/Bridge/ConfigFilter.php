@@ -4,8 +4,9 @@ namespace Airship\Cabin\Bridge;
 
 use Airship\Engine\Security\Filter\{
     BoolFilter,
-    InputFilter,
-    InputFilterContainer
+    InputFilterContainer,
+    IntFilter,
+    StringFilter
 };
 
 /**
@@ -21,32 +22,18 @@ class ConfigFilter extends InputFilterContainer
      */
     public function __construct()
     {
-        /* Define generic fitlers */
-        $checkboxFilter = new BoolFilter();
-        $stringFilter = (new InputFilter())
-            ->setType('string')
-            ->setDefault('');
-        $intFilter = (new InputFilter())
-            ->setType('int')
-            ->setDefault(0);
-
         $this
             /* config_extra */
-            ->addFilter('config_extra.board.enabled', $checkboxFilter)
-            ->addFilter('config_extra.recaptcha.secret-key', $stringFilter)
-            ->addFilter('config_extra.recaptcha.site-key', $stringFilter)
-            ->addFilter('config_extra.password-reset.enabled', $checkboxFilter)
-            ->addFilter(
-                'config_extra.password-reset.ttl',
-                (new InputFilter())
-                    ->setType('int')
-                    ->setDefault(60)
-            )
-            ->addFilter('config_extra.file.cache', $intFilter)
+            ->addFilter('config_extra.board.enabled', new BoolFilter())
+            ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
+            ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
+            ->addFilter('config_extra.password-reset.enabled', new BoolFilter())
+            ->addFilter('config_extra.password-reset.ttl', new IntFilter())
+            ->addFilter('config_extra.file.cache', new IntFilter())
             /* twig_vars */
-            ->addFilter('twig_vars.active-motif', $stringFilter)
-            ->addFilter('twig_vars.title', $stringFilter)
-            ->addFilter('twig_vars.tagline', $stringFilter)
+            ->addFilter('twig_vars.active-motif', new StringFilter())
+            ->addFilter('twig_vars.title', new StringFilter())
+            ->addFilter('twig_vars.tagline', new StringFilter())
         ;
     }
 

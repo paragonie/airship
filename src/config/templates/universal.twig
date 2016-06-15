@@ -31,7 +31,7 @@
     },
     "guzzle": {{ universal.guzzle|default([])|je }},
     "notary": {
-        "channel": {{ universal["notary"]["channel"]|je }},
+        "channel": {{ universal["notary"]["channel"]|default('paragonie')|je }},
         "enabled": {{ universal["notary"]["enabled"] ? 'true' : 'false' }}
     },
     "session_config": {{ universal["session_config"]|je }},

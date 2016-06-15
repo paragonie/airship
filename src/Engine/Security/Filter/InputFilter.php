@@ -104,7 +104,11 @@ class InputFilter implements FilterInterface
         }
 
         if ($this->type === 'array') {
-            if (!\is_array($data)) {
+            if (\is_array($data)) {
+                $data = (array) $data;
+            } elseif (\is_null($data)) {
+                $data = null;
+            } else {
                 throw new \TypeError('Expected an array.');
             }
         }

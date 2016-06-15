@@ -213,8 +213,8 @@ class Cabins extends LoggedInUsersOnly
         $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
 
         // Apply the cabin's input filter:
-        if (\class_exists('\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter')) {
-            $filterName = '\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter';
+        $filterName = '\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter';
+        if (\class_exists($filterName)) {
             $filter = new $filterName;
             $post = $filter($post);
         }
