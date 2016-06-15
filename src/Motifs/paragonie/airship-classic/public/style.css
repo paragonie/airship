@@ -1869,3 +1869,14 @@ h2#comments {
 #skyport-search {
     color: #333;
 }
+.skyport-package-link {
+    cursor: pointer;
+}
+.package-buttons {
+    list-style: none;
+    display: inline;
+    padding: 0;
+}
+.package-buttons li {
+    display: inline-block;
+}

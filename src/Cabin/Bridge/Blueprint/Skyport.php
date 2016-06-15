@@ -138,7 +138,42 @@ class Skyport extends BlueprintGear
         if (empty($exts)) {
             return [];
         }
+        foreach ($exts as $i => $ext) {
+            $exts[$i]['skyport_metadata'] = \json_decode($ext['skyport_metadata'], true);
+        }
         return $exts;
+    }
+
+    /**
+     * Get the relevant details for a particular package
+     *
+     * @param string $type
+     * @param string $supplier
+     * @param string $name
+     * @return array
+     */
+    public function getDetails(string $type, string $supplier, string $name): array
+    {
+        $package = $this->db->row(
+            'SELECT 
+                 *
+             FROM
+                 airship_package_cache
+             WHERE
+                     packagetype = ?
+                 AND supplier = ?
+                 AND name = ?
+            ',
+            $type,
+            $supplier,
+            $name
+        );
+        if (empty($package)) {
+            return [];
+        }
+        $package['skyport_metadata'] = \json_decode($package['skyport_metadata'], true);
+        $package['versions'] = $this->getNewVersions($package);
+        return $package;
     }
 
     /**
@@ -218,6 +253,30 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * @param string $type
+     * @param string $supplier
+     * @param string $name
+     * @return string
+     */
+    public function getURL(string $type, string $supplier, string $name): string
+    {
+        /**
+         * @todo Make this less hard-coded
+         */
+        $prefix = 'https://airship.paragonie.com/';
+        switch (\strtolower($type)) {
+            case 'cabin':
+                return $prefix . 'cabin/' . $supplier . '/' . $name;
+            case 'gadget':
+                return $prefix . 'gadget/' . $supplier . '/' . $name;
+            case 'motif':
+                return $prefix . 'motif/' . $supplier . '/' . $name;
+            default:
+                return $prefix;
+        }
+    }
+
+    /**
      * Get a list of all the available upgrade version identifiers
      *
      * @param array $ext
@@ -235,6 +294,9 @@ class Skyport extends BlueprintGear
             $ext['packageid'],
             $current
         );
+        if (empty($available)) {
+            return [];
+        }
         $version = new Version($ext['current_version']);
         $results = [];
         foreach ($available as $ver) {
@@ -244,5 +306,35 @@ class Skyport extends BlueprintGear
         }
         $ext['upgrades'] = $results;
         return $ext;
+    }
+
+    /**
+     * Get all of the new versions available for a given package
+     *
+     * Unlike getAvailableUpgrades(), this gets the full dataset
+     *
+     * @param array $package
+     * @return array
+     */
+    protected function getNewVersions(array $package): array
+    {
+        $current = $this->db->cell(
+            'SELECT versionid FROM airship_package_versions WHERE package = ? AND version = ?',
+            $package['packageid'],
+            $package['current_version']
+        );
+        $available = $this->db->run(
+            'SELECT * FROM airship_package_versions WHERE package = ? AND versionid > ?',
+            $package['packageid'],
+            $current
+        );
+        $version = new Version($package['current_version']);
+        $results = [];
+        foreach ($available as $ver) {
+            if ($version->isUpgrade($ver['version'])) {
+                $results []= $ver;
+            }
+        }
+        return $results;
     }
 }

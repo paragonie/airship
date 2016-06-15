@@ -20,7 +20,7 @@
     </testsuites>
     <testsuites>
         <testsuite name="Airship Test Suite">
-            <directory suffix="Test.php">./tests/unit</directory>
+            <directory suffix="Test.php">./test/unit</directory>
         </testsuite>
     </testsuites>
     <filter>

@@ -36,7 +36,7 @@
     "phpunit/phpunit": "*"
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7",
     "ext-openssl": "*",
     "ext-libsodium": "^1.0.6",
     "ext-zip": "*",
@@ -44,7 +44,7 @@
     "bjeavons/zxcvbn-php": "*",
     "ezyang/htmlpurifier": "^4.7",
     "gregwar/rst": "^1.0",
-    "guzzlehttp/guzzle": "^6.0",
+    "guzzlehttp/guzzle": "^6",
     "league/commonmark": "^0.13",
     "paragonie/csp-builder": "^2",
     "paragonie/constant_time_encoding": "^2",
@@ -52,9 +52,9 @@
     "paragonie/multi-factor": "^0",
     "paragonie/halite": "^2",
     "paragonie/recaptcha": "^2",
-    "psr/http-message": "^1.0",
-    "psr/log": "^1.0",
-    "twig/twig": "^1.22"
+    "psr/http-message": "^1",
+    "psr/log": "^1",
+    "twig/twig": "^1"
   },
   "suggest": {
     "ext-apcu": "Minimum: 5.1.4"

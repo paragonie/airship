@@ -70,6 +70,22 @@ var skyport = {
         );
     },
 
+    "refreshPackageInfo": function(type, supplier, pkg) {
+        $.post(
+            skyport.prefix + "ajax/admin/skyport/refresh",
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg
+            },
+            function(response) {
+                if (response.status == "OK") {
+                    skyport.viewPackage(type, supplier, pkg);
+                }
+            }
+        );
+    },
+
     "setupLeftLinks": function() {
         $(".skyport-left-link").on('click', skyport.handleLeftLink);
         $("#skyport-search").on('change', skyport.handleSearchChange);
@@ -83,6 +99,28 @@ var skyport = {
                 skyport.lastAjaxPage[1]
             );
         });
+        $(".skyport-package-link").on('click', function() {
+            skyport.viewPackage(
+                $(this).data('type'),
+                $(this).data('supplier'),
+                $(this).data('package')
+            )
+        });
+    },
+
+    "viewPackage": function(type, supplier, pkg) {
+        $.post(
+            skyport.prefix + "ajax/admin/skyport/view",
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg
+            },
+            function(html) {
+                $("#skyport-main").html(html);
+                skyport.setupPageChangeEvents();
+            }
+        );
     }
 };
 

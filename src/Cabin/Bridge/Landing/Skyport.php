@@ -133,11 +133,60 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * @route ajax/admin/skyport/refresh
+     */
+    public function ajaxRefreshPackageInfo()
+    {
+        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+            echo 'Invalid POST request.', "\n";
+            return;
+        }
+
+        
+
+        $this->lens(
+            'skyport/view',
+            [
+                'package' => $this->skyport->getDetails(
+                    $_POST['type'],
+                    $_POST['supplier'],
+                    $_POST['package']
+                ),
+                'skyport_url' => $this->skyport->getURL(
+                    $_POST['type'],
+                    $_POST['supplier'],
+                    $_POST['package']
+                )
+            ]
+        );
+    }
+
+
+    /**
      * @route ajax/admin/skyport/view
      */
     public function ajaxViewPackageInfo()
     {
+        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+            echo 'Invalid POST request.', "\n";
+            return;
+        }
 
+        $this->lens(
+            'skyport/view',
+            [
+                'package' => $this->skyport->getDetails(
+                    $_POST['type'],
+                    $_POST['supplier'],
+                    $_POST['package']
+                ),
+                'skyport_url' => $this->skyport->getURL(
+                    $_POST['type'],
+                    $_POST['supplier'],
+                    $_POST['package']
+                )
+            ]
+        );
     }
 
     /**

@@ -1,1 +1,9 @@
-{{ ext.supplier }}/{{ ext.name }}
+<a
+    class="skyport-package-link"
+    data-type="{{ ext.packagetype|e('html_attr') }}"
+    data-package="{{ ext.name|e('html_attr') }}"
+    data-supplier="{{ ext.supplier|e('html_attr') }}"
+>{{ ext.supplier }}/{{ ext.name }}</a>
+<div class="package-description">
+    {{ ext["skyport_metadata"].description|e('html_attr') }}
+</div>

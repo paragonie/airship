@@ -1,0 +1,60 @@
+<h3>{{ package.supplier }}/{{ package.name }}</h3>
+<div class="package-description">
+    {{ package["skyport_metadata"].description|e('html_attr') }}
+</div>
+<div class="package-details">
+    {{ package["skyport_metadata"].details|default('')|purify }}
+</div>
+<ul class="package-buttons">
+    <li>
+        <a
+            id="skyport-refresh-package"
+            class="pure-button pure-button-primary"
+        >
+            <i class="fa fa-refresh"></i> {{ __("Refresh") }}
+        </a>
+    </li>
+    <li>
+        <a
+            class="pure-button pure-button-secondary"
+            href="{{ skyport_url }}"
+            id="skyport-view-online"
+            target="_blank"
+        >
+            <i class="fa fa-globe"></i> {{ __("View Online") }}
+        </a>
+    </li>
+    {% if package.installed %} {# If it's already installed... #}
+        <li>
+        {% if package.upgrades %} {# Show available upgrades#}
+            <select
+                id="skyport-upgrade-version"
+            >
+                <option value="">{{ __("Current: ")|e('html') ~ package['current_version']|e('html') }}</option>
+            {% for ver in upgrades %}
+                <option value="{{ ver.version|e('html_attr') }}">
+                    {{ ver.version|e('html') }}
+                </option>
+            {% endfor %}
+            </select>
+            <button
+                class="pure-button pure-button-primary"
+                id="skyport-upgrade-button"
+            >
+                <i class="fa fa-arrow-up"></i> {{ __("Upgrade") }}
+            </button>
+        {% else %} {# Just show the "Up to date" message. #}
+            <em>{{ __("Up to date (%s)", "default", package['current_version'])|e('html') }}</em>
+        {% endif %}
+        </li>
+    {% else %}{# Install button: #}
+        <li>
+            <a
+                class="pure-button pure-button-primary"
+                id="skyport-install"
+            >
+                <i class="fa fa-plus"></i> {{ __("Install") }}
+            </a>
+        </li>
+    {% endif %}
+</ul>

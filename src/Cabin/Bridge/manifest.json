@@ -30,6 +30,8 @@
             ["Skyport", "ajaxGetInstalledPackages"],
         "ajax/admin/skyport/leftmenu":
             ["Skyport", "ajaxGetLeftMenu"],
+        "ajax/admin/skyport/refresh":
+            ["Skyport", "ajaxRefreshPackageInfo"],
         "ajax/admin/skyport/stale":
             ["Skyport", "ajaxGetOutdatedPackages"],
         "ajax/admin/skyport/view":
