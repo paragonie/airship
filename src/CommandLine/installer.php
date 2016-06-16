@@ -21,7 +21,7 @@ function usage()
     echo 'To bypass all security:', "\n\t";
     echo 'install.sh --bypass-security [type] [supplier]/[package]', "\n";
     echo 'To install from a local file:', "\n\t";
-    echo 'install.sh [type] [supplier]/[package] [source file]', "\n";
+    echo 'install.sh [type] [supplier]/[package] [source file] [version identifier]', "\n";
     exit(0);
 }
 /**
@@ -54,6 +54,7 @@ if ($type === '--bypass-security') {
 
 $what = \array_shift($args) ?? usage();
 $source = \array_shift($args) ?? null;
+$version = \array_shift($args) ?? null;
 
 list($supplier, $package) = \explode('/', $what);
 if (empty($supplier) || empty($package)) {
@@ -84,7 +85,9 @@ switch (\strtolower($type)) {
 
 // Local source file:
 if ($source) {
-    $version = $this->prompt("What version should we expect? ");
+    if (!$version) {
+        $version = $this->prompt("What version should we expect? ");
+    }
     $installer->useLocalInstallFile($source, $version);
 }
 

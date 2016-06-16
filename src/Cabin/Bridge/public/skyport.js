@@ -34,6 +34,35 @@ var skyport = {
         skyport.setupLeftLinks();
     },
 
+    "installPackage": function(type, supplier, pkg) {
+        var password = arguments[3] || null;
+        $.post(
+            skyport.prefix + 'admin/skyport/install',
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg,
+                "password": password
+            },
+            function (response) {
+                if (response.status === 'PROMPT') {
+                    return skyport.installPasswordPrompt(type, supplier, pkg);
+                } else if (response.status === 'ERROR') {
+                    alert(response.message);
+                }
+                // Otherwise, we assume we're doing fine.
+            }
+        );
+    },
+
+    "installPasswordPrompt": function(type, supplier, pkg) {
+        var password = prompt("Please enter the password to unlock the Skyport");
+        if (!password) {
+            return false;
+        }
+        return skyport.installPackage(type, supplier, pkg, password);
+    },
+
     "loadAjaxPage": function(which, type) {
         var args = {};
         if (type !== null) {
@@ -101,6 +130,13 @@ var skyport = {
         });
         $(".skyport-package-link").on('click', function() {
             skyport.viewPackage(
+                $(this).data('type'),
+                $(this).data('supplier'),
+                $(this).data('package')
+            )
+        });
+        $("#skyport-install").on('click', function() {
+            skyport.installPackage(
                 $(this).data('type'),
                 $(this).data('supplier'),
                 $(this).data('package')

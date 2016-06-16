@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
+use \Airship\Engine\Security\HiddenString;
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -200,6 +202,70 @@ class Skyport extends AdminOnly
                 'left' => $this->skyport->getLeftMenu()
             ]
         );
+    }
+
+    /**
+     * Trigger the package install process
+     *
+     */
+    public function installPackage()
+    {
+        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => \__('Incomplete request.')
+            ]);
+        }
+        if ($this->skyport->isLocked()) {
+            $locked = true;
+            if ($this->skyport->isPasswordLocked() && !empty($_POST['password'])) {
+                $password = new HiddenString($_POST['password']);
+                if ($this->skyport->tryUnlockPassword($password)) {
+                    $_SESSION['airship_install_lock_override'] = true;
+                    $locked = false;
+                }
+                unset($password);
+            }
+            if ($locked) {
+                if ($this->skyport->isPasswordLocked()) {
+                    \Airship\json_response([
+                        'status' => 'PROMPT',
+                        'message' => \__(
+                            'The skyport is locked. To unlock the skyport, please provide the password.'
+                        )
+                    ]);
+                }
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__(
+                        'The skyport is locked. You cannot install packages from the web interface.'
+                    )
+                ]);
+            }
+        }
+
+        /**
+         * @security We need to guarantee RCE isn't possible:
+         */
+        $args = \implode(
+            ' ',
+            [
+                \escapeshellarg(
+                    Util::charWhitelist($_POST['type'], Util::PRINTABLE_ASCII)
+                ),
+                \escapeshellarg(
+                    Util::charWhitelist($_POST['supplier'], Util::PRINTABLE_ASCII) .
+                        '/' .
+                    Util::charWhitelist($_POST['package'], Util::PRINTABLE_ASCII)
+                )
+            ]
+        );
+        $output = \shell_exec('php -dphar.readonly=0 ' . ROOT . '/CommandLine/install.sh ' . $args);
+
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => $output
+        ]);
     }
 
     /**

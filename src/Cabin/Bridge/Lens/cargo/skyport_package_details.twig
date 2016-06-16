@@ -39,6 +39,9 @@
             </select>
             <button
                 class="pure-button pure-button-primary"
+                data-type="{{ package.packagetype|e('html_attr') }}"
+                data-package="{{ package.name|e('html_attr') }}"
+                data-supplier="{{ package.supplier|e('html_attr') }}"
                 id="skyport-upgrade-button"
             >
                 <i class="fa fa-arrow-up"></i> {{ __("Upgrade") }}
@@ -51,6 +54,9 @@
         <li>
             <a
                 class="pure-button pure-button-primary"
+                data-type="{{ package.packagetype|e('html_attr') }}"
+                data-package="{{ package.name|e('html_attr') }}"
+                data-supplier="{{ package.supplier|e('html_attr') }}"
                 id="skyport-install"
             >
                 <i class="fa fa-plus"></i> {{ __("Install") }}

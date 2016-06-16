@@ -23,6 +23,23 @@ abstract class Util
     const NUMERIC = '0123456789';
     const UPPER_ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const LOWER_ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+
+    /**
+     * @param string $input
+     * @param string $whitelist
+     * @return string
+     */
+    public static function charWhitelist(string $input, string $whitelist = self::PRINTABLE_ASCII): string
+    {
+        $output = '';
+        $length = self::stringLength($input);
+        for ($i = 0; $i < $length; ++$i) {
+            if (\strpos($whitelist, $input[$i]) !== false) {
+                $output .= $input[$i];
+            }
+        }
+        return $output;
+    }
     
     /**
      * Don't allow any HTML tags or attributes to be inserted into the DOM.
@@ -54,22 +71,11 @@ abstract class Util
     }
 
     /**
-     * Binary-safe strlen() implementation
-     *
-     * @param string $str
-     * @return int
-     */
-    public static function stringLength(string $str) : int
-    {
-        return Binary::safeStrlen($str);
-    }
-    
-    /**
      * Generate a random string of a given length and character set
-     * 
+     *
      * @param int $length How many characters do you want?
      * @param string $characters Which characters to choose from
-     * 
+     *
      * @return string
      */
     public static function randomString(
@@ -83,5 +89,16 @@ abstract class Util
             $str .= $characters[$r];
         }
         return $str;
+    }
+
+    /**
+     * Binary-safe strlen() implementation
+     *
+     * @param string $str
+     * @return int
+     */
+    public static function stringLength(string $str) : int
+    {
+        return Binary::safeStrlen($str);
     }
 }

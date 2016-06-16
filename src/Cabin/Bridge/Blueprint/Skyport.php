@@ -2,7 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use Airship\Engine\Continuum\Version;
+use \Airship\Engine\{
+    Continuum\Version,
+    Security\HiddenString,
+    State
+};
+use \ParagonIE\Halite\Password;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -15,6 +20,11 @@ require_once __DIR__.'/init_gear.php';
  */
 class Skyport extends BlueprintGear
 {
+    /**
+     * @var string
+     */
+    protected $installHash;
+
     /**
      * Get the number of packages available
      *
@@ -274,6 +284,47 @@ class Skyport extends BlueprintGear
             default:
                 return $prefix;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        if (!empty($_SESSION['airship_install_lock_override'])) {
+            // Previously entered a password to override the lock
+            return false;
+        }
+        return \file_exists(ROOT . '/config/install.lock');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPasswordLocked(): bool
+    {
+        if (!$this->isLocked()) {
+            return false;
+        }
+        $this->installHash = \file_get_contents(ROOT . '/config/install.lock');
+        if (\preg_match('/^3142[0-9a-f]{300,}$/', $this->installHash)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param HiddenString $password
+     * @return bool
+     */
+    public function tryUnlockPassword(HiddenString $password): bool
+    {
+        $state = State::instance();
+        return Password::verify(
+            $password->getString(),
+            $this->installHash,
+            $state->keyring['auth.password_key']
+        );
     }
 
     /**
