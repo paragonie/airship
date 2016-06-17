@@ -142,6 +142,13 @@ var skyport = {
                 $(this).data('package')
             )
         });
+        $("#skyport-refresh-package").on('click', function() {
+            skyport.refreshPackageInfo(
+                $(this).data('type'),
+                $(this).data('supplier'),
+                $(this).data('package')
+            )
+        });
     },
 
     "viewPackage": function(type, supplier, pkg) {

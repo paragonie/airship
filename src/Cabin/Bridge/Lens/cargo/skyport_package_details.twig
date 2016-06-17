@@ -9,6 +9,9 @@
     <li>
         <a
             id="skyport-refresh-package"
+            data-type="{{ package.packagetype|e('html_attr') }}"
+            data-package="{{ package.name|e('html_attr') }}"
+            data-supplier="{{ package.supplier|e('html_attr') }}"
             class="pure-button pure-button-primary"
         >
             <i class="fa fa-refresh"></i> {{ __("Refresh") }}

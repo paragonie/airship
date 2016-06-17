@@ -143,8 +143,29 @@ class Skyport extends AdminOnly
             echo 'Invalid POST request.', "\n";
             return;
         }
+        $type = '';
+        if (isset($post['type'])) {
+            switch ($post['type']) {
+                case 'cabin':
+                    $type = 'Cabin';
+                    break;
+                case 'gadget':
+                    $type = 'Gadget';
+                    break;
+                case 'motif':
+                    $type = 'Motif';
+                    break;
+                default:
+                    echo 'Invalid POST request.', "\n";
+                    return;
+            }
+        }
 
-        
+        $this->skyport->manualRefresh(
+            $type,
+            $_POST['supplier'],
+            $_POST['package']
+        );
 
         $this->lens(
             'skyport/view',

@@ -2,11 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Engine\{
+use Airship\Alerts\Hail\NoAPIResponse;
+use Airship\Engine\{
     Continuum\Version,
+    Hail,
     Security\HiddenString,
     State
 };
+use \GuzzleHttp\Client;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use \ParagonIE\Halite\Password;
 
 require_once __DIR__.'/init_gear.php';
@@ -314,6 +318,38 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Manually refresh a package's metadata.
+     *
+     * @param string $type
+     * @param string $supplier
+     * @param string $pkg
+     * @return bool
+     */
+    public function manualRefresh(
+        string $type,
+        string $supplier,
+        string $pkg
+    ): bool {
+        $metadata = $this->getPackageMetadata($type, $supplier, $pkg);
+        if (empty($metadata)) {
+            return false;
+        }
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_package_cache',
+            [
+                'skyport_metadata' => \json_encode($metadata[0]['metadata'])
+            ],
+            [
+                'packagetype' => $type,
+                'supplier' => $supplier,
+                'name' => $pkg
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * @param HiddenString $password
      * @return bool
      */
@@ -387,5 +423,56 @@ class Skyport extends BlueprintGear
             }
         }
         return $results;
+    }
+
+    /**
+     * Get the updated metadata for a particular package.
+     *
+     * @param string $type
+     * @param string $supplier
+     * @param string $pkg
+     * @return array
+     */
+    protected function getPackageMetadata(
+        string $type,
+        string $supplier,
+        string $pkg
+    ): array {
+        $state = State::instance();
+        if (IDE_HACKS) {
+            $state->hail = new Hail(new Client());
+        }
+
+        $channels = \Airship\loadJSON(ROOT . "/config/channels.json");
+        $ch = $state->universal['airship']['trusted-supplier'] ?? 'paragonie';
+        if (empty($channels[$ch])) {
+            return [];
+        }
+        $publicKey = new SignaturePublicKey(
+            \Sodium\hex2bin($channels[$ch]['publickey'])
+        );
+
+        foreach ($channels[$ch]['urls'] as $url) {
+            try {
+                $response = $state->hail->postSignedJSON(
+                    $url,
+                    $publicKey,
+                    [
+                        'type' => $type,
+                        'supplier' => $supplier,
+                        'name' => $pkg
+                    ]
+                );
+            } catch (NoAPIResponse $ex) {
+                // Continue
+            }
+        }
+        if (empty($response)) {
+            return [];
+        }
+        if ($response['status'] !== 'success') {
+            return [];
+        }
+        return $response['packageMetadata'];
     }
 }

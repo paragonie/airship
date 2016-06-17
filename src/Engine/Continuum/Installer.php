@@ -2,17 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\{
-    FileSystem\FileNotFound,
-    Hail\NoAPIResponse,
-    Hail\SignatureFailed
+use Airship\Alerts\{
+    Continuum\MotifZipFailed, FileSystem\FileNotFound, Hail\NoAPIResponse, Hail\SignatureFailed
 };
-use \Airship\Engine\{
-    Bolt\Log as LogBolt,
-    Bolt\Supplier as SupplierBolt,
-    Continuum\Installers\InstallFile,
-    Hail,
-    State
+use Airship\Engine\{
+    Bolt\Log as LogBolt, Bolt\Supplier as SupplierBolt, Continuum\Installers\Cabin, Continuum\Installers\Gadget, Continuum\Installers\InstallFile, Continuum\Updaters\Motif, Hail, State
 };
 use \GuzzleHttp\Exception\TransferException;
 use \ParagonIE\Halite\{
@@ -220,6 +214,7 @@ abstract class Installer
                 return false;
             }
             // Clear the cache, since we just installed something.
+            $this->markPackageInstalled($install);
             $this->clearCache();
             return true;
         } catch (\Throwable $ex) {
@@ -384,6 +379,33 @@ abstract class Installer
      * @return bool
      */
     abstract public function install(InstallFile $fileInfo): bool;
+
+    /**
+     * Somewhat self-explanatory. This just sets the 'installed' column in the
+     * database to 'TRUE' so our web UI knows that it's installed.
+     *
+     * @param InstallFile $install
+     * @return bool
+     */
+    public function markPackageInstalled(InstallFile $install): bool
+    {
+        $db = \Airship\get_database();
+        $db->beginTransaction();
+
+        $db->update(
+            'airship_package_cache',
+            [
+                'installed' => true,
+                'current_version' => $install->getVersion()
+            ],
+            [
+                'packagetype' => $this->type,
+                'supplier' => $this->supplier->getName(),
+                'name' => $this->package
+            ]
+        );
+        return $db->commit();
+    }
 
     /**
      * For CLI usage: Bypass the download process, use a local file instead.
