@@ -11,6 +11,7 @@ use \Airship\Engine\{
     State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use \ParagonIE\Halite\Util as CryptoUtil;
 use \Psr\Log\LogLevel;
 use \ZxcvbnPhp\Zxcvbn;
@@ -404,6 +405,28 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * Get the user's two-factor authentication secret
+     *
+     * @param int $userID
+     * @return string
+     */
+    public function getTwoFactorSecret(int $userID): string
+    {
+        $secret = $this->db->cell(
+            'SELECT totp_secret FROM airship_users WHERE userid = ?',
+            $userID
+        );
+        if (empty($secret)) {
+            return '';
+        }
+        $state = State::instance();
+        return Symmetric::decrypt(
+            $secret,
+            $state->keyring['auth.password_key']
+        );
+    }
+
+    /**
      * Get a user's unique ID
      *
      * @param int $userId
@@ -645,6 +668,33 @@ class UserAccounts extends BlueprintGear
         );
     }
 
+
+    /**
+     * Get the user's two-factor authentication secret
+     *
+     * @param int $userID
+     * @return string
+     */
+    public function resetTwoFactorSecret(int $userID): bool
+    {
+        $state = State::instance();
+        $this->db->beginTransaction();
+        $secret = \random_bytes(20);
+        $this->db->update(
+            'airship_users',
+            [
+                'totp_secret' =>
+                    Symmetric::encrypt(
+                        $secret,
+                        $state->keyring['auth.password_key']
+                    )
+            ], [
+                'userid' => $userID
+            ]
+        );
+        return $this->db->commit();
+    }
+
     /**
      * Reset a user's passphrase
      *
@@ -662,6 +712,31 @@ class UserAccounts extends BlueprintGear
             ], [
                 $this->f['userid'] =>
                     $accountId
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
+     * Save the user's two-factor-authentication preferences
+     *
+     * @param int $userID
+     * @param array $post
+     * @return bool
+     */
+    public function toggleTwoFactor(int $userID, array $post): bool
+    {
+        if (!empty($post['reset_secret'])) {
+            $this->resetTwoFactorSecret($userID);
+        }
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_users',
+            [
+                'enable_2factor' => !empty($post['enable_two_factor'])
+            ],
+            [
+                'userid' => $userID
             ]
         );
         return $this->db->commit();
@@ -722,7 +797,7 @@ class UserAccounts extends BlueprintGear
     {
         $this->db->beginTransaction();
 
-        if ($this->db->cell('SELECT count(preferenceid) FROM airship_user_preferences WHERE userid = ?', $userId) > 0) {
+        if ($this->db->exists('SELECT count(preferenceid) FROM airship_user_preferences WHERE userid = ?', $userId)) {
             $this->db->update(
                 'airship_user_preferences',
                 [

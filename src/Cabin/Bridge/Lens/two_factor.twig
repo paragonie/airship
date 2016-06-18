@@ -1,0 +1,6 @@
+{% extends base_template() %}
+{% set title = __("My Account") %}
+
+{% block main %}
+    {% include cargo("two_factor") ignore missing %}
+{% endblock %}

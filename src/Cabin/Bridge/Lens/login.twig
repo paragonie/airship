@@ -1,5 +1,5 @@
 {% extends base_template() %}
-{% set title = __("Please Log In") %}
+{% set title = __("Please Log In")|e('html') %}
 
 {% block content %}
     <div class="width50 center">
@@ -9,7 +9,7 @@
         {% endif %}
         <div class="login-form-wrapper">
             <fieldset>
-                <legend>{{ __("Please Log In") }}</legend>
+                <legend>{{ __("Please Log In")|e('html') }}</legend>
                 <form
                     id="login"
                     class="login-form pure-form pure-form-stacked"
@@ -18,16 +18,38 @@
                 >{{ form_token(get_path_url(cabin_url()) ~ "login") }}
                     {% include cargo("form_before_login") ignore missing %}
                     <label for="username">{{ __("Username") }}:</label>
-                    <input type="text" id="username" name="username" placeholder="{{ __("Enter your Username") }}" class="pure-input-1" />
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="{{ __("Enter your Username")|e('html_attr') }}"
+                        class="pure-input-1"
+                    />
 
-                    <label for="password">{{ __("Passphrase") }}:</label>
-                    <input type="password" id="password" name="passphrase" placeholder="{{ __("Enter your Passphrase") }}" class="pure-input-1" />
-                    
+                    <label for="password">{{ __("Passphrase")|e('html') }}:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="passphrase"
+                        placeholder="{{ __("Enter your Passphrase")|e('html_attr') }}"
+                        class="pure-input-1"
+                    />
+
+                    <label for="two-factor">{{ __("Two-Factor Authentication Code")|e('html') }}:</label>
+                    <input
+                        type="text"
+                        id="two-factor"
+                        name="two_factor"
+                        pattern="^[0-9]{6,8}$"
+                        placeholder="{{ __("Required if Two-Factor Authentication is enabled on your account")|e('html_attr') }}"
+                        class="pure-input-1"
+                    />
+
                     {% include cargo("form_login_extra_fields") ignore missing %}
                     
                     <div>
                         <input class="inblock" type="checkbox" name="remember" id="rememberMe" value="1" />
-                        <label for="rememberMe" class="inblock">{{ __("Remember Me") }}</label>
+                        <label for="rememberMe" class="inblock">{{ __("Remember Me")|e('html') }}</label>
                     </div>
                     
                     {% include cargo("form_after_login") ignore missing %}
@@ -39,7 +61,7 @@
                         </button>
                         <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary float-right">
                             <i class="fa fa-undo"></i>
-                            {{ __("I Forgot My Passphrase") }}
+                            {{ __("I Forgot My Passphrase")|e('html') }}
                         </a>
                     </div>
                 </form>
@@ -48,7 +70,7 @@
                 <hr />
                 <a href="{{ cabin_url('Bridge')|e('html_attr') }}board" class="pure-button pure-button-secondary">
                     <i class="fa fa-user-plus"></i>
-                    Register for a New Account
+                    {{ __("Register for a New Account")|e('html') }}
                 </a>
             {% endif %}
         </div>

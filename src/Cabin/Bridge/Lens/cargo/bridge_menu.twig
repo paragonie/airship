@@ -4,6 +4,13 @@
         <a href="{{ cabin_url() }}my/account">
             <i class="fa fa-gear bridge-icon"></i>{{  __("My Account") }}
         </a>
+        <ul>
+            <li>
+                <a href="{{ cabin_url() }}my/account/2-factor">
+                    <i class="fa fa-qrcode bridge-icon"></i>{{  __("Two-Factor Auth.") }}
+                </a>
+            </li>
+        </ul>
     </li>
     {% if can_read("author") %}
     <li>

@@ -5,16 +5,16 @@
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
             <label for="twigvars_active_motif">
-                {{ __("Active Motif") }}:
+                {{ __("Active Motif")|e('html') }}:
             </label>
         </div>
         <div class="table-cell full-width">
             <select
-                    class="full-width"
-                    id="twigvars_active_motif"
-                    type="text"
-                    name="{{ form_key_twig }}[active-motif]"
-                    value="{{ twig_vars['active-motif']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_active_motif"
+                type="text"
+                name="{{ form_key_twig }}[active-motif]"
+                value="{{ twig_vars['active-motif']|e('html_attr') }}"
             >{% for name, motif in motifs %}
                 <option value="{{ name|e('html_attr') }}">
                     {% if motif.config["display_name"] %}
@@ -29,16 +29,16 @@
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
             <label for="twigvars_title">
-                {{ __("Page Title") }}:
+                {{ __("Page Title")|e('html') }}:
             </label>
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_title"
-                    type="text"
-                    name="{{ form_key_twig }}[title]"
-                    value="{{ twig_vars['title']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_title"
+                type="text"
+                name="{{ form_key_twig }}[title]"
+                value="{{ twig_vars['title']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -46,23 +46,23 @@
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
             <label for="twigvars_tagline">
-                {{ __("Tagline") }}:
+                {{ __("Tagline")|e('html') }}:
             </label>
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_tagline"
-                    type="text"
-                    name="{{ form_key_twig }}[tagline]"
-                    value="{{ twig_vars['tagline']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_tagline"
+                type="text"
+                name="{{ form_key_twig }}[tagline]"
+                value="{{ twig_vars['tagline']|e('html_attr') }}"
             />
         </div>
     </div>
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
-            {{ __("Registration:") }}
+            {{ __("Registration:")|e('html') }}
         </div>
         <div class="table-cell full-width">
             <input
@@ -89,31 +89,32 @@
 
             <fieldset>
                 <legend>{{ __("ReCAPTCHA Settings") }}</legend>
-                <label for="recaptcha_secret_key">{{ __("ReCAPTCHA Secret Key") }}:</label><br />
+
+                <label for="recaptcha_site_key">{{ __("ReCAPTCHA Site Key") }}:</label><br />
                 <input
-                        class="full-width"
-                        id="recaptcha_secret_key"
-                        type="text"
-                        name="{{ form_key_config }}[recaptcha][secret-key]"
-                        value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
+                    class="full-width"
+                    id="recaptcha_site_key"
+                    type="text"
+                    name="{{ form_key_config }}[recaptcha][site-key]"
+                    value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
                 />
 
                 <hr />
-                
-                <label for="recaptcha_site_key">{{ __("ReCAPTCHA Site Key") }}:</label><br />
+
+                <label for="recaptcha_secret_key">{{ __("ReCAPTCHA Secret Key") }}:</label><br />
                 <input
-                        class="full-width"
-                        id="recaptcha_site_key"
-                        type="text"
-                        name="{{ form_key_config }}[recaptcha][site-key]"
-                        value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
+                    class="full-width"
+                    id="recaptcha_secret_key"
+                    type="text"
+                    name="{{ form_key_config }}[recaptcha][secret-key]"
+                    value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
                 /><br />
             </fieldset>
         </div>
     </div>
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
-            {{ __("Account Recovery:") }}
+            {{ __("Account Recovery:")|e('html') }}
         </div>
         <div class="table-cell full-width">
             <input
@@ -129,12 +130,87 @@
 
             <label for="reset_token_ttl">{{ __("Token Lifetime") }}:</label>
             <input
-                    id="reset_token_ttl"
-                    type="text"
-                    placeholder=""
-                    name="{{ form_key_config }}[password-reset][ttl]"
-                    value="{{ config_extra['password-reset']['ttl']|e('html_attr') }}"
+                id="reset_token_ttl"
+                type="text"
+                placeholder=""
+                name="{{ form_key_config }}[password-reset][ttl]"
+                value="{{ config_extra['password-reset']['ttl']|e('html_attr') }}"
             /> (seconds)
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            {{ __("Two-Factor Authentication:")|e('html') }}
+        </div>
+        <div class="table-cell full-width">
+
+            <!-- Begin 2FA Table -->
+            <div class="table full-width">
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="twofactor_label">{{ __("Label") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="twofactor_label"
+                            type="text"
+                            placeholder="{{ __("(Optional)")|e('html_attr') }}"
+                            pattern="^[A-Za-z0-9 ]+$"
+                            name="{{ form_key_config }}[two-factor][label]"
+                            value="{{ config_extra['two-factor']['label']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="twofactor_issuer">{{ __("Issuer") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="twofactor_issuer"
+                            type="text"
+                            placeholder="{{ twig_vars['title']|e('html_attr') }}"
+                            pattern="^[A-Za-z0-9 ]+$"
+                            name="{{ form_key_config }}[two-factor][issuer]"
+                            value="{{ config_extra['two-factor']['issuer']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="twofactor_digits">{{ __("Digits") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <select
+                            id="twofactor_digits"
+                            name="{{ form_key_config }}[two-factor][digits]"
+                        >
+                        {% for i in [6, 7, 8] %}
+                            <option value="{{ i }}"{#
+                                #}{% if config_extra['two-factor']['digits'] == i%} selected="selected"{% endif %}{#
+                            #}>{{ i }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="twofactor_period">{{ __("Period (seconds)") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="twofactor_period"
+                            type="text"
+                            placeholder="Default: 30"
+                            pattern="^[0-9]+$"
+                            name="{{ form_key_config }}[two-factor][period]"
+                            value="{{ config_extra['two-factor']['period']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <!-- End 2FA Table -->
+
         </div>
     </div>
     <div class="table-row">

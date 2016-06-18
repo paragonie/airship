@@ -17,6 +17,8 @@ use \ParagonIE\Halite\{
     Alerts\InvalidMessage,
     Util as CryptoUtil
 };
+use \ParagonIE\MultiFactor\OTP\TOTP;
+use \ParagonIE\MultiFactor\Vendor\GoogleAuth;
 use \Psr\Log\LogLevel;
 use \Zend\Mail\{
     Message,
@@ -244,6 +246,52 @@ class Account extends LandingGear
     }
 
     /**
+     * Returns the user's QR code.
+     *
+     */
+    public function twoFactorSetupQRCode()
+    {
+        if (!$this->isLoggedIn())  {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        $gauth = $this->twoFactorPreamble();
+        $user = $this->acct->getUserAccount($this->getActiveUserId());
+
+        \header('Content-Type: image/png');
+        $gauth->makeQRCode(
+            null,
+            'php://output',
+            $user['username'] . '@' . $_SERVER['HTTP_HOST'],
+            $this->config('two-factor.issuer') ?? '',
+            $this->config('two-factor.label') ?? ''
+        );
+    }
+
+    /**
+     *
+     */
+    public function twoFactorSetup()
+    {
+        if (!$this->isLoggedIn())  {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        $this->twoFactorPreamble();
+        $userID = $this->getActiveUserId();
+        $post = $this->post();
+        if ($post) {
+            $this->acct->toggleTwoFactor($userID, $post);
+        }
+        $user = $this->acct->getUserAccount($userID);
+        
+        $this->lens(
+            'two_factor',
+            [
+                'enabled' => $user['enable_2factor'] ?? false
+            ]
+        );
+    }
+
+    /**
      * Is this motif part of this cabin?
      *
      * @param array $motifs
@@ -454,6 +502,28 @@ class Account extends LandingGear
         }
 
         if (!empty($userID)) {
+            $userID = (int) $userID;
+            $user = $this->acct->getUserAccount($userID);
+            if ($user['enable_2factor']) {
+                if (empty($post['two_factor'])) {
+                    $post['two_factor'] = '';
+                }
+                $gauth = $this->twoFactorPreamble($userID);
+                $checked = $gauth->validateCode($post['two_factor'], \time());
+                if (!$checked) {
+                    $this->lens(
+                        'login',
+                        [
+                            'post_response' => [
+                                'message' => \__('Incorrect username or passphrase. Please try again.'),
+                                'status' => 'error'
+                            ]
+                        ]
+                    );
+                    exit;
+                }
+            }
+
             $idx = $state->universal['session_index']['user_id'];
 
             // Regenerate session ID:
@@ -632,5 +702,35 @@ class Account extends LandingGear
             return true;
         }
         return false;
+    }
+
+    /**
+     * Make sure the secret exists, then get the GoogleAuth object
+     *
+     * @param int $userID
+     * @return GoogleAuth
+     * @throws \Airship\Alerts\Security\UserNotLoggedIn
+     */
+    protected function twoFactorPreamble(int $userID = 0): GoogleAuth
+    {
+        if (!$userID) {
+            $userID = $this->getActiveUserId();
+        }
+        $secret = $this->acct->getTwoFactorSecret($userID);
+        if (empty($secret)) {
+            if (!$this->acct->resetTwoFactorSecret($userID)) {
+                \Airship\json_response(['test2']);
+                \Airship\redirect($this->airship_cabin_prefix);
+            }
+            $secret = $this->acct->getTwoFactorSecret($userID);
+        }
+        return new GoogleAuth(
+            $secret,
+            new TOTP(
+                0,
+                $this->config('two-factor.period') ?? 30,
+                $this->config('two-factor.length') ?? 6
+            )
+        );
     }
 }

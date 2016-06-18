@@ -1,5 +1,7 @@
 ALTER TABLE airship_users ADD gpg_public_key TEXT;
 ALTER TABLE airship_users ADD allow_reset BOOLEAN DEFAULT FALSE;
+ALTER TABLE airship_users ADD totp_secret TEXT;
+ALTER TABLE airship_users ADD enable_2factor BOOLEAN DEFAULT FALSE;
 ALTER TABLE hull_blog_posts ADD cache boolean DEFAULT FALSE;
 
 DROP VIEW view_hull_blog_post;

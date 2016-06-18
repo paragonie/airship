@@ -2,6 +2,8 @@ CREATE TABLE airship_users (
     userid BIGSERIAL PRIMARY KEY,
     username TEXT,
     password TEXT,
+    totp_secret TEXT,
+    enable_2factor BOOLEAN DEFAULT FALSE,
     display_name TEXT,
     email TEXT,
     uniqueid TEXT,

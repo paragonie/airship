@@ -179,6 +179,10 @@
         "motifs":
             ["Motifs"],
 
+        "my/account/2-factor/qr-code":
+            ["Account", "twoFactorSetupQRCode"],
+        "my/account/2-factor":
+            ["Account", "twoFactorSetup"],
         "my/account":
             ["Account", "my"],
         "my/files/{string}/info":
