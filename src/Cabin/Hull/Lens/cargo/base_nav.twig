@@ -6,7 +6,7 @@
             #}{% else %}{#
                 #}{{ cabin_url() ~ link.url[2:]|e('html_attr') }}{#
             #}{% endif %}{#
-            #}">{{ link.translate ? __(link.label)|e('html') : link.label|e('html') }}</a>
+            #}">{{ link.translate ? __(link.label) : link.label }}</a>
         </li>
     {% endfor %}
 {% endspaceless %}

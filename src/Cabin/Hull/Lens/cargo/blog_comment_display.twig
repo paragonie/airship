@@ -3,13 +3,13 @@
     <div class="blog-comment-meta">
         {% if data.authorname %}
             {% set name = data.authorname %}
-            <a href="/blog/author/{{ data.authorslug|e('url') }}">{{ data.authorname|e('html') }}</a>
+            <a href="/blog/author/{{ data.authorslug|e('url') }}">{{ data.authorname }}</a>
         {% elseif data.metadata %}
             {% set name = data.metadata.name %}
             {% if data.metadata.url %}
-                <a href="{{ data.metadata.url|e('html_attr') }}">{{ data.metadata.name|e('html') }}</a>
+                <a href="{{ data.metadata.url|e('html_attr') }}">{{ data.metadata.name }}</a>
             {% else %}
-                {{ data.metadata.name|e('html') }}
+                {{ data.metadata.name }}
             {% endif %}
         {% endif %}
         <time id="comment-{{ data.commentid }}" datetime="{{ data.created }}">{{ data.created|date('M j, Y H:i A') }}</time>

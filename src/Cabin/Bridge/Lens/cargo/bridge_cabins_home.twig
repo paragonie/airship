@@ -9,7 +9,7 @@
     {% for cabin in cabins %}
         <li>
             <a href="{{ cabin_url() }}cabin/{{ cabin|e('url') }}">
-                {{ cabin|e('html') }}
+                {{ cabin }}
             </a>
             <ul>
                 {% if can_read("cabins/manage/ ~ cabin") %}

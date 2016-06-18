@@ -1,4 +1,4 @@
-<h2 class="nomargin">{{ author.name|e('html') }}</h2>
+<h2 class="nomargin">{{ author.name }}</h2>
 <div class="blog-list-author-bio">
 {% if author.bio_format == "Markdown" %}
     {{ author.biography|CleanMarkdown }}

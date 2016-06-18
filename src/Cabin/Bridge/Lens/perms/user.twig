@@ -1,6 +1,6 @@
 {% spaceless %}
     <tr>
-        <td class="perm_row_user" id="perm_username_{{ user.username|e('html_attr') }}">{{ user.username|e('html') }}</td>
+        <td class="perm_row_user" id="perm_username_{{ user.username|e('html_attr') }}">{{ user.username }}</td>
         {% for k, act in actions %}
             <td class="permlist_perm permtable_{% if perms[act] %}on{% else %}off{% endif %}">
                 <input

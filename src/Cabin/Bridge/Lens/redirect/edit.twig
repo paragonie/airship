@@ -1,7 +1,7 @@
 {% extends base_template() %}
 
 {% block main %}
-    <h2>{{ __("Edit Redirect for " ~ cabin|e('html')) }}</h2>
+    <h2>{{ __("Edit Redirect for " ~ cabin) }}</h2>
     <div id="bridge_redirect_edit">
         {% include cargo("bridge_redirect_edit") ignore missing %}
     </div>

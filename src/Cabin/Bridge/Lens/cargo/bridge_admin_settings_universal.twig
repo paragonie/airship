@@ -12,7 +12,7 @@
                 {% for supplier, data in suppliers %}
                 <option value="{{ supplier|e('html_attr') }}"
                     {% if supplier == universal.airship['trusted-supplier'] %} selected="selected"{% endif %}
-                >{{ supplier|e('html') }}</option>
+                >{{ supplier }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -125,7 +125,7 @@
                     name="universal[session_config][cookie_domain]"
                     value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
             />
-            ({{ __("Blank defaults to current host")|e('html') }})
+            ({{ __("Blank defaults to current host") }})
         </div>
     </div>
 

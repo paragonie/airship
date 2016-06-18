@@ -5,7 +5,7 @@
                 Cabin:
             </label>
             <div class="table-cell">
-                <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}" target="_blank">{{ cabin|e('html') }}</a>
+                <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}" target="_blank">{{ cabin }}</a>
             </div>
         </div>
         <div class="table-row">
@@ -13,7 +13,7 @@
                 Page Name:
             </label>
             <div class="table-cell">
-                {{ dir|e('html') }}/<input type="text" required="required" name="url" />
+                {{ dir }}/<input type="text" required="required" name="url" />
             </div>
         </div>
         <div class="table-row">

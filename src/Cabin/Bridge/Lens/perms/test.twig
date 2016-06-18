@@ -6,7 +6,7 @@
             {{ __("Cabin") }}:
         </div>
         <div class="table-cell">
-            <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a>
+            <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin }}</a>
         </div>
     </div>
     {% if contexts %}
@@ -18,7 +18,7 @@
                 <ul class="test-cabin-list">{% for c in contexts %}{#
                     #}<li>
                         <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}/context/{{ c.contextid|e('html_attr') }}">{#
-                            #}{{ c.locator|default(__('(Blank)'))|e('html') }}{#
+                            #}{{ c.locator|default(__('(Blank)')) }}{#
                         #}</a>
                     </li>{#
                 #}{% endfor %}</ul>
@@ -70,8 +70,8 @@
                         #}>
                             <td class="permtable_name depth_0">
                                 <div class="perm_username">
-                                    <a href="{{ cabin_url() }}crew/users/edit/{{ userid|e('html') }}">{#
-                                        #}{{ username|e('html') }}{#
+                                    <a href="{{ cabin_url() }}crew/users/edit/{{ userid }}">{#
+                                        #}{{ username }}{#
                                     #}</a>
                                 </div>
                             </td>

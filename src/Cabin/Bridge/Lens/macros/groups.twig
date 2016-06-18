@@ -23,7 +23,7 @@
             {% endif %}
         {% endif %}
     >
-        {{ groupdata.name|e('html') }}
+        {{ groupdata.name }}
     </option>
     {% if groupdata.children %}
         {% for child in groupdata.children %}

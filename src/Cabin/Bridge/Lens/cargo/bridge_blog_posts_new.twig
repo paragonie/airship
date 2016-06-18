@@ -35,7 +35,7 @@
                                 #}{% endif %}{#
                             #}{% elseif auth.userid == userid() and auth.default_author_for_user %}{#
                                 #} selected="selected"{#
-                            #}{% endif %}>{{ auth.name|e('html') }}</option>
+                            #}{% endif %}>{{ auth.name }}</option>
                     {% endfor %}
                 </select>
                 <a href="{{ cabin_url() }}author/new" target="_blank" title="{{ __("Create an Author Profile")|e('html_attr') }}">{#

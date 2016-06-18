@@ -12,7 +12,7 @@
             {% if userid() %}
                 <div class="form-row">
                     <div class="form-column blog-comment-label">
-                        <label for="blog-reply-author">{{ __("Author")|e('html') }}:</label>
+                        <label for="blog-reply-author">{{ __("Author") }}:</label>
                     </div>
                     <div class="form-column blog-comment-author-wrapper">
                         <select id="blog-reply-author" name="author">
@@ -22,7 +22,7 @@
                                 <option{#
                                     #} class="select-author-name"{#
                                     #}{% if author.default_author_for_user %} selected="selected"{% endif %}{#
-                                    #} value="{{ author.authorid|e('html_attr') }}">{{ author.name|e('html') }}</option>
+                                    #} value="{{ author.authorid|e('html_attr') }}">{{ author.name }}</option>
                             {% endfor %}
                             </optgroup>
                         </select> <a href="{{ cabin_url('Bridge') }}author">{{ __("Create a New Author") }}</a>
@@ -78,7 +78,7 @@
                         #} class="blog-comment-textarea"{#
                         #} placeholder="Markdown is supported."{#
                     #}>{#
-                        #}{{ _POST.message|e('html') }}{#
+                        #}{{ _POST.message }}{#
                     #}</textarea>
                 </div>
             </div>

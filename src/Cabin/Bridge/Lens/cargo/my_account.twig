@@ -11,7 +11,7 @@
                 <label for="real_name">{{ __("Public ID") }}:</label>
             </div>
             <div class="form-column">
-                <code>{{ user_unique_id()|e('html') }}</code>
+                <code>{{ user_unique_id() }}</code>
             </div>
         </div>
         <div class="form-row">
@@ -39,7 +39,7 @@
                 <label for="username">{{ __("Username") }}:</label>
             </div>
             <div class="form-column">
-                {{ account.username|e('html') }}
+                {{ account.username }}
             </div>
         </div>
         <div class="form-row">

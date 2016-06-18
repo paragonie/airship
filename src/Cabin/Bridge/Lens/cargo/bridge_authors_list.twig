@@ -1,4 +1,4 @@
-<h2>{{ __("Authors")|e('html') }}</h2>
+<h2>{{ __("Authors") }}</h2>
 <div id="bridge_author_header">
     <a class="pure-button pure-button-secondary" href="{{ cabin_url() }}author/new">
         <i class="fa fa-user-plus"></i>
@@ -103,7 +103,7 @@
                 #}><i class="fa fa-folder-open-o"></i></a>
             </div>
             <div class="table-cell">
-                {{ auth.name|e('html') }}
+                {{ auth.name }}
             </div>
             <div class="table-cell">
                 {{ auth.created|date('Y-m-d g:i:s A') }}

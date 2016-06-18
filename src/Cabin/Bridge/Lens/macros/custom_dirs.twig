@@ -5,7 +5,7 @@
         #}data-fullpath="{{ fullpath ~ "/" ~ data.url|e('url') }}" {#
         #}data-cabin="{{ cabin|e('url') }}" {#
         #}value="{{ data.directoryid }}"{#
-        #}>{{ data.url|e('html') }}</option>
+        #}>{{ data.url }}</option>
     {% if data.children %}
         {% for child in data.children %}
             {{ _self.dirTree(child, fullpath ~ "/" ~ data.url|e('url'), cabin, depth + 1) }}

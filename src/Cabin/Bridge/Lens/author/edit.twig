@@ -1,5 +1,5 @@
 {% extends base_template() %}
-{% set title = __("Edit Author " ~ author.name|e('html')) %}
+{% set title = __("Edit Author " ~ author.name) %}
 
 {% block main %}
     {% include cargo("bridge_authors_edit") ignore missing %}

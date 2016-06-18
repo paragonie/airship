@@ -1,7 +1,7 @@
 <h2>{{ __("My Preferences") }}</h2>
 <form method="post">{{ form_token() }}
     {% if post_response %}
-        <p class="{{ post_response.status|e('html_attr') }}">{{ post_response.message|e('html') }}</p>
+        <p class="{{ post_response.status|e('html_attr') }}">{{ post_response.message }}</p>
     {% endif %}
 
     {% include cargo("bridge_preferences_motif") %}

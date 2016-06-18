@@ -79,7 +79,7 @@
             {% for cabin in state.cabins %}
                 <li>
                     <a href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}">
-                        <i class="fa fa-home bridge-icon"></i>{{ cabin.name|e('html') }}
+                        <i class="fa fa-home bridge-icon"></i>{{ cabin.name }}
                     </a>
                     <ul>
                         {% if can_read("cabins/manage/ ~ cabin.name") %}

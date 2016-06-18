@@ -152,9 +152,10 @@
                     </div>
                     <div class="table-cell full-width">
                         <input
+                            class="full-width"
                             id="twofactor_label"
                             type="text"
-                            placeholder="{{ __("(Optional)")|e('html_attr') }}"
+                            placeholder="{{ __("e.g. Bridge (Optional)")|e('html_attr') }}"
                             pattern="^[A-Za-z0-9 ]+$"
                             name="{{ form_key_config }}[two-factor][label]"
                             value="{{ config_extra['two-factor']['label']|e('html_attr') }}"
@@ -167,9 +168,10 @@
                     </div>
                     <div class="table-cell full-width">
                         <input
+                            class="full-width"
                             id="twofactor_issuer"
                             type="text"
-                            placeholder="{{ twig_vars['title']|e('html_attr') }}"
+                            placeholder="e.g. {{ twig_vars['title']|e('html_attr') }} (Optional)"
                             pattern="^[A-Za-z0-9 ]+$"
                             name="{{ form_key_config }}[two-factor][issuer]"
                             value="{{ config_extra['two-factor']['issuer']|e('html_attr') }}"
@@ -191,6 +193,7 @@
                             #}>{{ i }}</option>
                         {% endfor %}
                         </select>
+                        {{ __("Warning: Google Authenticator only suppoorts 6 digits.") }}
                     </div>
                 </div>
                 <div class="table-row">
@@ -199,6 +202,7 @@
                     </div>
                     <div class="table-cell full-width">
                         <input
+                            class="full-width"
                             id="twofactor_period"
                             type="text"
                             placeholder="Default: 30"

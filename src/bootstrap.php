@@ -95,6 +95,7 @@ $lensLoad = [];
 // Load all the gadgets, which can act on $twigLoader
 include ROOT.'/config/gadgets.php';
 $twigOpts = [
+    'autoescape' => true,
     'debug' => $state->universal['debug']
 ];
 if (!empty($state->universal['twig-cache'])) {

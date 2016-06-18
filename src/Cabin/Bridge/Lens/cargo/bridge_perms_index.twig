@@ -6,7 +6,7 @@
 <ul id="bridge_perms_list">
 {% for cabin in cabins %}
     <li>
-        <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin|e('html') }}</a>
+        <a href="{{ cabin_url() }}crew/permissions/{{ cabin|e('html_attr') }}">{{ cabin }}</a>
     </li>
 {% endfor %}
 </ul>

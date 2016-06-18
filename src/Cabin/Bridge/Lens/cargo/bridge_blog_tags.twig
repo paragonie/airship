@@ -51,7 +51,7 @@
             #}</a>{% endif %}
             </div>
             <div class="table-cell">
-                {{ tag.name|e('html') }}
+                {{ tag.name }}
             </div>
             <div class="table-cell">
                 {{ tag.created|date(config.format|default('Y-m-d g:i:s A')) }}

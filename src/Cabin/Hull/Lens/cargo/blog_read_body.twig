@@ -1,7 +1,7 @@
 {% if blogpost.format == 'RST' %}{#
-    #}{{ blogpost.snippet|RST|e('html') }}{#
+    #}{{ blogpost.snippet|RST }}{#
     #}<span id="after-fold"></span>{#
-    #}{{ blogpost.after_fold|RST|e('html') }}{#
+    #}{{ blogpost.after_fold|RST }}{#
 #}{% elseif blogpost.format == 'Markdown' %}{#
     #}{{ blogpost.snippet|default("")|CleanMarkdown }}{#
     #}<span id="after-fold"></span>{#

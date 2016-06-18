@@ -1,10 +1,10 @@
-<h2 class="bottom-pad">{{ __("Custom Pages - %s", "default", cabin)|e('html') }}</h2>
+<h2 class="bottom-pad">{{ __("Custom Pages - %s", "default", cabin) }}</h2>
 <select id="pages_list_cabin">{% spaceless %}
         {% for cab in cabins %}
             <option
                 value="{{ cab|e('html_attr') }}"
                 {% if cab == cabin %} selected="selected"{% endif %}
-            >{{ cab|e('html') }}</option>
+            >{{ cab }}</option>
         {% endfor %}
     {% endspaceless %}</select>
 <ul class="bridge_page_list_header_pathinfo">
@@ -23,7 +23,7 @@
         {% endif %}
         <li{% if acc_path == current %} class="current_dir"{% endif %}>
             <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={{ acc_path|e('url') }}">
-                {{ piece|e('html') }}
+                {{ piece }}
             </a>
         </li>
     {% endif %}

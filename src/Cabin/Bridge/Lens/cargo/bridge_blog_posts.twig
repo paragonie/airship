@@ -51,24 +51,24 @@
             {% endif %}
         </div>
         <div class="table-cell">
-            {{ post.title|e('html') }}
+            {{ post.title }}
         </div>
         <div class="table-cell">
             {% if can_update("blog/authors") or post.author in my_author_ids %}
             <a href="{{ cabin_url() }}author/edit/{{ post.author|e('html_attr') }}">{{
-                post.authorname|e('html')
+                post.authorname
             }}</a>
             {% else %}
-                {{ post.authorname|e('html') }}
+                {{ post.authorname }}
             {% endif %}
         </div>
         <div class="table-cell">
             {% if post.categoryid %}
             <a href="{{ cabin_url() }}blog/category/edit/{{ post.categoryid|e('html_attr') }}">{{
-                post.categoryname|e('html')
+                post.categoryname
             }}</a>
             {% else %}
-                {{ post.categoryname|default(__("Uncategorized"))|e('html') }}
+                {{ post.categoryname|default(__("Uncategorized")) }}
             {% endif %}
         </div>
         <div class="table-cell">

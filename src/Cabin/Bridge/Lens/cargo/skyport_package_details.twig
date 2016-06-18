@@ -33,10 +33,10 @@
             <select
                 id="skyport-upgrade-version"
             >
-                <option value="">{{ __("Current: ")|e('html') ~ package['current_version']|e('html') }}</option>
+                <option value="">{{ __("Current: ") ~ package['current_version'] }}</option>
             {% for ver in upgrades %}
                 <option value="{{ ver.version|e('html_attr') }}">
-                    {{ ver.version|e('html') }}
+                    {{ ver.version }}
                 </option>
             {% endfor %}
             </select>
@@ -50,7 +50,7 @@
                 <i class="fa fa-arrow-up"></i> {{ __("Upgrade") }}
             </button>
         {% else %} {# Just show the "Up to date" message. #}
-            <em>{{ __("Up to date (%s)", "default", package['current_version'])|e('html') }}</em>
+            <em>{{ __("Up to date (%s)", "default", package['current_version']) }}</em>
         {% endif %}
         </li>
     {% else %}{# Install button: #}

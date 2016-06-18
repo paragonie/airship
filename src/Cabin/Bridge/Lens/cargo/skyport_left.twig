@@ -7,30 +7,30 @@
     <li>
         {% if needs_update %}
             <a class="skyport-left-link" data-id="stale">
-                {{ __("Needs Update")|e('html') }} ({{ needs_update|number_format }})
+                {{ __("Needs Update") }} ({{ needs_update|number_format }})
             </a>
         {% else %}
-            <em>{{ __("Up-To-Date")|e('html') }}</em>
+            <em>{{ __("Up-To-Date") }}</em>
         {% endif %}
     </li>
     <li>
         <a class="skyport-left-link" data-id="browse">
-            {{ __("Browse Extensions")|e('html') }}
+            {{ __("Browse Extensions") }}
         </a>
         <ul>
             <li>
                 <a class="skyport-left-link" data-id="browse" data-type="cabin">
-                    {{ __("Cabins")|e('html') }}
+                    {{ __("Cabins") }}
                 </a>
             </li>
             <li>
                 <a class="skyport-left-link" data-id="browse" data-type="gadget">
-                    {{ __("Gadgets")|e('html') }}
+                    {{ __("Gadgets") }}
                 </a>
             </li>
             <li>
                 <a class="skyport-left-link" data-id="browse" data-type="motif">
-                    {{ __("Motifs")|e('html') }}
+                    {{ __("Motifs") }}
                 </a>
             </li>
             <li>

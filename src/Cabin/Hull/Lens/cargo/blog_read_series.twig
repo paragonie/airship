@@ -6,16 +6,16 @@
                 {% if series.prev_link %}{#
                     #}<a href="{{ series.prev_link|e('html_attr') }}">{#
                     #}{% if series.config.leftlink %}{#
-                        #}{{ series.config.leftlink|e('html') }}{#
+                        #}{{ series.config.leftlink }}{#
                     #}{% else %}{#
-                        #}&laquo; {{ __("Prev")|e('html') }}{#
+                        #}&laquo; {{ __("Prev") }}{#
                     #}{% endif %}{#
                     #}</a>{#
                 #}{% else %}{#
                     #}{% if series.config.leftlink %}{#
-                        #}{{ series.config.leftlink|e('html') }}{#
+                        #}{{ series.config.leftlink }}{#
                     #}{% else %}{#
-                        #}&laquo; {{ __("Prev")|e('html') }}{#
+                        #}&laquo; {{ __("Prev") }}{#
                     #}{% endif %}{#
                 #}{% endif %}
             </div>
@@ -26,16 +26,16 @@
                 {% if series.next_link %}{#
                     #}<a href="{{ series.next_link|e('html_attr') }}">{#
                     #}{% if series.config.rightlink %}{#
-                        #}{{ series.config.rightlink|e('html') }}{#
+                        #}{{ series.config.rightlink }}{#
                     #}{% else %}{#
-                        #}{{ __("Next")|e('html') }} &raquo;{#
+                        #}{{ __("Next") }} &raquo;{#
                     #}{% endif %}{#
                     #}</a>{#
                 #}{% else %}
                     {% if series.config.rightlink %}{#
-                        #}{{ series.config.rightlink|e('html') }}{#
+                        #}{{ series.config.rightlink }}{#
                     #}{% else %}{#
-                        #}{{ __("Next")|e('html') }} &raquo;{#
+                        #}{{ __("Next") }} &raquo;{#
                     #}{% endif %}{#
                 #}{% endif %}
             </div>

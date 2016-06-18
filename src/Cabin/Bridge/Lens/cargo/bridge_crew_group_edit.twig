@@ -25,7 +25,7 @@
             </div>
             <div class="table-cell">
                 <select name="parent" id="groups_parents">
-                    <option value=""> -- {{ __("None")|e('html') }} --</option>
+                    <option value=""> -- {{ __("None") }} --</option>
                     {% for g in allowed_parents %}
                         {{ grpmac.selectBox(g, group.inherits) }}
                     {% endfor %}

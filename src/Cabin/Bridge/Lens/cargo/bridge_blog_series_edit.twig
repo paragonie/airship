@@ -20,11 +20,11 @@
                     <select name="author" id="author" required="required">
                         <option value=""></option>
                         {% for auth in authors %}
-                            <option {% if auth.authorid == author.authorid %} selected="selected"{% endif %} value="{{ auth.authorid|e('html') }}">{{ auth.name|e('html') }}</option>
+                            <option {% if auth.authorid == author.authorid %} selected="selected"{% endif %} value="{{ auth.authorid }}">{{ auth.name }}</option>
                         {% endfor %}
                     </select>
                 {% else %}
-                    {{ author.name|e('html') }}
+                    {{ author.name }}
                     <input type="hidden" name="author" id="author" value="{{  author.authorid|e('html_attr') }}" />
                 {% endif %}
             </div>

@@ -3,7 +3,7 @@
             <option
                     value="{{ cab|e('html_attr') }}"
                     {% if cab == cabin %} selected="selected"{% endif %}
-            >{{ cab|e('html') }}</option>
+            >{{ cab }}</option>
         {% endfor %}
     {% endspaceless %}</select>
 <ul class="bridge_file_list_header_pathinfo">
@@ -22,7 +22,7 @@
             {% endif %}
             <li{% if acc_path == current %} class="current_dir"{% endif %}>
                 <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}?dir={{ acc_path|e('url') }}">
-                    {{ piece|e('html') }}
+                    {{ piece }}
                 </a>
             </li>
         {% endif %}

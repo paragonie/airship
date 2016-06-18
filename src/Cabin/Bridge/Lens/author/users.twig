@@ -1,5 +1,5 @@
 {% extends base_template() %}
-{% set title = __("Users for Author " ~ author.name|e('html')) %}
+{% set title = __("Users for Author " ~ author.name) %}
 
 {% block main %}
     {% include cargo("bridge_authors_users") ignore missing %}

@@ -1,32 +1,32 @@
 {% if item.series %}
-    <li id="series_items_series_{{ item.series|e('html') }}"{#
+    <li id="series_items_series_{{ item.series }}"{#
                 #} class="series_item_series"{#
-                #} data-itemid="{{ item.itemid|e('html') }}"{#
-                #} data-id="series_{{ item.series|e('html') }}"{#
+                #} data-itemid="{{ item.itemid }}"{#
+                #} data-id="series_{{ item.series }}"{#
                 #} data-type="series"{#
-                #} data-rowid="{{ item.series|e('html') }}"{#
+                #} data-rowid="{{ item.series }}"{#
             #}>{#
                 #}<span>{#
                     #}<i class="fa fa-list-alt"></i> {#
-                    #}{{ item.name|e('html') }}{#
+                    #}{{ item.name }}{#
                 #}</span>{#
-                #}<a class="delete_item" data-id="series_{{ item.series|e('html') }}">{#
+                #}<a class="delete_item" data-id="series_{{ item.series }}">{#
                     #}<i class="fa fa-trash"></i>{#
                 #}</a>{#
             #}</li>
 {% else %}
-    <li id="series_items_blogpost_{{ item.post|e('html') }}"{#
+    <li id="series_items_blogpost_{{ item.post }}"{#
                 #} class="series_item_blogpost"{#
-                #} data-itemid="{{ item.itemid|e('html') }}"{#
-                #} data-id="blogpost_{{ item.post|e('html') }}"{#
+                #} data-itemid="{{ item.itemid }}"{#
+                #} data-id="blogpost_{{ item.post }}"{#
                 #} data-type="blogpost"{#
-                #} data-rowid="{{ item.post|e('html') }}"{#
+                #} data-rowid="{{ item.post }}"{#
             #}>{#
                 #}<span>{#
                     #}<i class="fa fa-file-text-o"></i> {#
-                    #}{{ item.name|e('html') }}{#
+                    #}{{ item.name }}{#
                 #}</span>{#
-                #}<a class="delete_item" data-id="blogpost_{{ item.post|e('html') }}">{#
+                #}<a class="delete_item" data-id="blogpost_{{ item.post }}">{#
                     #}<i class="fa fa-trash"></i>{#
                 #}</a>{#
             #}</li>

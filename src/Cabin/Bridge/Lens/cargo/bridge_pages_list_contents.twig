@@ -20,7 +20,7 @@
     >
         <div class="monospace">
             <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={% if current %}{{ current ~ "/" ~ dir.url|e('url') }}{% else %}{{ dir.url|e('url') }}{% endif %}">
-                <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.url|e('html') }}
+                <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.url }}
             </a>
         </div>
         <div class="monospace">

@@ -7,7 +7,7 @@
                 class="metadata-input"
                 type="text"
                 name="metadata[title]"
-                value="{{ metadata.title|e('html') }}"
+                value="{{ metadata.title }}"
                 placeholder="{{ __("Text for the title bar of the browser when viewing this page.")|e('html_attr') }}"
         />
     </div>
@@ -21,7 +21,7 @@
                 class="metadata-input"
                 type="text"
                 name="metadata[keywords]"
-                value="{{ metadata.keywords|e('html') }}"
+                value="{{ metadata.keywords }}"
                 placeholder="{{ __("Keywords for the document's meta tags.")|e('html_attr') }}"
         />
     </div>
@@ -35,7 +35,7 @@
                 class="metadata-input"
                 type="text"
                 name="metadata[description]"
-                value="{{ metadata.description|e('html') }}"
+                value="{{ metadata.description }}"
                 placeholder="{{ __("Description for the RSS reader and meta tags.")|e('html_attr') }}"
         />
     </div>

@@ -1,6 +1,6 @@
 <h2>{{ __("Are you sure you want to delete this folder (and all its contents)?") }}</h2>
 
-<pre>{{ cabin_url(cabin) ~ "files/" ~ dir|e('html') }}</pre>
+<pre>{{ cabin_url(cabin) ~ "files/" ~ dir }}</pre>
 
 <ul>
     {% for child in dir_contents %}

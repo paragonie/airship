@@ -1,6 +1,6 @@
 <div class="width50 center">
     <h1>{{ __("Forgot Your Password?") }}</h1>
-    {% if form_message %}<p>{{ form_message|e('html') }}</p>{% endif %}
+    {% if form_message %}<p>{{ form_message }}</p>{% endif %}
 
     <form method="post" class="board-form pure-form pure-form-stacked">{{ form_token() }}
         <label for="username">{{ __("Please enter your username:") }}</label>

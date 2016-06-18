@@ -1,5 +1,5 @@
 {% extends base_template() %}
-{% set title = __("Please Log In")|e('html') %}
+{% set title = __("Please Log In") %}
 
 {% block content %}
     <div class="width50 center">
@@ -9,7 +9,7 @@
         {% endif %}
         <div class="login-form-wrapper">
             <fieldset>
-                <legend>{{ __("Please Log In")|e('html') }}</legend>
+                <legend>{{ __("Please Log In") }}</legend>
                 <form
                     id="login"
                     class="login-form pure-form pure-form-stacked"
@@ -26,7 +26,7 @@
                         class="pure-input-1"
                     />
 
-                    <label for="password">{{ __("Passphrase")|e('html') }}:</label>
+                    <label for="password">{{ __("Passphrase") }}:</label>
                     <input
                         type="password"
                         id="password"
@@ -35,7 +35,7 @@
                         class="pure-input-1"
                     />
 
-                    <label for="two-factor">{{ __("Two-Factor Authentication Code")|e('html') }}:</label>
+                    <label for="two-factor">{{ __("Two-Factor Authentication Code") }}:</label>
                     <input
                         type="text"
                         id="two-factor"
@@ -49,7 +49,7 @@
                     
                     <div>
                         <input class="inblock" type="checkbox" name="remember" id="rememberMe" value="1" />
-                        <label for="rememberMe" class="inblock">{{ __("Remember Me")|e('html') }}</label>
+                        <label for="rememberMe" class="inblock">{{ __("Remember Me") }}</label>
                     </div>
                     
                     {% include cargo("form_after_login") ignore missing %}
@@ -61,7 +61,7 @@
                         </button>
                         <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary float-right">
                             <i class="fa fa-undo"></i>
-                            {{ __("I Forgot My Passphrase")|e('html') }}
+                            {{ __("I Forgot My Passphrase") }}
                         </a>
                     </div>
                 </form>
@@ -70,7 +70,7 @@
                 <hr />
                 <a href="{{ cabin_url('Bridge')|e('html_attr') }}board" class="pure-button pure-button-secondary">
                     <i class="fa fa-user-plus"></i>
-                    {{ __("Register for a New Account")|e('html') }}
+                    {{ __("Register for a New Account") }}
                 </a>
             {% endif %}
         </div>

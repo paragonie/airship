@@ -54,7 +54,7 @@
     <div class="table-row">
         <div class="table-cell">Blog Post:</div>
         <div class="table-cell">
-            <a href="{{ cabin_url() }}blog/post/edit/{{ comment.blogpost|e('html_attr') }}">{{ comment.blog.title|e('html') }}</a>
+            <a href="{{ cabin_url() }}blog/post/edit/{{ comment.blogpost|e('html_attr') }}">{{ comment.blog.title }}</a>
         </div>
     </div>
     {% if comment.replyto %}

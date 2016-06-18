@@ -26,9 +26,9 @@
                 #}<i class="fa fa-search"></i>{#
             #}</a>
             </div>
-            <div class="table-cell">#{{ comment.commentid|number_format|e('html') }}</div>
+            <div class="table-cell">#{{ comment.commentid|number_format }}</div>
             <div class="table-cell">
-                {{ comment.blog.title|e('html') }}
+                {{ comment.blog.title }}
             </div>
             <div class="table-cell">
                 {% if comment.replyto %}
@@ -36,7 +36,7 @@
                         #} title="{{ __("View Comment")|e('html_attr') }}"{#
                         #} href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}"{#
                     #}>{#
-                        #}#{{ comment.replyto|e('html') }}{#
+                        #}#{{ comment.replyto }}{#
                     #}</a>
                 {% else %}
                     &mdash;

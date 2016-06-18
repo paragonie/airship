@@ -55,7 +55,7 @@
                                 #}{% endif %}{#
                             #}{% elseif auth.authorid == blogpost.author %}{#
                                 #} selected="selected"{#
-                            #}{% endif %}>{{ auth.name|e('html') }}</option>
+                            #}{% endif %}>{{ auth.name }}</option>
                     {% endfor %}
                 </select>
             {% else %}

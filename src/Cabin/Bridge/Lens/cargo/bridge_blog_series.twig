@@ -28,15 +28,15 @@
                 #}</a>
             </div>
             <div class="table-cell">
-                {{ ser.name|e('html') }}
+                {{ ser.name }}
             </div>
             <div class="table-cell">
                 <a href="{{ cabin_url() }}author/edit/{{ ser.author_data.authorid|e('html_attr') }}">{#
-                    #}{{ ser.author_data.name|e('html') }}{#
+                    #}{{ ser.author_data.name }}{#
                 #}</a>
             </div>
             <div class="table-cell">
-                {{ ser.num_items|number_format|e('html') }}
+                {{ ser.num_items|number_format }}
             </div>
         </div>
     {% endfor %}

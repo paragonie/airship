@@ -8,7 +8,7 @@
             <div class="table-cell">
                 <select id="directory" name="directory">{% spaceless %}
                     {% for cab in cabins %}
-                        <option value="{{ cab|e('html_attr') }}" class="depth0"{% if pageinfo.cabin == cab and not pageinfo.directory %} selected="selected"{% endif %} data-cabin="{{ cab|e('html_attr') }}">{{ cab|e('html') }}</option>
+                        <option value="{{ cab|e('html_attr') }}" class="depth0"{% if pageinfo.cabin == cab and not pageinfo.directory %} selected="selected"{% endif %} data-cabin="{{ cab|e('html_attr') }}">{{ cab }}</option>
                         {% for subdir in custom_dir_tree[cab] %}
                             {{ cdir.dirTree(subdir, cab, cab, 1) }}
                         {% endfor %}
@@ -33,7 +33,7 @@
                 <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
                     {{  __("Save Changes") }}
                 </button>
-                <button data-href="{{ cabin_url() ~ "pages/" ~ cabin|e('html') ~ "?dir=" ~ dir|e('html') }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+                <button data-href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ dir }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
                     Cancel
                 </button>
             </div>

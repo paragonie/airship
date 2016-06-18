@@ -9,7 +9,7 @@
 
     <label for="channel">{{ __("Channel") }}</label>:
     <select name="channel" id="channel">{% for name, channel in channels %}
-        <option value="{{ name|e('html_attr') }}">{{ name|e('html') }}</option>
+        <option value="{{ name|e('html_attr') }}">{{ name }}</option>
     {% endfor %}</select>
 
     <button type="submit" name="new_notary_submit" value="1" class="pure-button pure-button-secondary">

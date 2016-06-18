@@ -8,7 +8,7 @@
     #}{% if piece != "" %}{#
         #}{% set acc = acc ~ "/" ~ piece  %}{#
             #}/{#
-        #}<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={{ acc|e('html_attr') }}">{{ piece|default('(Home)')|e('html') }}</a>{#
+        #}<a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={{ acc|e('html_attr') }}">{{ piece|default('(Home)') }}</a>{#
     #}{% endif %}{#
 #}{% endfor %}{#
     #}/{#

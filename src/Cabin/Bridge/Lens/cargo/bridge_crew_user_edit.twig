@@ -79,7 +79,7 @@
                     #} class="full-width full-textarea"{#
                     #} name="custom_fields"{#
                 #}>{{
-                    user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))|e('html')
+                    user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))
                 }}</textarea>
             </div>
         </div>

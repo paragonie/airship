@@ -4,7 +4,7 @@
     {% for cabin, motif_data in motifs %}
         <div class="table-row">
             <label class="table-cell table-label">
-                {{ cabin|e('html') }}:
+                {{ cabin }}:
             </label>
             <div class="table-cell full-width">
                 <select name="prefs[motif][{{ cabin|e('html_attr') }}]">
@@ -18,7 +18,7 @@
                                 {% endif %}
                                 value="{{ combined_name|e('html_attr') }}"
                         >{#
-                                #}{{ motif_config.config.display_name|e('html') }}{#
+                                #}{{ motif_config.config.display_name }}{#
                             #}</option>
                     {% endfor %}{#
                     #}</select>

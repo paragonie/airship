@@ -50,7 +50,7 @@
             <select id="bridge_lang" name="config[lang]">
                 {% for ln, txt in get_languages() %}
                 <option {% if config.lang == ln %} selected="selected"{% endif %} value="{{ ln|e('html_attr') }}">
-                    {{ txt|e('html') }}
+                    {{ txt }}
                 </option>
                 {% endfor %}
             </select>

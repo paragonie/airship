@@ -1,6 +1,6 @@
 {% set can_update = can_update() %}
 {% set can_create = can_create() %}
-<h2>{{ __("Permissions") }} - {{ cabin|e('html') }}</h2>
+<h2>{{ __("Permissions") }} - {{ cabin }}</h2>
 
 <form method="post">{{ form_token() }}
 
@@ -53,7 +53,7 @@
                     #}>{#
                         #}<i class="fa fa-pencil"></i>{#
                     #}</a>{% endif %}
-                    {{ act.label|e('html') }}
+                    {{ act.label }}
                 </li>
             {% endfor %}
         </ul>

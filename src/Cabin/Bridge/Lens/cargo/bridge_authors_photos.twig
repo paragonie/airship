@@ -1,4 +1,4 @@
-<h2>Photos for Author "{{ author.name|e('html') }}"</h2>
+<h2>Photos for Author "{{ author.name }}"</h2>
 <p>
     {{ __(
         "First, select a context to see the current selected photo. Then, select a Cabin. " ~
@@ -18,10 +18,10 @@
                     <li>
                         <a
                                 class="photo-selector-context"
-                                data-context="{{ c.label|e('html') }}"
-                                id="photo-selector-context-{{ c.label|e('html') }}"
+                                data-context="{{ c.label }}"
+                                id="photo-selector-context-{{ c.label }}"
                         >
-                            {{ c["display_name"]|e('html') }}
+                            {{ c["display_name"] }}
                         </a>
                     </li>
                 {% endfor %}
@@ -35,7 +35,7 @@
                                 data-cabin="{{ c|e('html_attr') }}"
                                 id="photo-selector-cabin-{{ c|e('html_attr') }}"
                         >
-                            {{ c|e('html') }}
+                            {{ c }}
                         </a>
                     </li>
                 {% endfor %}

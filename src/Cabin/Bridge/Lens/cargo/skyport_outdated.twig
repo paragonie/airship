@@ -1,4 +1,4 @@
-{% if headline %}<h3>{{ __(headline)|e('html') }}</h3>{% endif %}
+{% if headline %}<h3>{{ __(headline) }}</h3>{% endif %}
 {% if extensions %}
     <ol id="skyport-list" start="{{ offset }}">
         {% for ext in extensions %}

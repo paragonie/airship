@@ -41,33 +41,33 @@
     {% endif %}
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
-            {{ label|e('html') }}:
+            {{ label }}:
         </div>
         <div class="table-cell">
             <fieldset>
                 <legend>
                     <input
                         class="csp_disable_all"
-                        id="csp_{{ key|e('html') }}_disable_security"
+                        id="csp_{{ key }}_disable_security"
                         data-key="{{ key|e('html_attr') }}"
                         type="checkbox"
-                        name="content_security_policy[{{ key|e('html') }}][disable-security]"
+                        name="content_security_policy[{{ key }}][disable-security]"
                         value="1"
                         {% if '*' in csp[key]['allow'] %}
                             checked="checked"
                         {% endif %}
                     />
-                    <label for="csp_{{ key|e('html') }}_disable_security">
+                    <label for="csp_{{ key }}_disable_security">
                         {{ __("Disable all security for this directive?") }}
                     </label>
                 </legend>
-                <div id="csp_{{ key|e('html') }}_inner">
-                    <ol id="csp_{{ key|e('html') }}_whitelist">
+                <div id="csp_{{ key }}_inner">
+                    <ol id="csp_{{ key }}_whitelist">
                     {% for url in csp[key]['allow'] %}{% if url != '*' %}
                         <li><input
                             type="text"
                             placeholder="{{ ph }}"
-                            name="content_security_policy[{{ key|e('html') }}][allow][]"
+                            name="content_security_policy[{{ key }}][allow][]"
                             value="{{ url|e('html_attr') }}"
                         /></li>
                     {% endif %}{% endfor %}
@@ -86,55 +86,55 @@
                         <hr />
                         {% if key in ['script-src', 'style-src'] %}
                         <input
-                                id="csp_{{ key|e('html') }}_unsafe_inline"
+                                id="csp_{{ key }}_unsafe_inline"
                                 type="checkbox"
-                                name="content_security_policy[{{ key|e('html') }}][unsafe-inline]"
+                                name="content_security_policy[{{ key }}][unsafe-inline]"
                                 value="1"
                                 {% if csp[key]['unsafe-inline'] %}
                                     checked="checked"
                                 {% endif %}
                         />
-                        <label for="csp_{{ key|e('html') }}_unsafe_inline">
+                        <label for="csp_{{ key }}_unsafe_inline">
                             {{ __("Allow unsafe inline?") }}
                         </label><br />
                         {% if key == 'script-src' %}
                             <input
-                                    id="csp_{{ key|e('html') }}_unsafe_eval"
+                                    id="csp_{{ key }}_unsafe_eval"
                                     type="checkbox"
-                                    name="content_security_policy[{{ key|e('html') }}][unsafe-eval]"
+                                    name="content_security_policy[{{ key }}][unsafe-eval]"
                                     value="1"
                                     {% if csp[key]['unsafe-eval'] %}
                                         checked="checked"
                                     {% endif %}
                             />
-                            <label for="csp_{{ key|e('html') }}_unsafe_eval">
+                            <label for="csp_{{ key }}_unsafe_eval">
                                 {{ __("Allow eval()?") }}
                             </label><br />
                         {% endif %}
                     {% endif %}
                     <input
-                        id="csp_{{ key|e('html') }}_self"
+                        id="csp_{{ key }}_self"
                         type="checkbox"
-                        name="content_security_policy[{{ key|e('html') }}][self]"
+                        name="content_security_policy[{{ key }}][self]"
                         value="1"
                         {% if csp[key]['self'] %}
                             checked="checked"
                         {% endif %}
                     />
-                    <label for="csp_{{ key|e('html') }}_self">
+                    <label for="csp_{{ key }}_self">
                         {{ __("Allow self-references?") }}
                     </label><br />
                     {% if key[4:] == '-src' %}
                         <input
-                                id="csp_{{ key|e('html') }}_data"
+                                id="csp_{{ key }}_data"
                                 type="checkbox"
-                                name="content_security_policy[{{ key|e('html') }}][data]"
+                                name="content_security_policy[{{ key }}][data]"
                                 value="1"
                                 {% if csp[key]['data'] %}
                                     checked="checked"
                                 {% endif %}
                         />
-                        <label for="csp_{{ key|e('html') }}_self">
+                        <label for="csp_{{ key }}_self">
                             {{ __("Allow data URIs?") }}
                         </label>
                     {% endif %}

@@ -13,16 +13,16 @@
         <tbody>
             {% for idx, notary in channel.notaries %}
             <tr>
-                <td>{{ notary.name|e('html') }}</td>
-                <td class="monospace">{{ notary.public_key|e('html') }}</td>
+                <td>{{ notary.name }}</td>
+                <td class="monospace">{{ notary.public_key }}</td>
                 <td>{% if notary.urls|length > 1 %}
                         <ol>
                         {% for url in notary.urls %}
-                            <li>{{ url|e('html') }}</li>
+                            <li>{{ url }}</li>
                         {% endfor %}
                         </ol>
                     {% else %}
-                        {{ notary.urls[0]|e('html') }}
+                        {{ notary.urls[0] }}
                 {% endif %}</td>
                 <td class="table-min-width">
                     <button type="submit" name="delete_notary" value="{{ name ~ "|" ~ idx }}" class="pure-button pure-button-secondary">

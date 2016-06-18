@@ -8,7 +8,7 @@
             #} type="checkbox"{#
             #} value="{{ tag.tagid|e('html_attr') }}"{#
             #}{% if tag.tagid in checked %} checked="checked"{% endif %}{#
-        #} /><label for="blog_post_tag_{{ tag.tagid|e('html_attr') }}">{{ tag.name|e('html') }}</label>{#
+        #} /><label for="blog_post_tag_{{ tag.tagid|e('html_attr') }}">{{ tag.name }}</label>{#
     #}</li>{#
 #}{% endfor %}{#
 #}</ul>

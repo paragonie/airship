@@ -1,6 +1,6 @@
 <h2>Are you sure you want to delete this file?</h2>
 
-<pre>{{ cabin_url(cabin) ~ "files/" ~ dir|e('html') ~ file.filename|e('html') }}</pre>
+<pre>{{ cabin_url(cabin) ~ "files/" ~ dir ~ file.filename }}</pre>
 
 <form method="post">{{ form_token() }}
     <button type="submit" name="submit_btn" value="Confirm Delete" class="pure-button pure-button-secondary">
