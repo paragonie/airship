@@ -84,7 +84,7 @@ class InputFilter implements FilterInterface
         if ($this->type === 'int') {
             if (\is_numeric($data)) {
                 $data = (int) $data;
-            } elseif (\is_null($data)) {
+            } elseif (\is_null($data) || $data === '') {
                 $data = null;
             } elseif (\is_string($data) && \ctype_digit($data)) {
                 $data = (int) $data;
@@ -96,7 +96,7 @@ class InputFilter implements FilterInterface
         if ($this->type === 'float') {
             if (\is_numeric($data)) {
                 $data = (float) $data;
-            } elseif (\is_null($data)) {
+            } elseif (\is_null($data) || $data === '') {
                 $data = null;
             } else {
                 throw new \TypeError('Expected an integer or floating point number.');
