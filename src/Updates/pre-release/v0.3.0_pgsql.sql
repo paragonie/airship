@@ -66,3 +66,15 @@ DROP TRIGGER IF EXISTS update_airship_user_recovery_modtime ON airship_user_reco
 CREATE TRIGGER update_airship_user_recovery_modtime
   BEFORE UPDATE ON airship_user_recovery
   FOR EACH ROW EXECUTE PROCEDURE update_modtime();
+
+CREATE TABLE airship_failed_logins (
+    failureid BIGSERIAL PRIMARY KEY,
+    username TEXT,
+    ipaddress TEXT,
+    sealed_password TEXT,
+    occurred TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX ON airship_failed_logins (username);
+CREATE INDEX ON airship_failed_logins (ipaddress);
+CREATE INDEX ON airship_failed_logins (username, ipaddress);

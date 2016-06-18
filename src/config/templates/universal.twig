@@ -34,6 +34,13 @@
         "channel": {{ universal["notary"]["channel"]|default('paragonie')|je }},
         "enabled": {{ universal["notary"]["enabled"] ? 'true' : 'false' }}
     },
+    "rate-limiting": {
+        "fast-exit": {{ universal["rate-limiting"]["fast-exit"] ? 'true' : 'false' }},
+        "first-delay": {{ universal["rate-limiting"]["first-delay"]|default(0.25)|je }},
+        "log-after": {{ universal["rate-limiting"]["log-after"]|default(3)|je }},
+        "log-public-key": {{ universal["rate-limiting"]["log-public-key"]|je }},
+        "max-delay": {{ universal["rate-limiting"]["max-delay"]|default(30)|je }}
+    },
     "session_config": {{ universal["session_config"]|je }},
     "session_index": {
         "user_id": {{ universal["session_index"]["user_id"]|je }},

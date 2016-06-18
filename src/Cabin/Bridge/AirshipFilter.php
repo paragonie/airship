@@ -58,6 +58,12 @@ class AirshipFilter extends InputFilterContainer
             )
             ->addFilter('universal.notary.enabled', new BoolFilter())
 
+            ->addFilter('universal.rate-limiting.fast-exit', new BoolFilter())
+            ->addFilter('universal.rate-limiting.first-delay', (new BoolFilter())->setDefault(0.25))
+            ->addFilter('universal.rate-limiting.log-after', (new IntFilter())->setDefault(3))
+            ->addFilter('universal.rate-limiting.log-public-key', new StringFilter())
+            ->addFilter('universal.rate-limiting.max-delay', (new IntFilter())->setDefault(30))
+
             ->addFilter('universal.session_config.cookie_domain', new StringFilter())
 
             ->addFilter('universal.session_index.user_id', (new StringFilter())
