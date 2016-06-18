@@ -4,6 +4,7 @@ CREATE TABLE airship_users (
     password TEXT,
     totp_secret TEXT,
     enable_2factor BOOLEAN DEFAULT FALSE,
+    session_canary TEXT,
     display_name TEXT,
     email TEXT,
     uniqueid TEXT,

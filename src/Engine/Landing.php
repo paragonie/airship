@@ -236,7 +236,7 @@ class Landing
      * @param string $search
      * @return mixed
      */
-    protected function config(string $search = '')
+    public function config(string $search = '')
     {
         if (empty($search)) {
             return $this->airship_config;

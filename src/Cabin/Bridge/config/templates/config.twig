@@ -5,6 +5,7 @@
     },
     "password-reset": {
         "enabled": {{ config['password-reset']['enabled'] ? 'true' : 'false' }},
+        "logout": {{ config['password-reset']['logout'] ? 'true' : 'false' }},
         "ttl": {{ config['password-reset']['ttl']|je }}
     },
     "file": {

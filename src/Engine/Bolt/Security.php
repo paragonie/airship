@@ -4,7 +4,9 @@ namespace Airship\Engine\Bolt;
 
 use \Airship\Engine\{
     AutoPilot,
+    Database,
     Gears,
+    Landing,
     Security\Authentication,
     Security\Permissions,
     State
@@ -145,6 +147,9 @@ trait Security
         $token_idx = $state->universal['cookie_index']['auth_token'];
         if (!empty($_SESSION[$uid_idx])) {
             // We're logged in!
+            if ($this instanceof Landing && $this->config('password-reset.logout')) {
+                return $this->verifySessionCanary($_SESSION[$uid_idx]);
+            }
             return true;
         } elseif (isset($_COOKIE[$token_idx])) {
             // We're not logged in, but we have a long-term
@@ -246,5 +251,30 @@ trait Security
         $_SESSION = [];
         $this->airship_cookie->store($token_idx, null);
         return \session_regenerate_id(true);
+    }
+
+    /**
+     * If another session triggered a password reset, we should be logged out
+     * as per the Bridge configuration. (This /is/ an optional feature.)
+     *
+     * @param int $userID
+     * @return bool
+     */
+    public function verifySessionCanary(int $userID): bool
+    {
+        $db = \Airship\get_database();
+        $canary = $db->cell(
+            'SELECT session_canary FROM airship_users WHERE userid = ?',
+            $userID
+        );
+        if (empty($canary)) {
+            $this->completeLogOut();
+            return false;
+        }
+        if (!\hash_equals($canary, $_SESSION['session_canary'])) {
+            $this->completeLogOut();
+            return false;
+        }
+        return true;
     }
 }

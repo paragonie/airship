@@ -17,9 +17,9 @@
                     <option value="{{ name|e('html_attr') }}"{#
                     #}{% if name == twig_vars['active-motif'] %} selected="selected"{% endif %}>
                         {% if motif.config["display_name"] %}
-                            {{ motif.config["display_name"]|e('html') }}
+                            {{ motif.config["display_name"] }}
                         {% else %}
-                            {{ motif.config.supplier|e('html') ~ "/" ~ motif.config.name|e('html') }}
+                            {{ motif.config.supplier ~ "/" ~ motif.config.name }}
                         {% endif %}</option>
                 {% endfor %}</select>
         </div>

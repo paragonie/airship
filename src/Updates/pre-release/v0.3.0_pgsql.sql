@@ -2,11 +2,12 @@ ALTER TABLE airship_users ADD gpg_public_key TEXT;
 ALTER TABLE airship_users ADD allow_reset BOOLEAN DEFAULT FALSE;
 ALTER TABLE airship_users ADD totp_secret TEXT;
 ALTER TABLE airship_users ADD enable_2factor BOOLEAN DEFAULT FALSE;
+ALTER TABLE airship_users ADD session_canary TEXT;
 ALTER TABLE hull_blog_posts ADD cache boolean DEFAULT FALSE;
 
 DROP VIEW view_hull_blog_post;
 CREATE VIEW view_hull_blog_post AS
-    SELECT DISTINCT ON (p.postid)
+    SELECT DISTINCT ON (postid)
             p.postid,
             p.shorturl,
             p.title,
@@ -59,7 +60,7 @@ CREATE TABLE airship_user_recovery (
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX ON airship_user_receovery (selector);
+CREATE INDEX ON airship_user_recovery (selector);
 
 DROP TRIGGER IF EXISTS update_airship_user_recovery_modtime ON airship_user_recovery;
 CREATE TRIGGER update_airship_user_recovery_modtime

@@ -40,11 +40,18 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                 ],
                 'password-reset' => [
                     'enabled' => false,
+                    'logout' => false,
                     'ttl' => 30
                 ],
                 'recaptcha' => [
                     'secret-key' => 'abc',
                     'site-key' => 'test'
+                ],
+                'two-factor' => [
+                    'issuer' => '',
+                    'label' => '',
+                    'length' => 0,
+                    'period' => 30
                 ]
             ],
             'twig_vars' => [

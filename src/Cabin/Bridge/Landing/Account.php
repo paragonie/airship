@@ -523,6 +523,11 @@ class Account extends LandingGear
                     exit;
                 }
             }
+            if ($user['session_canary']) {
+                $_SESSION['session_canary'] = $user['session_canary'];
+            } elseif ($this->config('password-reset.logout')) {
+                $_SESSION['session_canary'] = $this->acct->createSessionCanary($userID);
+            }
 
             $idx = $state->universal['session_index']['user_id'];
 

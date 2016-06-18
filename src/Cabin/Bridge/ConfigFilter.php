@@ -28,6 +28,7 @@ class ConfigFilter extends InputFilterContainer
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
             ->addFilter('config_extra.password-reset.enabled', new BoolFilter())
+            ->addFilter('config_extra.password-reset.logout', new BoolFilter())
             ->addFilter('config_extra.password-reset.ttl', new IntFilter())
             ->addFilter('config_extra.file.cache', new IntFilter())
             ->addFilter('config_extra.two-factor.label', new StringFilter())
@@ -47,14 +48,8 @@ class ConfigFilter extends InputFilterContainer
             )
             ->addFilter(
                 'config_extra.two-factor.period',
-                (new IntFilter())->addCallback(
-                    function ($var): int {
-                        if ($var < 30) {
-                            return 30;
-                        }
-                        return (int) $var;
-                    }
-                )
+                (new IntFilter())
+                    ->setDefault(30)
             )
             /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())

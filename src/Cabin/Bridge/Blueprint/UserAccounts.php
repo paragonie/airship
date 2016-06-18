@@ -103,6 +103,29 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * @param int $userID
+     * @return string
+     */
+    public function createSessionCanary(int $userID): string
+    {
+        $canary = Base64UrlSafe::encode(\random_bytes(33));
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_users',
+            [
+                'session_canary' => $canary
+            ],
+            [
+                'userid' => $userID
+            ]
+        );
+        if ($this->db->commit()) {
+            return $canary;
+        }
+        return '';
+    }
+
+    /**
      * Create a new user account
      *
      * @param array $post

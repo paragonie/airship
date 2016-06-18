@@ -6,6 +6,9 @@ use Airship\Engine\Security\Util;
  */
 class UtilTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Util::randomString()
+     */
     public function testRandomString()
     {
         $sample = [
