@@ -583,6 +583,25 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * All long-term authentication tokens will be rendered invalid.
+     * This is usually triggered on a password reset.
+     *
+     * @param int $userID
+     * @return bool
+     */
+    public function invalidateLongTermAuthTokens(int $userID): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'airship_auth_tokens',
+            [
+                'userid' => $userID
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Is this password too weak?
      *
      * @param array $post

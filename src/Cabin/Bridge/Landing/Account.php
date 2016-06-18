@@ -373,6 +373,12 @@ class Account extends LandingGear
                 LogLevel::WARNING
             );
             $this->acct->setPassphrase(new HiddenString($post['passphrase']), $_SESSION[$idx]);
+            if ($this->config('password-reset.logout')) {
+                $this->acct->invalidateLongTermAuthTokens($_SESSION[$idx]);
+
+                // We're not logging ourselves out!
+                $_SESSION['session_canary'] = $this->acct->createSessionCanary($_SESSION[$idx]);
+            }
             unset($post['username'], $post['passphrase']);
         }
 
