@@ -311,7 +311,7 @@ class AirBrake
         }
         return $this->getIPv6Subnet(
             $ip,
-            $this->state['universal']['rate-limiting']['ipv6-subnet'] ?? 32
+            $this->state['universal']['rate-limiting']['ipv6-subnet'] ?? 128
         );
     }
 
