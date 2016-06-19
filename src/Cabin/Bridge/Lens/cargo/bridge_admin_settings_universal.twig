@@ -58,12 +58,12 @@
         <div class="table-cell">
             <select id="ledger_driver" name="universal[ledger][driver]">
                 <option
-                        {% if universal.ledger.driver == "file" %} selected{% endif %}
-                        value="file"
+                    {% if universal.ledger.driver == "file" %} selected{% endif %}
+                    value="file"
                 >{{ __("Store logs in the filesystem") }}</option>
                 <option
-                        {% if universal.ledger.driver == "database" %} selected{% endif %}
-                        value="database"
+                    {% if universal.ledger.driver == "database" %} selected{% endif %}
+                    value="database"
                 >{{ __("Store logs in a database table") }}</option>
             </select>
         </div>
@@ -104,10 +104,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="session_userid"
-                    type="text"
-                    name="universal[session_index][user_id]"
-                    value="{{ universal['session_index']['user_id']|e('html_attr') }}"
+                id="session_userid"
+                type="text"
+                name="universal[session_index][user_id]"
+                value="{{ universal['session_index']['user_id']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -120,10 +120,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="session_domain"
-                    type="text"
-                    name="universal[session_config][cookie_domain]"
-                    value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
+                id="session_domain"
+                type="text"
+                name="universal[session_config][cookie_domain]"
+                value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
             />
             ({{ __("Blank defaults to current host") }})
         </div>
@@ -168,10 +168,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="email_from"
-                    type="text"
-                    name="universal[email][from]"
-                    value="{{ universal['email']['from']|e('html_attr') }}"
+                id="email_from"
+                type="text"
+                name="universal[email][from]"
+                value="{{ universal['email']['from']|e('html_attr') }}"
             />
         </div>
     </div>
