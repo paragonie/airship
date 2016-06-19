@@ -43,12 +43,12 @@ class AirBrake
         if (!$db) {
             $db = \Airship\get_database();
         }
-        if (empty($array)) {
+        if (empty($config)) {
             $state = State::instance();
-            $array = $state->universal['rate-limiting'];
+            $config = $state->universal['rate-limiting'];
         }
         $this->db = $db;
-        $this->state = State::instance();
+        $this->config = $config;
     }
 
     /**
@@ -125,7 +125,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->state['univeral']['rate-limiting']['expire'] ?? 43200
+                    $this->config['expire'] ?? 43200
                 ))
                 ->format('Y-m-d\TH:i:s')
         );
@@ -174,7 +174,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->state['univeral']['rate-limiting']['expire'] ?? 43200
+                    $this->config['expire'] ?? 43200
                 ))
                 ->format('Y-m-d\TH:i:s')
         );
@@ -211,7 +211,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->state['univeral']['rate-limiting']['expire'] ?? 43200
+                    $this->config['expire'] ?? 43200
                 ))
                 ->format('Y-m-d\TH:i:s')
         );
