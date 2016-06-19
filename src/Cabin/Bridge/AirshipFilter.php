@@ -4,11 +4,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge;
 
 use Airship\Engine\Security\Filter\{
-    ArrayFilter,
-    BoolFilter,
-    InputFilterContainer,
-    IntFilter,
-    StringFilter
+    ArrayFilter, BoolFilter, FloatFilter, InputFilterContainer, IntFilter, StringFilter
 };
 
 /**
@@ -60,7 +56,7 @@ class AirshipFilter extends InputFilterContainer
 
             ->addFilter('universal.rate-limiting.expire', (new IntFilter())->setDefault(3600))
             ->addFilter('universal.rate-limiting.fast-exit', new BoolFilter())
-            ->addFilter('universal.rate-limiting.first-delay', (new BoolFilter())->setDefault(0.25))
+            ->addFilter('universal.rate-limiting.first-delay', (new FloatFilter())->setDefault(0.25))
             ->addFilter('universal.rate-limiting.ipv4-subnet',
                 (new IntFilter())
                     ->setDefault(32)
