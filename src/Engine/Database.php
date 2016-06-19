@@ -24,9 +24,16 @@ class Database implements DBInterface
      * 
      * @param \PDO $pdo
      * @param string $dbengine
+     * @throws DBAlert\DBException
      */
-    public function __construct(\PDO $pdo, $dbengine = '')
+    public function __construct(\PDO $pdo = null, $dbengine = '')
     {
+        if (!$pdo) {
+            throw new DBAlert\DBException(
+                'An instance of PDO was expected. ' .
+                'This parameter only defaults to NULL for unit testing purposes.'
+            );
+        }
         $this->pdo = $pdo;
         $this->dbengine = $dbengine;
         $this->pdo->setAttribute(
