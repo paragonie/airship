@@ -58,10 +58,48 @@ class AirshipFilter extends InputFilterContainer
             )
             ->addFilter('universal.notary.enabled', new BoolFilter())
 
+            ->addFilter('universal.rate-limiting.expire', (new IntFilter())->setDefault(3600))
             ->addFilter('universal.rate-limiting.fast-exit', new BoolFilter())
             ->addFilter('universal.rate-limiting.first-delay', (new BoolFilter())->setDefault(0.25))
+            ->addFilter('universal.rate-limiting.ipv4-subnet',
+                (new IntFilter())
+                    ->setDefault(32)
+                    ->addCallback(
+                        function ($var): int {
+                            if ($var < 1) {
+                                return 1;
+                            } elseif ($var > 32) {
+                                return 32;
+                            }
+                            return (int) $var;
+                        }
+                    )
+            )
+            ->addFilter('universal.rate-limiting.ipv6-subnet',
+                (new IntFilter())
+                    ->setDefault(64)
+                    ->addCallback(
+                        function ($var): int {
+                            if ($var < 1) {
+                                return 1;
+                            } elseif ($var > 128) {
+                                return 128;
+                            }
+                            return (int) $var;
+                        }
+                    )
+            )
             ->addFilter('universal.rate-limiting.log-after', (new IntFilter())->setDefault(3))
-            ->addFilter('universal.rate-limiting.log-public-key', new StringFilter())
+            ->addFilter('universal.rate-limiting.log-public-key',
+                (new StringFilter())
+                    ->addCallback(function ($var): string {
+                        // Hex-encoded public keys are 64-char hex strings.
+                        if (\preg_match('/^[0-9A-Fa-f]{64}$/', $var)) {
+                            return \strtolower($var);
+                        }
+                        return '';
+                    })
+            )
             ->addFilter('universal.rate-limiting.max-delay', (new IntFilter())->setDefault(30))
 
             ->addFilter('universal.session_config.cookie_domain', new StringFilter())
