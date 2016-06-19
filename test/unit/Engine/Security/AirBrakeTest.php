@@ -23,7 +23,7 @@ class AirBrakeTest extends PHPUnit_Framework_TestCase
             $this->assertSame(59, $cutoff->i);
             $this->assertSame(29, $cutoff->s);
 
-        $cutoff = $airbrake->getCutoff(86400);
+        $cutoff = $airbrake->getCutoff(86401);
             $this->assertSame(0, $cutoff->y);
             $this->assertSame(0, $cutoff->m);
             $this->assertSame(1, $cutoff->d);
