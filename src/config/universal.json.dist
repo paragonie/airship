@@ -30,6 +30,16 @@
         "channel": "paragonie",
         "enabled": true
     },
+    "rate-limiting": {
+        "expire": 43200,
+        "fast-exit": false,
+        "first-delay": 0.25,
+        "ipv4-subnet": 24,
+        "ipv6-subnet": 48,
+        "log-after": 3,
+        "log-public-key": "",
+        "max-delay": 30
+    },
     "session_config": {
         "cookie_domain": ""
     },
