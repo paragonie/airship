@@ -141,7 +141,7 @@ class AirBrake
     {
         $d1 = new \DateTime();
         $d2 = clone $d1;
-        $d2->add(new \DateInterval('PT' . $expire . 'S'));
+        $d2->sub(new \DateInterval('PT' . $expire . 'S'));
         return $d2->diff($d1);
     }
 
