@@ -54,11 +54,7 @@ if (empty($_SESSION['created_canary'])) {
         // We haven't seen this session ID before
         $oldSession = $_SESSION;
         // An hour has passed:
-        // Make sure $_SESSION is empty before we regenerate IDs
-        $_SESSION = [];
         \session_regenerate_id(true);
-        // Now let's restore the superglobal
-        $_SESSION = $oldSession;
         // Create the canary
         $_SESSION['created_canary'] = $now->format('Y-m-d\TH:i:s');
     }
