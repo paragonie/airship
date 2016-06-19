@@ -8,13 +8,16 @@ use \Airship\Engine\{
     AutoPilot,
     Bolt\Security,
     Gears,
+    Security\AirBrake,
     Security\HiddenString,
     Security\Util,
     State
 };
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\GPGMailer\GPGMailer;
 use \ParagonIE\Halite\{
     Alerts\InvalidMessage,
+    Asymmetric\Crypto as Asymmetric,
     Util as CryptoUtil
 };
 use \ParagonIE\MultiFactor\OTP\TOTP;
@@ -485,6 +488,26 @@ class Account extends LandingGear
             ]);
             exit;
         }
+
+        $airBrake = Gears::get('AirBrake');
+        if (IDE_HACKS) {
+            $airBrake = new AirBrake();
+        }
+        if ($airBrake->failFast($post['username'], $_SERVER['REMOTE_ADDR'])) {
+            $this->lens('login', [
+                'post_response' => [
+                    'message' => \__('You are doing that too fast. Please wait a few seconds and try again.'),
+                    'status' => 'error'
+                ]
+            ]);
+
+        } else {
+            $delay = $airBrake->getDelay($post['username'], $_SERVER['REMOTE_ADDR']);
+            if ($delay > 0) {
+                \usleep($delay * 1000);
+            }
+        }
+
         try {
             $userID = $this->airship_auth->login(
                 $post['username'],
@@ -517,6 +540,37 @@ class Account extends LandingGear
                 $gauth = $this->twoFactorPreamble($userID);
                 $checked = $gauth->validateCode($post['two_factor'], \time());
                 if (!$checked) {
+                    $fails = $airBrake->getFailedLoginAttempts(
+                        $post['username'],
+                        $_SERVER['REMOTE_ADDR']
+                    ) + 1;
+
+                    // Instead of the password, seal a timestamped and
+                    // signed message saying the password was correct.
+                    // We use a signature with a key local to this Airship
+                    // so attackers can't just spam a string constant to
+                    // make the person decrypting these strings freak out
+                    // and assume the password was compromised.
+                    //
+                    // False positives are bad. This gives the sysadmin a
+                    // surefire way to reliably verify that a log entry is
+                    // due to two-factor authentication failing.
+                    $message = '**Note: The password was correct; ' .
+                        ' invalid 2FA token was provided.** ' .
+                        (new \DateTime('now'))->format('Y-m-d\TH:i:s');
+                    $signed = Base64UrlSafe::encode(
+                        Asymmetric::sign(
+                            $message,
+                            $state->keyring['notary.online_signing_key'],
+                            true
+                        )
+                    );
+                    $airBrake->registerLoginFailure(
+                        $post['username'],
+                        $_SERVER['REMOTE_ADDR'],
+                        $fails,
+                        new HiddenString($signed . $message)
+                    );
                     $this->lens(
                         'login',
                         [
@@ -561,6 +615,21 @@ class Account extends LandingGear
             }
             \Airship\redirect($this->airship_cabin_prefix);
         } else {
+            $fails = $airBrake->getFailedLoginAttempts(
+                $post['username'],
+                $_SERVER['REMOTE_ADDR']
+            ) + 1;
+
+            // If the server is setup (with an EncryptionPublicKey) and the
+            // number of failures is above the log threshold, this will
+            // encrypt the password guess with the public key so that only
+            // the person in possession of the secret key can decrypt it.
+            $airBrake->registerLoginFailure(
+                $post['username'],
+                $_SERVER['REMOTE_ADDR'],
+                $fails,
+                new HiddenString($post['passphrase'])
+            );
             $this->lens(
                 'login',
                 [
@@ -582,10 +651,43 @@ class Account extends LandingGear
      */
     protected function processRecoverAccount(array $post): bool
     {
+        $airBrake = Gears::get('AirBrake');
+        if (IDE_HACKS) {
+            $airBrake = new AirBrake();
+        }
+        $failFast = $airBrake->failFast(
+            $post['username'],
+            $_SERVER['REMOTE_ADDR'],
+            $airBrake::ACTION_RECOVER
+        );
+        if ($failFast) {
+            $this->lens(
+                'recover_account',
+                [
+                    'form_message' =>
+                        \__('You are doing that too fast. Please wait a few seconds and try again.')
+                ]
+            );
+            exit;
+        } else {
+            $delay = $airBrake->getDelay(
+                $post['username'],
+                $_SERVER['REMOTE_ADDR'],
+                $airBrake::ACTION_RECOVER
+            );
+            if ($delay > 0) {
+                \usleep($delay * 1000);
+            }
+        }
+
         try {
             $recoverInfo = $this->acct->getRecoveryInfo($post['forgot_passphrase_for']);
         } catch (UserNotFound $ex) {
             // Username not found. Is this a harvester?
+            $airBrake->registerAccountRecoveryAttempt(
+                $post['username'],
+                $_SERVER['REMOTE_ADDR']
+            );
             $this->log(
                 'Password reset attempt for nonexistent user.',
                 LogLevel::NOTICE,
@@ -597,8 +699,13 @@ class Account extends LandingGear
         }
         if (!$recoverInfo['allow_reset'] || empty($recoverInfo['email'])) {
             // Opted out or no email address? Act like the user doesn't exist.
+            $airBrake->registerAccountRecoveryAttempt(
+                $post['username'],
+                $_SERVER['REMOTE_ADDR']
+            );
             return false;
         }
+
         $token = $this->acct->createRecoveryToken((int) $recoverInfo['userid']);
         if (empty($token)) {
             return false;

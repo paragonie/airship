@@ -35,9 +35,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
         try {
             $pdo = new \PDO(...$config);
         } catch (\Exception $ex) {
-            return $this->markTestSkipped(
+            $this->markTestSkipped(
                 'Database not configured'
             );
+            return;
         }
         $db = new Database($pdo, self::DRIVER);
         $this->assertTrue($db instanceof Database);
@@ -49,9 +50,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
         try {
             $db = Database::factory($this->getConfig());
         } catch (DBException $ex) {
-            return $this->markTestSkipped(
+            $this->markTestSkipped(
                 'Database not configured'
             );
+            return;
         }
         $this->assertTrue($db instanceof Database);
     }
@@ -61,9 +63,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
         try {
             $db = Database::factory($this->getConfig());
         } catch (DBException $ex) {
-            return $this->markTestSkipped(
+            $this->markTestSkipped(
                 'Database not configured'
             );
+            return;
         }
         $this->assertTrue($db instanceof Database);
 
@@ -148,9 +151,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
         try {
             $db = Database::factory($this->getConfig());
         } catch (DBException $ex) {
-            return $this->markTestSkipped(
+            $this->markTestSkipped(
                 'Database not configured'
             );
+            return;
         }
 
         try {
@@ -179,9 +183,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
         try {
             $db = Database::factory($this->getConfig());
         } catch (DBException $ex) {
-            return $this->markTestSkipped(
+            $this->markTestSkipped(
                 'Database not configured'
             );
+            return;
         }
         $db->safeQuery('DELETE FROM test_values');
     }

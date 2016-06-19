@@ -58,12 +58,12 @@
         <div class="table-cell">
             <select id="ledger_driver" name="universal[ledger][driver]">
                 <option
-                        {% if universal.ledger.driver == "file" %} selected{% endif %}
-                        value="file"
+                    {% if universal.ledger.driver == "file" %} selected{% endif %}
+                    value="file"
                 >{{ __("Store logs in the filesystem") }}</option>
                 <option
-                        {% if universal.ledger.driver == "database" %} selected{% endif %}
-                        value="database"
+                    {% if universal.ledger.driver == "database" %} selected{% endif %}
+                    value="database"
                 >{{ __("Store logs in a database table") }}</option>
             </select>
         </div>
@@ -104,10 +104,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="session_userid"
-                    type="text"
-                    name="universal[session_index][user_id]"
-                    value="{{ universal['session_index']['user_id']|e('html_attr') }}"
+                id="session_userid"
+                type="text"
+                name="universal[session_index][user_id]"
+                value="{{ universal['session_index']['user_id']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -120,10 +120,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="session_domain"
-                    type="text"
-                    name="universal[session_config][cookie_domain]"
-                    value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
+                id="session_domain"
+                type="text"
+                name="universal[session_config][cookie_domain]"
+                value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
             />
             ({{ __("Blank defaults to current host") }})
         </div>
@@ -160,6 +160,127 @@
         </div>
     </div>
 
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            {{  __("Authentication Rate-Limiting") }}:
+        </div>
+        <div class="table-cell">
+            <!-- Begin Rate-Limiting Table -->
+            <div class="table full-width">
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        {{ __("Options") }}:
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                                id="rate-limiting-expire"
+                                type="checkbox"
+                                name="universal[rate-limiting][expire]"
+                                value="1"
+                                {% if universal['rate-limiting']['expire'] %}
+                                    checked="checked"
+                                {% endif %}
+                        />
+                        <label for="rate-limiting-expire">
+                            {{ __("Fast Exit? This is better for security, but worse for usability.") }}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-expire">{{ __("Expiration") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="rate-limiting-expire"
+                            type="text"
+                            name="universal[rate-limiting][expire]"
+                            placeholder="{{ __("43200 = 12 hours")|e('html_attr') }}"
+                            value="{{ universal['rate-limiting']['expire']|e('html_attr') }}"
+                        /> (seconds)
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-first-delay">{{ __("First Delay") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                                id="rate-limiting-first-delay"
+                                type="text"
+                                name="universal[rate-limiting][first-delay]"
+                                value="{{ universal['rate-limiting']['first-delay']|e('html_attr') }}"
+                        /> (seconds)
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-ipv4-subnet">{{ __("IPv4 Subnet") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                                id="rate-limiting-ipv4-subnet"
+                                type="text"
+                                name="universal[rate-limiting][ipv4-subnet]"
+                                placeholder="32"
+                                value="{{ universal['rate-limiting']['ipv4-subnet']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-ipv6-subnet">{{ __("IPv6 Subnet") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="rate-limiting-ipv6-subnet"
+                            type="text"
+                            name="universal[rate-limiting][ipv6-subnet]"
+                            placeholder="128"
+                            value="{{ universal['rate-limiting']['ipv6-subnet']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-log-after">{{ __("Log Threshold") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="rate-limiting-log-after"
+                            type="text"
+                            name="universal[rate-limiting][log-after]"
+                            value="{{ universal['rate-limiting']['log-after']|e('html_attr') }}"
+                        /> (failed attempts)
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-log-public-key">{{ __("Log Public Key") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="rate-limiting-log-public-key"
+                            class="full-width"
+                            type="text"
+                            pattern="^[0-9A-Fa-f]{64}$"
+                            name="universal[rate-limiting][log-public-key]"
+                            value="{{ universal['rate-limiting']['log-public-key']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+            </div>
+            <!-- End Rate-Limiting Table -->
+        </div>
+    </div>
+
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
             <label for="email_from">
@@ -168,10 +289,10 @@
         </div>
         <div class="table-cell">
             <input
-                    id="email_from"
-                    type="text"
-                    name="universal[email][from]"
-                    value="{{ universal['email']['from']|e('html_attr') }}"
+                id="email_from"
+                type="text"
+                name="universal[email][from]"
+                value="{{ universal['email']['from']|e('html_attr') }}"
             />
         </div>
     </div>

@@ -2,6 +2,9 @@
 declare(strict_types=1);
 // Initialize the base types for our framework gears
 \Airship\Engine\Gears::init([
+    'AirBrake' =>
+        '\\Airship\\Engine\\Security\\AirBrake',
+
     'AutoPilot' =>
         '\\Airship\\Engine\\AutoPilot',
     
