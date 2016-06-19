@@ -41,6 +41,21 @@
 {% if supplier %}
             "supplier": {{ cabin.supplier|je }},
 {% endif %}
+            // HTTP Public-Key-Pinning:
+            "hpkp": {
+                "enabled": {{ cabin['hpkp']['enabled'] ? 'true' : 'false' }},
+                "hashes": {% if cabin['hpkp']['hashes'] %}[
+                    {% for h in cabin['hpkp']['hashes'] %}{
+                        "algo": {{ h.algo|default('sha256')|je }},
+                        "hash": {{ h.hash|je }}
+                    }{% if not loop.last %},{% endif %} {% endfor %}
+
+                ]{% else %}[]{% endif %},
+                "include-subdomains": {{ cabin['hpkp']['include-subdomains'] ? 'true' : 'false' }},
+                "max-age": {{ cabin['hpkp']['max-age']|je }},
+                "report-only": {{ cabin['hpkp']['report-only'] ? 'true' : 'false' }},
+                "report-uri": {{ cabin['hpkp']['report-uri']|je }}
+            },
             // Must be unique:
             "name": {{ cabin.name|default('UnnamedCabin' ~ loop.index)|je }}
         }{% if not loop.last %},{% endif %}

@@ -36,6 +36,15 @@
             // Used in cross-cabin hyperlinks:
             "canon_url": "http:\/\/localhost\/bridge",
             "language": "en-us",
+            // HTTP Public-Key-Pinning:
+            "hpkp": {
+                "enabled": false,
+                "hashes": [],
+                "include-subdomains": false,
+                "max-age": 5184000,
+                "report-only": false,
+                "report-uri": ""
+            },
             // Must be unique:
             "name": "Bridge"
         },
@@ -45,6 +54,15 @@
             // Used in cross-cabin hyperlinks:
             "canon_url": "http:\/\/localhost",
             "language": "en-us",
+            // HTTP Public-Key-Pinning:
+            "hpkp": {
+                "enabled": false,
+                "hashes": [],
+                "include-subdomains": false,
+                "max-age": 5184000,
+                "report-only": false,
+                "report-uri": ""
+            },
             // Must be unique:
             "name": "Hull"
         }

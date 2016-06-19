@@ -15,6 +15,7 @@ use \Airship\Engine\Security\CSRF;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\Alerts\InvalidType;
 use \ParagonIE\Halite\Util;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
 use \Psr\Log\LogLevel;
 
 /**
@@ -357,17 +358,21 @@ class Landing
         $state = State::instance();
         if (!\headers_sent()) {
             \header('Content-Type: text/html;charset=UTF-8');
-            \header('Content-Language: '.$state->lang);
+            \header('Content-Language: ' . $state->lang);
             \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
-        }
-        $csp = $state->CSP;
-        if ($csp instanceof CSPBuilder) {
-            $csp->sendCSPHeader();
-            $this->airship_cspcache_object->set(
-                $_SERVER['REQUEST_URI'],
-                \json_encode($csp->getHeaderArray())
-            );
+            $hpkp = $state->HPKP;
+            if ($hpkp instanceof HPKPBuilder) {
+                $hpkp->sendHPKPHeader();
+            }
+            $csp = $state->CSP;
+            if ($csp instanceof CSPBuilder) {
+                $csp->sendCSPHeader();
+                $this->airship_cspcache_object->set(
+                    $_SERVER['REQUEST_URI'],
+                    \json_encode($csp->getHeaderArray())
+                );
+            }
         }
         echo $data;
         return true;

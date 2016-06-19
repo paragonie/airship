@@ -268,10 +268,26 @@ trait Security
             $userID
         );
         if (empty($canary)) {
+            $this->log(
+                'What is this even.',
+                LogLevel::DEBUG,
+                [
+                    'database' => $canary,
+                    'session' => $_SESSION['session_canary']
+                ]
+            );
             $this->completeLogOut();
             return false;
         }
         if (!\hash_equals($canary, $_SESSION['session_canary'])) {
+            $this->log(
+                'User was logged out for having the wrong canary.',
+                LogLevel::DEBUG,
+                [
+                    'expected' => $canary,
+                    'possessed' => $_SESSION['session_canary']
+                ]
+            );
             $this->completeLogOut();
             return false;
         }

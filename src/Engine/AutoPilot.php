@@ -40,6 +40,11 @@ class AutoPilot implements RouterInterface
     public static $patternPrefix = '';
 
     /**
+     * @var string
+     */
+    public static $cabinIndex;
+
+    /**
      * @var CSPBuilder
      */
     protected $CSPBuilder;
@@ -85,6 +90,7 @@ class AutoPilot implements RouterInterface
     public function setActiveCabin(array $cabin, string $prefix)
     {
         self::$active_cabin = $cabin['namespace'] ?? $cabin['name'];
+        self::$cabinIndex = $prefix;
         if ($prefix === '*') {
             self::$patternPrefix = '';
         } elseif ($prefix[0] === '*') {

@@ -14,6 +14,10 @@
   * Updated jQuery to 3.0.0.
   * Regenerate session IDs on login. Thanks [@kelunik](https://github.com/kelunik)
     for bringing this oversight to our attention.
+  * Implemented progressive rate-limiting based on two factors: IP subnet and
+    username. This covers both the login form and the account recovery form.
+  * You can now specify [HPKP headers](https://scotthelme.co.uk/hpkp-http-public-key-pinning)
+    on a per-Cabin basis, via the Cabin Management screen. 
 
 ## Version 0.2.1 - 2016-06-04
 

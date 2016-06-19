@@ -105,7 +105,9 @@ if ($autoUpdater->needsUpdate()) {
 require ROOT . '/cabin_gears.php';
 
 $autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
-$autoPilot->setActiveCabin($active, $state->active_cabin);
+if ($autoPilot instanceof \Airship\Engine\AutoPilot) {
+    $autoPilot->setActiveCabin($active, $state->active_cabin);
+}
 
 require ROOT . '/symlinks.php';
 require ROOT . '/motifs.php';

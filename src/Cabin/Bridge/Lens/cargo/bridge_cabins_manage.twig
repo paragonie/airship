@@ -28,6 +28,12 @@
                 "inherit_box": true
             } %}
         </div>
+        <h3>{{ __("HTTP Public-Key-Pinning") }}</h3>
+        <div id="http-public-key-pinning">
+            {% include cargo("bridge_hpkp") with {
+                "hpkp": config.cabin.hpkp
+            } %}
+        </div>
     </div>
     <div class="form-button-group">
         <button type="submit" class="pure-button pure-button-secondary">

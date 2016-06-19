@@ -1,0 +1,118 @@
+<p>
+    {{ __(
+        "HPKP can greatly improve the security of your Airship, " ~
+        "but it can also backfire and prevent users from accessing it."
+    ) }}
+    <a href="https://raymii.org/s/articles/HTTP_Public_Key_Pinning_Extension_HPKP.html#Where_to_Pin">{{
+        __(
+            "Learn about the HPKP best practices before you consider " ~
+            "enabling this feature"
+        )
+    }}</a>. {{ __(
+        "At a minimum, it's highly recommended to use Report-Only mode during testing."
+    ) }}
+</p>
+
+<div class="table table-pad-1 full-width">
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            {{ __("Options") }}:
+        </div>
+        <div class="table-cell full-width">
+            <input
+                id="cabin_hpkp_enabled"
+                type="checkbox"
+                name="config[hpkp][enabled]"
+                value="1"
+                {% if hpkp['enabled'] %} checked="checked"{% endif %}
+            />
+            <label for="cabin_hpkp_enabled">{{ __(
+                "Enable HTTP Public-Key-Pinning? If you uncheck this box, no headers will be sent."
+            ) }}</label>
+            <br />
+            <input
+                id="cabin_hpkp_report_only"
+                type="checkbox"
+                name="config[hpkp][report-only]"
+                value="1"
+                {% if hpkp['report-only'] %} checked="checked"{% endif %}
+            />
+            <label for="cabin_hpkp_report_only">{{ __("Enable Report-Only mode?") }}</label>
+            <br />
+
+            <input
+                id="cabin_hpkp_include_subdomains"
+                type="checkbox"
+                name="config[hpkp][include-subdomains]"
+                value="1"
+                {% if hpkp['include-subdomains'] %} checked="checked"{% endif %}
+            />
+            <label for="cabin_hpkp_include_subdomains">{{ __("Enable include-subdomains mode?") }}</label>
+            
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="config_hpkp_report_uri">
+                {{ __("Report URI") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                class="full-width"
+                id="config_hpkp_report_uri"
+                name="config[hpkp][report-uri]"
+                placeholder="https://report-uri.io"
+                value="{{ hpkp['report-uri']|e('html_attr') }}"
+                type="text"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            <label for="config_hpkp_max_age">
+                {{ __("Max Age") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                id="config_hpkp_max_age"
+                name="config[hpkp][max-age]"
+                placeholder="5184000 = 2 months"
+                value="{{ hpkp['max-age']|e('html_attr') }}"
+                type="text"
+            /> (seconds)
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell">
+            {{ __("Public Key Hashes") }}:
+        </div>
+        <div class="table-cell full-width">
+            <ul id="hpkp-hashes">
+                {% for i, h in hpkp.hashes %}
+                <li><input
+                    class="full-width"
+                    title="{{ __("Public key hash")|e('html') }}"
+                    type="text"
+                    name="config[hpkp][hashes][{{ i }}][hash]"
+                    value="{{ h.hash|e('html_attr') }}"
+                />
+                </li>
+                {% endfor %}
+            </ul>
+            <button
+                class="pure-button pure-button-primary"
+                data-numhashes="{{ hpkp.hashes|length }}"
+                id="add-hpkp-hash"
+                type="button"
+            >
+                <i class="fa fa-plus"></i>
+                {{ __("Add Public Key Hash") }}
+            </button>
+        </div>
+    </div>
+    
+</div>

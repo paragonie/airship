@@ -86,6 +86,15 @@ window.setupDynamicNavigationEditor = function (id, config) {
     $("." + idPrefix + "_delete_link").click(window.delDynamicNavLink);
 };
 
+window.hpkpAdd = function () {
+    var addHash = $("#add-hpkp-hash");
+    var num = parseInt(addHash.data('numhashes'), 10);
+    $("#hpkp-hashes").append(
+        "<li><input class=\"full-width\" type=\"text\" name=\"config[hpkp][hashes][" + num + "][hash]\"/></li>"
+    );
+    addHash.data('numhashes', (num + 1));
+};
+
 $(document).ready(function() {
     $("#cabin_accordion").accordion({
         heightStyle: "content"
@@ -97,5 +106,8 @@ $(document).ready(function() {
             $(this).attr('id'),
             $.parseJSON(config)
         );
+    });
+    $("#add-hpkp-hash").on('click', function() {
+        return window.hpkpAdd();
     });
 });

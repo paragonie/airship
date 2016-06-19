@@ -4,6 +4,7 @@ namespace Airship\Engine;
 
 use \Airship\Engine\Bolt\Log as LogBolt;
 use \ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
 
 /**
  * Class Lens
@@ -60,6 +61,9 @@ class Lens
                 $base . '.twig',
                 \array_merge($this->stored, $params)
             );
+            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
+                $state->HPKP->sendHPKPHeader();
+            }
             if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
                 $state->CSP->sendCSPHeader();
             }
@@ -98,6 +102,9 @@ class Lens
                 $file,
                 $params
             );
+            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
+                $state->HPKP->sendHPKPHeader();
+            }
             if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
                 $state->CSP->sendCSPHeader();
             }
@@ -145,6 +152,12 @@ class Lens
             \header("Content-Language: ".$state->lang);
             \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
+            if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
+                $state->CSP->sendCSPHeader();
+            }
+            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
+                $state->HPKP->sendHPKPHeader();
+            }
         }
         return $this->twigEnv->render(
             $file,

@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
+use \Airship\Engine\{
+    AutoPilot,
+    State
+};
 /**
  * @global State $state
  */
@@ -17,7 +20,9 @@ if (!\session_id()) {
         // 32 bytes = 256 bits, which mean a 50% chance of 1 collision after 2^128 sessions
         'entropy_length' => 32,
         // The session ID cookie should be inaccessible to JavaScript
-        'cookie_httponly' => true
+        'cookie_httponly' => true,
+        // If we're over HTTPS, enforce secure=1
+        'cookie_secure' => AutoPilot::isHTTPSConnection()
     ];
     if (isset($state->universal['session_config'])) {
         $session_config = $state->universal['session_config'] + $session_config;
@@ -33,26 +38,18 @@ if (!\session_id()) {
 
 if (empty($_SESSION['created_canary'])) {
     // We haven't seen this session ID before
-    $oldSession = $_SESSION;
-    // Make sure $_SESSION is empty before we regenerate IDs
     $_SESSION = [];
     \session_regenerate_id(true);
-    // Now let's restore the superglobal
-    $_SESSION = $oldSession;
     // Create the canary
-    $_SESSION['created_canary'] = (new \DateTime('NOW'))
+    $_SESSION['created_canary'] = (new \DateTime())
         ->format('Y-m-d\TH:i:s');
 } else {
-    $dt = (
-        new \DateTime($_SESSION['created_canary'])
-    )->add(
+    $dt = (new \DateTime($_SESSION['created_canary']))->add(
         new \DateInterval('PT01H')
     );
-    $now = new \DateTime('now');
+    $now = new \DateTime();
     // Has an hour passed?
     if ($dt < $now) {
-        // We haven't seen this session ID before
-        $oldSession = $_SESSION;
         // An hour has passed:
         \session_regenerate_id(true);
         // Create the canary
