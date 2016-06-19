@@ -30,18 +30,22 @@ class AirBrake
     protected $db;
 
     /**
-     * @var State
+     * @var array
      */
-    protected $state;
+    protected $config;
 
     /**
      * AirBrake constructor.
      * @param Database|null $db
      */
-    public function __construct(Database $db = null)
+    public function __construct(Database $db = null, array $config = [])
     {
         if (!$db) {
             $db = \Airship\get_database();
+        }
+        if (empty($array)) {
+            $state = State::instance();
+            $array = $state->universal['rate-limiting'];
         }
         $this->db = $db;
         $this->state = State::instance();
@@ -59,7 +63,7 @@ class AirBrake
         string $ip,
         string $action = self::ACTION_LOGIN
     ): bool {
-        if (!$this->state->universal['rate-limiting']['fast-exit']) {
+        if (!$this->config['fast-exit']) {
             return false;
         }
         // Get the current time and the anticipated delay.
@@ -215,8 +219,8 @@ class AirBrake
             return 0;
         }
 
-        $max = $this->state['universal']['rate-limiting']['max-delay'] ?? 30;
-        $value = $this->state['universal']['rate-limiting']['first-delay'] ?? 0.250;
+        $max = $this->config['max-delay'] ?? 30;
+        $value = $this->config['first-delay'] ?? 0.250;
         if ($attempts > (8 * PHP_INT_SIZE - 1))  {
             // Don't ever overflow. Just assume the max time:s
             $value = $max;
@@ -279,7 +283,7 @@ class AirBrake
     public function getLogPublicKey(string $publicKey = ''): EncryptionPublicKey
     {
         if (!$publicKey) {
-            $publicKey = $this->state['universal']['rate-limiting']['log-public-key'] ?? null;
+            $publicKey = $this->config['log-public-key'] ?? null;
             if (!$publicKey) {
                 throw new SecurityAlert(
                     'Encryption public key not configured'
@@ -306,12 +310,12 @@ class AirBrake
         if (\preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $ip)) {
             return $this->getIPv4Subnet(
                 $ip,
-                $this->state['universal']['rate-limiting']['ipv4-subnet'] ?? 32
+                $this->config['ipv4-subnet'] ?? 32
             );
         }
         return $this->getIPv6Subnet(
             $ip,
-            $this->state['universal']['rate-limiting']['ipv6-subnet'] ?? 128
+            $this->config['ipv6-subnet'] ?? 128
         );
     }
 
@@ -330,8 +334,8 @@ class AirBrake
         int $numFailures = 0,
         HiddenString $password = null
     ): bool {
-        $logAfter = $this->state['universal']['rate-limiting']['log-after'] ?? null;
-        $publicKey = $this->state['universal']['rate-limiting']['log-public-key'] ?? '';
+        $logAfter = $this->config['log-after'] ?? null;
+        $publicKey = $this->config['log-public-key'] ?? '';
 
         $this->db->beginTransaction();
         $inserts = [
