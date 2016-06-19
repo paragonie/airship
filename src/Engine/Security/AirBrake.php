@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use Airship\Alerts\Security\SecurityAlert;
+use \Airship\Alerts\Security\SecurityAlert;
 use \Airship\Engine\{
     Database,
     State
