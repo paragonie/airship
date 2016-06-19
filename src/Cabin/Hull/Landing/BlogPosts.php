@@ -526,7 +526,7 @@ class BlogPosts extends LandingGear
             'config' => $this->config(),
             'mathjax' => $mathJAX
         ];
-        if ($blogPost['cache']) {
+        if (!empty($blogPost['cache'])) {
             $args['cached'] = true;
             $this->stasis('blog/read', $args);
         } else {
