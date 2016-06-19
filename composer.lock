@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2489f03ed2ba55c0e9360dd2442125e7",
-    "content-hash": "518e9dd2d1f15342d3e3dc9b22ff953b",
+    "hash": "bd199e4c7362a270889a2fbf594414f7",
+    "content-hash": "04eb89b2d993adbca2084a9a608b4992",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -651,6 +651,60 @@
             "time": "2016-05-15 07:41:00"
         },
         {
+            "name": "paragonie/hpkp-builder",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/hpkp-builder.git",
+                "reference": "9fb17828da24a88cf823c695273703dfbd939a86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/hpkp-builder/zipball/9fb17828da24a88cf823c695273703dfbd939a86",
+                "reference": "9fb17828da24a88cf823c695273703dfbd939a86",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/constant_time_encoding": "^2",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ParagonIE\\HPKPBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+",
+                "MIT",
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "info@paragonie.com",
+                    "homepage": "https://paragonie.com",
+                    "role": "Development Team"
+                }
+            ],
+            "description": "Easily integrate HTTP Public-Key-Pinning headers into your application.",
+            "homepage": "https://paragonie.com",
+            "keywords": [
+                "Hypertext",
+                "headers",
+                "hpkp",
+                "public key",
+                "public key pinning",
+                "security",
+                "security headers"
+            ],
+            "time": "2016-06-19 16:02:40"
+        },
+        {
             "name": "paragonie/multi-factor",
             "version": "v0.2.2",
             "source": {
@@ -807,16 +861,16 @@
         },
         {
             "name": "pear/crypt_gpg",
-            "version": "v1.4.1",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Crypt_GPG.git",
-                "reference": "c2000d4cd4287977c37c9faa70a05d092dff2948"
+                "reference": "0348ae4ee32bacdfaa1e6c13a852dc1ce6496edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Crypt_GPG/zipball/c2000d4cd4287977c37c9faa70a05d092dff2948",
-                "reference": "c2000d4cd4287977c37c9faa70a05d092dff2948",
+                "url": "https://api.github.com/repos/pear/Crypt_GPG/zipball/0348ae4ee32bacdfaa1e6c13a852dc1ce6496edc",
+                "reference": "0348ae4ee32bacdfaa1e6c13a852dc1ce6496edc",
                 "shasum": ""
             },
             "require": {
@@ -865,7 +919,7 @@
                 "gnupg",
                 "gpg"
             ],
-            "time": "2016-04-17 07:14:59"
+            "time": "2016-06-19 07:45:43"
         },
         {
             "name": "pear/pear_exception",
