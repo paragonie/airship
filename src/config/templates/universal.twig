@@ -38,9 +38,9 @@
         "expire": {{ universal["rate-limiting"]["expire"]|default(43200)|je }},
         "fast-exit": {{ universal["rate-limiting"]["fast-exit"] ? 'true' : 'false' }},
         "first-delay": {{ universal["rate-limiting"]["first-delay"]|default(0.25)|je }},
-        "log-after": {{ universal["rate-limiting"]["log-after"]|default(3)|je }},
         "ipv4-subnet": {{ universal["rate-limiting"]["ipv4-subnet"]|default(32)|je }},
         "ipv6-subnet": {{ universal["rate-limiting"]["ipv6-subnet"]|default(48)|je }},
+        "log-after": {{ universal["rate-limiting"]["log-after"]|default(3)|je }},
         "log-public-key": {{ universal["rate-limiting"]["log-public-key"]|je }},
         "max-delay": {{ universal["rate-limiting"]["max-delay"]|default(30)|je }}
     },
