@@ -3,8 +3,13 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge;
 
-use Airship\Engine\Security\Filter\{
-    ArrayFilter, BoolFilter, FloatFilter, InputFilterContainer, IntFilter, StringFilter
+use \Airship\Engine\Security\Filter\{
+    ArrayFilter,
+    BoolFilter,
+    FloatFilter,
+    InputFilterContainer,
+    IntFilter,
+    StringFilter
 };
 
 /**
