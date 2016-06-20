@@ -140,11 +140,11 @@
             <br />
 
             <input
-                    {% if config_extra['password-reset']['logout'] %}checked="checked"{% endif %}
-                    id="reset_logout"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_config }}[password-reset][logout]"
+                {% if config_extra['password-reset']['logout'] %}checked="checked"{% endif %}
+                id="reset_logout"
+                type="checkbox"
+                class="large_checkbox"
+                name="{{ form_key_config }}[password-reset][logout]"
             />
             <label for="reset_logout">{{ __("Logout all other sessions when password is reset?") }}</label>
         </div>

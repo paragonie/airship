@@ -10,9 +10,9 @@
         </div>
         <div class="table-cell full-width">
             <select
-                    class="full-width"
-                    id="twigvars_active_motif"
-                    name="{{ form_key_twig }}[active-motif]"
+                class="full-width"
+                id="twigvars_active_motif"
+                name="{{ form_key_twig }}[active-motif]"
             >{% for name, motif in motifs %}
                     <option value="{{ name|e('html_attr') }}"{#
                     #}{% if name == twig_vars['active-motif'] %} selected="selected"{% endif %}>
@@ -33,11 +33,11 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_title"
-                    type="text"
-                    name="{{ form_key_twig }}[title]"
-                    value="{{ twig_vars['title']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_title"
+                type="text"
+                name="{{ form_key_twig }}[title]"
+                value="{{ twig_vars['title']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -50,11 +50,11 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_tagline"
-                    type="text"
-                    name="{{ form_key_twig }}[tagline]"
-                    value="{{ twig_vars['tagline']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_tagline"
+                type="text"
+                name="{{ form_key_twig }}[tagline]"
+                value="{{ twig_vars['tagline']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -84,28 +84,28 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_blog_title"
-                    type="text"
-                    name="{{ form_key_twig }}[blog][title]"
-                    value="{{ twig_vars['blog']['title']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_blog_title"
+                type="text"
+                name="{{ form_key_twig }}[blog][title]"
+                value="{{ twig_vars['blog']['title']|e('html_attr') }}"
             />
         </div>
     </div>
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
-            <label for="twigvars_blog_title">
+            <label for="twigvars_blog_tagline">
                 {{ __("Blog Sub-Header") }}:
             </label>
         </div>
         <div class="table-cell full-width">
             <input
-                    class="full-width"
-                    id="twigvars_blog_tagline"
-                    type="text"
-                    name="{{ form_key_twig }}[blog][tagline]"
-                    value="{{ twig_vars['blog']['tagline']|e('html_attr') }}"
+                class="full-width"
+                id="twigvars_blog_tagline"
+                type="text"
+                name="{{ form_key_twig }}[blog][tagline]"
+                value="{{ twig_vars['blog']['tagline']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -118,10 +118,10 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    id="blog_per_page"
-                    type="text"
-                    name="{{ form_key_config }}[blog][per_page]"
-                    value="{{ config_extra['blog']['per_page']|e('html_attr') }}"
+                id="blog_per_page"
+                type="text"
+                name="{{ form_key_config }}[blog][per_page]"
+                value="{{ config_extra['blog']['per_page']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -134,10 +134,10 @@
         </div>
         <div class="table-cell full-width bottom-extra-pad">
             <input
-                    id="blog_per_page"
-                    type="text"
-                    name="{{ form_key_config }}[blog][comments][depth_max]"
-                    value="{{ config_extra['blog']['comments']['depth_max']|e('html_attr') }}"
+                id="blog_per_page"
+                type="text"
+                name="{{ form_key_config }}[blog][comments][depth_max]"
+                value="{{ config_extra['blog']['comments']['depth_max']|e('html_attr') }}"
             />
         </div>
     </div>
@@ -148,33 +148,33 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
-                    id="blog_comments_enabled"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_config }}[blog][comments][enabled]"
+                {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
+                id="blog_comments_enabled"
+                type="checkbox"
+                class="large_checkbox"
+                name="{{ form_key_config }}[blog][comments][enabled]"
             />
             <label for="blog_comments_enabled">{{ __("Allow Comments?") }}</label>
 
             <br />
 
             <input
-                    {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
-                    id="blog_comments_guests"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_config }}[blog][comments][guests]"
+                {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
+                id="blog_comments_guests"
+                type="checkbox"
+                class="large_checkbox"
+                name="{{ form_key_config }}[blog][comments][guests]"
             />
             <label for="blog_comments_guests">{{ __("Allow Guests to Comment?") }}</label>
 
             <br />
 
             <input
-                    {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
-                    id="blog_recaptcha_enabled"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_config }}[blog][comments][recaptcha]"
+                {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
+                id="blog_recaptcha_enabled"
+                type="checkbox"
+                class="large_checkbox"
+                name="{{ form_key_config }}[blog][comments][recaptcha]"
             />
             <label for="blog_recaptcha_enabled">{{ __("Require ReCAPTCHA?") }}</label>
 
@@ -184,22 +184,22 @@
                 <legend>{{ __("ReCAPTCHA Settings") }}</legend>
                 <label for="recaptcha_secret_key">{{ __("ReCAPTCHA Secret Key") }}:</label><br />
                 <input
-                        class="full-width"
-                        id="recaptcha_secret_key"
-                        type="text"
-                        name="{{ form_key_config }}[recaptcha][secret-key]"
-                        value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
+                    class="full-width"
+                    id="recaptcha_secret_key"
+                    type="text"
+                    name="{{ form_key_config }}[recaptcha][secret-key]"
+                    value="{{ config_extra['recaptcha']['secret-key']|e('html_attr') }}"
                 />
 
                 <hr />
 
                 <label for="recaptcha_site_key">{{ __("ReCAPTCHA Site Key") }}:</label><br />
                 <input
-                        class="full-width"
-                        id="recaptcha_site_key"
-                        type="text"
-                        name="{{ form_key_config }}[recaptcha][site-key]"
-                        value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
+                    class="full-width"
+                    id="recaptcha_site_key"
+                    type="text"
+                    name="{{ form_key_config }}[recaptcha][site-key]"
+                    value="{{ config_extra['recaptcha']['site-key']|e('html_attr') }}"
                 /><br />
             </fieldset>
         </div>
@@ -212,10 +212,10 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    id="file_cache"
-                    type="text"
-                    name="{{ form_key_config }}[file][cache]"
-                    value="{{ config_extra['file']['cache']|e('html_attr') }}"
+                id="file_cache"
+                type="text"
+                name="{{ form_key_config }}[file][cache]"
+                value="{{ config_extra['file']['cache']|e('html_attr') }}"
             /> (seconds)
         </div>
     </div>
@@ -225,11 +225,11 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    {% if config_extra['blog']['cachelists'] %}checked="checked"{% endif %}
-                    id="list_cache"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_config }}[blog][cachelists]"
+                {% if config_extra['blog']['cachelists'] %}checked="checked"{% endif %}
+                id="list_cache"
+                type="checkbox"
+                class="large_checkbox"
+                name="{{ form_key_config }}[blog][cachelists]"
             />
             <label for="list_cache">{{ __("Cache the blog list pages as static HTML?") }}</label>
         </div>
