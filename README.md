@@ -1,11 +1,13 @@
-# Airship - Content Management Platform
-
-*The sky is only the beginning.*
+# CMS Airship - Secure Content Management for the Modern Web
 
 [![Build Status](https://travis-ci.org/paragonie/airship.svg?branch=master)](https://travis-ci.org/paragonie/airship)
 
-Airship is a content management/blogging platform and application development
-framework written for PHP 7. Requires [libsodium](https://download.libsodium.org/doc/).
+[Screenshot](https://i.imgur.com/MoeL82n.png)
+
+*The sky is only the beginning.*
+
+Airship is a content management system, blog engine, and application 
+development framework written for PHP 7.
 
 Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
