@@ -115,6 +115,18 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                 $this->manifest['version']
             );
             foreach ($updates as $updateInfo) {
+                if (!$this->checkVersionSettings($updateInfo, $this->manifest['version'])) {
+                    $this->log(
+                        'Skipping Cabin update',
+                        LogLevel::INFO,
+                        [
+                            'info' => $updateInfo->getResponse(),
+                            'new_version' => $updateInfo->getVersion(),
+                            'current_version' => $this->manifest['version']
+                        ]
+                    );
+                    continue;
+                }
                 /**
                  * @var UpdateFile
                  */

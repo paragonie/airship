@@ -93,6 +93,18 @@ class Motif extends AutoUpdater implements ContinuumInterface
                 $this->manifest['version']
             );
             foreach ($updateInfoArray as $updateInfo) {
+                if (!$this->checkVersionSettings($updateInfo, $this->manifest['version'])) {
+                    $this->log(
+                        'Skipping Motif update',
+                        LogLevel::INFO,
+                        [
+                            'info' => $updateInfo->getResponse(),
+                            'new_version' => $updateInfo->getVersion(),
+                            'current_version' => $this->manifest['version']
+                        ]
+                    );
+                    continue;
+                }
                 /**
                  * @var UpdateFile
                  */
