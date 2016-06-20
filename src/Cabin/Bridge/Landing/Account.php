@@ -500,6 +500,7 @@ class Account extends LandingGear
                     'status' => 'error'
                 ]
             ]);
+            exit;
         } elseif (!$airBrake->getFastExit()) {
             $delay = $airBrake->getDelay($post['username'], $_SERVER['REMOTE_ADDR']);
             if ($delay > 0) {
