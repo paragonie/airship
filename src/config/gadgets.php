@@ -33,7 +33,7 @@ foreach (\glob(ROOT . '/Gadgets/') as $supplier) {
         }
     }
 }
-if (!\file_get_contents(ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json')) {
+if (!\file_exists(ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json')) {
     \file_get_contents(
         ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json',
         '[]'
