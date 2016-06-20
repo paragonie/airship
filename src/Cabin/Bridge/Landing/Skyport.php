@@ -290,6 +290,46 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * Trigger the package install process
+     *
+     */
+    public function updatePackage()
+    {
+        if (!\Airship\all_keys_exist(['type', 'supplier', 'package', 'version'], $_POST)) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => \__('Incomplete request.')
+            ]);
+        }
+
+        /**
+         * @security We need to guarantee RCE isn't possible:
+         */
+        $args = \implode(
+            ' ',
+            [
+                \escapeshellarg(
+                    Util::charWhitelist($_POST['type'], Util::PRINTABLE_ASCII)
+                ),
+                \escapeshellarg(
+                    Util::charWhitelist($_POST['supplier'], Util::PRINTABLE_ASCII) .
+                        '/' .
+                    Util::charWhitelist($_POST['package'], Util::PRINTABLE_ASCII)
+                ),
+                \escapeshellarg(
+                    Util::charWhitelist($_POST['version'], Util::PRINTABLE_ASCII)
+                )
+            ]
+        );
+        $output = \shell_exec('php -dphar.readonly=0 ' . ROOT . '/CommandLine/update_one.sh ' . $args);
+
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => $output
+        ]);
+    }
+
+    /**
      *
      * @param int $numInstalled
      * @return int[]

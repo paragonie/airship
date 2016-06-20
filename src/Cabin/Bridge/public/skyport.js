@@ -51,6 +51,29 @@ var skyport = {
                     alert(response.message);
                 }
                 // Otherwise, we assume we're doing fine.
+                skyport.viewPackage(type, supplier, pkg);
+            }
+        );
+    },
+
+    "updatePackage": function(type, supplier, pkg, version) {
+        if (!version) {
+            return;
+        }
+        $.post(
+            skyport.prefix + 'admin/skyport/update',
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg,
+                "version": version
+            },
+            function (response) {
+                if (response.status === 'ERROR') {
+                    alert(response.message);
+                }
+                // Otherwise, we assume we're doing fine.
+                skyport.viewPackage(type, supplier, pkg);
             }
         );
     },
@@ -140,6 +163,14 @@ var skyport = {
                 $(this).data('type'),
                 $(this).data('supplier'),
                 $(this).data('package')
+            )
+        });
+        $("#skyport-upgrade-button").on('click', function() {
+            skyport.updatePackage(
+                $(this).data('type'),
+                $(this).data('supplier'),
+                $(this).data('package'),
+                $("#skyport-upgrade-version").val()
             )
         });
         $("#skyport-refresh-package").on('click', function() {
