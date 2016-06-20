@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/paragonie/airship.svg?branch=master)](https://travis-ci.org/paragonie/airship)
 
-[![Screenshot](https://cspr.ng)](https://i.imgur.com/h40F3eg.png)
+[![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
 
 *The sky is only the beginning.*
 
