@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/paragonie/airship.svg?branch=master)](https://travis-ci.org/paragonie/airship)
 
-[![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
-
 *The sky is only the beginning.*
 
 Airship is a content management system, blog engine, and application 
 development framework written for PHP 7.
+
+[![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
 
 Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
@@ -24,6 +24,13 @@ if your company requires one.
 ## Documentation
 
 See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
+
+### Getting Started
+
+ * [Five-minute overview of CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/5-Minute-Overview.md)
+ * [Why choose CMS Airship over any other platform?](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md)
+ * [Introduction](https://github.com/paragonie/airship-docs/tree/master/en-us/01-intro)
+ * [How to install CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/2-Installing.md)
 
 ## Customizing Your Airship
 
