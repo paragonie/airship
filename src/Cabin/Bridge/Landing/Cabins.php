@@ -149,12 +149,14 @@ class Cabins extends LoggedInUsersOnly
             DIRECTORY_SEPARATOR . $cabinName .
             DIRECTORY_SEPARATOR . 'config.json'
         );
-        $settings['gadgets'] = \Airship\loadJSON(
-            ROOT . DIRECTORY_SEPARATOR . 'config' .
+        $gadgets = ROOT . DIRECTORY_SEPARATOR . 'config' .
             DIRECTORY_SEPARATOR . 'Cabin'.
             DIRECTORY_SEPARATOR . $cabinName .
-            DIRECTORY_SEPARATOR . 'gadgets.json'
-        );
+            DIRECTORY_SEPARATOR . 'gadgets.json';
+        if (!\file_exists($gadgets)) {
+            \file_put_contents($gadgets, '[]');
+        }
+        $settings['gadgets'] = \Airship\loadJSON($gadgets);
         $settings['motifs'] = $this->getCabinsMotifs($cabinName);
         $settings['twig_vars'] = \Airship\loadJSON(
             ROOT . DIRECTORY_SEPARATOR . 'config' .

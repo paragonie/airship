@@ -33,6 +33,12 @@ foreach (\glob(ROOT . '/Gadgets/') as $supplier) {
         }
     }
 }
+if (!\file_get_contents(ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json')) {
+    \file_get_contents(
+        ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json',
+        '[]'
+    );
+}
 
 $cabinsGadgets = \Airship\loadJSON(
     ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json'
