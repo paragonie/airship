@@ -39,11 +39,6 @@ class Gadget extends AutoUpdater implements ContinuumInterface
     protected $filePath = '';
 
     /**
-     * @var array
-     */
-    protected $manifest = [];
-
-    /**
      * @var string
      */
     protected $ext = 'phar';

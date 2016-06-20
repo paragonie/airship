@@ -2,12 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use \Airship\Alerts\Continuum\CouldNotUpdate;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Alerts\Hail\{
     NoAPIResponse,
     SignatureFailed
 };
 use \Airship\Engine\{
+    Continuum\Updaters\Cabin,
     Continuum\Updaters\UpdateFile,
     Continuum\Updaters\UpdateInfo,
     Bolt\Log,
@@ -62,6 +64,11 @@ abstract class AutoUpdater
      * @var UpdateFile
      */
     protected $localUpdateFile;
+
+    /**
+     * @var array
+     */
+    protected $manifest = [];
 
     /**
      * @var string
@@ -242,6 +249,7 @@ abstract class AutoUpdater
         string $apiEndpoint = 'download'
     ): UpdateFile {
         if ($this->localUpdateFile instanceof UpdateFile) {
+            $this->log('Local update file used', LogLevel::DEBUG);
             return $this->localUpdateFile;
         }
         try {
@@ -307,6 +315,98 @@ abstract class AutoUpdater
         throw new NoAPIResponse(
             \trk('errors.hail.no_channel_configured')
         );
+    }
+
+    /**
+     * This is the method that actually does the installation
+     *
+     * @param UpdateInfo $info
+     * @param UpdateFile $file
+     * @throws CouldNotUpdate
+     */
+    abstract protected function install(UpdateInfo $info, UpdateFile $file);
+
+    /**
+     * Process manual updates:
+     *
+     * 1. Check if a new update is available.
+     * 2. Download the upload file, store in a temporary file.
+     * 3. Verify the signature (via Halite).
+     * 4. Verify the update is recorded in Keyggdrasil.
+     * 5. If all is well, run the update script.
+     *
+     * @param string $desiredVersion
+     * @return bool
+     */
+    public function manualUpdate(string $desiredVersion): bool
+    {
+        $debugArgs = [
+            'supplier' =>
+                $this->supplier->getName(),
+            'name' =>
+                $this->name,
+            'version' =>
+                $desiredVersion
+        ];
+        $this->log('Begin Cabin manual update routine', LogLevel::DEBUG, $debugArgs);
+        $found = false;
+
+        if ($this instanceof Cabin) {
+            if ($this->isAirshipSpecialCabin()) {
+                // This only gets touched by core updates.
+                return false;
+            }
+        }
+        try {
+            /**
+             * @var UpdateInfo[]
+             */
+            $updates = $this->updateCheck(
+                $this->supplier->getName(),
+                $this->name,
+                $this->manifest['version']
+            );
+            foreach ($updates as $updateInfo) {
+                // We only want a specific version to be installed.
+                if ($updateInfo->getVersion() !== $desiredVersion) {
+                    continue;
+                }
+                $found = true;
+                /**
+                 * @var UpdateFile
+                 */
+                $updateFile = $this->downloadUpdateFile($updateInfo);
+                $this->log('Downloaded Cabin update file', LogLevel::DEBUG, $debugArgs);
+
+                if ($this->bypassSecurityAndJustInstall) {
+                    $this->log('Cabin update verification bypassed', LogLevel::ALERT, $debugArgs);
+                    $this->install($updateInfo, $updateFile);
+                    return true;
+                }
+
+                /**
+                 * Don't proceed unless we've verified the signatures
+                 */
+                if ($this->verifyUpdateSignature($updateInfo, $updateFile)) {
+                    if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
+                        $this->install($updateInfo, $updateFile);
+                        return true;
+                    } else {
+                        $this->log('Keyggdrasil check failed for this Cabin', LogLevel::ALERT, $debugArgs);
+                    }
+                } else {
+                    $this->log('Signature check failed for this Cabin', LogLevel::ALERT, $debugArgs);
+                }
+            }
+        } catch (NoAPIResponse $ex) {
+            // We should log this.
+            $this->log(
+                'Automatic update failure: NO API Response.',
+                LogLevel::ERROR,
+                \Airship\throwableToArray($ex)
+            );
+        }
+        return $found;
     }
 
     /**
