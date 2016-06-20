@@ -262,6 +262,9 @@ trait Security
      */
     public function verifySessionCanary(int $userID): bool
     {
+        if (empty($_SESSION['session_canary'])) {
+            return false;
+        }
         $db = \Airship\get_database();
         $canary = $db->cell(
             'SELECT session_canary FROM airship_users WHERE userid = ?',

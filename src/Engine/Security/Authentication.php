@@ -218,7 +218,12 @@ class Authentication
                 \trk('errors.security.invalid_persistent_token')
             );
         }
-        return (int) $record[$f['userid']];
+        $userID = (int) $record[$f['userid']];
+        $_SESSION['session_canary'] = $this->db->cell(
+            'SELECT session_canary FROM airship_users WHERE userid = ?',
+            $userID
+        );
+        return $userID;
     }
 
     /**
