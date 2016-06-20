@@ -77,15 +77,16 @@ class Ajax extends LandingGear
      */
     protected function fetchComments(CacheInterface $cache, string $uniqueID)
     {
-        \ob_start();
-            $blog = $this->blog->getBlogPostByUniqueId($uniqueID);
-            $comments = $this->blog->getCommentTree((int) $blog['postid']);
-            $this->lens('blog/comments', [
+        $blog = $this->blog->getBlogPostByUniqueId($uniqueID);
+        $comments = $this->blog->getCommentTree((int) $blog['postid']);
+        $contents = $this->lensRender(
+            'blog/comments',
+            [
                 'blogpost' => $blog,
                 'comments' => $comments,
                 'config' => $this->config()
-            ]);
-        $contents = \ob_get_clean();
+            ]
+        );
         $cache->set($uniqueID, [
             'status' => 'OK',
             'cached' => $contents

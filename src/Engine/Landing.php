@@ -278,18 +278,37 @@ class Landing
     }
 
     /**
-     * Grab a lens
+     * Render a lens, return its contents, don't exit.
      *
      * @param string $name
      * @param mixed[] ...$cArgs Constructor arguments
-     * @return bool
+     * @return string
      */
-    protected function lens(string $name, ...$cArgs): bool
+    protected function lensRender(string $name, ...$cArgs): string
     {
         if (isset($this->airship_lens_override[$name])) {
             $name = $this->airship_lens_override[$name];
         }
-        return $this->airship_lens_object->display($name, ...$cArgs);
+        \ob_start();
+        $this->airship_lens_object->display($name, ...$cArgs);
+        return \ob_get_clean();
+    }
+
+    /**
+     * Render a template and terminate execution. Do not cache.
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @return void
+     * @exit
+     */
+    protected function lens(string $name, ...$cArgs)
+    {
+        if (isset($this->airship_lens_override[$name])) {
+            $name = $this->airship_lens_override[$name];
+        }
+        $this->airship_lens_object->display($name, ...$cArgs);
+        exit;
     }
 
     /**
@@ -340,6 +359,7 @@ class Landing
      * @param string $name
      * @param array $cArgs Constructor arguments
      * @return bool
+     * @exit;
      */
     protected function stasis(string $name, ...$cArgs): bool
     {
@@ -374,8 +394,7 @@ class Landing
                 );
             }
         }
-        echo $data;
-        return true;
+        die($data);
     }
 
     /**

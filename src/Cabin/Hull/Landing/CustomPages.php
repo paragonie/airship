@@ -139,10 +139,11 @@ class CustomPages extends LandingGear
         $vars['rendered_content'] = $this->render($latest);
 
         if ($page['cache']) {
-            return $this->stasis('custom', $vars);
+            $this->stasis('custom', $vars);
         } else {
-            return $this->lens('custom', $vars);
+            $this->lens('custom', $vars);
         }
+        return true;
     }
 
     /**

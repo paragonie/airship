@@ -114,7 +114,8 @@ class Blog extends LoggedInUsersOnly
         }
         $category = $this->blog->getCategoryInfo($id);
 
-        $this->lens('blog/category_edit',
+        $this->lens(
+            'blog/category_edit',
             [
                 'category' => $category,
                 'categories' => $this->blog->getCategoryTree()

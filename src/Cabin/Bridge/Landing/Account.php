@@ -82,18 +82,17 @@ class Account extends LandingGear
                     $resp = $rc->verify($p['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
                     if ($resp->isSuccess()) {
                         $this->processBoard($p);
-                        exit;
+                        return;
                     } else {
                         $this->lens('board', [
                             'config' => $this->config(),
                             'title' => 'All Aboard!'
                         ]);
-                        exit;
                     }
                 }
             } else {
                 $this->processBoard($p);
-                exit;
+                return;
             }
         }
         $this->lens('board', [
@@ -115,9 +114,10 @@ class Account extends LandingGear
         }
         $p = $this->post();
         if (!empty($p)) {
-            return $this->processLogin($p);
+            $this->processLogin($p);
+            return;
         }
-        return $this->lens('login');
+        $this->lens('login');
     }
 
     /**
@@ -159,7 +159,7 @@ class Account extends LandingGear
         $p = $this->post();
         if (!empty($p)) {
             $this->processAccountUpdate($p, $account, $gpg_public_key);
-            exit;
+            return;
         }
         $this->lens(
             'my_account',
@@ -211,7 +211,7 @@ class Account extends LandingGear
             }
         }
 
-        return $this->lens('preferences', [
+        $this->lens('preferences', [
             'prefs' =>
                 $prefs,
             'motifs' =>
@@ -367,7 +367,6 @@ class Account extends LandingGear
                         ]
                     ]
                 );
-                exit;
             }
 
             // Log password changes as a WARNING
@@ -400,7 +399,6 @@ class Account extends LandingGear
                     ]
                 ]
             );
-            exit;
         }
         $this->lens(
             'my_account',
@@ -434,7 +432,6 @@ class Account extends LandingGear
                     ]
                 ]
             );
-            exit;
         }
 
         if ($this->acct->isUsernameTaken($post['username'])) {
@@ -447,7 +444,6 @@ class Account extends LandingGear
                     ]
                 ]
             );
-            exit;
         }
 
         if ($this->acct->isPasswordWeak($post)) {
@@ -460,7 +456,6 @@ class Account extends LandingGear
                     ]
                 ]
             );
-            exit;
         }
 
         $userID = $this->acct->createUser($post);
@@ -486,7 +481,6 @@ class Account extends LandingGear
                     'status' => 'error'
                 ]
             ]);
-            exit;
         }
 
         $airBrake = Gears::get('AirBrake');
@@ -500,7 +494,6 @@ class Account extends LandingGear
                     'status' => 'error'
                 ]
             ]);
-            exit;
         } elseif (!$airBrake->getFastExit()) {
             $delay = $airBrake->getDelay($post['username'], $_SERVER['REMOTE_ADDR']);
             if ($delay > 0) {
@@ -527,7 +520,6 @@ class Account extends LandingGear
                     'status' => 'error'
                 ]
             ]);
-            exit;
         }
 
         if (!empty($userID)) {
@@ -580,7 +572,6 @@ class Account extends LandingGear
                             ]
                         ]
                     );
-                    exit;
                 }
             }
             if ($user['session_canary']) {
@@ -639,7 +630,6 @@ class Account extends LandingGear
                     ]
                 ]
             );
-            exit;
         }
     }
 
@@ -668,7 +658,6 @@ class Account extends LandingGear
                         \__('You are doing that too fast. Please wait a few seconds and try again.')
                 ]
             );
-            exit;
         } elseif (!$airBrake->getFastExit()) {
             $delay = $airBrake->getDelay(
                 $post['username'],

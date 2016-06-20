@@ -62,12 +62,11 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );
-            exit;
+            return;
         }
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
             $this->lens('pages/bad_config');
-            exit;
         }
 
         $post = $this->post();
@@ -143,7 +142,6 @@ class PageManager extends LoggedInUsersOnly
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
             $this->lens('pages/bad_config');
-            exit;
         }
         $post = $this->post();
         if (!empty($post)) {
@@ -412,7 +410,7 @@ class PageManager extends LoggedInUsersOnly
             'cabins' => $cabins,
             'pageinfo' => $page,
             // UNTRUSTED, PROVIDED BY THE USER:
-            'all_dirs' => $this->pg->getDirectoryTree(),
+            'all_dirs' => $this->pg->getCustomDirTree($cabins, 0),
             'dir' => $path,
             'cabin' => $cabin,
             'pathinfo' => \Airship\chunk($path)

@@ -452,19 +452,16 @@ class Ajax extends LoggedInUsersOnly
             $perms[$action] = \in_array($action, $userPerms);
         }
 
-        \ob_start();
-        $this->lens(
-            'perms/user',
-            [
-                'user' =>  $user,
-                'actions' => $actions,
-                'perms' => $perms
-            ]
-        );
-        $body = \ob_get_clean();
         \Airship\json_response([
             'status' => 'OK',
-            'message' => $body,
+            'message' => $this->lensRender(
+                'perms/user',
+                [
+                    'user' =>  $user,
+                    'actions' => $actions,
+                    'perms' => $perms
+                ]
+            ),
         ]);
     }
 
