@@ -72,6 +72,7 @@ class AirBrake
         if ($delay === 0) {
             return false;
         }
+        $delay = \intdiv($delay, 1000);
 
         // Returns TRUE if the user hasn't waited long enough.
         return $this->db->exists(
