@@ -113,16 +113,8 @@ class Cabins extends LoggedInUsersOnly
         $post = $this->post();
         if (!empty($post)) {
             if ($this->saveSettings($cabinName, $cabin, $post)) {
-                $this->storeLensVar('post_response', [
-                    'status' => 'OK',
-                    'message' => \__(
-                        'Your changes have been made successfully.'
-                    )
-                ]);
-
-                // Reload configuration for page render
-                $cabin = \Airship\loadJSON(
-                    ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'cabins.json'
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/cabins/manage/' . $cabinName
                 );
             }
         }
@@ -325,9 +317,6 @@ class Cabins extends LoggedInUsersOnly
         if (\file_exists(ROOT . 'tmp' . $ds . 'cache' . $ds . 'cabin_data.json')) {
             \unlink(ROOT . 'tmp' . $ds . 'cache' . $ds . 'cabin_data.json');
         }
-        \Airship\redirect(
-            $this->airship_cabin_prefix . '/cabins/manage/' . $cabinName
-        );
         return true;
     }
 

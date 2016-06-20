@@ -196,11 +196,11 @@
                     <div class="table-cell full-width">
                         <select
                             id="twofactor_digits"
-                            name="{{ form_key_config }}[two-factor][digits]"
+                            name="{{ form_key_config }}[two-factor][length]"
                         >
                         {% for i in [6, 7, 8] %}
                             <option value="{{ i }}"{#
-                                #}{% if config_extra['two-factor']['digits'] == i%} selected="selected"{% endif %}{#
+                                #}{% if config_extra['two-factor']['length'] == i%} selected="selected"{% endif %}{#
                             #}>{{ i }}</option>
                         {% endfor %}
                         </select>
