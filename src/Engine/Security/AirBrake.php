@@ -349,6 +349,7 @@ class AirBrake
         $this->db->beginTransaction();
         $inserts = [
             'action' => self::ACTION_LOGIN,
+            'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
             'username' => $username,
             'ipaddress' => $ip,
             'subnet' => $this->getSubnet($ip)
@@ -387,6 +388,7 @@ class AirBrake
             'airship_failed_logins',
             [
                 'action' => self::ACTION_RECOVER,
+                'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
                 'username' => $username,
                 'ipaddress' => $ip,
                 'subnet' => $this->getSubnet($ip)
