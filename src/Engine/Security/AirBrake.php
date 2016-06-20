@@ -63,7 +63,7 @@ class AirBrake
         string $ip,
         string $action = self::ACTION_LOGIN
     ): bool {
-        if (!$this->config['fast-exit']) {
+        if (!$this->getFastExit()) {
             return false;
         }
         // Get the current time and the anticipated delay.
@@ -94,6 +94,14 @@ class AirBrake
                 ->sub($this->getCutoff($delay))
                 ->format('Y-m-d\TH:i:s')
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFastExit(): bool
+    {
+        return $this->config['fast-exit'];
     }
 
     /**
