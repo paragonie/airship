@@ -18,13 +18,13 @@
     </div>
     <div class="table-cell">
         <input
-                id="csp_inherit_box"
-                type="checkbox"
-                name="content_security_policy[inherit]"
-                value="1"
-                {% if csp['inherit'] %}
-                    checked="checked"
-                {% endif %}
+            id="csp_inherit_box"
+            type="checkbox"
+            name="content_security_policy[inherit]"
+            value="1"
+            {% if csp['inherit'] %}
+                checked="checked"
+            {% endif %}
         />
         <label for="csp_inherit_box">
             {{ __("Include, and extend, the Universal CSP Rules?") }}
@@ -86,26 +86,26 @@
                         <hr />
                         {% if key in ['script-src', 'style-src'] %}
                         <input
-                                id="csp_{{ key }}_unsafe_inline"
-                                type="checkbox"
-                                name="content_security_policy[{{ key }}][unsafe-inline]"
-                                value="1"
-                                {% if csp[key]['unsafe-inline'] %}
-                                    checked="checked"
-                                {% endif %}
+                            id="csp_{{ key }}_unsafe_inline"
+                            type="checkbox"
+                            name="content_security_policy[{{ key }}][unsafe-inline]"
+                            value="1"
+                            {% if csp[key]['unsafe-inline'] %}
+                                checked="checked"
+                            {% endif %}
                         />
                         <label for="csp_{{ key }}_unsafe_inline">
                             {{ __("Allow unsafe inline?") }}
                         </label><br />
                         {% if key == 'script-src' %}
                             <input
-                                    id="csp_{{ key }}_unsafe_eval"
-                                    type="checkbox"
-                                    name="content_security_policy[{{ key }}][unsafe-eval]"
-                                    value="1"
-                                    {% if csp[key]['unsafe-eval'] %}
-                                        checked="checked"
-                                    {% endif %}
+                                id="csp_{{ key }}_unsafe_eval"
+                                type="checkbox"
+                                name="content_security_policy[{{ key }}][unsafe-eval]"
+                                value="1"
+                                {% if csp[key]['unsafe-eval'] %}
+                                    checked="checked"
+                                {% endif %}
                             />
                             <label for="csp_{{ key }}_unsafe_eval">
                                 {{ __("Allow eval()?") }}
@@ -126,13 +126,13 @@
                     </label><br />
                     {% if key[4:] == '-src' %}
                         <input
-                                id="csp_{{ key }}_data"
-                                type="checkbox"
-                                name="content_security_policy[{{ key }}][data]"
-                                value="1"
-                                {% if csp[key]['data'] %}
-                                    checked="checked"
-                                {% endif %}
+                            id="csp_{{ key }}_self"
+                            type="checkbox"
+                            name="content_security_policy[{{ key }}][data]"
+                            value="1"
+                            {% if csp[key]['data'] %}
+                                checked="checked"
+                            {% endif %}
                         />
                         <label for="csp_{{ key }}_self">
                             {{ __("Allow data URIs?") }}

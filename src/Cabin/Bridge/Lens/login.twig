@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="width50 center">
-        <h2>Airship &mdash; Bridge</h2>
+        <h2>CMS Airship &mdash; Bridge</h2>
         {%  if post_response %}
             <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
         {% endif %}
@@ -13,7 +13,7 @@
                 <form
                     id="login"
                     class="login-form pure-form pure-form-stacked"
-                    action="{{ cabin_url('Bridge')|e('html_attr') }}login"
+                    action="{{ cabin_url('Bridge') }}login"
                     method="post"
                 >{{ form_token(get_path_url(cabin_url()) ~ "login") }}
                     {% include cargo("form_before_login") ignore missing %}

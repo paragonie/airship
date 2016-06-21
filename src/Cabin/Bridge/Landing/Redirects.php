@@ -17,10 +17,17 @@ class Redirects extends LoggedInUsersOnly
      */
     protected $pg;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();
         $this->pg = $this->blueprint('CustomPages');
+        if (!($this->pg instanceof  CustomPages)) {
+            throw new \TypeError('Custom Pages Blueprint');
+        }
     }
 
     /**
@@ -36,7 +43,7 @@ class Redirects extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
         $post = $this->post();
-        $redirectId += 0;
+        $redirectId = (int) $redirectId;
         $redirect = $this->pg->getRedirect($cabin, $redirectId);
 
         if (empty($redirect)) {

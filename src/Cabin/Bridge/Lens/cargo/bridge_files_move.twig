@@ -10,7 +10,7 @@
         </legend>
         <div class="full-width table table-pad-1">
             <div class="width50 table-cell">
-                <select class="full-width" name="new_dir">
+                <select title="Destination" class="full-width" name="new_dir">
                     <option value=""></option>
                     {% for d in all_dirs %}
                         <option value="{{ d|e('html_attr') }}"{% if d == dir %} selected="selected"{% endif %}>{{ d }}</option>
@@ -18,7 +18,7 @@
                 </select>
             </div>
             <div class="width50 table-cell">
-                <input class="full-width" type="text" name="new_name" value="{{ file.filename|e('html_attr') }}" />
+                <input title="{{ __("New Filename")|e('html_attr') }}" class="full-width" type="text" name="new_name" value="{{ file.filename|e('html_attr') }}" />
             </div>
             <div class="table-cell table-btn-right">
                 <button type="submit" name="submit_btn" value="confirm" class="pure-button pure-button-secondary">

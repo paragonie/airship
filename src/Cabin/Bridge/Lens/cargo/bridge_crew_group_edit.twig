@@ -4,10 +4,10 @@
 
         <div class="table-row">
             <div class="table-cell">
-                {{ __("New Group Name") }}:
+                {{ __("Group Name") }}:
             </div>
             <div class="table-cell">
-                <input type="text" name="name" value="{{ group.name|e('html_attr') }}" required="required" />
+                <input title="{{ __("Group Name")|e('html_attr') }}" type="text" name="name" value="{{ group.name|e('html_attr') }}" required="required" />
             </div>
         </div>
 
@@ -24,7 +24,7 @@
                 {{ __("Parent") }}:
             </div>
             <div class="table-cell">
-                <select name="parent" id="groups_parents">
+                <select title="{{ __("Parent")|e('html_attr') }}" name="parent" id="groups_parents">
                     <option value=""> -- {{ __("None") }} --</option>
                     {% for g in allowed_parents %}
                         {{ grpmac.selectBox(g, group.inherits) }}

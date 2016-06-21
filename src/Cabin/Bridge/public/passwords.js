@@ -9,6 +9,7 @@ function passwordWarning(text, score) {
             break;
         case 'This is a top-100 common password':
             html = "The password you chose is one of the 100 most common passwords that other people choose.";
+            break;
         case 'This is a very common password':
             html = "The password you chose is very common.";
             break;

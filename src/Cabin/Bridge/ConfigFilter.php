@@ -23,7 +23,8 @@ class ConfigFilter extends InputFilterContainer
     public function __construct()
     {
         $this
-            /* config_extra */
+
+        /* config_extra */
             ->addFilter('config_extra.board.enabled', new BoolFilter())
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
@@ -51,7 +52,8 @@ class ConfigFilter extends InputFilterContainer
                 (new IntFilter())
                     ->setDefault(30)
             )
-            /* twig_vars */
+
+        /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())
             ->addFilter('twig_vars.title', new StringFilter())
             ->addFilter('twig_vars.tagline', new StringFilter())

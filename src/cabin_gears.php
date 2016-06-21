@@ -5,6 +5,9 @@ use Airship\Engine\Gears;
 
 /**
  * Let's gearify the current cabin:
+ *
+ * e.g. Landing__IndexPage => \Airship\Cabin\Hull\Landing\IndexPage
+ *
  */
 $cabinGearsClosure = function() {
     foreach (['Landing', 'Blueprint'] as $dir) {

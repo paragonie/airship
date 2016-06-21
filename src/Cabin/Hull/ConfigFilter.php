@@ -23,7 +23,8 @@ class ConfigFilter extends InputFilterContainer
     public function __construct()
     {
         $this
-            /* config_extra */
+
+        /* config_extra */
             ->addFilter('config_extra.blog.cachelists', new BoolFilter())
             ->addFilter('config_extra.blog.comments.depth_max', new IntFilter())
             ->addFilter('config_extra.blog.comments.enabled', new BoolFilter())
@@ -31,11 +32,14 @@ class ConfigFilter extends InputFilterContainer
             ->addFilter('config_extra.blog.comments.recaptcha', new BoolFilter())
             ->addFilter('config_extra.blog.per_page', new IntFilter())
 
+            ->addFilter('config_extra.file.cache', new IntFilter())
+
+            ->addFilter('config_extra.homepage.blog-posts', (new IntFilter())->setDefault(5))
+
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
 
-            ->addFilter('config_extra.file.cache', new IntFilter())
-            /* twig_vars */
+        /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())
             ->addFilter('twig_vars.title', new StringFilter())
             ->addFilter('twig_vars.tagline', new StringFilter())

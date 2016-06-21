@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint as BP;
-use \Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
+use \Airship\Cabin\Bridge\{
+    Blueprint as BP,
+    Exceptions\UserFeedbackException
+};
 use \Airship\Engine\Bolt\Orderable as OrderableBolt;
 
 require_once __DIR__.'/init_gear.php';
@@ -25,7 +27,8 @@ class Author extends LoggedInUsersOnly
     private $author;
 
     /**
-     * The Airship post-constructor
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {

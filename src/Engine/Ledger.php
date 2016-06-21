@@ -10,6 +10,9 @@ use \Psr\Log\{
 
 /**
  * Class Ledger
+ *
+ * Logs messages in the appropriate ledger storage device.
+ *
  * @package Airship\Engine
  */
 class Ledger implements LoggerInterface

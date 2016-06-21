@@ -28,19 +28,26 @@ class Notary extends LandingGear
      * @var SignatureSecretKey
      */
     private $sk;
+
     /**
      * @var string
      */
     protected $channel;
+
     /**
      * @var SignaturePublicKey
      */
     protected $pk;
+
     /**
      * @var ChannelUpdates
      */
     protected $chanUp;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();

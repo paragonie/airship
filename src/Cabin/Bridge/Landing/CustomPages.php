@@ -11,5 +11,8 @@ namespace Airship\Cabin\Bridge\Landing;
  */
 class CustomPages extends \Airship\Cabin\Hull\Landing\CustomPages
 {
+    /**
+     * @var string
+     */
     protected $cabin = 'Bridge';
 }

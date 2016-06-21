@@ -9,13 +9,16 @@ use \Airship\Engine\{
 };
 
 /**
+ * Set up the Database objects from our database.json file
+ *
  * @global State $state
  */
 
 $dbgear = Gears::getName('Database');
-$databases = \Airship\loadJSON(ROOT.'/config/databases.json');
+$databases = \Airship\loadJSON(ROOT . '/config/databases.json');
 $dbPool = [];
 
+// Needed for IDE code completion:
 if (IDE_HACKS) {
     $dbgear = new Database(new \PDO('sqlite::memory:'));
 }

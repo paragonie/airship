@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Engine\Landing;
-use \Airship\Engine\Gears;
+use \Airship\Engine\{
+    Landing,
+    Gears
+};
 
 if (!\class_exists('LandingGear')) {
     Gears::extract('Landing', 'LandingGear', __NAMESPACE__);

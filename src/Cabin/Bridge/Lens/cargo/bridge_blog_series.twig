@@ -23,7 +23,10 @@
     {% for ser in series %}
         <div class="table-row">
             <div class="table-cell table-1-btn-left">
-                <a class="pure-button pure-button-primary" href="{{ cabin_url() }}blog/series/edit/{{ ser.seriesid }}">{#
+                <a
+                    class="pure-button pure-button-primary"
+                    href="{{ cabin_url() }}blog/series/edit/{{ ser.seriesid|e('html_attr') }}"
+                >{#
                     #}<i class="fa fa-pencil"></i>{#
                 #}</a>
             </div>

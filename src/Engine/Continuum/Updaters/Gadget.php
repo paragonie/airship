@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Updaters;
 
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Alerts\{
+    Continuum\CouldNotUpdate,
+    Hail\NoAPIResponse
+};
 use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
@@ -155,7 +157,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         }
 
         // Create a backup of the old Gadget:
-        \rename($this->filePath, $this->filePath.'.backup');
+        \rename($this->filePath, $this->filePath . '.backup');
         \rename($file->getPath(), $this->filePath);
 
         $this->log(

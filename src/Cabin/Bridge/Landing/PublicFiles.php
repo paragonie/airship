@@ -10,5 +10,8 @@ use \Airship\Cabin\Hull\Landing\PublicFiles as HullPublicFiles;
  */
 class PublicFiles extends HullPublicFiles
 {
+    /**
+     * @var string
+     */
     protected $cabin = 'Bridge';
 }

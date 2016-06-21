@@ -6,13 +6,18 @@
     {% set div = true %}
     {% if ser.type == 'blogpost' %}
     <li class="series-blog">
-        <a class="blog-post-title" href="/blog/{{ ser.blogyear|e('url') }}/{{ ser.blogmonth|e('url') }}/{{ ser.slug|e('url') }}">{#
-            #}{{ ser.title|e }}</a> ({{ ser.published|date("F j, Y") }} by <a href="/blog/author/{{ ser.authorslug|e('url') }}">{{ ser.authorname|e }}</a>)
+        <a class="blog-post-title" href="{{ cabin_url() }}blog/{{ ser.blogyear|e('url') }}/{{ ser.blogmonth|e('url') }}/{{ ser.slug|e('url') }}">{#
+            #}{{ ser.title }}</a> {#
+            #}({#
+                #}{{ ser.published|date("F j, Y") }} {#
+                #}{{ __("by") }} {#
+                #}<a href="{{ cabin_url() }}blog/author/{{ ser.authorslug|e('url') }}">{{ ser.authorname }}</a>{#
+            #})
     </li>
     {% else %}
     <li class="series-series">
-        <a class="series-title" href="/blog/series/{{ ser.slug|e('url') }}">{#
-            #}<i class="fa fa-folder-o"></i>{{ ser.name|e }}</a>
+        <a class="series-title" href="{{ cabin_url() }}blog/series/{{ ser.slug|e('url') }}">{#
+            #}<i class="fa fa-folder-o"></i>{{ ser.name }}</a>
     </li>
     {% endif %}
 {% endfor %}

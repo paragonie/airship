@@ -26,8 +26,8 @@ class Blog extends LoggedInUsersOnly
     protected $blog;
 
     /**
-     * This method gets invoked by the router before the final method call
-     * of the HTTP request.
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {

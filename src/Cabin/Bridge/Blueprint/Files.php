@@ -41,6 +41,10 @@ class Files extends BlueprintGear
         'py',
         'sh'
     ];
+
+    /**
+     * @var \finfo
+     */
     protected $finfo;
 
     /**
@@ -144,13 +148,13 @@ class Files extends BlueprintGear
         string $dirName = ''
     ): bool {
         if (empty($parent)) {
-            return 0 < $this->db->cell(
+            return $this->db->exists(
                 'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND name = ? AND cabin = ?',
                 $dirName,
                 $cabin
             );
         }
-        return 0 < $this->db->cell(
+        return $this->db->exists(
             'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND cabin = ?',
             $parent,
             $dirName,
@@ -241,8 +245,11 @@ class Files extends BlueprintGear
      * @param string $thisDir
      * @return array
      */
-    public function getContentsTree(string $cabin, string $base, string $thisDir): array
-    {
+    public function getContentsTree(
+        string $cabin,
+        string $base,
+        string $thisDir
+    ): array {
         $pieces = \Airship\chunk($base);
         foreach (\Airship\chunk($thisDir) as $p) {
             \array_push($pieces, $p);
@@ -263,8 +270,11 @@ class Files extends BlueprintGear
      * @param string $cabin
      * @return array
      */
-    protected function getContentsIterative(int $parent, string $path, string $cabin): array
-    {
+    protected function getContentsIterative(
+        int $parent,
+        string $path,
+        string $cabin
+    ): array {
         $ret = [];
         foreach ($this->getChildrenOf($parent, $cabin) as $dir) {
             $list = $this->getContentsIterative(
@@ -392,8 +402,10 @@ class Files extends BlueprintGear
      * @param string $cabin
      * @return array
      */
-    public function getFilesInDirectory($directoryId = null, string $cabin = ''): array
-    {
+    public function getFilesInDirectory(
+        $directoryId = null,
+        string $cabin = ''
+    ): array {
         if (empty($directoryId)) {
             $children = $this->db->run(
                 'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? ORDER BY filename ASC',
@@ -568,13 +580,13 @@ class Files extends BlueprintGear
         if ($oldParent !== $newDir) {
             // Detect collisions then update if there are none
             if ($newDir) {
-                $exists = $this->db->cell(
+                $exists = $this->db->exists(
                     'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND directoryid != ?',
                     $newDir,
                     $post['new_name'],
                     $dirId
                 );
-                if ($exists > 0) {
+                if ($exists) {
                     // There's already a directory here with the same name
                     $this->db->rollBack();
                     return false;
@@ -591,13 +603,13 @@ class Files extends BlueprintGear
                     ]
                 );
             } else {
-                $exists = $this->db->cell(
+                $exists = $this->db->exists(
                     'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND cabin = ? AND name = ? AND directoryid != ?',
                     $cabin,
                     $post['new_name'],
                     $dirId
                 );
-                if ($exists > 0) {
+                if ($exists) {
                     // There's already a directory here with the same name
                     $this->db->rollBack();
                     return false;
@@ -617,21 +629,21 @@ class Files extends BlueprintGear
         } elseif ($post['new_name'] !== $dirName) {
             // Detect name collisions
             if ($newDir) {
-                $exists = $this->db->cell(
+                $exists = $this->db->exists(
                     'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND directoryid != ?',
                     $newDir,
                     $post['new_name'],
                     $dirId
                 );
             } else {
-                $exists = $this->db->cell(
+                $exists = $this->db->exists(
                     'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND cabin = ? AND name = ? AND directoryid != ?',
                     $cabin,
                     $post['new_name'],
                     $dirId
                 );
             }
-            if ($exists > 0) {
+            if ($exists) {
                 // There's already a directory here with the same name
                 $this->db->rollBack();
                 return false;
@@ -690,7 +702,7 @@ class Files extends BlueprintGear
         }
 
         if ($newDir === null) {
-            $exists = $this->db->cell(
+            $exists = $this->db->exists(
                 'SELECT count(*) FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ? AND fileid != ?',
                 $cabin,
                 $post['new_name'],
@@ -702,7 +714,7 @@ class Files extends BlueprintGear
                 'filename' => $post['new_name']
             ];
         } else {
-            $exists = $this->db->cell(
+            $exists = $this->db->exists(
                 'SELECT count(*) FROM airship_files WHERE directory = ? AND filename = ? AND fileid != ?',
                 $newDir,
                 $post['new_name'],
@@ -713,7 +725,7 @@ class Files extends BlueprintGear
                 'filename' => $post['new_name']
             ];
         }
-        if ($exists > 0) {
+        if ($exists) {
             // There's already a directory here with the same name
             $this->db->rollBack();
             return false;
@@ -748,7 +760,7 @@ class Files extends BlueprintGear
         switch ($file['error']) {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-            throw new UploadError('File is too large');
+                throw new UploadError('File is too large');
             case UPLOAD_ERR_PARTIAL:
                 throw new UploadError('Partial file received');
             case UPLOAD_ERR_NO_TMP_DIR:
@@ -780,7 +792,10 @@ class Files extends BlueprintGear
 
         $type = $this->getMimeType($fullpath);
         $state = State::instance();
-        $checksum = HaliteFile::checksum($fullpath, $state->keyring['cache.hash_key']);
+        $checksum = HaliteFile::checksum(
+            $fullpath,
+            $state->keyring['cache.hash_key']
+        );
 
         // Begin transaction
         $this->db->beginTransaction();
@@ -816,7 +831,9 @@ class Files extends BlueprintGear
             // Clean up orphaned file, it was a database error.
             \unlink($fullpath);
             $this->db->rollBack();
-            throw new UploadError('A database error occurred trying to save ' . $destination);
+            throw new UploadError(
+                'A database error occurred trying to save ' . $destination
+            );
         }
 
         // Return metadata
@@ -852,11 +869,11 @@ class Files extends BlueprintGear
         }
         $iterName = $name . '.' . $ext;
         $i = 1;
-        while ($this->db->cell(
+        while ($this->db->exists(
             'SELECT count(*) FROM airship_files WHERE filename = ? AND '.$sub,
             $iterName,
             $subParam
-        ) > 0) {
+        )) {
             $iterName = $name . '-' . ++$i . '.' . $ext;
         }
         return $iterName;
@@ -903,19 +920,18 @@ class Files extends BlueprintGear
         }
         $dir1 = \Sodium\bin2hex(\random_bytes(1));
         $dir2 = \Sodium\bin2hex(\random_bytes(1));
-        if (!\file_exists(AIRSHIP_UPLOADS . $dir1)) {
-            \mkdir(AIRSHIP_UPLOADS . $dir1, 0777);
-        }
-        if (!\file_exists(AIRSHIP_UPLOADS . $dir1. DIRECTORY_SEPARATOR . $dir2)) {
-            \mkdir(AIRSHIP_UPLOADS . $dir1 . DIRECTORY_SEPARATOR . $dir2, 0777);
-        }
         $base = AIRSHIP_UPLOADS . $dir1 . DIRECTORY_SEPARATOR . $dir2;
+        if (!\file_exists($base)) {
+            \mkdir($base, 0775, true);
+        }
         do {
             $filename = \Sodium\bin2hex(\random_bytes(22)) . '.' . \strtolower($ext);
         } while (\file_exists($base . DIRECTORY_SEPARATOR . $filename));
 
         if (!\move_uploaded_file($tmp_name, $base . DIRECTORY_SEPARATOR . $filename)) {
-            throw new UploadError("Could not move temporary file to its permanent home");
+            throw new UploadError(
+                'Could not move temporary file to its permanent home'
+            );
         }
         return $dir1 . DIRECTORY_SEPARATOR .
             $dir2 . DIRECTORY_SEPARATOR .

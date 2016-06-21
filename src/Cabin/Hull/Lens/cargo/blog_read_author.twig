@@ -1,13 +1,13 @@
-<h2 id="about-the-author">About the Author</h2>
+<h2 id="about-the-author">{{ __("About the Author") }}</h2>
 {% set avatar = get_avatar(author.authorid, 'bio') %}
 <div id="author-wrap">
     {% if avatar %}
     <div class="author_photo_wrapper">
-        <img src="{{ avatar }}" alt="{{ author.name|e }} Photo" class="author_photo" />
+        <img src="{{ avatar }}" alt="{{ __("%s Photo", author.name)|e('html_attr') }}" class="author_photo" />
     </div>
     {% endif %}
     <div class="author_extra">
-        <h4 class="nomargin"><a href="/blog/author/{{ author.slug|e('url') }}">{{ author.name|e }}</a></h4>
+        <h4 class="nomargin"><a href="{{ cabin_url() }}blog/author/{{ author.slug|e('url') }}">{{ author.name }}</a></h4>
         <div id="author_byline">{{ author.byline|default("")|CleanMarkdown }}</div>
         {% if author.biography %}
         <div id="author_bio">

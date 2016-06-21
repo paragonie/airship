@@ -144,6 +144,22 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="homepage_blog_posts">
+                {{ __("Posts on Home Page") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                id="homepage_blog_posts"
+                type="text"
+                name="{{ form_key_config }}[homepage][blog-posts]"
+                value="{{ config_extra['homepage']['blog-posts']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
             {{ __("Comments:") }}
         </div>
         <div class="table-cell full-width">
@@ -212,10 +228,10 @@
         </div>
         <div class="table-cell full-width">
             <input
-                id="file_cache"
-                type="text"
-                name="{{ form_key_config }}[file][cache]"
-                value="{{ config_extra['file']['cache']|e('html_attr') }}"
+                    id="file_cache"
+                    type="text"
+                    name="{{ form_key_config }}[file][cache]"
+                    value="{{ config_extra['file']['cache']|e('html_attr') }}"
             /> (seconds)
         </div>
     </div>

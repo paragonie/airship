@@ -135,7 +135,7 @@ footer {
 .blog_year {
     list-style: none;
     margin-left: 0;
-    padding-left: 0px;
+    padding-left: 0;
 }
 .blog_month {
     list-style: none;
@@ -144,8 +144,8 @@ footer {
 }
 #blog_menu_dates, #blog_menu_dates ul {
     list-style: none;
-    margin-left: 0px !important;
-    padding-left: 0px;
+    margin-left: 0 !important;
+    padding-left: 0;
 }
 #blog_menu_dates li {
     list-style: none;

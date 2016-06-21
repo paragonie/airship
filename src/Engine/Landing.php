@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\GearNotFound;
-use \Airship\Alerts\Security\SecurityAlert;
+use \Airship\Alerts\{
+    GearNotFound,
+    Security\SecurityAlert
+};
 use \Airship\Engine\Bolt\{
     Common as CommonBolt,
     Cache as CacheBolt,
@@ -13,9 +15,11 @@ use \Airship\Engine\Bolt\{
 use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Security\CSRF;
 use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\Halite\Alerts\InvalidType;
-use \ParagonIE\Halite\Util;
-use ParagonIE\HPKPBuilder\HPKPBuilder;
+use \ParagonIE\Halite\{
+    Alerts\InvalidType,
+    Util
+};
+use \ParagonIE\HPKPBuilder\HPKPBuilder;
 use \Psr\Log\LogLevel;
 
 /**
@@ -155,31 +159,14 @@ class Landing
     }
 
     /**
-     * Choose a database
+     * Choose a database. We don't do anything fancy, but a Gear
+     * might decide to do something different.
      *
      * @return Contract\DBInterface
      */
     protected function airshipChooseDB(): DBInterface
     {
-        if (\array_key_exists('default', $this->airship_databases)) {
-            $db = $this->airship_databases['default'];
-            if (\count($db) === 1) {
-                return \array_shift($db);
-            }
-            $k = \array_keys($db);
-            $r = $k[random_int(0, \count($db) - 1)];
-            return $db[$r];
-        } elseif (\count($this->airship_databases) > 0) {
-            $k = \array_keys($this->airship_databases);
-            $db = $this->airship_databases[\array_shift($k)];
-            if (\count($db) === 1) {
-                return \array_shift($db);
-            }
-            $_k = \array_keys($db);
-            $r = $_k[random_int(0, \count($db) - 1)];
-            return $db[$r];
-        }
-        return null;
+        return \Airship\get_database();
     }
 
     /**
@@ -193,10 +180,10 @@ class Landing
     protected function blueprint(string $name, ...$cArgs): Blueprint
     {
         if (!empty($cArgs)) {
-            $cache = Util::hash($name.':'.\json_encode($cArgs));
+            $cache = Util::hash($name . ':' . \json_encode($cArgs));
         } else {
             $cArgs = [];
-            $cache = Util::hash($name.'[]');
+            $cache = Util::hash($name . '[]');
         }
 
         if (!isset($this->_cache['blueprints'][$cache])) {
@@ -363,7 +350,7 @@ class Landing
      */
     protected function stasis(string $name, ...$cArgs): bool
     {
-
+        // We don't want to cache anything tied to a session.
         $oldSession = $_SESSION;
         $_SESSION = [];
         $data = $this->airship_lens_object->render($name, ...$cArgs);

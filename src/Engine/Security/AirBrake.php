@@ -37,6 +37,7 @@ class AirBrake
     /**
      * AirBrake constructor.
      * @param Database|null $db
+     * @param array $config
      */
     public function __construct(Database $db = null, array $config = [])
     {
@@ -56,6 +57,7 @@ class AirBrake
      *
      * @param string $username
      * @param string $ip
+     * @param string $action
      * @return bool
      */
     public function failFast(
@@ -93,7 +95,7 @@ class AirBrake
             $this->getSubnet($ip),
             $date
                 ->sub($this->getCutoff($delay))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -136,7 +138,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -185,7 +187,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -222,7 +224,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
         if ($attempts === 0) {
             return 0;
@@ -266,6 +268,7 @@ class AirBrake
      * Return the given subnet for an IPv6 address and mask bits
      *
      * @param string $ip
+     * @param int $maskBits
      * @return string
      */
     public function getIPv6Subnet(string $ip, int $maskBits = 48): string
@@ -349,7 +352,7 @@ class AirBrake
         $this->db->beginTransaction();
         $inserts = [
             'action' => self::ACTION_LOGIN,
-            'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
+            'occurred' => (new \DateTime())->format(\AIRSHIP_DATE_FORMAT),
             'username' => $username,
             'ipaddress' => $ip,
             'subnet' => $this->getSubnet($ip)
@@ -388,7 +391,7 @@ class AirBrake
             'airship_failed_logins',
             [
                 'action' => self::ACTION_RECOVER,
-                'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
+                'occurred' => (new \DateTime())->format(\AIRSHIP_DATE_FORMAT),
                 'username' => $username,
                 'ipaddress' => $ip,
                 'subnet' => $this->getSubnet($ip)

@@ -27,8 +27,16 @@ class CustomPages extends LandingGear
      * @var PagesBlueprint
      */
     protected $pages;
+
+    /**
+     * @var string
+     */
     protected $cabin = 'Hull';
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         $this->pages = $this->blueprint('CustomPages');

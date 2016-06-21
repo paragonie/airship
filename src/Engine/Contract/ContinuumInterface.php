@@ -30,7 +30,10 @@ interface ContinuumInterface
      * @param string $apiEndpoint
      * @return UpdateFile
      */
-    public function downloadUpdateFile(UpdateInfo $update, string $apiEndpoint = 'download'): UpdateFile;
+    public function downloadUpdateFile(
+        UpdateInfo $update,
+        string $apiEndpoint = 'download'
+    ): UpdateFile;
 
     /**
      * Verify the Ed25519 signature of the update file against the
@@ -40,5 +43,8 @@ interface ContinuumInterface
      * @param UpdateFile $file
      * @return bool
      */
-    public function verifyUpdateSignature(UpdateInfo $info, UpdateFile $file): bool;
+    public function verifyUpdateSignature(
+        UpdateInfo $info,
+        UpdateFile $file
+    ): bool;
 }

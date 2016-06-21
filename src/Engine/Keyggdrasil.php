@@ -37,8 +37,10 @@ use \Psr\Log\LogLevel;
  *
  * (Yggdrasil = "world tree")
  *
- * This synchronizes our public keys for each channel with the rest of the network,
- * taking care to verify that a random subset of trusted peers sees the same keys.
+ * This synchronizes our public keys for each channel with the rest of the
+ * network, taking care to verify that a random subset of trusted peers sees
+ * the same keys. We also keep the checksums and version identifiers of all
+ * extensions in the Merkle tree.
  *
  * @package Airship\Engine\Continuum
  */
@@ -74,8 +76,11 @@ class Keyggdrasil
      * @param DBInterface|null $db
      * @param array $channels
      */
-    public function __construct(Hail $hail = null, DBInterface $db = null, array $channels = [])
-    {
+    public function __construct(
+        Hail $hail = null,
+        DBInterface $db = null,
+        array $channels = []
+    ) {
         $config = State::instance();
         if (empty($hail)) {
             $this->hail = $config->hail;
@@ -83,7 +88,7 @@ class Keyggdrasil
             $this->hail = $hail;
         }
 
-        if (!$db) {
+        if (empty($db)) {
             $db = \Airship\get_database();
         }
         $this->db = $db;
@@ -113,11 +118,18 @@ class Keyggdrasil
                 // Decode then verify signature
                 $message = Base64UrlSafe::decode($response['response']);
                 $signature = Base64UrlSafe::decode($response['signature']);
-                if (!AsymmetricCrypto::verify($message, $peer->getPublicKey(), $signature, true)) {
+                $isValid = AsymmetricCrypto::verify(
+                    $message,
+                    $peer->getPublicKey(),
+                    $signature,
+                    true
+                );
+                if (!$isValid) {
                     throw new PeerSignatureFailed(
                         'Invalid digital signature (i.e. it was signed with an incorrect key).'
                     );
                 }
+
                 // Make sure our challenge was signed.
                 $decoded = \json_decode($message, true);
                 if (!\hash_equals($challenge, $decoded['challenge'])) {
@@ -125,6 +137,7 @@ class Keyggdrasil
                         'Challenge-response authentication failed.'
                     );
                 }
+
                 // Make sure this was a recent signature (it *should* be):
                 $min = (new \DateTime('now'))
                     ->sub(new \DateInterval('P01D'));
@@ -173,8 +186,11 @@ class Keyggdrasil
      * @param string $root Which Merkle root are we starting at?
      * @return TreeUpdate[]
      */
-    protected function fetchTreeUpdates(Channel $chan, string $url, string $root): array
-    {
+    protected function fetchTreeUpdates(
+        Channel $chan,
+        string $url,
+        string $root
+    ): array {
         try {
             return $this->parseTreeUpdateResponse(
                 $chan,
@@ -188,9 +204,12 @@ class Keyggdrasil
             if (IDE_HACKS) {
                 $state->logger = new Ledger();
             }
-            $state->logger->alert('Signature failed!', \Airship\throwableToArray($ex));
-            return [];
+            $state->logger->alert(
+                'Signature failed!',
+                \Airship\throwableToArray($ex)
+            );
         }
+        return [];
     }
 
     /**
@@ -202,8 +221,19 @@ class Keyggdrasil
     protected function getMerkleTree(Channel $chan): MerkleTree
     {
         $nodeList = [];
-        $queryString = 'SELECT data FROM airship_tree_updates WHERE channel = ? ORDER BY treeupdateid ASC';
-        foreach ($this->db->run($queryString, $chan->getName()) as $node) {
+        $nodes = $this->db->run(
+            'SELECT
+                 data
+             FROM
+                 airship_tree_updates
+             WHERE
+                 channel = ?
+             ORDER BY
+                 treeupdateid ASC
+            ',
+            $chan->getName()
+        );
+        foreach ($nodes as $node) {
             $nodeList []= new Node($node['data']);
         }
         return (new MerkleTree(...$nodeList))
@@ -249,8 +279,10 @@ class Keyggdrasil
      * @throws ChannelSignatureFailed
      * @throws CouldNotUpdate
      */
-    protected function parseTreeUpdateResponse(Channel $chan, array $response): array
-    {
+    protected function parseTreeUpdateResponse(
+        Channel $chan,
+        array $response
+    ): array {
         if (!empty($response['no_updates'])) {
             // The "no updates" message should be authenticated.
             $signatureVerified = AsymmetricCrypto::verify(
@@ -314,8 +346,10 @@ class Keyggdrasil
      * @param TreeUpdate[] $updates
      * @return bool
      */
-    protected function processTreeUpdates(Channel $chan, TreeUpdate ...$updates): bool
-    {
+    protected function processTreeUpdates(
+        Channel $chan,
+        TreeUpdate ...$updates
+    ): bool {
         $this->db->beginTransaction();
         foreach ($updates as $update) {
             // Insert the new node in the database:
@@ -399,7 +433,11 @@ class Keyggdrasil
                     $merkleTree = $originalTree->getExpandedTree();
                     // Verify these updates with our Peers.
                     try {
-                        if ($this->verifyResponseWithPeers($chan, $merkleTree, ...$updates)) {
+                        if ($this->verifyResponseWithPeers(
+                            $chan,
+                            $merkleTree,
+                            ...$updates
+                        )) {
                             // Apply these updates:
                             $this->processTreeUpdates($chan, ...$updates);
                             return;
@@ -532,6 +570,9 @@ class Keyggdrasil
         $peers = $channel->getPeerList();
         $numPeers = \count($peers);
 
+        /**
+         * These numbers are negotiable in future versions.
+         */
         $minSuccess = $channel->getAppropriatePeerSize();
         $maxFailure = (int) \min(
             \floor($minSuccess * M_E),
@@ -544,6 +585,11 @@ class Keyggdrasil
 
         $success = $networkError = 0;
 
+        /**
+         * If any peers give a different answer, we're under attack.
+         * If too many peers don't respond, assume they're being DDoS'd.
+         * If enough peers respond in absolute agreement, we're good.
+         */
         for ($i = 0; $i < $numPeers; ++$i) {
             try {
                 if (!$this->checkWithPeer($peers[$i], $tree->getRoot())) {

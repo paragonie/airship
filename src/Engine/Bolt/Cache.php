@@ -25,6 +25,9 @@ trait Cache
      */
     public $airship_cspcache_object;
 
+    /**
+     * After loading the Cache bolt in place, configure it.
+     */
     function tightenCacheBolt()
     {
         static $tightened = false;

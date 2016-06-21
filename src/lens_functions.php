@@ -16,9 +16,13 @@ use \ParagonIE\ConstantTime\{
     Base64,
     Base64UrlSafe
 };
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
-use \ParagonIE\Halite\Asymmetric\SignatureSecretKey;
-use \ParagonIE\Halite\Util as CryptoUtil;
+use \ParagonIE\Halite\{
+    Asymmetric\SignaturePublicKey,
+    Asymmetric\SignatureSecretKey,
+    File,
+    Symmetric\AuthenticationKey,
+    Util as CryptoUtil
+};
 
 /**
  * Get the base template (normally "base.twig")
@@ -56,7 +60,9 @@ function cabin_config(string $name = \CABIN_NAME): array
  */
 function cabin_custom_config(string $name = \CABIN_NAME): array
 {
-    return \Airship\loadJSON(ROOT . '/Cabin/' . $name . '/config/config.json');
+    return \Airship\loadJSON(
+        ROOT . '/Cabin/' . $name . '/config/config.json'
+    );
 }
 
 /**
@@ -87,7 +93,7 @@ function cabin_url(string $cabin = \CABIN_NAME): string
 }
 
 /**
- * Used in our cachebust filter
+ * Used in our cachebust filter. This is mostly useful for HTML5 app caching
  *
  * @param $relative_path
  * @return string
@@ -99,9 +105,18 @@ function cachebust($relative_path)
     }
     $absolute = $_SERVER['DOCUMENT_ROOT'] . $relative_path;
     if (\is_readable($absolute)) {
-        return $relative_path.'?'.Base64UrlSafe::encode(
-            \Sodium\crypto_generichash(
-                \file_get_contents($absolute).\filemtime($absolute)
+        // Halite's File::checksum() uses less memory than reading the entire
+        // file into memory.
+        $key = new AuthenticationKey(
+            CryptoUtil::raw_hash(
+                (string) \filemtime($absolute)
+            )
+        );
+        return $relative_path . '?' . Base64UrlSafe::encode(
+            File::checksum(
+                $absolute,
+                $key,
+                true
             )
         );
     }
@@ -131,9 +146,9 @@ function can(
             'Permissions',
             \Airship\get_database()
         );
-        if (IDE_HACKS) {
-            $perm = new Permissions(\Airship\get_database());
-        }
+    }
+    if (!($perm instanceof Permissions)) {
+        return false;
     }
     return $perm->can($label, $context_regex, $domain, $user_id);
 }
@@ -148,7 +163,7 @@ function cargo(...$args)
 }
 
 /**
- * Content-Security-Policy hash a file
+ * Hash a file and store its hash in the Content-Security-Policy header
  *
  * @param string $file
  * @param string $dir
@@ -164,9 +179,21 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
         $h2 = substr($checksum, 2, 2);
         $fhash = substr($checksum, 4);
 
-        if (\file_exists(ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2.'/'.$fhash.'.txt')) {
+        $fileName = \implode(
+            '/',
+            [
+                ROOT,
+                'tmp',
+                'cache',
+                'csp_hash',
+                $h1,
+                $h2,
+                $fhash . '.txt'
+            ]
+        );
+        if (\file_exists($fileName)) {
             if ($state->CSP instanceof CSPBuilder) {
-                $prehash = \file_get_contents(ROOT . '/tmp/cache/csp_hash/' . $h1 . '/' . $h2 . '/' . $fhash . '.txt');
+                $prehash = \file_get_contents($fileName);
                 if (!\is_string($prehash)) {
                     // Network connection errors
                     return $file;
@@ -179,6 +206,7 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
             }
             return $file;
         }
+
         // Cache miss.
         if (\preg_match('#^([A-Za-z]+):\/\/#', $file)) {
             $absolute = $file;
@@ -201,15 +229,23 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
                 \hash($algo, \file_get_contents($absolute), true)
             );
             $state->CSP->preHash($dir, $preHash, $algo);
-            if (!is_dir(ROOT.'/tmp/cache/csp_hash/'.$h1)) {
-                \mkdir(ROOT.'/tmp/cache/csp_hash/'.$h1, 0777);
-            }
-            if (!is_dir(ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2)) {
-                \mkdir(ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2, 0777);
+
+            $dirName = \implode(
+                '/', [
+                    ROOT,
+                    'tmp',
+                    'cache',
+                    'csp_hash',
+                    $h1,
+                    $h2
+                ]
+            );
+            if (!\is_dir($dirName)) {
+                \mkdir($dirName, 0775, true);
             }
 
             \file_put_contents(
-                ROOT.'/tmp/cache/csp_hash/'.$h1.'/'.$h2.'/'.$fhash.'.txt',
+                $dirName . '/' . $fhash . '.txt',
                 $preHash
             );
             return $file;
@@ -219,15 +255,18 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
 }
 
 /**
- * Content-Security-Policy hash a string
+ * Hash a string and store its hash in the Content-Security-Policy header
  *
- * @param string $str
- * @param string $dir
- * @param string $algo
- * @return string
+ * @param string $str   The data we are hashing
+ * @param string $dir   The CSP Directive
+ * @param string $algo  Which hash algorithm?
+ * @return string       $str
  */
-function csp_hash_str(string $str, string $dir = 'script-src', string $algo = 'sha384'): string
-{
+function csp_hash_str(
+    string $str,
+    string $dir = 'script-src',
+    string $algo = 'sha384'
+): string {
     $state = State::instance();
     if (isset($state->CSP)) {
         if ($state->CSP instanceof CSPBuilder) {
@@ -305,8 +344,8 @@ function display_notary_tag(SignaturePublicKey $pk = null)
     if (!empty($notary['enabled'])) {
         if (!$pk) {
             $sk = $state->keyring['notary.online_signing_key'];
-            if (IDE_HACKS) {
-                $sk = new SignatureSecretKey();
+            if (!($sk instanceof SignatureSecretKey)) {
+                return;
             }
             $pk = $sk
                 ->derivePublicKey()
@@ -335,7 +374,6 @@ function get_languages(): array
  *
  * @param int $authorId
  * @param string $which
- * @param string $cabin
  * @return string
  */
 function get_avatar(int $authorId, string $which): string
@@ -355,21 +393,22 @@ function get_avatar(int $authorId, string $which): string
     if (!isset($cache[$key])) {
         $file = $db->row(
             "SELECT
-             f.*,
-             a.slug
-         FROM
-             hull_blog_author_photos p
-         JOIN
-             hull_blog_authors a
-             ON p.author = a.authorid
-         JOIN
-             hull_blog_photo_contexts c
-             ON p.context = c.contextid
-         JOIN
-             airship_files f
-             ON p.file = f.fileid
-         WHERE
-             c.label = ? AND a.authorid = ?",
+                 f.*,
+                 a.slug
+             FROM
+                 hull_blog_author_photos p
+             JOIN
+                 hull_blog_authors a
+                 ON p.author = a.authorid
+             JOIN
+                 hull_blog_photo_contexts c
+                 ON p.context = c.contextid
+             JOIN
+                 airship_files f
+                 ON p.file = f.fileid
+             WHERE
+                 c.label = ? AND a.authorid = ?
+             ",
             $which,
             $authorId
         );
@@ -381,7 +420,10 @@ function get_avatar(int $authorId, string $which): string
             }  else {
                 $dirId = $file['directory'];
                 do {
-                    $dir = $db->row("SELECT parent, cabin FROM airship_dirs WHERE directoryid = ?", $dirId);
+                    $dir = $db->row(
+                        "SELECT parent, cabin FROM airship_dirs WHERE directoryid = ?",
+                        $dirId
+                    );
                     $dirId = $dir['parent'];
                 } while (!empty($dirId));
                 $cabin = $dir['cabin'];
@@ -427,11 +469,11 @@ function global_config(string $key): array
 /**
  * Is this user an administrator?
  *
- * @param int $user_id
+ * @param int $userID
  * @return bool
  * @throws \Airship\Alerts\Database\DBException
  */
-function is_admin(int $user_id = 0): bool
+function is_admin(int $userID = 0): bool
 {
     static $perm = null;
     if ($perm === null) {
@@ -439,11 +481,14 @@ function is_admin(int $user_id = 0): bool
             'Permissions',
             \Airship\get_database()
         );
+        if (!($perm instanceof Permissions)) {
+            return false;
+        }
     }
-    if ($user_id < 1) {
-        $user_id = \Airship\LensFunctions\userid();
+    if ($userID < 1) {
+        $userID = \Airship\LensFunctions\userid();
     }
-    return $perm->isSuperUser($user_id);
+    return $perm->isSuperUser($userID);
 }
 
 /**
@@ -469,6 +514,8 @@ function je($data, int $indents = 0)
 }
 
 /**
+ * Return the user's logout token. This is to prevent logout via CSRF.
+ *
  * @return string
  */
 function logout_token(): string
@@ -513,24 +560,34 @@ function render_markdown(string $string = '', bool $return = false): string
     $h2 = substr($checksum, 2, 2);
     $hash = substr($checksum, 4);
 
-    if (\file_exists(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
-        $output = \file_get_contents(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt');
+    $cacheDir = \implode(
+        '/', [
+            ROOT,
+            'tmp',
+            'cache',
+            'markdown',
+            $h1,
+            $h2
+        ]
+    );
+
+    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
+        $output = \file_get_contents(
+            $cacheDir . '/' . $hash . '.txt'
+        );
     } else {
-        if (!is_dir(ROOT.'/tmp/cache/markdown/'.$h1)) {
-            \mkdir(ROOT.'/tmp/cache/markdown/'.$h1, 0777);
-        }
-        if (!is_dir(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2)) {
-            \mkdir(ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2, 0777);
+        if (!\is_dir($cacheDir)) {
+            \mkdir($cacheDir, 0775, true);
         }
         $output = $md->convertToHtml($string);
         // Cache for later
         \file_put_contents(
-            ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt',
+            $cacheDir . '/' . $hash . '.txt',
             $output
         );
         \chmod(
-            ROOT.'/tmp/cache/markdown/'.$h1.'/'.$h2.'/'.$hash.'.txt',
-            0666
+            $cacheDir . '/' . $hash . '.txt',
+            0664
         );
     }
     if ($return) {
@@ -561,27 +618,38 @@ function render_rst(string $string = '', bool $return = false): string
     $h2 = substr($checksum, 2, 2);
     $hash = substr($checksum, 4);
 
-    if (\file_exists(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
-        $output = \file_get_contents(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt');
+    $cacheDir = \implode(
+        '/',
+        [
+            ROOT,
+            'tmp',
+            'cache',
+            'rst',
+            $h1,
+            $h2
+        ]
+    );
+
+    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
+        $output = \file_get_contents(
+            $cacheDir . '/' . $hash . '.txt'
+        );
     } else {
-        if (!is_dir(ROOT.'/tmp/cache/rst')) {
-            \mkdir(ROOT.'/tmp/cache/rst', 0777);
+        if (!\is_dir($cacheDir)) {
+            \mkdir($cacheDir, 0775, true);
         }
-        if (!is_dir(ROOT.'/tmp/cache/rst/'.$h1)) {
-            \mkdir(ROOT.'/tmp/cache/rst/'.$h1, 0777);
-        }
-        if (!is_dir(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2)) {
-            \mkdir(ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2, 0777);
-        }
+        // This actually expects a string. The docblock in gregwar/rst is wrong
+        /** @noinspection PhpParamsInspection */
         $output = $rst->parse($string);
+
         // Cache for later
         \file_put_contents(
-            ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt',
+            $cacheDir . '/' . $hash . '.txt',
             $output
         );
         \chmod(
-            ROOT.'/tmp/cache/rst/'.$h1.'/'.$h2.'/'.$hash.'.txt',
-            0666
+            $cacheDir . '/' . $hash . '.txt',
+            0664
         );
     }
     if ($return) {
@@ -609,27 +677,35 @@ function purify(string $string = '')
     $h2 = substr($checksum, 2, 2);
     $hash = substr($checksum, 4);
 
-    if (\file_exists(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt')) {
-        $output = \file_get_contents(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt');
+    $cacheDir = \implode(
+        '/',
+        [
+            ROOT,
+            'tmp',
+            'cache',
+            'html_purifier',
+            $h1,
+            $h2
+        ]
+    );
+
+    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
+        $output = \file_get_contents(
+            $cacheDir . '/' . $hash . '.txt'
+        );
     } else {
-        if (!is_dir(ROOT.'/tmp/cache/html_purifier')) {
-            \mkdir(ROOT.'/tmp/cache/html_purifier', 0777);
-        }
-        if (!is_dir(ROOT.'/tmp/cache/html_purifier/'.$h1)) {
-            \mkdir(ROOT.'/tmp/cache/html_purifier/'.$h1, 0777);
-        }
-        if (!is_dir(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2)) {
-            \mkdir(ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2, 0777);
+        if (!\is_dir($cacheDir)) {
+            \mkdir($cacheDir, 0775, true);
         }
         $output = $state->HTMLPurifier->purify($string);
         // Cache for later
         \file_put_contents(
-            ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt',
+            $cacheDir . '/' . $hash . '.txt',
             $output
         );
         \chmod(
-            ROOT.'/tmp/cache/html_purifier/'.$h1.'/'.$h2.'/'.$hash.'.txt',
-            0666
+            $cacheDir . '/' . $hash . '.txt',
+            0664
         );
     }
     echo $output;
@@ -759,6 +835,7 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
 {
     static $userCache = [];
     $state = State::instance();
+
     if (empty($userId)) {
         $userId = \Airship\LensFunctions\userid();
         if (empty($userId)) {
@@ -766,28 +843,42 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
             return $state->motifs[$k];
         }
     }
+    // Did we cache these preferences?
     if (isset($userCache[$userId])) {
         return $state->motifs[$userCache[$userId]];
     }
+
     $db = \Airship\get_database();
+
     $userPrefs = $db->cell(
         'SELECT preferences FROM airship_user_preferences WHERE userid = ?',
         $userId
     );
-    if (!empty($userPrefs)) {
-        $userPrefs = \Airship\parseJSON($userPrefs, true);
-        if (isset($userPrefs['motif'][$cabin])) {
-            $split = \explode('/', $userPrefs['motif'][$cabin]);
-            foreach ($state->motifs as $k => $motif) {
-                if ($motif['config']['supplier'] === $split[0]) {
-                    if ($motif['config']['name'] === $split[1]) {
-                        $userCache[$userId] = $k;
-                        return $state->motifs[$k];
-                    }
-                }
+
+    if (empty($userPrefs)) {
+        // Default
+        $k = \array_keys($state->motifs)[0];
+        $userCache[$userId] = $k;
+        return $state->motifs[$k];
+    }
+
+    $userPrefs = \Airship\parseJSON($userPrefs, true);
+    if (isset($userPrefs['motif'][$cabin])) {
+        $split = \explode('/', $userPrefs['motif'][$cabin]);
+        foreach ($state->motifs as $k => $motif) {
+            if (
+                $motif['config']['supplier'] === $split[0]
+                    &&
+                $motif['config']['name'] === $split[1]
+            ) {
+                // We've found a match:
+                $userCache[$userId] = $k;
+                return $state->motifs[$k];
             }
         }
     }
+
+    // When all else fails, go with the first one
     $k = \array_keys($state->motifs)[0];
     $userCache[$userId] = $k;
     return $state->motifs[$k];

@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Updaters;
 
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Alerts\{
+    Continuum\CouldNotUpdate,
+    Hail\NoAPIResponse
+};
 use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
@@ -342,7 +344,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                     'cabin.' . $name . '.offline.txt'
                 ]
             ),
-            \date('Y-m-d\TH:i:s')
+            \date(\AIRSHIP_DATE_FORMAT)
         );
         \clearstatcache();
     }

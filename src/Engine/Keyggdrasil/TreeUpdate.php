@@ -124,11 +124,11 @@ class TreeUpdate
         $this->merkleRoot = $updateData['root'];
         $this->stored = $updateData['stored'];
         $this->action = $this->stored['action'];
+
         $packageRelatedActions = [
             self::ACTION_CORE_UPDATE,
             self::ACTION_PACKAGE_UPDATE
         ];
-
         if (\in_array($this->action, $packageRelatedActions)) {
             // This is a package-related update:
             $this->checksum = $this->stored['checksum'];
@@ -329,7 +329,7 @@ class TreeUpdate
      */
     protected function loadSupplier(Channel $chan, array $updateData): Supplier
     {
-        $this->supplierName = \preg_replace('/[^A-Za-z0-9\-_]/', '', $updateData['supplier']);
+        $this->supplierName = \preg_replace('#[^A-Za-z0-9\-_]#', '', $updateData['supplier']);
         try {
             if (!\file_exists(ROOT . '/config/supplier_keys/' . $this->supplierName . '.json')) {
                 throw new NoSupplier($this->supplierName);
@@ -376,7 +376,7 @@ class TreeUpdate
         }
         // We need a precise format:
         $dateGen = (new \DateTime($this->stored['date_generated']))
-            ->format('Y-m-d\TH:i:s');
+            ->format(\AIRSHIP_DATE_FORMAT);
         $messageToSign = [
             'action' =>
                 $this->action,

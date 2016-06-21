@@ -13,85 +13,6 @@ use \Airship\Engine\{
 /**
  * I. GENERAL FUNCTIONS
  */
-
-    /**
-     * Use HKDF to derive multiple keys from one.
-     * http://tools.ietf.org/html/rfc5869
-     *
-     * @param string $hash Hash Function
-     * @param string $ikm Initial Keying Material
-     * @param int $length How many bytes?
-     * @param string $info What sort of key are we deriving?
-     * @param string $salt
-     * @return string
-     * @throws \Exception
-     * @throws \InvalidArgumentException
-     */
-    function hash_hkdf(
-        string $hash,
-        string $ikm,
-        int $length, 
-        string $info = '', 
-        string $salt = null
-    ): string {
-        if (\strtolower($hash) === 'blake2b') {
-            // Punt to Halite.
-            if ($salt) {
-                return Util::hkdfBlake2b($ikm, $length, $info, $salt);
-            }
-            return Util::hkdfBlake2b($ikm, $length, $info);
-        }
-        // Find the correct digest length
-        $digest_length = Util::safeStrlen(
-            \hash_hmac($hash, '', '', true)
-        );
-
-        // Sanity-check the desired output length.
-        if (empty($length) || !\is_int($length) ||
-            $length < 0 || $length > 255 * $digest_length) {
-            throw new \InvalidArgumentException(
-                \trk("errors.crypto.hkdf_bad_digest_length")
-            );
-        }
-        // "if [salt] not provided, is set to a string of HashLen zeroes."
-        if (\is_null($salt)) {
-            $salt = \str_repeat("\x00", $digest_length);
-        }
-
-        // HKDF-Extract:
-        // PRK = HMAC-Hash(salt, IKM)
-        // The salt is the HMAC key.
-        $prk = \hash_hmac($hash, $ikm, $salt, true);
-
-        // HKDF-Expand:
-        // This check is useless, but it serves as a reminder to the spec.
-        if (mb_strlen($prk, '8bit') < $digest_length) {
-            throw new \Exception('HKDF-Expand failed');
-        }
-        // T(0) = ''
-        $t = '';
-        $last_block = '';
-        for ($block_index = 1; Util::safeStrlen($t) < $length; ++$block_index) {
-            // T(i) = HMAC-Hash(PRK, T(i-1) | info | 0x??)
-            $last_block = \hash_hmac(
-                $hash,
-                $last_block . $info . \chr($block_index),
-                $prk,
-                true
-            );
-            // T = T(1) | T(2) | T(3) | ... | T(N)
-            $t .= $last_block;
-        }
-        // ORM = first L octets of T
-        $orm = Util::safeSubstr($t, 0, $length);
-        if ($orm === FALSE) {
-            throw new \Exception(
-                \trk('errors.crypto.general_error')
-            );
-        }
-        return $orm;
-    }
-
     /**
      * Returns true if every member of an array is NOT another array
      *
@@ -132,32 +53,6 @@ use \Airship\Engine\{
             }
         }
         return $ret;
-    }
-
-    /**
-     * Generate a UUID following the version 4 specification
-     *
-     * @return string
-     */
-    function UUIDv4()
-    {
-        return \implode('-', [
-            \Sodium\bin2hex(random_bytes(4)),
-            \Sodium\bin2hex(random_bytes(2)),
-            \Sodium\bin2hex(
-                \pack(
-                    'C',
-                    (ord(\random_bytes(1)) & 0x0F) | 0x40
-                )
-            ) . \Sodium\bin2hex(\random_bytes(1)),
-            \Sodium\bin2hex(
-                \pack(
-                    'C',
-                    (\ord(\random_bytes(1)) & 0x3F) | 0x80
-                )
-            ) . \Sodium\bin2hex(\random_bytes(1)),
-            \Sodium\bin2hex(\random_bytes(6))
-        ]);
     }
 
 /**

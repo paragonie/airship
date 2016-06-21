@@ -17,9 +17,21 @@ class AuthorFiles extends FileManager
      * @var Author
      */
     protected $author;
+
+    /**
+     * @var int
+     */
     protected $authorId = 0;
+
+    /**
+     * @var string
+     */
     protected $authorSlug = '';
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();

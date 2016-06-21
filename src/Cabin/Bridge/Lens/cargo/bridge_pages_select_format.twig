@@ -1,4 +1,4 @@
-<select name="format" id="format"{% if readonly %} readonly="readonly" disabled="disabled"{% endif %}>
+<select title="{{ __("Format")|e('html_attr') }}" name="format" id="format"{% if readonly %} readonly="readonly" disabled="disabled"{% endif %}>
     <option {% if format == "HTML"  %} selected{% endif %} value="HTML">HTML</option>
     <option {% if format == "Markdown"  %} selected{% endif %} value="Markdown">Markdown</option>
     <option {% if format == "Rich Text"  %} selected{% endif %} value="Rich Text">Rich Text</option>

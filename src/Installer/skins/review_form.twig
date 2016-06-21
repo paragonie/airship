@@ -40,12 +40,12 @@
             <label for="username">
                 Administrator Username:
             </label>
-            <input class="pure-input-1" type="text" name="username" value="{{ admin.username|e('html_attr') }}" />
+            <input id="username" class="pure-input-1" type="text" name="username" value="{{ admin.username|e('html_attr') }}" />
 
             <label for="passphrase">
                 Administrator Passphrase:
             </label>
-            <input class="pure-input-1" type="password" name="passphrase" id="passphrase" placeholder="Leave blank to not change your password." />
+            <input id="passphrase" class="pure-input-1" type="password" name="passphrase" id="passphrase" placeholder="Leave blank to not change your password." />
         </div>
 </fieldset>
 
@@ -58,7 +58,7 @@
         <label for="bridge_path">
             Hostname and Path:
         </label>
-        <input class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ cabins.Bridge.path|e('html_attr') }}" />
+        <input id="bridge_path" class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ cabins.Bridge.path|e('html_attr') }}" />
 
         <div>
             <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" {% if cabins.Bridge.https %} checked="checked"{% endif %} />
@@ -67,15 +67,15 @@
             </label>
         </div>
 
-        <label for="bridge_path">
+        <label for="bridge_url">
             Canon URL (for hyperlinks from other Cabins):
         </label>
-        <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="{{ cabins.Bridge.canon_url|e('html_attr') }}" />
+        <input id="bridge_url" class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="{{ cabins.Bridge.canon_url|e('html_attr') }}" />
 
-        <label for="brige_lang">
+        <label for="bridge_lang">
             Language:
         </label>
-        <select class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
+        <select id="bridge_lang" class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
             <option {% if cabins.Bridge.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
         </select>
 
@@ -101,7 +101,7 @@
         <label for="hull_path">
             Hostname and Path:
         </label>
-        <input class="pure-input-1" type="text" name="cabin[Hull][path]" value="{{ cabins.Hull.path|e('html_attr') }}" />
+        <input id="hull_path" class="pure-input-1" type="text" name="cabin[Hull][path]" value="{{ cabins.Hull.path|e('html_attr') }}" />
 
         <div>
             <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" {% if cabins.Hull.https %} checked="checked"{% endif %} />
@@ -110,15 +110,15 @@
             </label>
         </div>
 
-        <label for="hull_path">
+        <label for="hull_url">
             Canon URL (for hyperlinks from other Cabins):
         </label>
-        <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Hull.canon_url|e('html_attr') }}" />
+        <input id="hull_url" class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="{{ cabins.Hull.canon_url|e('html_attr') }}" />
 
-        <label for="brige_lang">
+        <label for="hull_lang">
             Language:
         </label>
-        <select class="pure-input-1" id="hull_lang" name="cabin[Hull][lang]">
+        <select id="hull_lang" class="pure-input-1" id="hull_lang" name="cabin[Hull][lang]">
             <option {% if cabins.Hull.lang == "en-us" %} selected="selected"{% endif %} value="en-us">English (U.S.)</option>
         </select>
 

@@ -1,6 +1,6 @@
 {% set can_update = can_update() %}{% set can_delete = can_delete() %}
 <a href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/new" class="pure-button pure-button-primary">
-    <i class="fa fa-plus"></i> New Redirect
+    <i class="fa fa-plus"></i> {{ __("New Redirect") }}
 </a>
 <hr />
 {% if redirects %}
@@ -14,15 +14,21 @@
     <div class="table-row table-body-row">
         <div class="table-cell table-min-width table-pad-right">
             {% if can_update %}
-            <a class="pure-button pure-button-primary" href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/edit/{{ redir.redirectid }}">
+            <a
+                class="pure-button pure-button-primary"
+                href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/edit/{{ redir.redirectid|e('html_attr') }}"
+            >
                 <i class="fa fa-pencil"></i>
-                Edit
+                {{ __("Edit") }}
             </a>
             {% endif %}
             {% if can_delete %}
-            <a class="pure-button pure-button-secondary" href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/delete/{{ redir.redirectid }}">
+            <a
+                class="pure-button pure-button-secondary"
+                href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/delete/{{ redir.redirectid|e('html_attr') }}"
+            >
                 <i class="fa fa-remove"></i>
-                Delete
+                {{ __("Delete") }}
             </a>
             {% endif %}
         </div>

@@ -1,28 +1,35 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
+use \Airship\Engine\{
+    Gears,
+    State
+};
 
 if (!\defined('ROOT')) {
     require_once __DIR__.'/preload.php';
 }
 /**
+ * This is the regular bootstrapping script for Airship. If you write your own
+ * API endpoint different from public/index.php, make sure you require_once
+ * this file.
+ *
  * @global State $state
  */
 
 /**
- * 1. Load all of the gears.
+ * 1. Load all of the custom gears (if any).
  */
-$gears = \Airship\loadJSON(ROOT.'/config/gears.json');
+$gears = \Airship\loadJSON(ROOT . '/config/gears.json');
 foreach ($gears as $gear) {
 
     $ns = isset($gear['supplier'])
-        ? $gear['supplier'].'\\'.$gear['name']
+        ? $gear['supplier'] . '\\' . $gear['name']
         : $gear['name'];
 
     // Load the gears first:
     \Airship\autoload(
-        '\\Airship\\Gears\\'.$ns, 
+        '\\Airship\\Gears\\' . $ns,
         '~/Gears/'.\str_replace('\\', '/', $ns)
     );
 }
@@ -42,6 +49,9 @@ $state->lang = isset($active['lang'])
     ? $active['lang']
     : 'en-us'; // default
 
+/**
+ * Defer execution if we are updating this Cabin:
+ */
 if (!\ISCLI) {
     $cabinFile = \implode(DIRECTORY_SEPARATOR, [
         ROOT,
@@ -56,7 +66,7 @@ if (!\ISCLI) {
             if (!\file_exists($cabinFile)) {
                 break;
             }
-            \usleep(100);
+            \usleep(1000);
             ++$iter;
         } while($iter < 15000);
 
@@ -72,12 +82,11 @@ if (!\ISCLI) {
 // Let's set the current language:
 $lang = \preg_replace_callback(
     '#([A-Za-z]+)\-([a-zA-Z]+)#',
-    function($matches) {
-        return \strtolower($matches[1]).'_'.\strtoupper($matches[2]);
-    },
-    $state->lang
-).
-'.UTF-8';
+        function($matches) {
+            return \strtolower($matches[1]).'_'.\strtoupper($matches[2]);
+        },
+        $state->lang
+    ) . '.UTF-8';
 \putenv('LANG='.$lang);
 
 // Overload the active template
@@ -87,14 +96,26 @@ if (isset($active['data']['base_template'])) {
     $state->base_template = 'base.twig';
 }
 
+// Let's load the universal configuration settings
+$universal = \Airship\loadJSON(ROOT . '/config/universal.json');
+$state->universal = $universal;
+
+// Let's start our session:
+require_once ROOT . '/session.php';
+
+// This loads templates for the template engine
 $twigLoader = new \Twig_Loader_Filesystem(
     ROOT.'/Cabin/'.$active['name'].'/Lens'
 );
 
 $lensLoad = [];
+
 // Load all the gadgets, which can act on $twigLoader
-include ROOT.'/config/gadgets.php';
+include ROOT . '/config/gadgets.php';
+
+// Twig configuration options:
 $twigOpts = [
+    // Defaults to 'html' strategy:
     'autoescape' => true,
     'debug' => $state->universal['debug']
 ];
@@ -103,22 +124,23 @@ if (!empty($state->universal['twig-cache'])) {
 }
 
 $twigEnv = new \Twig_Environment($twigLoader, $twigOpts);
-$twigEnv->addExtension(new \Twig_Extension_Debug());
-
-$lens = \Airship\Engine\Gears::get('Lens', $twigEnv);
+if ($state->universal['debug']) {
+    $twigEnv->addExtension(new \Twig_Extension_Debug());
+}
+$lens = Gears::get('Lens', $twigEnv);
 
 // Load the Lens configuration
-include ROOT.'/config/lens.php';
+include ROOT . '/config/lens.php';
 
 // Load the Cabin-specific filters etc, if applicable:
-if (\file_exists(ROOT.'/Cabin/'.$active['name'].'/lens.php')) {
-    include ROOT.'/Cabin/'.$active['name'].'/lens.php';
+if (\file_exists(ROOT . '/Cabin/' . $active['name'] . '/lens.php')) {
+    include ROOT . '/Cabin/' . $active['name'] . '/lens.php';
 }
 
 // Load the template variables for this Cabin:
-if (\file_exists(ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json')) {
+if (\file_exists(ROOT.'/config/Cabin/' . $active['name'] . '/twig_vars.json')) {
     $_settings = \Airship\loadJSON(
-        ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json'
+        ROOT.'/config/Cabin/' . $active['name'] . '/twig_vars.json'
     );
     $lens->addGlobal(
         'SETTINGS',
@@ -126,7 +148,7 @@ if (\file_exists(ROOT.'/config/Cabin/'.$active['name'].'/twig_vars.json')) {
     );
 }
 
-// Now let's load all the lens.php files
+// Now let's load all the lens.php files, which are added by Gadgets:
 foreach ($lensLoad as $incl) {
     include $incl;
 }
@@ -135,12 +157,10 @@ foreach ($lensLoad as $incl) {
  * Let's load up the databases
  */
 $dbPool = [];
-require ROOT.'/database.php';
+require ROOT . '/database.php';
 
-$universal = \Airship\loadJSON(ROOT.'/config/universal.json');
-$state->universal = $universal;
-
-$manifest = \Airship\loadJSON(ROOT.'/config/manifest.json');
+// Airship manifest:
+$manifest = \Airship\loadJSON(ROOT . '/config/manifest.json');
 $state->manifest = $manifest;
 
 $htmlpurifier = new \HTMLPurifier(
@@ -161,11 +181,8 @@ require_once ROOT."/config/logger.php";
 /**
  * Automatic security updates
  */
-$hail = \Airship\Engine\Gears::get(
+$hail = Gears::get(
     'Hail',
     new \GuzzleHttp\Client($state->universal['guzzle'])
 );
 $state->hail = $hail;
-
-// Let's start our session:
-require_once ROOT.'/session.php';

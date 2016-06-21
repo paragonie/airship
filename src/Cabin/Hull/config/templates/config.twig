@@ -8,6 +8,9 @@
             "guests": {{ config['blog']['comments']['guests'] ? 'true' : 'false' }}
         }
     },
+    "homepage": {
+        "blog-posts": {{ config['homepage']['blog-posts']|je }}
+    },
     "file": {
         "cache": {{ config['file']['cache']|je }}
     },

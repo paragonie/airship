@@ -17,9 +17,9 @@
                 {% for c in contexts %}
                     <li>
                         <a
-                                class="photo-selector-context"
-                                data-context="{{ c.label }}"
-                                id="photo-selector-context-{{ c.label }}"
+                            class="photo-selector-context"
+                            data-context="{{ c.label|e('html_attr') }}"
+                            id="photo-selector-context-{{ c.label|e('html_attr') }}"
                         >
                             {{ c["display_name"] }}
                         </a>
@@ -30,10 +30,10 @@
                 {% for c in cabins %}
                     <li>
                         <a
-                                class="photo-selector-cabin"
-                                data-url="{{ cabin_url(c)|e('html_attr') }}"
-                                data-cabin="{{ c|e('html_attr') }}"
-                                id="photo-selector-cabin-{{ c|e('html_attr') }}"
+                            class="photo-selector-cabin"
+                            data-url="{{ cabin_url(c)|e('html_attr') }}"
+                            data-cabin="{{ c|e('html_attr') }}"
+                            id="photo-selector-cabin-{{ c|e('html_attr') }}"
                         >
                             {{ c }}
                         </a>
@@ -46,7 +46,7 @@
                         &bull;
                     <a id="photo-select-refresh"><i class="fa fa-refresh"></i> {{ __("Refresh") }}</a>
                 </div>
-                <select id="selected-filename"></select>
+                <select title="{{ __("Selected filename")|e('html_attr') }}" id="selected-filename"></select>
                 <button id="change-photo-btn" type="button" class="pure-button pure-button-primary">
                     {{ __("Confirm") }}
                 </button>

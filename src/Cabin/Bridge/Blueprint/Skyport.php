@@ -2,16 +2,18 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use Airship\Alerts\Hail\NoAPIResponse;
-use Airship\Engine\{
+use \Airship\Alerts\Hail\NoAPIResponse;
+use \Airship\Engine\{
     Continuum\Version,
     Hail,
     Security\HiddenString,
     State
 };
 use \GuzzleHttp\Client;
-use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
-use \ParagonIE\Halite\Password;
+use \ParagonIE\Halite\{
+    Asymmetric\SignaturePublicKey,
+    Password
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -32,6 +34,7 @@ class Skyport extends BlueprintGear
     /**
      * Get the number of packages available
      *
+     * @param string $type The package type
      * @return int
      */
     public function countAvailable(string $type = ''): int
@@ -96,6 +99,7 @@ class Skyport extends BlueprintGear
 
     /**
      * @param string $type
+     * @param string $query Search query
      * @param int $offset
      * @param int $limit
      * @return array

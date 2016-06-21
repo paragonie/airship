@@ -335,30 +335,33 @@ class AutoPilot implements RouterInterface
     /**
      * See Gadgets::injectRoutes()
      *
-     * This loads all of the routes injected by the Gadgets into the current cabin
+     * This loads all of the routes injected by the Gadgets into the current
+     * Cabin
      *
-     * @return void
+     * @return AutoPilot
      */
-    protected function loadInjectedRoutes()
+    protected function loadInjectedRoutes(): self
     {
         $state = State::instance();
         if (empty($state->injectRoutes)) {
-            return;
+            return $this;
         }
         foreach ($state->injectRoutes as $path => $landing) {
             if (!\array_key_exists($path, $this->cabin['data']['routes'])) {
                 $this->cabin['data']['routes'][$path] = $landing;
             }
         }
+        return $this;
     }
 
     /**
      * Actually serve the routes. Called by route() above.
-     * 
+     *
      * @param array $route
      * @param array $args
      * @return mixed
      * @throws FallbackLoop
+     * @throws \Error
      */
     protected function serve(array $route, array $args = [])
     {
@@ -391,10 +394,10 @@ class AutoPilot implements RouterInterface
         
         // Load our cabin-specific landing
         $landing = new $class_name;
-
-        // For type-hinting and auto-complete:
-        if (IDE_HACKS) {
-            $landing = new Landing();
+        if (!($landing instanceof Landing)) {
+            throw new \Error(
+                "{$class_name} is not a Landing"
+            );
         }
         
         // Dependency injection with a twist

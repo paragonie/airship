@@ -15,6 +15,9 @@ require_once __DIR__.'/init_gear.php';
  */
 class CustomPages extends BlueprintGear
 {
+    /**
+     * @var string
+     */
     protected $cabin;
 
     /**
@@ -53,7 +56,8 @@ class CustomPages extends BlueprintGear
                 airship_custom_dir
             WHERE
                   directoryid = ?
-              AND parent NOT IN '.$this->db->escapeValueSet($idsEncountered, 'int'),
+              AND parent NOT IN ' .
+                $this->db->escapeValueSet($idsEncountered, 'int'),
             $directoryId
         );
         if (empty($row)) {
@@ -265,7 +269,7 @@ class CustomPages extends BlueprintGear
     public function getLatestVersion(int $pageId): array
     {
         $latest = $this->db->row(
-            "SELECT
+            'SELECT
                 *
             FROM
                 airship_custom_page_version
@@ -274,7 +278,7 @@ class CustomPages extends BlueprintGear
                 AND page = ?
                 ORDER BY versionid DESC
                 LIMIT 1
-            ",
+            ',
             $pageId
         );
         if (empty($latest)) {

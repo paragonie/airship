@@ -107,20 +107,32 @@ abstract class AutoUpdater
         // What kind of autoRun script is it?
         switch ($autoRun['type']) {
             case 'php':
-                \file_put_contents($script.'.php', Base64::decode($autoRun['data']));
-                $ret = Sandbox::safeRequire($script.'.php');
-                \unlink($script.'.php');
+                \file_put_contents(
+                    $script . '.php',
+                    Base64::decode($autoRun['data'])
+                );
+                $ret = Sandbox::safeRequire($script . '.php');
+                \unlink($script . '.php');
                 break;
             case 'sh':
-                \file_put_contents($script.'.sh', Base64::decode($autoRun['data']));
-                $ret = \shell_exec($script.'.sh');
-                \unlink($script.'.sh');
+                \file_put_contents(
+                    $script . '.sh',
+                    Base64::decode($autoRun['data'])
+                );
+                $ret = \shell_exec($script . '.sh');
+                \unlink($script . '.sh');
                 break;
             case 'pgsql':
             case 'mysql':
-                \file_put_contents($script.'.'.$autoRun['type'], Base64::decode($autoRun['data']));
-                $ret = Sandbox::runSQLFile($script.'.'.$autoRun['type'], $autoRun['type']);
-                \unlink($script.'.'.$autoRun['type']);
+                \file_put_contents(
+                    $script . '.' . $autoRun['type'],
+                    Base64::decode($autoRun['data'])
+                );
+                $ret = Sandbox::runSQLFile(
+                    $script . '.' . $autoRun['type'],
+                    $autoRun['type']
+                );
+                \unlink($script . '.' . $autoRun['type']);
                 break;
         }
         return $ret;
@@ -140,7 +152,10 @@ abstract class AutoUpdater
      */
     protected function bringSiteDown()
     {
-        \file_put_contents(ROOT . '/tmp/site_down.txt', \date('Y-m-d\TH:i:s'));
+        \file_put_contents(
+            ROOT . '/tmp/site_down.txt',
+            \date(\AIRSHIP_DATE_FORMAT)
+        );
         \clearstatcache();
     }
 
@@ -217,6 +232,7 @@ abstract class AutoUpdater
             // Not found in Keyggdrasil
             return false;
         }
+
         $data = \Airship\parseJSON($merkle['data'], true);
         if (!\hash_equals($this->type, $data['pkg_type'])) {
             $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
@@ -434,9 +450,9 @@ abstract class AutoUpdater
      * @param string $packageName
      * @param string $minVersion
      * @param string $apiEndpoint
-     * 
+     *
      * @return UpdateInfo[]
-     * 
+     *
      * @throws \Airship\Alerts\Hail\NoAPIResponse
      */
     public function updateCheck(
@@ -576,8 +592,10 @@ abstract class AutoUpdater
      * @return AutoUpdater
      * @throws FileNotFound
      */
-    public function useLocalUpdateFile(string $path, string $version = ''): self
-    {
+    public function useLocalUpdateFile(
+        string $path,
+        string $version = ''
+    ): self {
         if (\file_exists($path)) {
             throw new FileNotFound();
         }

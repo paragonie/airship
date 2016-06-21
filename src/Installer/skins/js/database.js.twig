@@ -27,14 +27,17 @@
                 html += "<label for=\"database_" + num_db + "_driver\">Database Driver:</label>" + "\n";
                 html += "<select class=\"db_driver pure-input-1\" name=\"database[" + num_db + "][driver]\" id=\"database_" + num_db + "_driver\">" + "\n";
                 html += "<option value=\"\"></option>";
-                {% for key, val in drivers %}html += "<option {#
+                {% for key, val in drivers %}html += "<option " +{#
                     #}{% if database[0] %}{#
                         #}{% if database[0][driver] == val %}{#
-                           #} selected=\"selected\" 
+                           #}" selected=\"selected\"" +
                         {% endif %}
                     {% endif %}{#
-                    #} value=\"{{ key|e('html_attr') }}\" {#
-                #}>{{ val|e('html') }}</option>";
+                    #}" value=" +
+                        '"' +
+                        "{{ key|e('html_attr') }}" +
+                        '"' +
+                    ">{{ val|e('html') }}</option>";
                 {% endfor %}html += "</select>";
                 
                 html += "<label for=\"database_" + num_db + "_group\">Database Group:</label>\n";

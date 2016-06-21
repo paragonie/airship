@@ -3,7 +3,7 @@ html {
 }
 body {
     background: #B0B0B0;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', sans-serif;
     color: #282828;
 }
 #site-wrapper {
@@ -132,7 +132,7 @@ nav {
             rgba(0, 0, 0, 0) 0%,
             rgba(0, 0, 0, 0.33) 100%
     );
-    border: 0px solid #000;
+    border: 0 solid #000;
     border-bottom-width: 1px;
     padding: 0.33ex 0.5ex;
 }
@@ -176,7 +176,7 @@ nav ul.navigation > li:hover a {
             rgba(255, 255, 255, 0.33) 0%,
             rgba(255, 255, 255, 0.01) 100%
     );
-    border: 0px solid #000;
+    border: 0 solid #000;
     border-bottom-width: 1px;
     padding: 0.5em;
 }
@@ -332,7 +332,7 @@ nav ul.navigation > li:hover a {
 .blog-post-body *:first-child {
     margin-top: 0;
 }
-.blog-post-snippet *:first-last,
+.blog-post-snippet *:first-child,
 .blog-post-body *:last-child {
     margin-bottom: 0;
 }
@@ -504,7 +504,7 @@ a:hover .bridge-icon {
 #bridge_table {
     margin-bottom: 0;
     border: 2px solid #010308;
-    box-shadow: rgba(0, 0, 0, 0.5) 0ex 0.66ex 1.66ex;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0.66ex 1.66ex;
 }
 #bridge_left a {
     color: #EFE5C8;
@@ -802,7 +802,7 @@ select .depth3 {
 #bridge_crew_users_list .table-cell,
 #bridge_tag_list .table-cell {
     background-color: rgba(255, 255, 255, 0.1);
-    border: 0px solid rgba(0, 0, 0, 0.5);
+    border: 0 solid rgba(0, 0, 0, 0.5);
     border-top-width: 1px;
     padding: 2px;
 }
@@ -1304,7 +1304,7 @@ select .depth3 {
     float: right;
     margin: 1px;
     padding: 0.25em 0.5em;
-    text-shadow: #000 1px 1px 2px, #000 0px 0px 3px;
+    text-shadow: #000 1px 1px 2px, #000 0 0 3px;
     transition: background-color 0.25s, color 0.25s;
 }
 #blog_series_items_sortable .delete_item:hover {

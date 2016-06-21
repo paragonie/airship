@@ -2,7 +2,7 @@
 <div class="table" id="bridge_comments_list">
     <div class="table-row table-header">
         <div class="table-cell"></div>
-        <div class="table-cell">ID</div>
+        <div class="table-cell">{{ __("ID") }}</div>
         <div class="table-cell">
             {{ __("Blog Post") }}
         </div>
@@ -43,7 +43,9 @@
                 {% endif %}
             </div>
             <div class="table-cell">
-                {{ comment.created|date(config.format|default('Y-m-d g:i:s A')) }}
+                {{ comment.created|date(
+                    config.format|default('Y-m-d g:i:s A')
+                ) }}
             </div>
             <div class="table-cell text-center">
                 {% if comment.approved %}

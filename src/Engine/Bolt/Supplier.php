@@ -90,7 +90,10 @@ trait Supplier
             // Fetch all suppliers
             if ($force_flush || empty($this->supplierCache)) {
                 $supplierCache = [];
-                $allSuppliers = \Airship\list_all_files(ROOT . '/config/supplier_keys', 'json');
+                $allSuppliers = \Airship\list_all_files(
+                    ROOT . '/config/supplier_keys',
+                    'json'
+                );
                 foreach ($allSuppliers as $supplierKeyFile) {
                     // We want everything except the .json
                     $supplier = \substr($this->getEndPiece($supplierKeyFile), 0, -5);
@@ -108,10 +111,11 @@ trait Supplier
         // Otherwise, we're just fetching one supplier's keys
         if ($force_flush || empty($this->supplierCache[$supplier])) {
             try {
-                if (!\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
-                    throw new NoSupplier(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+                $supplierFile = ROOT . '/config/supplier_keys/' . $supplier . '.json';
+                if (!\file_exists($supplierFile)) {
+                    throw new NoSupplier($supplierFile);
                 }
-                $data = \Airship\loadJSON(ROOT . '/config/supplier_keys/' . $supplier . '.json');
+                $data = \Airship\loadJSON($supplierFile);
             } catch (FileNotFound $ex) {
                 throw new NoSupplier($supplier, 0, $ex);
             }

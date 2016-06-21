@@ -1,22 +1,22 @@
     {% if blogpost %}
         <div class="blog-post blog-read-post">
             <div class="blogpost_header">
-                <h1 class="blog-post-title">{{ blogpost.title|e }} </h1>
+                <h1 class="blog-post-title">{{ blogpost.title }} </h1>
                 <p class="blog-post-meta">
                     <time datetime="{{ blogpost.published|date('Y-m-d H:i:s') }}">
                         {{ blogpost.published|date("F j, Y g:i a") }}
                     </time> by
-                    <a href="/blog/author/{{ blogpost.authorslug|e('url') }}">{{ blogpost.authorname|e }}</a>
+                    <a href="{{ cabin_url() }}blog/author/{{ blogpost.authorslug|e('url') }}">{{ blogpost.authorname }}</a>
                 </p>
             </div>
             <div class="blogpost_subhead">
                 <div class="blogpost_category">
-                    <a href="/blog/category/{{ blogpost.categoryslug|e('url') }}"><i class="fa fa-folder-open"></i>{{ blogpost.categoryname|e }}</a>
+                    <a href="{{ cabin_url() }}blog/category/{{ blogpost.categoryslug|e('url') }}"><i class="fa fa-folder-open"></i>{{ blogpost.categoryname }}</a>
                 </div>
                 {% if blogpost.tags %}
                     <ul class="blogpost_tags">
                         {% for t in blogpost.tags %}
-                            <li><a href="/blog/tag/{{ t.slug|e('url') }}"><i class="fa fa-tag"></i>{{ t.name|e }}</a></li>
+                            <li><a href="{{ cabin_url() }}blog/tag/{{ t.slug|e('url') }}"><i class="fa fa-tag"></i>{{ t.name }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}

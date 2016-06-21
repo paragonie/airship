@@ -20,7 +20,7 @@
                 #}{% endif %}
             </div>
             <div class="blog_read_series_name">
-                <a href="/blog/series/{{ series.slug|e('url') }}">{{ series.name }}</a>
+                <a href="{{ cabin_url() }}blog/series/{{ series.slug|e('url') }}">{{ series.name }}</a>
             </div>
             <div class="blog_read_series_right">
                 {% if series.next_link %}{#

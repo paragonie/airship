@@ -99,6 +99,10 @@
         "type": {
             "expected_resource":
                 "%s must be a resource.",
+            "expected_1d_array":
+                "Expected a 1-dimensional array.",
+            "expected_string_array":
+            "Expected a 1-dimensional array of strings; %s given at index %d.",
             "wrong_class":
                 "Expected an instance of %s, or of one of its child classes."
         }

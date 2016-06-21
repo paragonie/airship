@@ -73,7 +73,9 @@
         </div>
         <div class="table-cell">
             {% if post.status %}
-                {{ post.published|date(config.format|default('Y-m-d g:i:s A')) }}
+                {{ post.published|date(
+                    config.format|default('Y-m-d g:i:s A')
+                ) }}
             {% else %}
                 <i class="fa fa-close" title="{{ __("Not yet published")|e('html_attr') }}"></i>
             {% endif %}

@@ -17,6 +17,7 @@ if (!\session_id()) {
     $session_config = [
         // Prevent uninitialized sessions from being accepted
         'use_strict_mode' => true,
+        // We don't need to specify entropy_file; it defaults to /dev/urandom
         // 32 bytes = 256 bits, which mean a 50% chance of 1 collision after 2^128 sessions
         'entropy_length' => 32,
         // The session ID cookie should be inaccessible to JavaScript
@@ -42,7 +43,7 @@ if (empty($_SESSION['created_canary'])) {
     \session_regenerate_id(true);
     // Create the canary
     $_SESSION['created_canary'] = (new \DateTime())
-        ->format('Y-m-d\TH:i:s');
+        ->format(\AIRSHIP_DATE_FORMAT);
 } else {
     $dt = (new \DateTime($_SESSION['created_canary']))->add(
         new \DateInterval('PT01H')
@@ -53,6 +54,6 @@ if (empty($_SESSION['created_canary'])) {
         // An hour has passed:
         \session_regenerate_id(true);
         // Create the canary
-        $_SESSION['created_canary'] = $now->format('Y-m-d\TH:i:s');
+        $_SESSION['created_canary'] = $now->format(\AIRSHIP_DATE_FORMAT);
     }
 }

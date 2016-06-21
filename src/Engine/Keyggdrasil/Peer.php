@@ -15,9 +15,24 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
  */
 class Peer
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var bool
+     */
     private $onion = false;
+
+    /**
+     * @var SignaturePublicKey
+     */
     private $publicKey;
+
+    /**
+     * @var string[]
+     */
     private $urls = [];
 
     /**

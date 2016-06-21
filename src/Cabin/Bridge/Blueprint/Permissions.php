@@ -190,7 +190,7 @@ class Permissions extends BlueprintGear
         array $actions = []
     ): array {
         if (empty($cabin) || empty($actions) || empty($contextId)) {
-            return null;
+            return [];
         }
         // This is the tree we are building...
         $users = [];
@@ -240,11 +240,11 @@ class Permissions extends BlueprintGear
      */
     public function createAction(string $cabin, string $label): bool
     {
-        $exists = $this->db->cell(
-                'SELECT count(*) FROM airship_perm_actions WHERE cabin = ? AND label = ?',
-                $cabin,
-                $label
-            ) > 0;
+        $exists = $this->db->exists(
+            'SELECT count(*) FROM airship_perm_actions WHERE cabin = ? AND label = ?',
+            $cabin,
+            $label
+        );
         if (!$exists) {
             $this->db->beginTransaction();
             $this->db->insert(
@@ -268,11 +268,11 @@ class Permissions extends BlueprintGear
      */
     public function createContext(string $cabin, string $locator): bool
     {
-        $exists = $this->db->cell(
-                'SELECT count(*) FROM airship_perm_contexts WHERE cabin = ? AND locator = ?',
-                $cabin,
-                $locator
-            ) > 0;
+        $exists = $this->db->exists(
+            'SELECT count(*) FROM airship_perm_contexts WHERE cabin = ? AND locator = ?',
+            $cabin,
+            $locator
+        );
         if (!$exists) {
             $this->db->beginTransaction();
             if ($locator === '') {
@@ -447,11 +447,10 @@ class Permissions extends BlueprintGear
      */
     public function getGroupPerms(int $groupId, int $contextId): array
     {
-        $perms = $this->db->col(
+        $perms = $this->db->first(
             ' SELECT a.label FROM airship_perm_rules r ' .
             ' LEFT JOIN airship_perm_actions a ON r.action = a.actionid ' .
             ' WHERE r.context = ? AND r.groupid = ?',
-            0,
             $contextId,
             $groupId
         );
@@ -468,11 +467,10 @@ class Permissions extends BlueprintGear
      */
     public function getUserPerms(int $userId, int $contextId): array
     {
-        $perms = $this->db->col(
+        $perms = $this->db->first(
             ' SELECT a.label FROM airship_perm_rules r ' .
                 ' LEFT JOIN airship_perm_actions a ON r.action = a.actionid ' .
                 ' WHERE r.context = ? AND r.userid = ?',
-            0,
             $contextId,
             $userId
         );
@@ -537,7 +535,7 @@ class Permissions extends BlueprintGear
         $groupInsert = \Airship\array_multi_diff($post['group_perms'], $groupPerms);
         $groupDelete = \Airship\array_multi_diff($groupPerms, $post['group_perms']);
 
-        // Sort the ndiff user permissions:
+        // Sort then diff user permissions:
         \ksort($userPerms);
         \ksort($post['user_perms']);
         $userInsert = \Airship\array_multi_diff($post['user_perms'], $userPerms);
@@ -723,9 +721,8 @@ class Permissions extends BlueprintGear
         int $contextId
     ): array {
         $perms = [];
-        $groupIds = $this->db->col(
+        $groupIds = $this->db->first(
             'SELECT DISTINCT groupid FROM airship_perm_rules WHERE context = ? AND groupid IS NOT NULL',
-            0,
             $contextId
         );
         foreach ($groupIds as $group) {
@@ -747,9 +744,8 @@ class Permissions extends BlueprintGear
         int $contextId
     ): array {
         $perms = [];
-        $userIds = $this->db->col(
+        $userIds = $this->db->first(
             'SELECT DISTINCT userid FROM airship_perm_rules WHERE context = ? AND userid IS NOT NULL',
-            0,
             $contextId
         );
         foreach ($userIds as $user) {

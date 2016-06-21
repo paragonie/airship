@@ -5,7 +5,13 @@
         <div class="table-row">
             <label class="table-cell table-min-width" for="blog_post_title">{{ __("Post Title") }}:</label>
             <div class="table-cell bottom-pad">
-                <input class="full-width" id="blog_post_title" type="text" name="title" value="{{ _POST.title|default(blogpost.title)|e('html_attr') }}" />
+                <input
+                    class="full-width"
+                    id="blog_post_title"
+                    name="title"
+                    type="text"
+                    value="{{ (_POST.title|default(blogpost.title))|e('html_attr') }}"
+                />
             </div>
         </div>
 
@@ -18,7 +24,7 @@
                     #} type="text"{#
                     #} name="slug"{#
                     #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
-                    #} value="{{ _POST.slug|default(blogpost.slug)|e('html_attr') }}"{#
+                    #} value="{{ (_POST.slug|default(blogpost.slug))|e('html_attr') }}"{#
                     #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
                 #} />
                 <div id="blog_post_slug_checkbox_wrapper">
@@ -32,7 +38,7 @@
             <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
             <div class="table-cell bottom-pad">
                 <select name="category" id="blog_post_category" class="treeselect">
-                    <option value="0"> -None- </option>
+                    <option value="0"> -{{ __("None") }}- </option>
                     {% for category in categories %}
                         {{ bcatmac.selectBox(category, _POST.category|default(blogpost.category)) }}
                     {% endfor %}
@@ -44,7 +50,7 @@
             <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
             <div class="table-cell bottom-pad">
             {% if is_admin() %}
-                <select name="author" id="blog_post_author" required="required" pattern="^\d+$">
+                <select name="author" id="blog_post_author" required="required">
                     <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
                     {% for auth in authors %}
                         <option{#
@@ -67,7 +73,9 @@
         <div class="table-row">
             <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell bottom-pad">
-                {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default(latest.format)} %}
+                {% include cargo("bridge_pages_select_format") with {
+                    "format": _POST.format|default(latest.format)
+                } %}
             </div>
         </div>
 
@@ -89,7 +97,10 @@
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
             <div class="table-cell bridge_blog_post_tags bottom-pad">
-                {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default(blogpost.tags)} %}
+                {% include cargo("bridge_blog_post_tags") with {
+                    "tags": tags,
+                    "checked": _POST.tags|default(blogpost.tags)
+                } %}
             </div>
         </div>
 
@@ -101,7 +112,9 @@
                     type="text"
                     name="description"
                     placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
-                    value="{{ _POST.description|default(blogpost.description)|e('html_attr') }}"
+                    value="{{ (
+                        _POST.description|default(blogpost.description)
+                    )|e('html_attr') }}"
                 />
             </div>
         </div>
@@ -109,7 +122,11 @@
         {% include cargo("bridge_blog_post_extra_fields") ignore missing %}
     </div>
     <div class="bridge_blog_rich_text_wrapper">
-        {% include cargo("rich_text_editor") with {"name": "blog_post_body", "placeholder": "", "contents": _POST.blog_post_body|default(latest.body)} %}
+        {% include cargo("rich_text_editor") with {
+            "name": "blog_post_body",
+            "placeholder": "",
+            "contents": _POST.blog_post_body|default(latest.body)
+        } %}
     </div>
 
     <fieldset class="form-button-group">

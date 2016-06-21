@@ -1,16 +1,34 @@
 <form method="post">{{ form_token() }}
     <div class="table full-width bottom-pad">
         <div class="table-row">
-            <label class="table-cell table-min-width bottom-pad" for="old_url">{{ __("Old URL") }}:</label>
+            <label class="table-cell table-min-width bottom-pad" for="old_url">
+                {{ __("Old URL") }}:
+            </label>
             <div class="table-cell">
-                <input class="full-width" type="text" name="old_url" value="{{ redirect["oldpath"]|e('html_attr') }}" placeholder="bridge/redirects/{{ cabin|e('html_attr') }}/new" />
+                <input
+                    class="full-width"
+                    id="old_url"
+                    name="old_url"
+                    placeholder="bridge/redirects/{{ cabin|e('html_attr') }}/new"
+                    type="text"
+                    value="{{ redirect["oldpath"]|e('html_attr') }}"
+                />
             </div>
         </div>
 
         <div class="table-row">
-            <label class="table-cell table-min-width" for="new_url">{{ __("New URL") }}:</label>
+            <label class="table-cell table-min-width" for="new_url">
+                {{ __("New URL") }}:
+            </label>
             <div class="table-cell">
-                <input class="full-width" type="text" name="new_url" value="{{ redirect["newpath"]|e('html_attr') }}" placeholder="https://example.com" />
+                <input
+                    class="full-width"
+                    id="new_url"
+                    name="new_url"
+                    placeholder="https://example.com"
+                    type="text"
+                    value="{{ redirect["newpath"]|e('html_attr') }}"
+                />
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 {% import "macros/permtable.twig" as ptable %}
 
-<h2 class="nomargin">Manage Permissions</h2>
+<h2 class="nomargin">{{ __("Manage Permissions") }}</h2>
 
 <form method="post">{{ form_token() }}
     <div class="table table-pad-1">
@@ -9,7 +9,14 @@
                 #}{{ __("Context Locator") }}:{#
             #}</div>{#
             #}<div class="table-cell full-width">{#
-                #}<input type="text" class="full-width" id="context" name="context" placeholder="foo/{string}/bar/{id}" value="{{ context.locator|e('html_attr') }}" />{#
+                #}<input
+                    type="text"
+                    class="full-width"
+                    id="context"
+                    name="context"
+                    placeholder="foo/{string}/bar/{id}"
+                    value="{{ context.locator|e('html_attr') }}"
+                />{#
             #}</div>
         </div>
     </div>
@@ -26,7 +33,7 @@
         </tr>
         <tr class="perm_header">
             {% for act in actions %}
-                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+                <th class="permtable_header_action">{{ act|capitalize }}</th>
             {% endfor %}
         </tr>
         </thead>
@@ -49,7 +56,7 @@
         </tr>
         <tr>
             {% for act in actions %}
-                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+                <th class="permtable_header_action">{{ act|capitalize }}</th>
             {% endfor %}
             {% set footercols = actions|length + 1 %}
         </tr>
@@ -57,17 +64,21 @@
         <tfoot>
         <tr>
             <th colspan="{{ footercols }}">
-                <input type="text" name="add_user" id="newUserField" />
+                <input title="New User" type="text" name="add_user" id="newUserField" />
                 <button class="pure-button pure-button-primary" type="button" id="add_user_btn">
                     <i class="fa fa-plus"></i>
-                    Add User
+                    {{ __("Add User") }}
                 </button>
             </th>
         </tr>
         </tfoot>
         <tbody>
         {% spaceless %}{% for userid, perms in userperms %}
-            {% include "perms/user.twig" with {"userid": userid, "user": users[userid], "perms": perms} %}
+            {% include "perms/user.twig" with {
+                "userid": userid,
+                "user": users[userid],
+                "perms": perms
+            } %}
         {% endfor %}{% endspaceless %}
         </tbody>
     </table>

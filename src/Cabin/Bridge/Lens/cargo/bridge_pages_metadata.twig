@@ -1,42 +1,42 @@
 <div class="table-row">
     <label class="table-cell metadata-label">
-        Page Title:
+        {{ __("Page Title") }}:
     </label>
     <div class="table-cell bridge_page_metadata_value">
         <input
-                class="metadata-input"
-                type="text"
-                name="metadata[title]"
-                value="{{ metadata.title }}"
-                placeholder="{{ __("Text for the title bar of the browser when viewing this page.")|e('html_attr') }}"
+            class="metadata-input"
+            name="metadata[title]"
+            placeholder="{{ __("Text for the title bar of the browser when viewing this page.")|e('html_attr') }}"
+            type="text"
+            value="{{ metadata.title|e('html_attr') }}"
         />
     </div>
 </div>
 <div class="table-row">
     <label class="table-cell metadata-label">
-        Keywords:
+        {{ __("Keywords") }}:
     </label>
     <div class="table-cell bridge_page_metadata_value">
         <input
-                class="metadata-input"
-                type="text"
-                name="metadata[keywords]"
-                value="{{ metadata.keywords }}"
-                placeholder="{{ __("Keywords for the document's meta tags.")|e('html_attr') }}"
+            class="metadata-input"
+            name="metadata[keywords]"
+            placeholder="{{ __("Keywords for the document's meta tags.")|e('html_attr') }}"
+            type="text"
+            value="{{ metadata.keywords|e('html_attr') }}"
         />
     </div>
 </div>
 <div class="table-row">
     <label class="table-cell metadata-label">
-        Description:
+        {{ __("Description") }}:
     </label>
     <div class="table-cell bridge_page_metadata_value">
         <input
-                class="metadata-input"
-                type="text"
-                name="metadata[description]"
-                value="{{ metadata.description }}"
-                placeholder="{{ __("Description for the RSS reader and meta tags.")|e('html_attr') }}"
+            class="metadata-input"
+            name="metadata[description]"
+            placeholder="{{ __("Description for the RSS reader and meta tags.")|e('html_attr') }}"
+            type="text"
+            value="{{ metadata.description|e('html_attr') }}"
         />
     </div>
 </div>

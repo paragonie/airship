@@ -472,7 +472,6 @@ class CustomPages extends HullCustomPages
 
     /**
      * @param int $directoryID
-     * @param string $cabin
      * @return array
      */
     public function getDirectoryPieces(int $directoryID): array
@@ -1151,12 +1150,14 @@ class CustomPages extends HullCustomPages
         do {
             $unique = \Airship\uniqueId();
         } while (
-            $this->db->cell(
+            $this->db->exists(
                 'SELECT count(*) FROM ' .
                     $this->db->escapeIdentifier($table) .
-                    ' WHERE '.$this->db->escapeIdentifier($column).' = ?',
+                ' WHERE ' .
+                    $this->db->escapeIdentifier($column) .
+                ' = ?',
                 $unique
-            ) > 0
+            )
         );
         return $unique;
     }

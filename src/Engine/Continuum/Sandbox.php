@@ -21,7 +21,7 @@ abstract class Sandbox
     }
 
     /**
-     * Require a file from within a Phar
+     * Include a file from within a Phar
      *
      * @param string $file
      * @param array $previous_metadata

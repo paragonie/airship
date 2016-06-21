@@ -1,13 +1,19 @@
 <?php
 declare(strict_types=1);
+
 use ParagonIE\Halite\KeyFactory;
+
+/**
+ * This sets up the contents of our keyring.
+ */
 
 $key_management_closure = function() {
     if (!\is_dir(ROOT.'/config/keyring/')) {
-        \mkdir(ROOT.'/config/keyring/', 0700);
+        \mkdir(ROOT.'/config/keyring/', 0750);
     }
-    $keyRing = \Airship\loadJSON(ROOT.'/config/keyring.json');
+    $keyRing = \Airship\loadJSON(ROOT . '/config/keyring.json');
     if (empty($keyRing)) {
+        // This is critical to Airship's functioning.
         throw new \Error('Keyring configuration file not found.');
     }
 
@@ -15,7 +21,7 @@ $key_management_closure = function() {
     $keys = [];
 
     foreach ($keyRing as $index => $keyConfig) {
-        $path = ROOT.'/config/keyring/'.$keyConfig['file'];
+        $path = ROOT . '/config/keyring/' . $keyConfig['file'];
         if (\file_exists($path)) {
             // Load it from disk
             switch ($keyConfig['type']) {

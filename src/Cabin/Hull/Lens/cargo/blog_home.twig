@@ -4,8 +4,8 @@
     {% set div = true %}
     <div class="blog-post blog-list-post">
         <a href="/blog/{{ latest.blogyear|e('url') }}/{{ latest.blogmonth|e('url') }}/{{ latest.slug|e('url') }}">{#
-        #}<h2 class="blog-post-title">{{ latest.title|e }}</h2></a>
-        <p class="blog-post-meta">{{ latest.published|date("F j, Y") }} by <a href="/blog/author/{{ latest.authorslug|e('url') }}">{{ latest.authorname|e }}</a></p>
+        #}<h2 class="blog-post-title">{{ latest.title }}</h2></a>
+        <p class="blog-post-meta">{{ latest.published|date("F j, Y") }} by <a href="/blog/author/{{ latest.authorslug|e('url') }}">{{ latest.authorname }}</a></p>
         <div class="blog-post-snippet">{% if latest.format == 'RST' %}{#
             #}{{ latest.snippet|default("")|CleanRST }}{#
         #}{% elseif latest.format == 'Markdown' %}{#
@@ -16,8 +16,8 @@
         {% if latest.snippet != latest.body %}
             <p class="readmore-wrapper">
                 <a
-                        class="readmore"
-                        href="/blog/{{ latest.blogyear|e('url') }}/{{ latest.blogmonth|e('url') }}/{{ latest.slug|e('url') }}#after-fold"
+                    class="readmore"
+                    href="/blog/{{ latest.blogyear|e('url') }}/{{ latest.blogmonth|e('url') }}/{{ latest.slug|e('url') }}#after-fold"
                 >
                     {{ __("Continue Reading this Blog Post") }} &raquo;
                 </a>

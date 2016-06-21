@@ -16,11 +16,16 @@ class Permissions extends AdminOnly
      * @var BP\Permissions
      */
     private $perms;
+
     /**
      * @var BP\UserAccounts
      */
     private $users;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();

@@ -14,10 +14,20 @@ use \Airship\Engine\Contract\{
 class DBStore implements LedgerStorageInterface
 {
     const DEFAULT_TABLE = 'airship_logs';
-    
+
+    /**
+     * @var string
+     */
     protected $table;
+
+    /**
+     * @var DBInterface
+     */
     protected $db;
-    
+
+    /**
+     * @var string[]
+     */
     protected $columns = [
         'level' => 'level',
         'message' => 'message',
@@ -36,7 +46,7 @@ class DBStore implements LedgerStorageInterface
         $this->db = $db ?? \Airship\get_database();
         $this->table = $table;
     }
-    
+
     /**
      * Store a log message -- used by Ledger
      * 
@@ -58,7 +68,7 @@ class DBStore implements LedgerStorageInterface
             ]
         );
     }
-    
+
     /**
      * Change a column name.
      *

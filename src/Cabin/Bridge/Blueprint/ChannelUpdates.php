@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use Airship\Alerts\InvalidType;
+use \Airship\Alerts\{
+    Continuum\CouldNotUpdate,
+    InvalidType
+};
 use \Airship\Engine\{
     Continuum\API,
     Database,
@@ -39,8 +41,19 @@ require_once __DIR__.'/init_gear.php';
  */
 class ChannelUpdates extends BlueprintGear
 {
+    /**
+     * @var string
+     */
     private $channel;
+
+    /**
+     * @var SignaturePublicKey
+     */
     private $channelPublicKey;
+
+    /**
+     * @var string[]
+     */
     private $urls;
 
     /**
@@ -76,12 +89,14 @@ class ChannelUpdates extends BlueprintGear
         $updates = [
             'challenge' => $challenge,
             'root' => $tree->getRoot(),
-            'timestamp' => $now->format('Y-m-d\TH:i:s')
+            'timestamp' => $now->format(\AIRSHIP_DATE_FORMAT)
         ];
         $response = \json_encode($updates);
         return [
             Base64UrlSafe::encode($response),
-            Base64UrlSafe::encode(AsymmetricCrypto::sign($response, $sk, true))
+            Base64UrlSafe::encode(
+                AsymmetricCrypto::sign($response, $sk, true)
+            )
         ];
     }
 
@@ -321,10 +336,14 @@ class ChannelUpdates extends BlueprintGear
      * @return array
      * @throws CouldNotUpdate
      */
-    protected function parseChannelUpdateResponse(array $data, \DateTime $originated): array
-    {
+    protected function parseChannelUpdateResponse(
+        array $data,
+        \DateTime $originated
+    ): array {
         if ($data['status'] !== 'success') {
-            throw new CouldNotUpdate($data['message'] ?? 'An update error has occurred');
+            throw new CouldNotUpdate(
+                $data['message'] ?? 'An update error has occurred'
+            );
         }
         $valid = [];
         if (!empty($data['no_updates'])) {
@@ -453,7 +472,7 @@ class ChannelUpdates extends BlueprintGear
     /**
      * We're storing metadata about a package in the database.
      *
-     * @param array $keyData
+     * @param array $pkgData
      * @param int $treeUpdateID
      * @return bool
      * @throws \Airship\Alerts\Database\DBException

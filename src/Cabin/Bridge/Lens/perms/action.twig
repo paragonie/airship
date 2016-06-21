@@ -2,8 +2,8 @@
 
 {% block main %}
     <form method="post">{{ form_token() }}
-        <label>{{ __("Action Name") }}</label>:
-        <input type="text" name="label" value="{{ action.label|e('html_attr') }}" />
+        <label for="label">{{ __("Action Name") }}</label>:
+        <input id="label" type="text" name="label" value="{{ action.label|e('html_attr') }}" />
         <button type="submit" class="pure-button pure-button-secondary">
             {{ __("Change Action's Label") }}
         </button>
