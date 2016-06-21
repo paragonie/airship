@@ -80,7 +80,6 @@ class Lens
         array $params = [],
         string $mime = 'text/html;charset=UTF-8'
     ): bool {
-        $state = State::instance();
         if (!\headers_sent()) {
             $this->sendStandardHeaders($mime);
             \ob_start();
@@ -127,7 +126,6 @@ class Lens
         string $file,
         array $params = []
     ) {
-        $state = State::instance();
         return $this->twigEnv->render(
             $file,
             $params
@@ -326,6 +324,7 @@ class Lens
 
     /**
      * Send HTTP headers
+     * @param string $mimeType
      */
     public function sendStandardHeaders(string $mimeType)
     {

@@ -1,4 +1,4 @@
-<select id="files_list_cabin">{% spaceless %}
+<select title="{{ __("Cabin")|e('html_attr') }}" id="files_list_cabin">{% spaceless %}
         {% for cab in cabins %}
             <option
                 value="{{ cab|e('html_attr') }}"

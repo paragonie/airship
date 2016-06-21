@@ -356,11 +356,12 @@ class AutoPilot implements RouterInterface
 
     /**
      * Actually serve the routes. Called by route() above.
-     * 
+     *
      * @param array $route
      * @param array $args
      * @return mixed
      * @throws FallbackLoop
+     * @throws \Error
      */
     protected function serve(array $route, array $args = [])
     {

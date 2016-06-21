@@ -17,10 +17,10 @@
 
         <div class="table-row">
             <div class="table-cell table-label">
-                <label for="format">{{ __("Byline") }}</label>:
+                <label for="byline">{{ __("Byline") }}</label>:
             </div>
             <div class="table-cell">
-                <input type="text" name="byline" value="{{ post.byline|e('html_attr') }}" />
+                <input id="byline" type="text" name="byline" value="{{ post.byline|e('html_attr') }}" />
             </div>
         </div>
 

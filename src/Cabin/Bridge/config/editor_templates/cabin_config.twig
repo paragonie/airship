@@ -12,9 +12,7 @@
             <select
                 class="full-width"
                 id="twigvars_active_motif"
-                type="text"
                 name="{{ form_key_twig }}[active-motif]"
-                value="{{ twig_vars['active-motif']|e('html_attr') }}"
             >{% for name, motif in motifs %}
                 <option value="{{ name|e('html_attr') }}">
                     {% if motif.config["display_name"] %}

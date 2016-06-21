@@ -143,7 +143,7 @@ if (!empty($state->universal['debug'])) {
         // Show previous throwables as well:
         $n = 1;
         $e = $e->getPrevious();
-        while ($e instanceof \Throwable) {
+        while ($e instanceof \Exception || $e instanceof \Error) {
             echo "\n", \str_repeat('#', 80), "\n";
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",

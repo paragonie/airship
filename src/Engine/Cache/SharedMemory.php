@@ -49,6 +49,7 @@ class SharedMemory implements CacheInterface
      *.
      * @param Key|null $cacheKey
      * @param AuthenticationKey|null $authKey
+     * @param string $personalization
      */
     public function __construct(
         Key $cacheKey = null,

@@ -48,11 +48,11 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                     ],
                     'per_page' => 20
                 ],
-                'homepage' => [
-                    'blog-posts' => 5
-                ],
                 'file' => [
                     'cache' => 10800
+                ],
+                'homepage' => [
+                    'blog-posts' => 5
                 ],
                 'recaptcha' => [
                     'secret-key' => 'boo',

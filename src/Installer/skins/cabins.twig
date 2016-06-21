@@ -8,10 +8,10 @@
         method="post"
     >{{ form_token() }}
             
-    <h1>Cabin Configuration</h1>
+    <h1>{{ __("Cabin Configuration") }}</h1>
     
     <p>
-       Cabins are (more-or-less standalone) applications built into your 
+       Cabins are (more-or-less standalone) applications built into your
        Airship. By default, we ship with two:
     </p>
     <ol>
@@ -30,12 +30,12 @@
             <label for="bridge_path">
                 Hostname and Path:
             </label>
-            <input class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
+            <input id="bridge_path" class="pure-input-1" type="text" name="cabin[Bridge][path]" value="{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
 
-            <label for="bridge_path">
+            <label for="bridge_url">
                 Canon URL (for hyperlinks from other Cabins):
             </label>
-            <input class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
+            <input id="bridge_url" class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
             
             <div>
                 <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" checked="checked" />
@@ -44,10 +44,10 @@
                 </label>
             </div>
             
-            <label for="brige_lang">
+            <label for="bridge_lang">
                 Language:
             </label>
-            <select class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
+            <select id="bridge_lang" class="pure-input-1" id="bridge_lang" name="cabin[Bridge][lang]">
                 <option value="en-us">English (U.S.)</option>
             </select>
 
@@ -66,6 +66,10 @@
                 },
                 "file": {
                     "cache": 900
+                },
+                "two-factor": {
+                    "length": 6,
+                    "period": 30
                 }
             } %}
             {% set twig_vars = {
@@ -82,15 +86,15 @@
         <legend>Hull Settings</legend>
         <div class="pure-form pure-form-stacked">
             
-            <label for="bridge_path">
+            <label for="hull_path">
                 Hostname and Path:
             </label>
-            <input class="pure-input-1" type="text" name="cabin[Hull][path]" value="*" />
+            <input id="hull_path" class="pure-input-1" type="text" name="cabin[Hull][path]" value="*" />
 
-            <label for="bridge_path">
+            <label for="hull_url">
                 Canon URL (for hyperlinks from other Cabins):
             </label>
-            <input class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
+            <input id="hull_url" class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
             
             <div>
                 <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" checked="checked" />
@@ -99,10 +103,10 @@
                 </label>
             </div>
             
-            <label for="brige_lang">
+            <label for="hull_lang">
                 Language:
             </label>
-            <select class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
+            <select id="hull_lang" class="pure-input-1" id="bridge_lang" name="cabin[Hull][lang]">
                 <option value="en-us">English (U.S.)</option>
             </select>
 
@@ -117,6 +121,7 @@
             {% set form_key_twig = "twig_vars[Hull]" %}
             {% set config_extra = {
                 "blog": {
+                    "cachelists": false,
                     "per_page": "20",
                     "comments": {
                         "enabled": true,
@@ -126,11 +131,18 @@
                 },
                 "file": {
                     "cache": 900
+                },
+                "homepage": {
+                    "blog-posts": 5
                 }
             } %}
             {% set twig_vars = {
-                "title": "Airship 0.1",
+                "title": "Airship 0.3",
                 "tagline": "Even the sky shall not limit you!",
+                "blog": {
+                    "title": "My Blog",
+                    "tagline": "Something classy goes here"
+                },
                 "navbar": [
                     {
                         "url": "~\/",
@@ -148,11 +160,7 @@
                         "url": "~\/blog",
                         "label": "Blog"
                     }
-                ],
-                "blog": {
-                    "title": "My Blog",
-                    "tagline": "Something classy goes here"
-                }
+                ]
             } %}
             {% include "cabin_links/Hull/cabin_config.twig" %}
         </fieldset>

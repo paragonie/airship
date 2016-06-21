@@ -374,7 +374,6 @@ function get_languages(): array
  *
  * @param int $authorId
  * @param string $which
- * @param string $cabin
  * @return string
  */
 function get_avatar(int $authorId, string $which): string
@@ -640,6 +639,7 @@ function render_rst(string $string = '', bool $return = false): string
             \mkdir($cacheDir, 0775, true);
         }
         // This actually expects a string. The docblock in gregwar/rst is wrong
+        /** @noinspection PhpParamsInspection */
         $output = $rst->parse($string);
 
         // Cache for later

@@ -17,7 +17,7 @@ class Commands
         $args = \array_slice($argv, 2);
         switch ($argv[1]) {
             case 'reset':
-                $this->reset(s);
+                $this->reset();
                 break;
             default:
                 $this->usage($argv[1], ...$args);

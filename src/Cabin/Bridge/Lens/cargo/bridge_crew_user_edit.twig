@@ -121,7 +121,7 @@
                     class="full-width full-textarea"
                     title="{{ __("Custom Profile Fields (JSON)")|e('html_attr') }}"
                     name="custom_fields"
-                #}>{{
+                >{{
                     user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))
                 }}</textarea>
             </div>

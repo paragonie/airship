@@ -37,7 +37,7 @@ class Admin extends AdminOnly
     /**
      * Add a new notary
      *
-     * @parma array $channels
+     * @param array $channels
      * @param array $post
      * @return bool
      */

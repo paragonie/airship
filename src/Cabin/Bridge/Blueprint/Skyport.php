@@ -34,6 +34,7 @@ class Skyport extends BlueprintGear
     /**
      * Get the number of packages available
      *
+     * @param string $type The package type
      * @return int
      */
     public function countAvailable(string $type = ''): int
@@ -98,6 +99,7 @@ class Skyport extends BlueprintGear
 
     /**
      * @param string $type
+     * @param string $query Search query
      * @param int $offset
      * @param int $limit
      * @return array

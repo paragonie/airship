@@ -472,7 +472,7 @@ class ChannelUpdates extends BlueprintGear
     /**
      * We're storing metadata about a package in the database.
      *
-     * @param array $keyData
+     * @param array $pkgData
      * @param int $treeUpdateID
      * @return bool
      * @throws \Airship\Alerts\Database\DBException

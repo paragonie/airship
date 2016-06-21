@@ -93,7 +93,7 @@ $(document).ready(function() {
         window.editor_is_wysiwyg = true;
         window.editor_html_wrapper[k] = $("#rich_text_" + k + "_wrapper").html();
 
-        var editor = new wysihtml5.Editor(
+        editors[k] = new wysihtml5.Editor(
             "rich_text_" + k,
             {
                 toolbar:        "rich_text_" + k + "_toolbar",
@@ -102,7 +102,6 @@ $(document).ready(function() {
                 showToolbarAfterInit: true
             }
         );
-        editors[k] = editor;
         $("#rich_text_" + k + "_tabs").hide();
     };
 

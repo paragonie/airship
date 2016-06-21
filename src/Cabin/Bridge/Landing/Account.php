@@ -24,6 +24,7 @@ use \ParagonIE\MultiFactor\OTP\TOTP;
 use \ParagonIE\MultiFactor\Vendor\GoogleAuth;
 use \Psr\Log\LogLevel;
 use \Zend\Mail\{
+    Exception\InvalidArgumentException,
     Message,
     Transport\Sendmail
 };
@@ -225,6 +226,7 @@ class Account extends LandingGear
 
     /**
      * @route recover-account
+     * @param string $token
      */
     public function recoverAccount(string $token = '')
     {
@@ -725,7 +727,7 @@ class Account extends LandingGear
                 // This will be sent as-is:
                 $state->mailer->send($message);
             }
-        } catch (\Zend\Mail\Exception\InvalidArgumentException $ex) {
+        } catch (InvalidArgumentException $ex) {
             return false;
         }
         return true;

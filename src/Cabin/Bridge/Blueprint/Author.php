@@ -393,6 +393,7 @@ class Author extends BlueprintGear
     /**
      * Get the available photo contexts
      *
+     * @param string $label
      * @return int
      */
     public function getPhotoContextId(string $label): int

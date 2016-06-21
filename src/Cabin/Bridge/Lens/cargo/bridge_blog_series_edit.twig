@@ -28,7 +28,7 @@
                         <option value=""></option>
                         {% for auth in authors %}
                             <option
-                                {% if auth.authorid == author.authorid %}}{#
+                                {% if auth.authorid == author.authorid %}{#
                                     #} selected="selected"{#
                                 #}{% endif %}
                                 value="{{ auth.authorid|e('html_attr') }}"

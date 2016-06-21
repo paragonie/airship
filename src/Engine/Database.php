@@ -689,7 +689,7 @@ class Database implements DBInterface
             );
         }
         $stmt = $this->pdo->prepare($statement);
-        $exec = $stmt->execute($params);
+        $stmt->execute($params);
         return $stmt->fetchColumn(0);
     }
 

@@ -33,9 +33,9 @@ window.formatDynamicLink = function(id, i, config, idPrefix) {
                 ? config['label']
                 : ''
         ) + "\" /> " + "\n" +
-        "<input id=\"" + idPrefix +"_translate_" + i + "\" type='checkbox' name='" + dataName + "[" + i + "][translate]' value='1' " +
-        (config['translate']
-                ? "checked='checked'"
+        "<input id=\"" + idPrefix +"_translate_" + i + "\" type='checkbox' name='" + dataName + "[" + i + "][translate]' value='1'" +
+        (config.translate
+                ? " checked='checked'"
                 : ""
         ) + " />" +
         "<label for=\"" + idPrefix +"_translate_" + i + "\">Translate?</label>" +

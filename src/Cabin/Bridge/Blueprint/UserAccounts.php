@@ -300,6 +300,7 @@ class UserAccounts extends BlueprintGear
      * Get the data necessary to recover an account.
      *
      * @param string $selector
+     * @param int $maxTokenLife
      * @return array
      */
     public function getRecoveryData(string $selector, int $maxTokenLife): array
@@ -726,7 +727,7 @@ class UserAccounts extends BlueprintGear
      * Get the user's two-factor authentication secret
      *
      * @param int $userID
-     * @return string
+     * @return bool
      */
     public function resetTwoFactorSecret(int $userID): bool
     {

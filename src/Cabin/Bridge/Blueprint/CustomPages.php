@@ -472,7 +472,6 @@ class CustomPages extends HullCustomPages
 
     /**
      * @param int $directoryID
-     * @param string $cabin
      * @return array
      */
     public function getDirectoryPieces(int $directoryID): array

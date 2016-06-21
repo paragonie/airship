@@ -37,6 +37,7 @@ class AirBrake
     /**
      * AirBrake constructor.
      * @param Database|null $db
+     * @param array $config
      */
     public function __construct(Database $db = null, array $config = [])
     {
@@ -56,6 +57,7 @@ class AirBrake
      *
      * @param string $username
      * @param string $ip
+     * @param string $action
      * @return bool
      */
     public function failFast(
@@ -266,6 +268,7 @@ class AirBrake
      * Return the given subnet for an IPv6 address and mask bits
      *
      * @param string $ip
+     * @param int $maskBits
      * @return string
      */
     public function getIPv6Subnet(string $ip, int $maskBits = 48): string
