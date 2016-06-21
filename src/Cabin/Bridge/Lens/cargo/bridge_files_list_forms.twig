@@ -2,18 +2,29 @@
 <form action="{{ formaction|e('html_attr') }}" method="post" enctype="multipart/form-data">{{ form_token()}}
     <div id="bridge_files_new_dir_form">
         <fieldset>
-            <legend>Create a New Directory</legend>
+            <legend>{{ __("Create a New Directory") }}</legend>
             <div class="table full-width">
                 <div class="table-cell cell-pad-right">
-                    <input type="text" class="full-width" name="directory" {% if _POST.directory %}{#
-                        #}{% if form_status.status != "SUCCESS" %}{#
-                            #} value="{{ _POST.directory|e('html_attr') }}"{#
-                        #}{% endif %}{#
-                    #}{% endif %} />
+                    <input
+                        title="{{ __("Directory Name")|e('html') }}"
+                        type="text"
+                        class="full-width"
+                        name="directory"
+                        {% if _POST.directory %}{#
+                            #}{% if form_status.status != "SUCCESS" %}{#
+                                #} value="{{ _POST.directory|e('html_attr') }}"{#
+                            #}{% endif %}{#
+                        #}{% endif %}
+                    />
                 </div>
                 <div class="table-cell table-btn-right">
-                    <button type="submit" name="submit_btn" value="new_dir" class="pure-button pure-button-secondary">
-                        Create Directory
+                    <button
+                        class="pure-button pure-button-secondary"
+                        name="submit_btn"
+                        type="submit"
+                        value="new_dir"
+                    >
+                        {{ __("Create Directory") }}
                     </button>
                 </div>
             </div>
@@ -22,7 +33,11 @@
     <div id="bridge_files_upload_form">
         <fieldset>
             <legend>
-                Upload Files <a id="add-files"><i class="fa fa-plus-circle"></i> Add Another</a>
+                {{ __("Upload Files") }}
+                <a id="add-files">{#
+                    #}<i class="fa fa-plus-circle"></i>
+                    {{ __("Add Another") }}
+                </a>
             </legend>
             <div class="table full-width">
                 <div class="table-cell cell-pad-right">

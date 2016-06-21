@@ -6,7 +6,7 @@
                     <label for="name">{{ __("Category Name") }}:</label>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="name" value="{{ category.name }}" />
+                    <input type="text" name="name" value="{{ category.name|e('html_attr') }}" />
                 </div>
             </div>
 
@@ -16,7 +16,7 @@
                 </div>
                 <div class="table-cell">
                     <select id="parent" class="treeselect" name="parent">{% spaceless %}
-                            <option value="0"> -None- </option>
+                            <option value="0"> -{{ __("None")|e('html_attr') }}- </option>
                             {% for cat in categories %}
                                 {{ bcatmac.selectBox(cat, category.parent) }}
                             {% endfor %}
@@ -34,7 +34,11 @@
         </div>
 
         <div class="bridge_categories_rich_text_wrapper">
-            {% include cargo("rich_text_editor") with {"name": "preamble", "placeholder": "", "contents": _POST.preamble|default(category.preamble)} %}
+            {% include cargo("rich_text_editor") with {
+                "name": "preamble",
+                "placeholder": "",
+                "contents": _POST.preamble|default(category.preamble)
+            } %}
         </div>
 
         <fieldset class="form-button-group">

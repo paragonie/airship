@@ -1,21 +1,21 @@
 <div class="table full-width">
     <div class="table-row">
         {% if comment.author %}
-            <div class="table-cell">Author:</div>
+            <div class="table-cell">{{ __("Author") }}:</div>
             <div class="table-cell">{#
                 #}<a href="{{ cabin_url() }}author/edit/{{ comment.author }}">{#
                     #}{{ comment.authorname|e('html_attr') }}{#
                 #}</a>{#
             #}</div>
         {% elseif comment.metadata.name %}
-        <div class="table-cell">Name:</div>
+        <div class="table-cell">{{ __("Name") }}:</div>
         <div class="table-cell">
             {{ comment.metadata.name|e('html_attr') }}{#
         #}</div>{% endif %}
     </div>
     {% if comment.metadata.email %}
         <div class="table-row">
-            <div class="table-cell">Email:</div>
+            <div class="table-cell">{{ __("Email") }}:</div>
             <div class="table-cell">{#
             #}{{ comment.metadata.email|e('html_attr') }}{#
         #}</div>
@@ -23,7 +23,7 @@
     {% endif %}
     {% if comment.metadata.url %}
         <div class="table-row">
-            <div class="table-cell">URL:</div>
+            <div class="table-cell">{{ __("URL") }}:</div>
             <div class="table-cell">{#
             #}{{ comment.metadata.url|e('html_attr') }}{#
         #}</div>
@@ -32,36 +32,48 @@
 
     {% if comment.author %}
         <div class="table-row">
-            <div class="table-cell">Avatar:</div>
+            <div class="table-cell">{{ __("Avatar") }}:</div>
             <div class="table-cell">{#
                 #}{% set author_avatar = get_avatar(comment.author, 'comment') %}{#
                 #}{% if author_avatar %}{#
                     #}<a href="{{ cabin_url() }}author/photos/{{ comment.author }}">{#
-                    #}<img src="{{ author_avatar }}" class="blog-comment-avatar" alt="{{ comment.authorname|e('html_attr') }}" title="{{ comment.authorname|e('html_attr') }}" />{#
+                    #}<img
+                        src="{{ author_avatar|e('html_attr') }}"
+                        class="blog-comment-avatar"
+                        alt="{{ comment.authorname|e('html_attr') }}"
+                        title="{{ comment.authorname|e('html_attr') }}"
+                    />{#
                     #}</a>{#
                 #}{% endif %}{#
             #}</div>
         </div>
     {% elseif comment.metadata.email %}
         <div class="table-row">
-            <div class="table-cell">Avatar:</div>
+            <div class="table-cell">{{ __("Avatar") }}:</div>
             <div class="table-cell">{#
-                #}<img src="{{ comment.metadata.email|gravatar }}" alt="{{ comment.metadata.name|e('html_attr') }}" title="{{ comment.metadata.name|e('html_attr') }}" />{#
+                #}<img
+                    src="{{ comment.metadata.email|gravatar }}"
+                    alt="{{ comment.metadata.name|e('html_attr') }}"
+                    title="{{ comment.metadata.name|e('html_attr') }}"
+                />{#
             #}</div>
         </div>
     {% endif %}
 
     <div class="table-row">
-        <div class="table-cell">Blog Post:</div>
+        <div class="table-cell">{{ __("Blog Post") }}:</div>
         <div class="table-cell">
-            <a href="{{ cabin_url() }}blog/post/edit/{{ comment.blogpost|e('html_attr') }}">{{ comment.blog.title }}</a>
+            <a href="{{ cabin_url() }}blog/post/edit/{{ comment.blogpost|e('html_attr') }}">{#
+                #}{{ comment.blog.title }}{#
+            #}</a>
         </div>
     </div>
     {% if comment.replyto %}
         <div class="table-row">
-            <div class="table-cell">Reply to:</div>
+            <div class="table-cell">{{ __("Reply to") }}:</div>
             <div class="table-cell">
-                <a href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}">Comment #{{ comment.replyto|number_format }}</a>
+                <a href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}">{#
+                    #}{{ __("Comment #%s", "default", comment.replyto|number_format) }}</a>
                 {% if comment.parent.author %}{#
                     #}by <a href="{{ cabin_url() }}author/edit/{{ comment.parent.author }}">{#
                         #}{{ comment.parent.authorname|e('html_attr') }}{#
@@ -76,14 +88,19 @@
 
 <input type="hidden" name="format" id="format" value="Markdown" />
 <div class="bridge_page_rich_text_wrapper">
-    {% include cargo("rich_text_editor") with {"name": "page_body", "placeholder": "", "contents": comment.body|default(''), "readonly" : true} %}
+    {% include cargo("rich_text_editor") with {
+        "name": "page_body",
+        "placeholder": "",
+        "contents": comment.body|default(''),
+        "readonly" : true
+    } %}
 </div>
 
 {% if can('publish') %}
 <form method="post">{{ form_token() }}
 
     <fieldset class="form-button-group">
-        <legend>Administrative Actions</legend>
+        <legend>{{ __("Administrative Actions") }}</legend>
     {% if comment.approved %}
         <button type="submit" name="comment_btn" value="hide" class="pure-button pure-button-secondary">
             <i class="fa fa-thumbs-down"></i>

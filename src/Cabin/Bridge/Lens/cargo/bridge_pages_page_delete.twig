@@ -14,15 +14,25 @@
         </div>
     </fieldset>
 
-    <label>{{ __("Please prove that you are human:") }}</label>
+    <label>{{ __("Please prove that you are human") }}:</label>
     <div class="g-recaptcha" data-sitekey="{{ config.recaptcha["site-key"]|e('html_attr') }}"></div>
 
     <hr />
 
-    <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
+    <button
+        class="pure-button pure-button-secondary"
+        name="save_btn"
+        type="submit"
+        value="confirm"
+    >
         {{  __("Save Changes") }}
     </button>
-    <button data-href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ dir }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
-        Cancel
+    <button
+        class="pure-button pure-button-tertiary"
+        id="cancel_btn"
+        data-href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ dir }}"
+        type="button"
+    >
+        {{ __("Cancel") }}
     </button>
 </form>

@@ -10,7 +10,8 @@
         <div class="table-cell">
             <select id="trusted_supplier" name="universal[airship][trusted-supplier]">
                 {% for supplier, data in suppliers %}
-                <option value="{{ supplier|e('html_attr') }}"
+                <option
+                    value="{{ supplier|e('html_attr') }}"
                     {% if supplier == universal.airship['trusted-supplier'] %} selected="selected"{% endif %}
                 >{{ supplier }}</option>
                 {% endfor %}
@@ -26,25 +27,39 @@
         </div>
         <div class="table-cell">
             <select id="update_frequency" name="universal[auto-update][check]">
-                <option {% if universal["auto-update"].check == 900 %} selected="selected"{% endif %} value="900">15 Minutes</option>
-                <option {% if universal["auto-update"].check == 1800 %} selected="selected"{% endif %} value="1800">30 Minutes</option>
-                <option {% if universal["auto-update"].check == 3600 %} selected="selected"{% endif %} value="3600">1 Hour (60 Minutes) - Recommended</option>
-                <option {% if universal["auto-update"].check == 21600 %} selected="selected"{% endif %} value="21600">6 Hours</option>
-                <option {% if universal["auto-update"].check == 43200 %} selected="selected"{% endif %} value="43200">12 Hours</option>
-                <option {% if universal["auto-update"].check == 86400 %} selected="selected"{% endif %} value="86400">24 Hours (1 Day)</option>
-                <option {% if universal["auto-update"].check == 604800 %} selected="selected"{% endif %} value="604800">7 Days (1 Week)</option>
+                <option {% if universal["auto-update"].check == 900 %} selected="selected"{% endif %} value="900">
+                    {{ __("15 Minutes") }}
+                </option>
+                <option {% if universal["auto-update"].check == 1800 %} selected="selected"{% endif %} value="1800">
+                    {{ __("30 Minutes") }}
+                </option>
+                <option {% if universal["auto-update"].check == 3600 %} selected="selected"{% endif %} value="3600">
+                    {{ __("1 Hour (60 Minutes) - Recommended") }}
+                </option>
+                <option {% if universal["auto-update"].check == 21600 %} selected="selected"{% endif %} value="21600">
+                    {{ __("6 Hours") }}
+                </option>
+                <option {% if universal["auto-update"].check == 43200 %} selected="selected"{% endif %} value="43200">
+                    {{ __("12 Hours") }}
+                </option>
+                <option {% if universal["auto-update"].check == 86400 %} selected="selected"{% endif %} value="86400">
+                    {{ __("24 Hours (1 Day)") }}
+                </option>
+                <option {% if universal["auto-update"].check == 604800 %} selected="selected"{% endif %} value="604800">
+                    {{ __("7 Days (1 Week)") }}
+                </option>
             </select>
             <fieldset class="updates_auto">
-                <legend>Automatically apply changes to:</legend>
+                <legend>{{ __("Automatically apply changes to") }}:</legend>
 
                 <input {% if universal["auto-update"].major %} checked="checked"{% endif %} id="update_major" type="checkbox" name="universal[auto-update][major]" value="1" />
-                <label for="update_major">Major version changes (e.g. <code>1.5.2 -> 2.0.0</code>)</label><br />
+                <label for="update_major">{{ __("Major version changes") }} (<code>1.5.2 -> 2.0.0</code>)</label><br />
 
                 <input {% if universal["auto-update"].minor %} checked="checked"{% endif %} id="update_minor" type="checkbox" name="universal[auto-update][minor]" value="1" />
-                <label for="update_minor">Minor version changes (e.g. <code>1.5.2 -> 1.6.0</code>)</label><br />
+                <label for="update_minor">{{ __("Minor version changes") }} (<code>1.5.2 -> 1.6.0</code>)</label><br />
 
                 <input {% if universal["auto-update"].patch %} checked="checked"{% endif %} id="update_patch" type="checkbox" name="universal[auto-update][patch]" value="1" checked="checked" />
-                <label for="update_patch">Patch version changes (e.g. <code>1.5.2 -> 1.5.3</code>)</label><br />
+                <label for="update_patch">{{ __("Patch version changes") }} (<code>1.5.2 -> 1.5.3</code>)</label><br />
             </fieldset>
         </div>
     </div>

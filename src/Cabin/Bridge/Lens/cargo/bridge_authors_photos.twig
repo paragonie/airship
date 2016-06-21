@@ -46,7 +46,7 @@
                         &bull;
                     <a id="photo-select-refresh"><i class="fa fa-refresh"></i> {{ __("Refresh") }}</a>
                 </div>
-                <select id="selected-filename"></select>
+                <select title="{{ __("Selected filename")|e('html_attr') }}" id="selected-filename"></select>
                 <button id="change-photo-btn" type="button" class="pure-button pure-button-primary">
                     {{ __("Confirm") }}
                 </button>

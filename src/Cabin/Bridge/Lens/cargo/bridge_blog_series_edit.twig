@@ -3,16 +3,16 @@
     <input type="hidden" name="series_id" id="series_id" value="{{ series.seriesid|e('html_attr') }}" />
     <div id="blog_series_metadata" class="form-table full-width table-pad-1">
         <div class="table-row">
-            <label class="table-cell table-label">
+            <label for="name" class="table-cell table-label">
                 {{ __("Series Name") }}:
             </label>
             <div class="table-cell">
-                <input type="text" class="full-width" required="required" name="name" value="{{ series.name|e('html_attr') }}" />
+                <input id="name" type="text" class="full-width" required="required" name="name" value="{{ series.name|e('html_attr') }}" />
             </div>
         </div>
 
         <div class="table-row">
-            <label class="table-cell">
+            <label for="author" class="table-cell">
                 {{ __("Author") }}:
             </label>
             <div class="table-cell">
@@ -20,7 +20,14 @@
                     <select name="author" id="author" required="required">
                         <option value=""></option>
                         {% for auth in authors %}
-                            <option {% if auth.authorid == author.authorid %} selected="selected"{% endif %} value="{{ auth.authorid }}">{{ auth.name }}</option>
+                            <option
+                                {% if auth.authorid == author.authorid %}}{#
+                                    #} selected="selected"{#
+                                #}{% endif %}
+                                value="{{ auth.authorid|e('html_attr') }}"
+                            >
+                                {{ auth.name }}
+                            </option>
                         {% endfor %}
                     </select>
                 {% else %}
@@ -36,7 +43,9 @@
                 {{ __("Preamble Format") }}:
             </label>
             <div class="table-cell">
-                {% include cargo("bridge_pages_select_format") with {"format": series.format|default('HTML')} %}
+                {% include cargo("bridge_pages_select_format") with {
+                    "format": series.format|default('HTML')
+                } %}
             </div>
         </div>
 
@@ -47,9 +56,9 @@
             <div class="table-cell">
                 <div class="bridge_blog_series_rich_text_wrapper">
                     {% include cargo("rich_text_editor") with {
-                    "name": "preamble",
-                    "placeholder": __("Information about this series goes here"),
-                    "contents": _POST.contents|default(series.preamble)
+                        "name": "preamble",
+                        "placeholder": __("Information about this series goes here"),
+                        "contents": _POST.contents|default(series.preamble)
                     } %}
                 </div>
             </div>

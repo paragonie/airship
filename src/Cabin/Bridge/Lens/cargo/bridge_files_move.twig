@@ -10,7 +10,7 @@
         </legend>
         <div class="full-width table table-pad-1">
             <div class="width50 table-cell">
-                <select class="full-width" name="new_dir">
+                <select title="Destination" class="full-width" name="new_dir">
                     <option value=""></option>
                     {% for d in all_dirs %}
                         <option value="{{ d|e('html_attr') }}"{% if d == dir %} selected="selected"{% endif %}>{{ d }}</option>

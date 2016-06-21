@@ -3,20 +3,23 @@
     <div class="table table-pad-1 full-width">
     {% for cabin, motif_data in motifs %}
         <div class="table-row">
-            <label class="table-cell table-label">
+            <label class="table-cell table-label" for="motif-{{ cabin|e('html_attr') }}-prefs">
                 {{ cabin }}:
             </label>
             <div class="table-cell full-width">
-                <select name="prefs[motif][{{ cabin|e('html_attr') }}]">
+                <select
+                    id="motif-{{ cabin|e('html_attr') }}-prefs"
+                    name="prefs[motif][{{ cabin|e('html_attr') }}]"
+                >
                     <option value=""> -- {{ __("Automatic") }} -- </option>{#
                         #}{% for motif_name, motif_config in motif_data %}{#
                             #}
                         {% set combined_name = motif_config.config.supplier ~ "/" ~ motif_name %}
                         <option
-                                {% if prefs.motif[cabin] == combined_name %}
-                                    selected="selected"
-                                {% endif %}
-                                value="{{ combined_name|e('html_attr') }}"
+                            {% if prefs.motif[cabin] == combined_name %}
+                                selected="selected"
+                            {% endif %}
+                            value="{{ combined_name|e('html_attr') }}"
                         >{#
                                 #}{{ motif_config.config.display_name }}{#
                             #}</option>

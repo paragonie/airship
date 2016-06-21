@@ -3,17 +3,26 @@
     <div class="table">
 
         <div class="table-row">
-            <label class="table-cell" for="blog_post_title">{{ __("Post Title") }}:</label>
+            <label class="table-cell" for="blog_post_title">{#
+                #}{{ __("Post Title") }}:{#
+            #}</label>
             <div class="table-cell">
-                <input type="text" name="title" value="{{ _POST.title|e('html_attr') }}" />
+                <input
+                    id="blog_post_title"
+                    name="title"
+                    type="text"
+                    value="{{ _POST.title|e('html_attr') }}"
+                />
             </div>
         </div>
 
         <div class="table-row">
-            <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
+            <label class="table-cell" for="blog_post_category">{#
+                #}{{ __("Category") }}:{#
+            #}</label>
             <div class="table-cell">
                 <select name="category" id="blog_post_category" class="treeselect">
-                    <option value="0"> -None- </option>
+                    <option value="0"> -{{ __("None") }}- </option>
                     {% for category in categories %}
                         {{ bcatmac.selectBox(category, _POST.category|default(0)) }}
                     {% endfor %}
@@ -24,7 +33,7 @@
         <div class="table-row">
             <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
             <div class="table-cell">
-                <select name="author" id="blog_post_author" required="required" pattern="^\d+$">
+                <select name="author" id="blog_post_author" required="required">
                     <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
                     {% for auth in authors %}
                         <option{#
@@ -47,7 +56,9 @@
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell">
-                {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default("Markdown")} %}
+                {% include cargo("bridge_pages_select_format") with {
+                    "format": _POST.format|default("Markdown")
+                } %}
             </div>
         </div>
 
@@ -69,14 +80,23 @@
         <div class="table-row">
             <label class="table-cell" for="blog_post_description">{{ __("Description") }}:</label>
             <div class="table-cell">
-                <input type="text" name="description" placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}" value="{{ _POST.description|e('html_attr') }}" />
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
+                    value="{{ _POST.description|e('html_attr') }}"
+                />
             </div>
         </div>
 
         {% include cargo("bridge_blog_post_extra_fields") ignore missing %}
     </div>
     <div class="bridge_blog_rich_text_wrapper">
-        {% include cargo("rich_text_editor") with {"name": "blog_post_body", "placeholder": "", "contents": _POST.blog_post_body|default("")} %}
+        {% include cargo("rich_text_editor") with {
+            "contents": _POST.blog_post_body|default(""),
+            "name": "blog_post_body",
+            "placeholder": ""
+        } %}
     </div>
 
     <fieldset class="form-button-group">

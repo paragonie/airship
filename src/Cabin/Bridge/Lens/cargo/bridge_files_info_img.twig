@@ -8,17 +8,17 @@
     <div id="preview_wrapper">
         <div id="bridge_files_info_img_code">
             <div id="bridge_files_info_img_html">
-                <textarea class="full-textarea">{#
+                <textarea title="HTML" class="full-textarea">{#
                     #}<img src="{{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}" alt="alternative text" />{#
                 #}</textarea>
             </div>
             <div id="bridge_files_info_img_markdown">
-                <textarea class="full-textarea">{#
+                <textarea title="Markdown" class="full-textarea">{#
                     #}![alternative text]({{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}){#
                 #}</textarea>
             </div>
             <div id="bridge_files_info_img_rst">
-                <textarea class="full-textarea">{#
+                <textarea title="ReStructuredText" class="full-textarea">{#
                     #}.. image:: {{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('html_attr') }}
    :alt: alternative text{#
                 #}</textarea>

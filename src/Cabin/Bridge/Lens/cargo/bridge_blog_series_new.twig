@@ -2,16 +2,16 @@
 <form method="post">{{ form_token() }}
     <div id="blog_series_metadata" class="form-table full-width table-pad-1">
         <div class="table-row">
-            <label class="table-cell table-label">
+            <label class="table-cell table-label" for="series-name">
                 {{ __("Series Name") }}:
             </label>
             <div class="table-cell">
-                <input type="text" class="full-width" required="required" name="name" />
+                <input id="series-name" type="text" class="full-width" required="required" name="name" />
             </div>
         </div>
 
         <div class="table-row">
-            <label class="table-cell">
+            <label class="table-cell" for="author">
                 {{ __("Author") }}:
             </label>
             <div class="table-cell">
@@ -54,7 +54,7 @@
     <h3 class="nomargin">{{ __("Series Contents") }}</h3>
 
     {% include cargo("bridge_blog_series_sortable") with {
-        "items": series_items.default([])
+        "items": series_items|default([])
     } %}
 
     <fieldset class="form-button-group">

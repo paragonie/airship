@@ -8,7 +8,13 @@
                 {{ __("Username") }}:
             </div>
             <div class="table-cell">
-                <input type="text" class="full-width" name="username" value="{{ user.username|e("html_attr") }}" />
+                <input
+                    class="full-width"
+                    name="username"
+                    title="{{ __("Username")|e('html_attr') }}"
+                    type="text"
+                    value="{{ user.username|e("html_attr") }}"
+                />
             </div>
         </div>
 
@@ -17,7 +23,13 @@
                 {{ __("Unique ID") }}:
             </div>
             <div class="table-cell">
-                <input type="text" class="full-width" name="uniqueid" value="{{ user.uniqueid|e("html_attr") }}" />
+                <input
+                    class="full-width"
+                    name="uniqueid"
+                    title="{{ __("Unique ID")|e('html_attr') }}"
+                    type="text"
+                    value="{{ user.uniqueid|e("html_attr") }}"
+                />
             </div>
         </div>
 
@@ -26,7 +38,13 @@
                 {{ __("Change Passphrase") }}:
             </div>
             <div class="table-cell">
-                <input type="password" class="full-width" id="password" name="passphrase" placeholder="Optional" />
+                <input
+                    class="full-width"
+                    id="password"
+                    name="passphrase"
+                    placeholder="{{ __("Optional")|e('html_attr') }}"
+                    type="password"
+                />
                 <div id="password_feedback" class="text-shadow"></div>
             </div>
         </div>
@@ -36,7 +54,13 @@
                 {{ __("Display Name") }}:
             </div>
             <div class="table-cell">
-                <input type="text" class="full-width" name="display_name" value="{{ user.display_name|e("html_attr") }}" />
+                <input
+                    class="full-width"
+                    name="display_name"
+                    title="{{ __("Display Name")|e('html_attr') }}"
+                    type="text"
+                    value="{{ user.display_name|e("html_attr") }}"
+                />
             </div>
         </div>
 
@@ -45,7 +69,13 @@
                 {{ __("Real Name") }}:
             </div>
             <div class="table-cell">
-                <input type="text" class="full-width" name="real_name" value="{{ user.real_name|e("html_attr") }}" />
+                <input
+                    class="full-width"
+                    name="real_name"
+                    title="{{ __("Real Name")|e('html_attr') }}"
+                    type="text"
+                    value="{{ user.real_name|e("html_attr") }}"
+                />
             </div>
         </div>
 
@@ -54,7 +84,13 @@
                 {{ __("Email Address") }}:
             </div>
             <div class="table-cell">
-                <input type="text" class="full-width" name="email" value="{{ user.email|e("html_attr") }}" />
+                <input
+                    class="full-width"
+                    name="email"
+                    title="{{ __("Email Address")|e('html_attr') }}"
+                    type="text"
+                    value="{{ user.email|e("html_attr") }}"
+                />
             </div>
         </div>
 
@@ -63,7 +99,13 @@
                 {{ __("Groups") }}:
             </div>
             <div class="table-cell">
-                <select name="groups[]" id="users_groups" class="treeselect full-width tall-select" multiple="multiple">
+                <select
+                    class="treeselect full-width tall-select"
+                    id="users_groups"
+                    multiple="multiple"
+                    name="groups[]"
+                    title="{{ __("Groups") }}"
+                >
                     {% for grp in groups %}
                         {{ grpmac.selectBox(grp, user.groups) }}
                     {% endfor %}
@@ -75,9 +117,10 @@
                 {{ __("Custom Profile Fields (JSON)") }}:
             </div>
             <div class="table-cell">
-                <textarea{#
-                    #} class="full-width full-textarea"{#
-                    #} name="custom_fields"{#
+                <textarea
+                    class="full-width full-textarea"
+                    title="{{ __("Custom Profile Fields (JSON)")|e('html_attr') }}"
+                    name="custom_fields"
                 #}>{{
                     user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))
                 }}</textarea>

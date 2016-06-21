@@ -6,7 +6,9 @@
     <div class="width50 center">
     <h2>{{ __("Register a New Account") }}</h2>
     {%  if post_response %}
-        <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
+        <div class="post {{ post_response.status|e('html_attr') }}">{#
+            #}{{ post_response.message }}{#
+        #}</div>
     {% endif %}
         <div class="board-form-wrapper">
             <form

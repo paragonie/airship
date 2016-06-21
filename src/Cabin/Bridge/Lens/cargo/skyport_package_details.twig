@@ -32,6 +32,7 @@
         {% if package.upgrades %} {# Show available upgrades#}
             <select
                 id="skyport-upgrade-version"
+                title="{{ __("Select version for upgrade")|e('html_attr') }}"
             >
                 <option value="">{{ __("Current: ") ~ package['current_version'] }}</option>
             {% for ver in upgrades %}

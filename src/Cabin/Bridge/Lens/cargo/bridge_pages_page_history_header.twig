@@ -12,7 +12,9 @@
     #}{% endif %}{#
 #}{% endfor %}{#
     #}/{#
-#}<strong><a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{{ pageinfo.url|e('html_attr') }}</a></strong>
+#}<strong><a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{#
+    #}{{ pageinfo.url|e('html_attr') }}{#
+#}</a></strong>
     <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/editPage?dir={{ acc|e('html_attr') }}&page={{ pageinfo.url|e('url') }}">{#
         #}<i class="fa fa-pencil" title="{{ __("Edit")|e('html_attr') }}"></i>{#
     #}</a>

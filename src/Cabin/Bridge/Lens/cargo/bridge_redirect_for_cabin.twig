@@ -1,6 +1,6 @@
 {% set can_update = can_update() %}{% set can_delete = can_delete() %}
 <a href="{{ cabin_url() }}redirects/{{ cabin|e('url') }}/new" class="pure-button pure-button-primary">
-    <i class="fa fa-plus"></i> New Redirect
+    <i class="fa fa-plus"></i> {{ __("New Redirect") }}
 </a>
 <hr />
 {% if redirects %}

@@ -8,9 +8,9 @@
     data-dir="{{ current|e('html_attr') }}">
     <div class="bridge_page_list_contents_row header_row"
 >
-        <div>Page</div>
-        <div>Created</div>
-        <div>Modified</div>
+        <div>{{ __("Page") }}</div>
+        <div>{{ __("Created") }}</div>
+        <div>{{ __("Modified") }}</div>
         <div></div>
     </div>
 {% if dirs %}
@@ -19,7 +19,12 @@
          data-dir="{{ dir.url|e('url') }}"
     >
         <div class="monospace">
-            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={% if current %}{{ current ~ "/" ~ dir.url|e('url') }}{% else %}{{ dir.url|e('url') }}{% endif %}">
+            <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}?dir={#
+                #}{% if current %}{#
+                    #}{{ (current ~ "/" ~ dir.url)|e('url') }}{#
+                #}{% else %}{#
+                    #}{{ dir.url|e('url') }}{#
+                #}{% endif %}">
                 <i class="fa fa-folder-open icon-pad-right"></i>{{ dir.url }}
             </a>
         </div>
