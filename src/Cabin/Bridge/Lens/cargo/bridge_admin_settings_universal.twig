@@ -326,14 +326,14 @@
         <div class="table-cell">
             <input {% if universal["tor-only"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="universal[tor-only]" value="1" />
             <label for="network-tor">
-                Proxy all requests over <a href="https://www.torproject.org/about/overview">Tor</a>?
+                {{ __("Proxy all requests over %s?", "default" , "<a href=\"https://www.torproject.org/about/overview\">Tor</a>") }}
             </label>
 
             <br />
 
             <input {% if universal["twig-cache"] %} checked="checked"{% endif %} id="twig-cache" type="checkbox" name="universal[twig-cache]" value="1" />
             <label for="twig-cache">
-                Cache templates?
+                {{ __("Cache templates?") }}
             </label>
 
             <br />

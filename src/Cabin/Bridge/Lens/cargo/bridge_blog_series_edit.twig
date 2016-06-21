@@ -7,7 +7,14 @@
                 {{ __("Series Name") }}:
             </label>
             <div class="table-cell">
-                <input id="name" type="text" class="full-width" required="required" name="name" value="{{ series.name|e('html_attr') }}" />
+                <input
+                    class="full-width"
+                    id="name"
+                    name="name"
+                    required="required"
+                    type="text"
+                    value="{{ series.name|e('html_attr') }}"
+                />
             </div>
         </div>
 
@@ -63,7 +70,9 @@
                 </div>
             </div>
         </div>
-        {% include cargo("bridge_blog_series_config") with {"config": series.config} %}
+        {% include cargo("bridge_blog_series_config") with {
+            "config": series.config
+        } %}
     </div>
 
     <h3 class="nomargin">{{ __("Series Contents") }}</h3>

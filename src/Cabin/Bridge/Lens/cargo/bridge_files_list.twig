@@ -15,8 +15,9 @@
     </div>
     {% if subdirs %}
         {% for dir in subdirs %}
-            <div class="bridge_file_list_contents_row"
-                 data-dir="{{ dir.url|e('url') }}"
+            <div
+                class="bridge_file_list_contents_row"
+                data-dir="{{ dir.url|e('url') }}"
             >
                 <div class="monospace">
                     <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}?dir={% if current %}{#

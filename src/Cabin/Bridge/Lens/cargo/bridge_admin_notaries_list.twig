@@ -25,7 +25,7 @@
                         {{ notary.urls[0] }}
                 {% endif %}</td>
                 <td class="table-min-width">
-                    <button type="submit" name="delete_notary" value="{{ name ~ "|" ~ idx }}" class="pure-button pure-button-secondary">
+                    <button type="submit" name="delete_notary" value="{{ (name ~ "|" ~ idx)|e('html_attr') }}" class="pure-button pure-button-secondary">
                         <i class="fa fa-remove"></i> Remove
                     </button>
                 </td>

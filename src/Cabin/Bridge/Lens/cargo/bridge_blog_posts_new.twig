@@ -22,7 +22,7 @@
             #}</label>
             <div class="table-cell">
                 <select name="category" id="blog_post_category" class="treeselect">
-                    <option value="0"> -{{ __("None") }}- </option>
+                    <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
                         {{ bcatmac.selectBox(category, _POST.category|default(0)) }}
                     {% endfor %}
@@ -48,7 +48,10 @@
                     {% endfor %}
                 </select>
                 <a href="{{ cabin_url() }}author/new" target="_blank" title="{{ __("Create an Author Profile")|e('html_attr') }}">{#
-                    #}<i class="fa fa-user-plus"></i>{% if not authors %}Create an Author Profile Now{% endif %}{#
+                    #}<i class="fa fa-user-plus"></i>{#
+                        #}{% if not authors %}{#
+                            #}{{ __("Create an Author Profile Now") }}{#
+                        #}{% endif %}{#
                 #}</a>
             </div>
         </div>
@@ -73,7 +76,10 @@
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
             <div class="table-cell bridge_blog_post_tags">
-                {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default([])} %}
+                {% include cargo("bridge_blog_post_tags") with {
+                    "tags": tags,
+                    "checked": _POST.tags|default([])
+                } %}
             </div>
         </div>
 

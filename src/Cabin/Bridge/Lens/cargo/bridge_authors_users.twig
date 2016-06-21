@@ -44,7 +44,7 @@
 {% for user in users%}
             <tr>{% if inCharge %}
                 <td class="table-min-width cell-pad-right">
-                    <button name="toggle_owner" value="{{ user.uniqueid }}" class="pure-button pure-button-secondary">
+                    <button name="toggle_owner" value="{{ user.uniqueid|e('html_attr') }}" class="pure-button pure-button-secondary">
                         {{
                             (user.in_charge
                                 ? '<i class="fa fa-thumbs-down"></i>' ~ __("Revoke Ownership")

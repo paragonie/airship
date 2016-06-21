@@ -43,5 +43,3 @@ Airship extensions come in three flavors:
 
 To create and/or manage these extensions, check out 
 [barge, our command line utility](https://github.com/paragonie/airship-barge).
-
-### Code Audit in Progress

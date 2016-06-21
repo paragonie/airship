@@ -7,7 +7,7 @@
                     #}<a class="skyport-page" data-page="1">&laquo;</a>{#
                 #}</li>
                 <li class="pagination_prev" title="Go to the previous page">{#
-                    #}<a class="skyport-page" data-page="{{ (pagination.page - 1) }}">&lsaquo;</a>{#
+                    #}<a class="skyport-page" data-page="{{ (pagination.page - 1)|e('html_Attr') }}">&lsaquo;</a>{#
                 #}</li>
             {% else %}
                 <li class="pagination_first" title="Go to the first page">&laquo;</li>
@@ -63,10 +63,10 @@
             {% endfor %}
             {% if num_pages - pagination.page > 0 %}
                 <li class="pagination_next" title="Go to the next page">{#
-                    #}<a class="skyport-page" data-page="{{ (pagination.page + 1) }}">&rsaquo;</a>{#
+                    #}<a class="skyport-page" data-page="{{ (pagination.page + 1)|e('html_Attr') }}">&rsaquo;</a>{#
                 #}</li>
                 <li class="pagination_last" title="Go to the last page">{#
-                    #}<a class="skyport-page" data-page="{{ (num_pages + 1) }}">&raquo;</a>{#
+                    #}<a class="skyport-page" data-page="{{ (num_pages + 1)|e('html_Attr') }}">&raquo;</a>{#
                 #}</li>
             {% else %}
                 <li class="pagination_next" title="Go to the next page">&rsaquo;</li>

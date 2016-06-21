@@ -54,7 +54,9 @@
                 {{ tag.name }}
             </div>
             <div class="table-cell">
-                {{ tag.created|date(config.format|default('Y-m-d g:i:s A')) }}
+                {{ tag.created|date(
+                    config.format|default('Y-m-d g:i:s A')
+                ) }}
             </div>
         </div>
     {% endfor %}

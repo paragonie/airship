@@ -16,7 +16,7 @@ $cutoff = \strlen(\dirname(__DIR__) . '/src') + 1;
 $dirs = [];
 
 $allDirs = \Airship\list_all_files(\dirname(__DIR__) . '/src');
-\sort($allDirs);
+\sort($allDirs, \SORT_STRING & ~\SORT_FLAG_CASE);
 foreach ($allDirs as $file) {
     $print = \trim(\substr($file, $cutoff), '/');
 

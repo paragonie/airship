@@ -10,7 +10,7 @@
                     id="blog_post_title"
                     name="title"
                     type="text"
-                    value="{{ _POST.title|default(blogpost.title)|e('html_attr') }}"
+                    value="{{ (_POST.title|default(blogpost.title))|e('html_attr') }}"
                 />
             </div>
         </div>
@@ -24,7 +24,7 @@
                     #} type="text"{#
                     #} name="slug"{#
                     #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
-                    #} value="{{ _POST.slug|default(blogpost.slug)|e('html_attr') }}"{#
+                    #} value="{{ (_POST.slug|default(blogpost.slug))|e('html_attr') }}"{#
                     #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
                 #} />
                 <div id="blog_post_slug_checkbox_wrapper">
@@ -73,7 +73,9 @@
         <div class="table-row">
             <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell bottom-pad">
-                {% include cargo("bridge_pages_select_format") with {"format": _POST.format|default(latest.format)} %}
+                {% include cargo("bridge_pages_select_format") with {
+                    "format": _POST.format|default(latest.format)
+                } %}
             </div>
         </div>
 
@@ -95,7 +97,10 @@
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
             <div class="table-cell bridge_blog_post_tags bottom-pad">
-                {% include cargo("bridge_blog_post_tags") with {"tags": tags, "checked": _POST.tags|default(blogpost.tags)} %}
+                {% include cargo("bridge_blog_post_tags") with {
+                    "tags": tags,
+                    "checked": _POST.tags|default(blogpost.tags)
+                } %}
             </div>
         </div>
 
@@ -107,7 +112,9 @@
                     type="text"
                     name="description"
                     placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
-                    value="{{ _POST.description|default(blogpost.description)|e('html_attr') }}"
+                    value="{{ (
+                        _POST.description|default(blogpost.description)
+                    )|e('html_attr') }}"
                 />
             </div>
         </div>

@@ -2,7 +2,7 @@
     <div class="form-table">
         <div class="table-row">
             <label class="table-cell">
-                Cabin:
+                {{ __("Cabin") }}:
             </label>
             <div class="table-cell">
                 <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}" target="_blank">{{ cabin }}</a>
@@ -13,12 +13,12 @@
                 Page Name:
             </label>
             <div class="table-cell">
-                {{ dir }}/<input type="text" required="required" name="url" />
+                {{ dir }}/<input title="{{ __("URL") }}" type="text" required="required" name="url" />
             </div>
         </div>
         <div class="table-row">
             <label class="table-cell">
-                Options:
+                {{ __("Options") }}:
             </label>
             <div class="table-cell bridge_page_options">
                 <fieldset class="form-button-group">

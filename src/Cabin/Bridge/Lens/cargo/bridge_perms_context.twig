@@ -33,7 +33,7 @@
         </tr>
         <tr class="perm_header">
             {% for act in actions %}
-                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+                <th class="permtable_header_action">{{ act|capitalize }}</th>
             {% endfor %}
         </tr>
         </thead>
@@ -56,7 +56,7 @@
         </tr>
         <tr>
             {% for act in actions %}
-                <th class="permtable_header_action">{{ act|capitalize|e }}</th>
+                <th class="permtable_header_action">{{ act|capitalize }}</th>
             {% endfor %}
             {% set footercols = actions|length + 1 %}
         </tr>
@@ -74,7 +74,11 @@
         </tfoot>
         <tbody>
         {% spaceless %}{% for userid, perms in userperms %}
-            {% include "perms/user.twig" with {"userid": userid, "user": users[userid], "perms": perms} %}
+            {% include "perms/user.twig" with {
+                "userid": userid,
+                "user": users[userid],
+                "perms": perms
+            } %}
         {% endfor %}{% endspaceless %}
         </tbody>
     </table>

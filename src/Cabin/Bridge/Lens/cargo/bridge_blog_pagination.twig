@@ -1,5 +1,9 @@
 <div id="pagination">
-    {% set num_pages = (pagination.count / pagination.per_page|default(20))|ceil %}
+    {% set num_pages = (
+        pagination.count
+            /
+        pagination.per_page|default(20)
+    )|ceil %}
     {% if num_pages > 0 %}
         <ul class="pages">
             {% if pagination.page > 1 %}

@@ -8,19 +8,19 @@
 <form method="post">{{ form_token() }}
     <fieldset>
         <input
-                id="enable_two_factor"
-                type="checkbox"
-                name="enable_two_factor"
-                value="1"{% if enabled %}
+            id="enable_two_factor"
+            type="checkbox"
+            name="enable_two_factor"
+            value="1"{% if enabled %}
             checked="checked"{% endif %}
         />
         <label for="enable_two_factor">{{ __("Enable Two-Factor Authentication?") }}</label>
         <br />
         <input
-                id="reset_secret"
-                type="checkbox"
-                name="reset_secret"
-                value="1"
+            id="reset_secret"
+            type="checkbox"
+            name="reset_secret"
+            value="1"
         />
         <label for="reset_secret">{{ __("Reset your two-factor authentication secret?") }}</label>
     </fieldset>

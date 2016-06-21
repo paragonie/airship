@@ -1,5 +1,5 @@
 {% if can_edit %}<a class="blog_icon" href="{{ cabin_url() }}blog/category/edit/{{ catdata.categoryid|e('url') }}">{#
     #}<i class="fa fa-pencil" title="{{
-    __("Edit Details for", "default", catdata.name)|e('html_attr')
+        __("Edit Details for", "default", catdata.name)|e('html_attr')
     }}"></i>{#
 #}</a>{% endif %}{{ catdata.name }}

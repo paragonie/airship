@@ -11,14 +11,14 @@
                     readonly="readonly"
                 {% endif %}
             >{#
-            #}{{ contents }}{#
+            #}{{ contents|e('html_attr') }}{#
             #}</textarea>
         </div>
         <div id="rich_text_{{ name|e('html_attr') }}_preview" class="richtext-render"></div>
     </div>
     <div class="rich_text_tab_row" id="rich_text_{{ name|e('html_attr') }}_tabs">
-        <a id="rich_text_{{ name|e('html_attr') }}_edit_tab">Edit</a>
-        <a id="rich_text_{{ name|e('html_attr') }}_preview_tab">Preview</a>
+        <a id="rich_text_{{ name|e('html_attr') }}_edit_tab">{{ __("Edit") }}</a>
+        <a id="rich_text_{{ name|e('html_attr') }}_preview_tab">{{ __("Preview") }}</a>
     </div>
 </div>
 <script nonce="{{ csp_nonce() }}">
