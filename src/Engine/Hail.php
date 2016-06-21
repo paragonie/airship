@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use \Airship\Alerts\Hail\SignatureFailed;
+use \Airship\Engine\Continuum\Supplier;
 use \GuzzleHttp\{
     Client,
     ClientInterface,
@@ -31,7 +32,14 @@ class Hail
 {
     const ENCODED_SIGNATURE_LENGTH = 88;
 
+    /**
+     * @var Client
+     */
     protected $client;
+
+    /**
+     * @var Supplier[]
+     */
     protected $supplierCache;
     
     /**
@@ -219,7 +227,7 @@ class Hail
                 unset($defaults['curl'][CURLOPT_SSLVERSION]);
             }
         } elseif (\preg_match('#^https?://([^/]+)\.onion#', $this->client->getConfig('base_uri') ?? '')) {
-            // Use Tor
+            // Use Tor for .onion addresses
             $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
             $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
         } elseif (!empty($config->universal['tor-only'])) {

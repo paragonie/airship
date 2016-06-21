@@ -63,23 +63,26 @@ class Database implements DBInterface
         string $password = '',
         $options = []
     ): Database {
+
         $post_query = null;
         $dbEngine = '';
-
-        // Let's grab the DB engine
-        
         if (\is_array($dsn)) {
-            list ($dsn, $dbEngine, $username, $password) = self::flattenDSN($dsn, $username, $password);
+            list ($dsn, $dbEngine, $username, $password) = self::flattenDSN(
+                $dsn,
+                $username,
+                $password
+            );
         } elseif (!\is_string($dsn)) {
             throw new \TypeError('DSN must be string or array');
         } elseif (strpos($dsn, ':') !== false) {
             $dbEngine = explode(':', $dsn)[0];
         }
 
-        // If no charset is specified, default to UTF-8
+        // Database engine specific DSN addendums
         switch ($dbEngine) {
             case 'mysql':
                 if (strpos($dsn, ';charset=') === false) {
+                    // If no charset is specified, default to UTF-8
                     $dsn .= ';charset=utf8';
                 }
                 break;
@@ -88,6 +91,7 @@ class Database implements DBInterface
         try {
             $pdo = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
+            // Don't leak the DB password in a stack trace:
             throw new DBAlert\DBException(
                 \trk('errors.database.pdo_exception')
             );
@@ -98,7 +102,7 @@ class Database implements DBInterface
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         if (!empty($post_query)) {
-            $pdo->query($post_query);
+            $pdo->exec($post_query);
         }
         
         return new Database($pdo, $dbEngine);
@@ -242,7 +246,9 @@ class Database implements DBInterface
             // Don't allow foot-bullets
             return null;
         }
-        $queryString = "DELETE FROM ".$this->escapeIdentifier($table)." WHERE ";
+        $queryString = "DELETE FROM " .
+            $this->escapeIdentifier($table) .
+            " WHERE ";
         
         // Simple array for joining the strings together
         $arr = [];
@@ -424,7 +430,9 @@ class Database implements DBInterface
         }
 
         // Begin query string
-        $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
+        $queryString = 'INSERT INTO ' .
+            $this->escapeIdentifier($table) .
+            ' (';
 
         $placeholder = [];
         $_keys = [];
@@ -460,13 +468,13 @@ class Database implements DBInterface
         $queryString .= \implode(', ', $keys);
 
         // This is the middle piece.
-        $queryString .= ") VALUES (";
+        $queryString .= ') VALUES (';
 
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(', ', $placeholder);
 
         // Necessary to close the open ( above
-        $queryString .= ");";
+        $queryString .= ');';
 
         // Now let's run a query with the parameters
         return $this->safeQuery($queryString, $params);
@@ -564,7 +572,9 @@ class Database implements DBInterface
         }
 
         // Begin query string
-        $queryString = "INSERT INTO ".$this->escapeIdentifier($table)." (";
+        $queryString = 'INSERT INTO ' .
+            $this->escapeIdentifier($table) .
+            ' (';
 
         // Let's make sure our keys are escaped.
         $keys = \array_keys($first);
@@ -576,7 +586,7 @@ class Database implements DBInterface
         $queryString .= \implode(', ', $keys);
 
         // This is the middle piece.
-        $queryString .= ") VALUES (";
+        $queryString .= ') VALUES (';
 
         // Now let's concatenate the ? placeholders
         $queryString .= \implode(
@@ -585,14 +595,12 @@ class Database implements DBInterface
         );
 
         // Necessary to close the open ( above
-        $queryString .= ");";
+        $queryString .= ');';
 
         // Now let's run a query with the parameters
         $stmt = $this->pdo->prepare($queryString);
         foreach ($maps as $params) {
-            if ($stmt->execute($params) === false) {
-                throw new DBAlert\QueryError($queryString, $params);
-            }
+            $stmt->execute($params);
         }
         return true;
     }
@@ -607,25 +615,16 @@ class Database implements DBInterface
      */
     public function row(string $statement, ...$params)
     {
-        try {
-            if (empty($params)) {
-                $stmt = $this->pdo->query($statement);
-                if ($stmt !== false) {
-                    return $stmt->fetch(\PDO::FETCH_ASSOC);
-                }
-                return false;
+        if (empty($params)) {
+            $stmt = $this->pdo->query($statement);
+            if ($stmt !== false) {
+                return $stmt->fetch(\PDO::FETCH_ASSOC);
             }
-            $stmt = $this->pdo->prepare($statement);
-            if ($stmt->execute($params) === false) {
-                throw new DBAlert\QueryError(
-                    $this->errorInfo()[2] ?? 'An unknown error has occurred',
-                    $this->errorInfo()[1] ?? 0
-                );
-            }
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
-            throw new DBAlert\QueryError($e->getMessage());
+            return false;
         }
+        $stmt = $this->pdo->prepare($statement);
+        $stmt->execute($params);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -655,35 +654,22 @@ class Database implements DBInterface
         array $params = [],
         int $fetch_style = \PDO::FETCH_ASSOC
     ) {
-        try {
-            if (empty($params)) {
-                $stmt = $this->pdo->query($statement);
-                if ($stmt !== false) {
-                    return $stmt->fetchAll($fetch_style);
-                }
-                return false;
+        if (empty($params)) {
+            $stmt = $this->pdo->query($statement);
+            if ($stmt !== false) {
+                return $stmt->fetchAll($fetch_style);
             }
-            $stmt = $this->pdo->prepare($statement);
-            if ($stmt === false) {
-                throw new DBAlert\QueryError(
-                    $this->errorInfo()[2] ?? \json_encode([$statement, $params]),
-                    (int) $this->errorInfo()[1]
-                );
-            }
-            if ($stmt->execute($params) === false) {
-                throw new DBAlert\QueryError(
-                    $this->errorInfo()[2] ?? \json_encode([$statement, $params]),
-                    (int) $this->errorInfo()[1]
-                );
-            }
-            return $stmt->fetchAll($fetch_style);
-        } catch (\PDOException $e) {
+            return false;
+        }
+        $stmt = $this->pdo->prepare($statement);
+        if ($stmt === false) {
             throw new DBAlert\QueryError(
-                $e->getMessage(),
-                (int) $e->getCode(),
-                $e
+                $this->errorInfo()[2] ?? \json_encode([$statement, $params]),
+                (int) $this->errorInfo()[1]
             );
         }
+        $stmt->execute($params);
+        return $stmt->fetchAll($fetch_style);
     }
 
     /**
@@ -703,19 +689,7 @@ class Database implements DBInterface
             );
         }
         $stmt = $this->pdo->prepare($statement);
-        if ($stmt === false) {
-            throw new DBAlert\QueryError(
-                $this->errorInfo()[2],
-                $this->errorInfo()[1]
-            );
-        }
         $exec = $stmt->execute($params);
-        if ($exec === false) {
-            throw new DBAlert\QueryError(
-                $this->errorInfo()[2],
-                $this->errorInfo()[1]
-            );
-        }
         return $stmt->fetchColumn(0);
     }
 

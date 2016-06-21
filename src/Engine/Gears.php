@@ -7,6 +7,7 @@ use \Airship\Alerts\{
     GearWrongType
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Class Gears
@@ -49,7 +50,9 @@ abstract class Gears
         
         $reflector = new \ReflectionClass($type);
         if (!$reflector->isSubclassOf($gears[$index])) {
-            throw new GearWrongType("{$type} does not inherit from {$gears[$index]}");
+            throw new GearWrongType(
+                "{$type} does not inherit from {$gears[$index]}"
+            );
         }
         $gears[$index] = $type;
         $state->gears = $gears;
@@ -76,25 +79,25 @@ abstract class Gears
                     \mkdir(ROOT."/tmp/cache/gear", 0777);
                     \clearstatcache();
                 }
-                $hashed =Base64UrlSafe::encode(
-                    \Sodium\crypto_generichash($code, null, 33)
+                $hashed = Base64UrlSafe::encode(
+                    CryptoUtil::raw_hash($code, 33)
                 );
-                if (!\file_exists(ROOT.'/tmp/cache/gear/'.$hashed.'.tmp.php')) {
+                if (!\file_exists(ROOT . '/tmp/cache/gear/' . $hashed . '.tmp.php')) {
                     \file_put_contents(
                         ROOT.'/tmp/cache/gear/'.$hashed.'.tmp.php',
                         '<?php'."\n".$code
                     );
                 }
-                return self::sandboxRequire(ROOT.'/cache/'.$hashed.'.tmp.php');
+                return self::sandboxRequire(ROOT . '/cache/' . $hashed . '.tmp.php');
             } else {
-                if (!\file_exists(ROOT.'/tmp/gear')) {
-                    \mkdir(ROOT.'/tmp/gear', 0777);
+                if (!\file_exists(ROOT . '/tmp/gear')) {
+                    \mkdir(ROOT . '/tmp/gear', 0777);
                     \clearstatcache();
                 }
-                $file = \tempnam(ROOT.'/tmp/gear', 'gear');
+                $file = \Airship\tempnam('gear-', 'php', ROOT.'/tmp/gear');
                 \file_put_contents(
                     $file,
-                    '<?php'."\n".$code
+                    '<?php' . "\n" . $code
                 );
                 \clearstatcache();
                 $ret = self::sandboxRequire($file);

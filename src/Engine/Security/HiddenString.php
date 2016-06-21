@@ -38,7 +38,8 @@ class HiddenString
             'interalStringValue' =>
                 '*',
             'attention' =>
-                'If you need the value of a HiddenString, invoke getString() instead of dumping it.'
+                'If you need the value of a HiddenString, ' .
+                'invoke getString() instead of dumping it.'
         ];
     }
 

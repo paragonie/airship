@@ -45,22 +45,15 @@ class SharedMemory implements CacheInterface
     protected $personalization = '';
 
     /**
-     * @var int
-     */
-    protected $mask;
-
-    /**
      * SharedMemory constructor
      *.
      * @param Key|null $cacheKey
      * @param AuthenticationKey|null $authKey
-     * @param int $mask
      */
     public function __construct(
         Key $cacheKey = null,
         AuthenticationKey $authKey = null,
-        string $personalization = '',
-        int $mask = 0600
+        string $personalization = ''
     ) {
         if (!$cacheKey) {
             $state = State::instance();
@@ -82,7 +75,6 @@ class SharedMemory implements CacheInterface
         if ($authKey) {
             $this->authKey = $authKey;
         }
-        $this->mask = $mask;
         $this->personalization = $personalization;
     }
 

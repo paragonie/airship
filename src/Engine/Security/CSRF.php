@@ -14,9 +14,24 @@ class CSRF
 {
     const FORM_TOKEN = '_CSRF_TOKEN';
 
+    /**
+     * @var int
+     */
     protected $recycleAfter = 1024;
-    protected $hmacIP = false; // Default to FALSE to be friendly to Tor/Mobile users!
+
+    /**
+     * @var bool Default to FALSE to be friendly to Tor/Mobile users
+     */
+    protected $hmacIP = false;
+
+    /**
+     * @var bool
+     */
     protected $expireOld = false;
+
+    /**
+     * @var string
+     */
     protected $sessionIndex = 'CSRF';
 
     /**
@@ -36,12 +51,13 @@ class CSRF
      * @param bool $echo if true, echo instead of returning
      * @return string
      */
-    public function insertToken(string $lockTo = '', bool $echo = true): string
-    {
-        $token = $this->getTokenString($lockTo);
+    public function insertToken(
+        string $lockTo = '',
+        bool $echo = true
+    ): string {
         $ret = '<input type="hidden"' .
                 ' name="' . Util::noHTML(self::FORM_TOKEN) . '"' .
-                ' value="' . Util::noHTML($token) . '"' .
+                ' value="' . $this->getTokenString($lockTo) . '"' .
             ' />';
         if ($echo) {
             echo $ret;
@@ -187,7 +203,9 @@ class CSRF
     {
         // Create a distinct index:
         do {
-            $index = Base64UrlSafe::encode(\random_bytes(18));
+            $index = Base64UrlSafe::encode(
+                \random_bytes(18)
+            );
         } while (isset($_SESSION[$this->sessionIndex][$index]));
         $token = Base64UrlSafe::encode(\random_bytes(33));
 

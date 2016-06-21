@@ -13,9 +13,20 @@ class FileStore implements LedgerStorageInterface
 {
     const FILE_FORMAT = 'Y-m-d.\l\o\g';
     const TIME_FORMAT = \AIRSHIP_DATE_FORMAT;
-    
+
+    /**
+     * @var string
+     */
     protected $basedir;
+
+    /**
+     * @var string
+     */
     protected $fileFormat;
+
+    /**
+     * @var string
+     */
     protected $timeFormat;
 
     /**
@@ -30,7 +41,7 @@ class FileStore implements LedgerStorageInterface
         string $timeFormat = self::TIME_FORMAT
     ) {
         if (\strlen($baseDirectory) < 2) {
-            $this->basedir = ROOT.'/tmp/logs/';
+            $this->basedir = ROOT . '/tmp/logs/';
         } else {
             $this->basedir = $baseDirectory;
         }

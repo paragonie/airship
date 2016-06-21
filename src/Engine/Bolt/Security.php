@@ -2,18 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+use \Airship\Alerts\{
+    Security\SecurityAlert,
+    Security\LongTermAuthAlert,
+    Security\UserNotLoggedIn
+};
 use \Airship\Engine\{
     AutoPilot,
-    Database,
     Gears,
     Landing,
     Security\Authentication,
     Security\Permissions,
     State
 };
-use \Airship\Alerts\Security\LongTermAuthAlert;
-use \Airship\Alerts\Security\SecurityAlert;
-use \Airship\Alerts\Security\UserNotLoggedIn;
 use \ParagonIE\Halite\Cookie;
 use \Psr\Log\LogLevel;
 

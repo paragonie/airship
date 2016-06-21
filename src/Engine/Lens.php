@@ -4,7 +4,7 @@ namespace Airship\Engine;
 
 use \Airship\Engine\Bolt\Log as LogBolt;
 use \ParagonIE\CSPBuilder\CSPBuilder;
-use ParagonIE\HPKPBuilder\HPKPBuilder;
+use \ParagonIE\HPKPBuilder\HPKPBuilder;
 
 /**
  * Class Lens
@@ -49,24 +49,14 @@ class Lens
         array $params = [], 
         string $mime = 'text/html;charset=UTF-8'
     ): bool {
-        $state = State::instance();
         if (!\headers_sent()) {
-            \header('Content-Type: '.$mime);
-            \header('Content-Language: '.$state->lang);
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
+            $this->sendStandardHeaders($mime);
             \ob_start();
             // We need to render this to make sure our CSP headers send!
             echo $this->twigEnv->render(
                 $base . '.twig',
                 \array_merge($this->stored, $params)
             );
-            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
-                $state->HPKP->sendHPKPHeader();
-            }
-            if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
-                $state->CSP->sendCSPHeader();
-            }
             \ob_end_flush();
             return true;
         }
@@ -92,22 +82,13 @@ class Lens
     ): bool {
         $state = State::instance();
         if (!\headers_sent()) {
-            \header('Content-Type: '.$mime);
-            \header('Content-Language: '.$state->lang);
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
+            $this->sendStandardHeaders($mime);
             \ob_start();
             // We need to render this to make sure our CSP headers send!
             echo $this->twigEnv->render(
                 $file,
                 $params
             );
-            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
-                $state->HPKP->sendHPKPHeader();
-            }
-            if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
-                $state->CSP->sendCSPHeader();
-            }
             \ob_end_flush();
             return true;
         }
@@ -147,18 +128,6 @@ class Lens
         array $params = []
     ) {
         $state = State::instance();
-        if (!\headers_sent()) {
-            \header("Content-Type: text/html;charset=UTF-8");
-            \header("Content-Language: ".$state->lang);
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
-            if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
-                $state->CSP->sendCSPHeader();
-            }
-            if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
-                $state->HPKP->sendHPKPHeader();
-            }
-        }
         return $this->twigEnv->render(
             $file,
             $params
@@ -230,7 +199,7 @@ class Lens
         $is_safe = ['html']
     ): self {
         if (empty($func)) {
-            $func = '\\Airship\\LensFunctions\\'.$name;
+            $func = '\\Airship\\LensFunctions\\' . $name;
         }
         $this->twigEnv->addFunction(
             new \Twig_SimpleFunction(
@@ -269,7 +238,7 @@ class Lens
         $func = null
     ): self {
         if (empty($func)) {
-            $func = '\\Airship\\LensFunctions\\'.$name;
+            $func = '\\Airship\\LensFunctions\\' . $name;
         }
         $this->twigEnv->addFilter(
             new \Twig_SimpleFilter($name, $func)
@@ -341,7 +310,11 @@ class Lens
     public function setBaseTemplate(string $name): self
     {
         $state = State::instance();
-        if (isset($state->motifs[$name]) && isset($state->motifs[$name]['config']['base_template'])) {
+        if (
+            isset($state->motifs[$name])
+                &&
+            isset($state->motifs[$name]['config']['base_template'])
+        ) {
             $state->base_template = 'motif/' .
                 $name .
                 '/lens/' .
@@ -349,5 +322,23 @@ class Lens
                 '.twig';
         }
         return $this;
+    }
+
+    /**
+     * Send HTTP headers
+     */
+    public function sendStandardHeaders(string $mimeType)
+    {
+        $state = State::instance();
+        \header('Content-Type: ' . $mimeType);
+        \header('Content-Language: ' . $state->lang);
+        \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
+        \header('X-XSS-Protection: 1; mode=block');
+        if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
+            $state->HPKP->sendHPKPHeader();
+        }
+        if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
+            $state->CSP->sendCSPHeader();
+        }
     }
 }

@@ -66,8 +66,11 @@ class Motif extends BaseInstaller
      * @param string $index
      * @return bool
      */
-    protected function createSymlinks(string $cabin, array $config, string $index): bool
-    {
+    protected function createSymlinks(
+        string $cabin,
+        array $config,
+        string $index
+    ): bool {
         $res = \symlink(
             // to:
             ROOT . '/Motifs/' . $config[$index]['path'] . '/public',

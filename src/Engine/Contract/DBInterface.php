@@ -3,7 +3,11 @@ declare(strict_types=1);
 namespace Airship\Engine\Contract;
 
 /**
+ * Interface DBInterface
+ *
  * An interface for database interaction.
+ *
+ * @package Airship\Engine\Contract
  */
 interface DBInterface
 {

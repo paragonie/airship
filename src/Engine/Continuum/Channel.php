@@ -3,10 +3,12 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use \Airship\Alerts\Continuum\NoSupplier;
-use \Airship\Engine\Continuum;
-use \Airship\Engine\Keyggdrasil;
-use \Airship\Engine\Keyggdrasil\Peer;
-use \Airship\Engine\State;
+use \Airship\Engine\{
+    Continuum,
+    Keyggdrasil,
+    Keyggdrasil\Peer,
+    State
+};
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
@@ -18,17 +20,38 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
  */
 class Channel
 {
+    /**
+     * @var string
+     */
     protected $name = '';
+
+    /**
+     * @var Continuum|Keyggdrasil
+     */
     protected $parent;
+
+    /**
+     * @var Peer[]
+     */
     protected $peers = [];
+
+    /**
+     * @var SignaturePublicKey
+     */
     protected $publicKey;
+
+    /**
+     * @var string[]
+     */
     protected $urls = [];
+
+    /**
+     * @var string
+     */
     protected $ext = '.phar';
 
     /**
      * Channel constructor.
-     *
-     * @todo \trk() these exception messages
      *
      * @param object $parent (Continuum or Keyggdrasil)
      * @param string $name
@@ -42,7 +65,7 @@ class Channel
         }
         if (!\is1DArray($config['urls'])) {
             throw new \TypeError(
-                'Expected a 1-dimensional array of strings for the URLs'
+                \trk('errors.type.expected_1d_array')
             );
         }
         // The channel should be signing responses at the application layer:
@@ -53,7 +76,7 @@ class Channel
         foreach (\array_values($config['urls']) as $index => $url) {
             if (!\is_string($url)) {
                 throw new \TypeError(
-                    'Expected an array of strings; ' . \gettype($url) . ' given at index ' . $index .'.'
+                    \trk('errors.type.expected_string_array', \gettype($url), $index)
                 );
             }
             $this->urls[] = $url;
@@ -161,7 +184,9 @@ class Channel
         if ($sizeOfList < 1) {
             $sizeOfList = \count($this->peers);
         }
-        $log = (int) \ceil(\log($sizeOfList + 0.0));
+        $log = (int) \ceil(
+            \log($sizeOfList)
+        );
         if ($log < 1) {
             return 1;
         }
