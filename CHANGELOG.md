@@ -1,4 +1,4 @@
-## Version 0.3.0 - Not Released Yet
+## Version 0.3.0 - 2016-06-21
 
   * Implemented a secure account recovery implementation, wherein users can
     opt out of account recovery entirely, or supply a GPG public key. We send a
@@ -17,7 +17,26 @@
   * Implemented progressive rate-limiting based on two factors: IP subnet and
     username. This covers both the login form and the account recovery form.
   * You can now specify [HPKP headers](https://scotthelme.co.uk/hpkp-http-public-key-pinning)
-    on a per-Cabin basis, via the Cabin Management screen. 
+    on a per-Cabin basis, via the Cabin Management screen.
+  * You can now add/remove Cabins, Gadgets, and Motifs from the Bridge.
+  * Sysadmins can "lock" installs to prevent an admin account compromise from
+    leading to a vulnerable extension from being installed and subsequently
+    used by an attacker to compromise the server. Locks come in two varieties:
+     * Password-based locks, where you must enter a separate password to
+       install a new extension.
+     * Absolute locks, which can only be removed by the sysadmin.
+  * In Landings, `$this->lens()` will now terminate script execution. If you
+    need to fetch the output (e.g. for caching), use `$this->lensRender()`
+    instead.
+  * Implemented input filters which work on multidimensional arrays (e.g
+    `$_POST`). We provide a few examples (one for each cabin's custom config
+    and one for the universal config).
+  * Implemented optional **Two-Factor Authentication** support via TOTP 
+    (e.g. Google Authenticator).
+  * Airship now supports in-memory caching via APCu instead of the filesystem.
+  * Comments are now loaded with AJAX when you elect to cache a blog post.
+  * When you delete a custom directory, you can elect to create redirects
+    automatically to guide your passengers to the correct destination.
 
 ## Version 0.2.1 - 2016-06-04
 
