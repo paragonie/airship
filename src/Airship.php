@@ -29,6 +29,7 @@ use \ReCaptcha\RequestMethod\CurlPost;
     'AIRSHIP_BLAKE2B_PERSONALIZATION',
     'ParagonInitiativeEnterprises:Airship-PoweredByHalite:Keyggdrasil'
 );
+\define('AIRSHIP_DATE_FORMAT', 'Y-m-d\TH:i:s');
 
 /**
  * Do all of these keys exist in the target array

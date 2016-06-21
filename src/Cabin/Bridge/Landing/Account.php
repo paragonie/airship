@@ -549,7 +549,7 @@ class Account extends LandingGear
                     // due to two-factor authentication failing.
                     $message = '**Note: The password was correct; ' .
                         ' invalid 2FA token was provided.** ' .
-                        (new \DateTime('now'))->format('Y-m-d\TH:i:s');
+                        (new \DateTime('now'))->format(\AIRSHIP_DATE_FORMAT);
                     $signed = Base64UrlSafe::encode(
                         Asymmetric::sign(
                             $message,

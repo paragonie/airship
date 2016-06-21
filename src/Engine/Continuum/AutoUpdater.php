@@ -140,7 +140,7 @@ abstract class AutoUpdater
      */
     protected function bringSiteDown()
     {
-        \file_put_contents(ROOT . '/tmp/site_down.txt', \date('Y-m-d\TH:i:s'));
+        \file_put_contents(ROOT . '/tmp/site_down.txt', \date(\AIRSHIP_DATE_FORMAT));
         \clearstatcache();
     }
 

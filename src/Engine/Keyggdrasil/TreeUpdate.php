@@ -376,7 +376,7 @@ class TreeUpdate
         }
         // We need a precise format:
         $dateGen = (new \DateTime($this->stored['date_generated']))
-            ->format('Y-m-d\TH:i:s');
+            ->format(\AIRSHIP_DATE_FORMAT);
         $messageToSign = [
             'action' =>
                 $this->action,

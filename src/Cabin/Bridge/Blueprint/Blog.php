@@ -1164,7 +1164,7 @@ class Blog extends BlueprintGear
         if ($publish && !$old['status']) {
             $postUpdates['status'] = true;
             $now = new \DateTime('now');
-            $postUpdates['published'] = $now->format('Y-m-d\TH:i:s');
+            $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
         }
         if ($publish) {
             $postUpdates['cache'] = !empty($post['cache']);

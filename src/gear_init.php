@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
-// Initialize the base types for our framework gears
+/**
+ * Initialize the base types for our framework gears
+ */
 \Airship\Engine\Gears::init([
     'AirBrake' =>
         '\\Airship\\Engine\\Security\\AirBrake',

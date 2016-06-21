@@ -12,7 +12,7 @@ use \Airship\Engine\Contract\LedgerStorageInterface;
 class FileStore implements LedgerStorageInterface
 {
     const FILE_FORMAT = 'Y-m-d.\l\o\g';
-    const TIME_FORMAT = 'Y-m-d\TH:i:s';
+    const TIME_FORMAT = \AIRSHIP_DATE_FORMAT;
     
     protected $basedir;
     protected $fileFormat;

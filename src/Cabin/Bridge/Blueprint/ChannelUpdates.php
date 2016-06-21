@@ -76,7 +76,7 @@ class ChannelUpdates extends BlueprintGear
         $updates = [
             'challenge' => $challenge,
             'root' => $tree->getRoot(),
-            'timestamp' => $now->format('Y-m-d\TH:i:s')
+            'timestamp' => $now->format(\AIRSHIP_DATE_FORMAT)
         ];
         $response = \json_encode($updates);
         return [

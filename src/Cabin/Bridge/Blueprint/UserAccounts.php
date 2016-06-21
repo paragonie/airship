@@ -303,7 +303,7 @@ class UserAccounts extends BlueprintGear
         $result = $this->db->row(
             'SELECT * FROM airship_user_recovery WHERE selector = ? AND created > ?',
             $selector,
-            $dateTime->format('Y-m-d\TH:i:s')
+            $dateTime->format(\AIRSHIP_DATE_FORMAT)
         );
         if (empty($result)) {
             return [];

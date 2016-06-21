@@ -9,11 +9,15 @@ use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\HPKPBuilder\HPKPBuilder;
 
 /**
+ * Security enhancements (i.e. CSP, HPKP) are defined here.
+ *
  * @global State $state
  */
 
+/**
+ * First, Content-Security-Policy headers:
+ */
 $cspCacheFile = ROOT . '/tmp/cache/csp.' . AutoPilot::$active_cabin . '.json';
-
 if (\file_exists($cspCacheFile)) {
     $csp = CSPBuilder::fromFile($cspCacheFile);
 } else {
@@ -38,6 +42,9 @@ if (\file_exists($cspCacheFile)) {
 }
 $state->CSP = $csp;
 
+/**
+ * Next, if we're connected over HTTPS, send an HPKP header too:
+ */
 if (AutoPilot::isHTTPSConnection()) {
     $hpkpCacheFile = ROOT . '/tmp/cache/hpkp.' . AutoPilot::$active_cabin . '.json';
     if (\file_exists($hpkpCacheFile)) {

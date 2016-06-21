@@ -57,7 +57,7 @@ if ($state->hail instanceof Hail) {
                     if (\processUpdates($db, ['packageMetadata'])) {
                         file_put_contents(
                             ROOT . '/tmp/last_metadata_update.txt',
-                            (new \DateTime())->format('Y-m-d\TH:i:s')
+                            (new \DateTime())->format(\AIRSHIP_DATE_FORMAT)
                         );
                         exit(0);
                     }

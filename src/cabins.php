@@ -8,10 +8,14 @@ use \Airship\Engine\{
 };
 
 /**
+ * This loads the Cabin configuration, and selects the active cabin.
+ *
  * @global State $state
  */
 
 $ap = Gears::getName('AutoPilot');
+
+// Needed for IDE code completion:
 if (IDE_HACKS) {
     $ap = new AutoPilot();
 }
@@ -19,9 +23,9 @@ if (IDE_HACKS) {
 /**
  * Cache the cabin configuration
  */
-if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
+if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
     // Load the cabins from cache
-    $config = \Airship\loadJSON(ROOT.'/tmp/cache/cabin_data.json');
+    $config = \Airship\loadJSON(ROOT . '/tmp/cache/cabin_data.json');
     foreach ($config['cabins'] as $key => $cabin) {
         if ($ap::isActiveCabinKey($key, !empty($cabin['https']))) {
             $state->active_cabin = $key;
@@ -31,7 +35,7 @@ if (\file_exists(ROOT.'/tmp/cache/cabin_data.json')) {
     $state->cabins = $config['cabins'];
 } else {
     // Load the cabins, rebuild the cache
-    $cabins = \Airship\loadJSON(ROOT.'/config/cabins.json');
+    $cabins = \Airship\loadJSON(ROOT . '/config/cabins.json');
     $active_cabin = null;
     foreach ($cabins as $key => $cabin) {
         try {

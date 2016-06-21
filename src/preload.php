@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 
+use \Airship\Engine\State;
 use \ParagonIE\Halite\Halite;
+
+/**
+ * This is loaded before everything else in the bootstrapping process.
+ */
 
 if (PHP_VERSION_ID < 70000) {
     die("Airship requires PHP 7.0.0 or newer. You are running PHP " . PHP_VERSION);
@@ -39,14 +44,14 @@ if (ISCLI) {
         if (!\file_exists(ROOT . '/tmp/site_down.txt')) {
             break;
         }
-        \usleep(100);
+        \usleep(1000);
         ++$iter;
     } while ($iter < 15000);
 
     \clearstatcache();
     // If we're still in the middle of that process, let's not load anything else:
     if (\file_exists(ROOT . '/tmp/site_down.txt')) {
-        echo 'This Airship is currently being repaired. Please try again later.', "\n";
+        echo 'This Airship is currently being upgraded. Please try again later.', "\n";
         exit(255);
     }
 }
@@ -78,7 +83,7 @@ if (!Halite::isLibsodiumSetupCorrectly()) {
 /**
  * 5. Load up the registry singleton for latest types
  */
-$state = \Airship\Engine\State::instance();
+$state = State::instance();
 
 // 5a. Initialize the Gears.
 require_once ROOT.'/gear_init.php';

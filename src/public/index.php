@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use \Airship\Engine\{
+    AutoPilot,
     Database,
     Gears,
     Cache\File as FileCache,
@@ -39,7 +40,7 @@ if (empty($_POST)) {
     $sliceAt = \strlen($_SERVER['REQUEST_URI']) - 1;
     if ($sliceAt > 0 && $_SERVER['REQUEST_URI'][$sliceAt] === '/') {
         \Airship\redirect(
-            '/'.\trim($_SERVER['REQUEST_URI'], '/')
+            '/' . \trim($_SERVER['REQUEST_URI'], '/')
         );
     }
 
@@ -80,7 +81,8 @@ if (empty($_POST)) {
     unset($staticCache);
 }
 
-require_once ROOT.'/bootstrap.php';
+// Load all of the prerequisites:
+require_once ROOT . '/bootstrap.php';
 
 /**
  * Initialize the automatic updater service
@@ -88,9 +90,11 @@ require_once ROOT.'/bootstrap.php';
  * Normally you would just want a cron job to run continuum.php every hour or so,
  * but this forces it to be run.
  */
-$autoUpdater = \Airship\Engine\Gears::get('AutoUpdater', $hail);
+$autoUpdater = Gears::get('AutoUpdater', $hail);
 if ($autoUpdater->needsUpdate()) {
-    \shell_exec('php -dphar.readonly=0 '.ROOT.'/CommandLine/continuum.php >/dev/null 2>&1 &');
+    \shell_exec(
+        'php -dphar.readonly=0 ' . ROOT . '/CommandLine/continuum.php >/dev/null 2>&1 &'
+    );
     \file_put_contents(
         ROOT.'/tmp/last_update_check.txt',
         time()
@@ -101,14 +105,16 @@ if ($autoUpdater->needsUpdate()) {
  * Let's load the latest gear for our autoloader
  */
 \define('CABIN_NAME', $active['name']);
-\define('CABIN_DIR', ROOT.'/Cabin/'.$active['name']);
+\define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
+// Turn all of this cabins' Landings and Blueprints into gears:
 require ROOT . '/cabin_gears.php';
 
 $autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
-if ($autoPilot instanceof \Airship\Engine\AutoPilot) {
+if ($autoPilot instanceof AutoPilot) {
     $autoPilot->setActiveCabin($active, $state->active_cabin);
 }
 
+// Load everything else:
 require ROOT . '/symlinks.php';
 require ROOT . '/motifs.php';
 require ROOT . '/security.php';
@@ -137,10 +143,7 @@ if (!empty($state->universal['debug'])) {
         // Show previous throwables as well:
         $n = 1;
         $e = $e->getPrevious();
-        while ($e) {
-            if (IDE_HACKS) {
-                $e = new \Exception('');
-            }
+        while ($e instanceof \Throwable) {
             echo "\n", \str_repeat('#', 80), "\n";
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",

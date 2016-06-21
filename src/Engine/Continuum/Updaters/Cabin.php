@@ -342,7 +342,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                     'cabin.' . $name . '.offline.txt'
                 ]
             ),
-            \date('Y-m-d\TH:i:s')
+            \date(\AIRSHIP_DATE_FORMAT)
         );
         \clearstatcache();
     }

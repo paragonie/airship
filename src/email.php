@@ -4,6 +4,10 @@ declare(strict_types=1);
 use \Airship\Engine\State;
 use \ParagonIE\GPGMailer\GPGMailer;
 
+/**
+ * Set up our email configuration
+ */
+
 $email_closure = function() {
     $state = State::instance();
 

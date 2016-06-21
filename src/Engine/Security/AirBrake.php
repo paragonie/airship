@@ -93,7 +93,7 @@ class AirBrake
             $this->getSubnet($ip),
             $date
                 ->sub($this->getCutoff($delay))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -136,7 +136,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -185,7 +185,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
     }
 
@@ -222,7 +222,7 @@ class AirBrake
                 ->sub($this->getCutoff(
                     $this->config['expire'] ?? 43200
                 ))
-                ->format('Y-m-d\TH:i:s')
+                ->format(\AIRSHIP_DATE_FORMAT)
         );
         if ($attempts === 0) {
             return 0;
@@ -349,7 +349,7 @@ class AirBrake
         $this->db->beginTransaction();
         $inserts = [
             'action' => self::ACTION_LOGIN,
-            'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
+            'occurred' => (new \DateTime())->format(\AIRSHIP_DATE_FORMAT),
             'username' => $username,
             'ipaddress' => $ip,
             'subnet' => $this->getSubnet($ip)
@@ -388,7 +388,7 @@ class AirBrake
             'airship_failed_logins',
             [
                 'action' => self::ACTION_RECOVER,
-                'occurred' => (new \DateTime())->format('Y-m-d\TH:i:s'),
+                'occurred' => (new \DateTime())->format(\AIRSHIP_DATE_FORMAT),
                 'username' => $username,
                 'ipaddress' => $ip,
                 'subnet' => $this->getSubnet($ip)

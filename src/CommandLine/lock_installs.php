@@ -18,7 +18,7 @@ if ($argc > 1) {
     );
 } else {
     $save = (new \DateTime('now'))
-        ->format('Y-m-d\TH:i:s');
+        ->format(\AIRSHIP_DATE_FORMAT);
 }
 
 \file_put_contents(
