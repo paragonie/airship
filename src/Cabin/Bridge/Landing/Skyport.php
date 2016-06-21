@@ -3,8 +3,10 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
-use \Airship\Engine\Security\HiddenString;
-use Airship\Engine\Security\Util;
+use \Airship\Engine\Security\{
+    HiddenString,
+    Util
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -14,6 +16,9 @@ require_once __DIR__.'/init_gear.php';
  */
 class Skyport extends AdminOnly
 {
+    /**
+     * @var string
+     */
     protected $channel = 'paragonie';
 
     /**
@@ -26,10 +31,19 @@ class Skyport extends AdminOnly
      */
     protected $skyport;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     *
+     * @throws \TypeError
+     */
     public function airshipLand()
     {
         parent::airshipLand();
         $this->skyport = $this->blueprint('Skyport');
+        if (!($this->skyport instanceof SkyportBP)) {
+            throw new \TypeError('Skyport Blueprint');
+        }
     }
 
     /**
@@ -84,16 +98,17 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetInstalledPackages()
     {
-        if (IDE_HACKS) {
-            $this->skyport = new SkyportBP();
-        }
         $numInstalled = $this->skyport->countInstalled();
         list($page, $offset) = $this->getPaginated($numInstalled);
         $this->lens(
             'skyport/list',
             [
                 'headline' => 'Installed Extensions',
-                'extensions' => $this->skyport->getInstalled(false, $offset, $this->perPage),
+                'extensions' => $this->skyport->getInstalled(
+                    false,
+                    $offset,
+                    $this->perPage
+                ),
                 'pagination' => [
                     'count' => $numInstalled,
                     'page' => $page,
@@ -291,7 +306,6 @@ class Skyport extends AdminOnly
 
     /**
      * Trigger the package install process
-     *
      */
     public function updatePackage()
     {
@@ -330,8 +344,9 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * Get the page number and offset
      *
-     * @param int $numInstalled
+     * @param int $sizeOfList
      * @return int[]
      */
     protected function getPaginated(int $sizeOfList): array

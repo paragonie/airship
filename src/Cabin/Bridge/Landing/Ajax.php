@@ -3,8 +3,12 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Alerts\CabinNotFound;
-use Airship\Cabin\Bridge\Blueprint\{
-    Author, Blog, Files, Permissions, UserAccounts
+use \Airship\Cabin\Bridge\Blueprint\{
+    Author,
+    Blog,
+    Files,
+    Permissions,
+    UserAccounts
 };
 
 require_once __DIR__.'/init_gear.php';

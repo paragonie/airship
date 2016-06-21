@@ -34,8 +34,19 @@ class UserAccounts extends BlueprintGear
     const RECOVERY_TOKEN_BYTES = 33;
     const RECOVERY_CHAR_LENGTH = (self::RECOVERY_SELECTOR_BYTES * 4 / 3) + (self::RECOVERY_TOKEN_BYTES * 4 / 3);
 
+    /**
+     * @var string
+     */
     protected $table = 'airship_users';
+
+    /**
+     * @var string
+     */
     protected $grouptable = 'airship_users_groups';
+
+    /**
+     * @var string[]
+     */
     protected $f = [
         'userid' => 'userid',
         'username' => 'username',
@@ -868,7 +879,11 @@ class UserAccounts extends BlueprintGear
     protected function generateUniqueId(): string
     {
         $unique = '';
-        $query = 'SELECT count(*) FROM '.$this->e($this->table).' WHERE '.$this->e($this->f['uniqueid']).' = ?';
+        $query = 'SELECT count(*) FROM ' .
+                $this->e($this->table) .
+            ' WHERE ' .
+                $this->e($this->f['uniqueid']) .
+            ' = ?';
         do {
             if (!empty($unique)) {
                 // This will probably never be executed. It will be a nice easter egg if it ever does.
@@ -886,7 +901,7 @@ class UserAccounts extends BlueprintGear
                 );
             }
             $unique = \Airship\uniqueId();
-        } while($this->db->cell($query, $unique) > 0);
+        } while ($this->db->exists($query, $unique));
         return $unique;
     }
 }

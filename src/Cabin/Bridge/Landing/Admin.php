@@ -22,7 +22,17 @@ class Admin extends AdminOnly
     /**
      * @var UserAccounts
      */
-    private $acct;
+    protected $acct;
+
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
+    public function airshipLand()
+    {
+        parent::airshipLand();
+        $this->acct = $this->blueprint('UserAccounts');
+    }
 
     /**
      * Add a new notary
@@ -69,12 +79,6 @@ class Admin extends AdminOnly
             ROOT . '/config/channel_peers/' . $ch . '.json',
             \json_encode($channels[$ch]['notaries'], JSON_PRETTY_PRINT)
         ) !== false;
-    }
-
-    public function airshipLand()
-    {
-        parent::airshipLand();
-        $this->acct = $this->blueprint('UserAccounts');
     }
 
     /**

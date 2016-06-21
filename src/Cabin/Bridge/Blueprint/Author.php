@@ -44,8 +44,7 @@ class Author extends BlueprintGear
         int $authorId,
         string $uniqueId,
         bool $inCharge = false
-    ): bool
-    {
+    ): bool {
         $this->db->beginTransaction();
         $userID = (int)$this->db->cell(
             'SELECT userid FROM airship_users WHERE uniqueid = ?',
@@ -286,8 +285,11 @@ class Author extends BlueprintGear
      * @param string $dir
      * @return array
      */
-    public function getForUser(int $userId, string $sortby = 'name', string $dir = 'ASC'): array
-    {
+    public function getForUser(
+        int $userId,
+        string $sortby = 'name',
+        string $dir = 'ASC'
+    ): array {
         $authors = $this->db->run(
             'SELECT * FROM view_hull_users_authors WHERE userid = ?' .
                 $this->orderBy($sortby, $dir, ['name', 'created']),
@@ -307,7 +309,10 @@ class Author extends BlueprintGear
      */
     public function getName(int $authorId): string
     {
-        $slug = $this->db->cell('SELECT name FROM hull_blog_authors WHERE authorid = ?', $authorId);
+        $slug = $this->db->cell(
+            'SELECT name FROM hull_blog_authors WHERE authorid = ?',
+            $authorId
+        );
         if (!empty($slug)) {
             return $slug;
         }

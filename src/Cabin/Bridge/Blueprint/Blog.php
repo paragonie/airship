@@ -30,7 +30,9 @@ class Blog extends BlueprintGear
     use Slug;
     use Cache;
 
-    // Cabin for this blog post (used as a default parameter)
+    /**
+     * @var string Cabin for this blog post (used as a default parameter)
+     */
     protected $cabin = 'Hull';
 
     /**
@@ -60,12 +62,12 @@ class Blog extends BlueprintGear
         if (\extension_loaded('apcu')) {
             return \apcu_clear_cache();
         }
-        foreach (\Airship\list_all_files(ROOT.'/tmp/cache/static') as $f) {
+        foreach (\Airship\list_all_files(ROOT . '/tmp/cache/static') as $f) {
             if (\preg_match('#/([0-9a-z]+)$#', $f)) {
                 \unlink($f);
             }
         }
-        foreach (\Airship\list_all_files(ROOT.'/tmp/cache/csp_static') as $f) {
+        foreach (\Airship\list_all_files(ROOT . '/tmp/cache/csp_static') as $f) {
             if (\preg_match('#/([0-9a-z]+)$#', $f)) {
                 \unlink($f);
             }
@@ -333,6 +335,8 @@ class Blog extends BlueprintGear
 
 
     /**
+     * Delete this comment and all of its revision history.
+     *
      * @param int $commentId
      * @return bool
      */
@@ -477,7 +481,10 @@ class Blog extends BlueprintGear
         if ($depth > 100) {
             return [];
         }
-        $parent = $this->db->cell('SELECT parent FROM hull_blog_categories WHERE categoryid = ?', $categoryId);
+        $parent = $this->db->cell(
+            'SELECT parent FROM hull_blog_categories WHERE categoryid = ?',
+            $categoryId
+        );
         if (empty($parent)) {
             return [];
         }
@@ -746,6 +753,20 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get a list of all selected blog posts
+     *
+     * @param int $postId
+     * @return array
+     */
+    public function getTagsForPost(int $postId): array
+    {
+        return $this->db->first(
+            'SELECT tagid FROM hull_blog_post_tags WHERE postid = ?',
+            $postId
+        );
+    }
+
+    /**
      * Get data on a specific tag
      *
      * @param int $tagId
@@ -761,20 +782,6 @@ class Blog extends BlueprintGear
             return [];
         }
         return $tagInfo;
-    }
-
-    /**
-     * Get a list of all selected blog posts
-     *
-     * @param int $postId
-     * @return array
-     */
-    public function getTagsForPost(int $postId): array
-    {
-        return $this->db->first(
-            'SELECT tagid FROM hull_blog_post_tags WHERE postid = ?',
-            $postId
-        );
     }
 
     /**
@@ -849,18 +856,25 @@ class Blog extends BlueprintGear
      * @param int $limit
      * @return array
      */
-    public function listPosts(bool $showAll = false, int $offset = 0, int $limit = 20): array
-    {
+    public function listPosts(
+        bool $showAll = false,
+        int $offset = 0,
+        int $limit = 20
+    ): array {
         if ($showAll) {
             // You're an admin, so you get to see non-public information
             $posts = $this->db->run(
-                \Airship\queryString('blog.posts.list_all', [
-                    'offset' => $offset,
-                    'limit' => $limit
-                ])
+                \Airship\queryString(
+                    'blog.posts.list_all',
+                    [
+                        'offset' => $offset,
+                        'limit' => $limit
+                    ]
+                )
             );
         } else {
-            // Only show posts that are public or owned by one of the authors this user belongs to
+            // Only show posts that are public or owned by one of
+            // the authors this user belongs to
             $posts = $this->db->safeQuery(
                 \Airship\queryString(
                     'blog.posts.list_mine',
@@ -893,7 +907,7 @@ class Blog extends BlueprintGear
         $series = $this->db->run(
             'SELECT * FROM hull_blog_posts WHERE author = ? AND postid NOT IN ' .
                 $this->db->escapeValueSet($exclude, 'int') .
-                ' ORDER BY title ASC',
+            ' ORDER BY title ASC',
             $authorId
         );
         if (empty($series)) {
@@ -960,12 +974,18 @@ class Blog extends BlueprintGear
     public function numComments($published = null): int
     {
         if ($published === null) {
-            return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments');
+            return (int) $this->db->cell(
+                'SELECT count(commentid) FROM hull_blog_comments'
+            );
         }
         if ($published) {
-            return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE approved');
+            return (int) $this->db->cell(
+                'SELECT count(commentid) FROM hull_blog_comments WHERE approved'
+            );
         }
-        return (int) $this->db->cell('SELECT count(commentid) FROM hull_blog_comments WHERE NOT approved');
+        return (int) $this->db->cell(
+            'SELECT count(commentid) FROM hull_blog_comments WHERE NOT approved'
+        );
     }
 
     /**
@@ -980,12 +1000,18 @@ class Blog extends BlueprintGear
     public function numPosts($published = null): int
     {
         if ($published === null) {
-            return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts');
+            return (int) $this->db->cell(
+                'SELECT count(postid) FROM hull_blog_posts'
+            );
         }
         if ($published) {
-            return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE status');
+            return (int) $this->db->cell(
+                'SELECT count(postid) FROM hull_blog_posts WHERE status'
+            );
         }
-        return (int) $this->db->cell('SELECT count(postid) FROM hull_blog_posts WHERE NOT status');
+        return (int) $this->db->cell(
+            'SELECT count(postid) FROM hull_blog_posts WHERE NOT status'
+        );
     }
 
     /**
@@ -995,7 +1021,9 @@ class Blog extends BlueprintGear
      */
     public function numSeries(): int
     {
-        return (int) $this->db->cell('SELECT count(seriesid) FROM hull_blog_series');
+        return (int) $this->db->cell(
+            'SELECT count(seriesid) FROM hull_blog_series'
+        );
     }
 
     /**
@@ -1024,7 +1052,9 @@ class Blog extends BlueprintGear
      */
     public function numTags(): int
     {
-        return (int) $this->db->cell('SELECT count(tagid) FROM hull_blog_tags');
+        return (int) $this->db->cell(
+            'SELECT count(tagid) FROM hull_blog_tags'
+        );
     }
 
     /**
@@ -1102,8 +1132,11 @@ class Blog extends BlueprintGear
      * @param bool $publish
      * @return bool
      */
-    public function updatePost(array $post, array $old, bool $publish = false): bool
-    {
+    public function updatePost(
+        array $post,
+        array $old,
+        bool $publish = false
+    ): bool {
         $this->db->beginTransaction();
         $postUpdates = [];
 
@@ -1163,7 +1196,7 @@ class Blog extends BlueprintGear
         }
         if ($publish && !$old['status']) {
             $postUpdates['status'] = true;
-            $now = new \DateTime('now');
+            $now = new \DateTime();
             $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
         }
         if ($publish) {

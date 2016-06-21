@@ -47,7 +47,8 @@ class Account extends LandingGear
     protected $acct;
 
     /**
-     * We initialize this after the constructor is done.
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {
@@ -70,18 +71,21 @@ class Account extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
 
-        $p = $this->post();
-        if (!empty($p)) {
+        $post = $this->post();
+        if (!empty($post)) {
             // Optional: CAPTCHA enforcement
             if ($this->config('board.captcha')) {
-                if (isset($p['g-recaptcha-response'])) {
+                if (isset($post['g-recaptcha-response'])) {
                     $rc = \Airship\getReCaptcha(
                         $this->config('recaptcha.secret-key'),
                         $this->config('recaptcha.curl-opts') ?? []
                     );
-                    $resp = $rc->verify($p['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+                    $resp = $rc->verify(
+                        $post['g-recaptcha-response'],
+                        $_SERVER['REMOTE_ADDR']
+                    );
                     if ($resp->isSuccess()) {
-                        $this->processBoard($p);
+                        $this->processBoard($post);
                         return;
                     } else {
                         $this->lens('board', [
@@ -91,7 +95,7 @@ class Account extends LandingGear
                     }
                 }
             } else {
-                $this->processBoard($p);
+                $this->processBoard($post);
                 return;
             }
         }
@@ -112,9 +116,9 @@ class Account extends LandingGear
             // You're already logged in!
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $p = $this->post();
-        if (!empty($p)) {
-            $this->processLogin($p);
+        $post = $this->post();
+        if (!empty($post)) {
+            $this->processLogin($post);
             return;
         }
         $this->lens('login');
@@ -156,9 +160,9 @@ class Account extends LandingGear
         if (!empty($account['gpg_public_key'])) {
             $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
         }
-        $p = $this->post();
-        if (!empty($p)) {
-            $this->processAccountUpdate($p, $account, $gpg_public_key);
+        $post = $this->post();
+        if (!empty($post)) {
+            $this->processAccountUpdate($post, $account, $gpg_public_key);
             return;
         }
         $this->lens(
@@ -250,6 +254,7 @@ class Account extends LandingGear
 
     /**
      * Returns the user's QR code.
+     * @route my/account/2-factor/qr-code
      *
      */
     public function twoFactorSetupQRCode()
@@ -271,7 +276,7 @@ class Account extends LandingGear
     }
 
     /**
-     *
+     * @route my/account/2-factor
      */
     public function twoFactorSetup()
     {

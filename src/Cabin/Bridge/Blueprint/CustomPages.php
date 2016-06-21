@@ -1151,12 +1151,14 @@ class CustomPages extends HullCustomPages
         do {
             $unique = \Airship\uniqueId();
         } while (
-            $this->db->cell(
+            $this->db->exists(
                 'SELECT count(*) FROM ' .
                     $this->db->escapeIdentifier($table) .
-                    ' WHERE '.$this->db->escapeIdentifier($column).' = ?',
+                ' WHERE ' .
+                    $this->db->escapeIdentifier($column) .
+                ' = ?',
                 $unique
-            ) > 0
+            )
         );
         return $unique;
     }

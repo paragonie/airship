@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
-use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
+use \Airship\Cabin\Bridge\{
+    Blueprint\UserAccounts,
+    Landing\Proto\FileManager
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -17,8 +19,16 @@ class MyFiles extends FileManager
      * @var UserAccounts
      */
     protected $users;
+
+    /**
+     * @var string
+     */
     protected $userUniqueId;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();

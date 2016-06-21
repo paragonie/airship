@@ -4,10 +4,12 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\CustomPages;
 use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
-use Airship\Engine\AutoPilot;
-use \Airship\Engine\Gears;
-use \Airship\Engine\State;
-use \Airship\Engine\Bolt\Get;
+use \Airship\Engine\{
+    AutoPilot,
+    Bolt\Get,
+    Gears,
+    State
+};
 use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
@@ -25,6 +27,10 @@ class PageManager extends LoggedInUsersOnly
      */
     protected $pg;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();
@@ -51,6 +57,7 @@ class PageManager extends LoggedInUsersOnly
         if (!$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+
         // Split this up
         $pieces = \explode('/', $path);
         $dir = \array_shift($pieces);
@@ -833,13 +840,14 @@ class PageManager extends LoggedInUsersOnly
      * @param string $cabin
      * @return bool
      * @throws \Airship\Alerts\GearNotFound
+     * @throws \TypeError
      */
     protected function detectCollisions(string $uri, string $cabin): bool
     {
         $state = State::instance();
         $ap = Gears::getName('AutoPilot');
-        if (IDE_HACKS) {
-            $ap = new AutoPilot();
+        if (!($ap instanceof AutoPilot)) {
+            throw new \TypeError('AutoPilot Blueprint');
         }
         $nop = [];
         foreach ($state->cabins as $pattern => $cab) {

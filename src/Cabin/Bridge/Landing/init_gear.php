@@ -29,8 +29,8 @@ if (!\class_exists('LandingGear')) {
     class LandingGear extends LandingGearBase
     {
         /**
-         * This method gets invoked by the router before the final method call
-         * of the HTTP request.
+         * This function is called after the dependencies have been injected by
+         * AutoPilot. Think of it as a user-land constructor.
          */
         public function airshipLand()
         {
@@ -59,7 +59,8 @@ if (!\class_exists('LoggedInUsersOnly')) {
     class LoggedInUsersOnly extends LandingGear
     {
         /**
-         * We aren't letting no one access this unless they log in first!
+         * This function is called after the dependencies have been injected by
+         * AutoPilot. Think of it as a user-land constructor.
          */
         public function airshipLand()
         {
@@ -85,7 +86,8 @@ if (!\class_exists('AdminOnly')) {
     class AdminOnly extends LoggedInUsersOnly
     {
         /**
-         * We aren't letting no one access this unless they log in first!
+         * This function is called after the dependencies have been injected by
+         * AutoPilot. Think of it as a user-land constructor.
          */
         public function airshipLand()
         {

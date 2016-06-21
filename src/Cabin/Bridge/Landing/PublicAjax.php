@@ -18,12 +18,16 @@ class PublicAjax extends LandingGear
     protected $acct;
 
     /**
-     * Post-constructor
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {
         parent::airshipLand();
         $this->acct = $this->blueprint('UserAccounts');
+        if (!($this->acct instanceof UserAccounts)) {
+            throw new \TypeError('UserAccounts Blueprint');
+        }
     }
 
     /**
