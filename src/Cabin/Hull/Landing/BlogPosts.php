@@ -194,7 +194,7 @@ class BlogPosts extends LandingGear
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pagination' => [
-                'base' => '/blog/author/' . $slug,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/author/' . $slug,
                 'count' => $count,
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
@@ -250,7 +250,7 @@ class BlogPosts extends LandingGear
             'blogroll' => $blogRoll,
             'mathjax' => $mathJAX,
             'pagination' => [
-                'base' => '/blog/category/' . $slug,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/category/' . $slug,
                 'count' => $count,
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
@@ -280,7 +280,7 @@ class BlogPosts extends LandingGear
             'pageTitle' => \__('Series Index'),
             'series_items' => $series_items,
             'pagination' => [
-                'base' => '/blog/series/',
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/series/',
                 'suffix' => '/?page=',
                 'count' => $count,
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
@@ -316,7 +316,7 @@ class BlogPosts extends LandingGear
             'pageTitle' => $series['name'],
             'series_items' => $series_items,
             'pagination' => [
-                'base' => '/blog/series/' . $slug,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/series/' . $slug,
                 'count' => $count,
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
@@ -364,7 +364,7 @@ class BlogPosts extends LandingGear
             'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', $tag['name']),
             'mathjax' => $mathJAX,
             'pagination' => [
-                'base' => '/blog/tag/' . $slug,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/tag/' . $slug,
                 'count' => $count,
                 'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
                 'per_page' => $limit
@@ -416,7 +416,7 @@ class BlogPosts extends LandingGear
                 $page
             ),
             'pagination' => [
-                'base' => '/blog/' . $year . '/' . $month,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/' . $year . '/' . $month,
                 'suffix' => '/?page=',
                 'count' => $count,
                 'page' => $page,
@@ -462,7 +462,7 @@ class BlogPosts extends LandingGear
                 $page
             ),
             'pagination' => [
-                'base' => '/blog/' . $year,
+                'base' => \Airship\LensFunctions\cabin_url() . 'blog/' . $year,
                 'suffix' => '/?page=',
                 'count' => $count,
                 'page' => $page,

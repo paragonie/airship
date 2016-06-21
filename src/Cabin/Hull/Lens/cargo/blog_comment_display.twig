@@ -13,13 +13,13 @@
             {% endif %}
         {% endif %}
         <time id="comment-{{ data.commentid }}" datetime="{{ data.created }}">{{ data.created|date('M j, Y H:i A') }}</time>
-        <a class="comment-link" href="#comment-{{ data.commentid }}"><i class="fa fa-link"></i> Link</a>
+        <a class="comment-link" href="#comment-{{ data.commentid }}"><i class="fa fa-link"></i> {{ __("Link") }}</a>
         {% if depth + 1 < cabin_custom_config()['blog']['comments']['depth_max'] %}
             <a{#
                 #} href="#reply-to"{#
                 #} class="reply-link"{#
                 #} data-author="{{ name|e('html_attr') }}"{#
-                #} data-replyto="{{ data.commentid }}"{#
+                #} data-replyto="{{ data.commentid|e('html_attr') }}"{#
             #}>{#
                 #}<i class="fa fa-comment"></i> {{ __("Reply") }}{#
             #}</a>

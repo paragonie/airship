@@ -2,7 +2,7 @@
 #}{% if config.blog.comments.enabled %}
     {% if cached %}
         <h2 id="comments">{{ __("Comments") }}</h2>
-            <div id="blog_comments_wrapper" data-cached="1" data-cabinurl="{{ cabin_url() }}" data-uniqueid="{{ blogpost.shorturl }}">{#
+            <div id="blog_comments_wrapper" data-cached="1" data-cabinurl="{{ cabin_url() }}" data-uniqueid="{{ blogpost.shorturl|e('html_attr') }}">{#
                 #}<em>{{ __("This blog post is cached. Comments are rendered via JavaScript.") }}</em>{#
             #}</div>{#
     #}{% elseif comments %}
