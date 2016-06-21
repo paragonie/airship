@@ -16,10 +16,10 @@
         {% if latest.snippet != latest.body %}
             <p class="readmore-wrapper">
                 <a
-                        class="readmore"
-                        href="/blog/{{ latest.blogyear|e('url') }}/{{ latest.blogmonth|e('url') }}/{{ latest.slug|e('url') }}#after-fold"
+                    class="readmore"
+                    href="/blog/{{ latest.blogyear|e('url') }}/{{ latest.blogmonth|e('url') }}/{{ latest.slug|e('url') }}#after-fold"
                 >
-                    Continue Reading this Blog Post &raquo;
+                    {{ __("Continue Reading this Blog Post") }} &raquo;
                 </a>
             </p>
         {% endif %}</div>

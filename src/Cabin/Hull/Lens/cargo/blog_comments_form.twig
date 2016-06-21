@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-column blog-comment-author-wrapper">
                         <select id="blog-reply-author" name="author">
-                            <option value="">Name / URL</option>
+                            <option value="">{{ __("Name / URL") }}</option>
                             <optgroup label="{{ __("Author")|e('html_attr') }}">
                             {% for author in user_authors() %}
                                 <option{#

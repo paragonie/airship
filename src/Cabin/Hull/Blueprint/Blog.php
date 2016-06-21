@@ -330,7 +330,7 @@ class Blog extends BlueprintGear
             if (!empty($kids)) {
                 foreach($kids as $kid) {
                     if ($kid > 0) {
-                        $flat[] = (int) $kid;
+                        $flat []= (int) $kid;
                     }
                 }
             }
@@ -402,6 +402,47 @@ class Blog extends BlueprintGear
         }
         return $authors;
     }
+    /**
+     * Gets the data necessary for the side menu on blog pages
+     *
+     * @return array
+     */
+    public function getBlogMenu(): array
+    {
+        $years = [];
+        $getYears = $this->db->run(
+            "SELECT DISTINCT
+                date_part('year', published) AS blogyear,
+                date_part('month', published) AS blogmonth
+            FROM hull_blog_posts
+            WHERE status = 't'
+            GROUP BY
+                date_part('year', published),
+                date_part('month', published)
+            ORDER BY
+                blogyear DESC,
+                blogmonth ASC
+            "
+        );
+        if (!empty($getYears)) {
+            foreach ($getYears as $yr) {
+                $dt = new \DateTime($yr['blogyear'] . '-' . $yr['blogmonth'] . '-01');
+                $y = intval($yr['blogyear']);
+                if ($yr['blogmonth'] < 10) {
+                    // Left-pad with a single zero
+                    $yr['blogmonth'] = '0' . $yr['blogmonth'];
+                }
+                $years[$y][$yr['blogmonth']] = $dt->format('F');
+            }
+        }
+
+        return [
+            'years' => $years,
+            'categories' => $this->getCategoryTree(),
+            'tags' => $this->getTagCloud()
+        ];
+    }
+
 
     /**
      * Get a specific blog post
@@ -472,36 +513,6 @@ class Blog extends BlueprintGear
     }
 
     /**
-     * Returns the cache container for blog comments:
-     *
-     * @return CacheInterface
-     */
-    public function getCommentCache(): CacheInterface
-    {
-        if (\extension_loaded('apcu')) {
-            return (new MemoryCache())
-                ->personalize('BlogCommentCache');
-        }
-        return new FileCache(ROOT . '/tmp/cache/comments');
-    }
-
-    /**
-     * @param int $commentId
-     * @return int
-     */
-    public function getCommentDepth(int $commentId): int
-    {
-        $parent = $this->db->cell(
-            'SELECT replyto FROM hull_blog_comments WHERE commentid = ?',
-            $commentId
-        );
-        if (!$parent) {
-            return 0;
-        }
-        return (1 + $this->getCommentDepth($parent));
-    }
-
-    /**
      * Get a specific blog post by its row ID
      *
      * @param int $id
@@ -550,72 +561,6 @@ class Blog extends BlueprintGear
         }
         return $cat;
     }
-
-    /**
-     * Return information about the current tag
-     *
-     * @param string $slug
-     * @return array
-     * @throws EmulatePageNotFound
-     */
-    public function getTag(string $slug): array
-    {
-        $tag = $this->db->row(
-            'SELECT
-                *
-            FROM
-                hull_blog_tags
-            WHERE
-                slug = ?',
-            $slug
-        );
-        if (empty($tag)) {
-            throw new EmulatePageNotFound();
-        }
-        return $tag;
-    }
-
-    /**
-     * Gets the data necessary for the side menu on blog pages
-     *
-     * @return array
-     */
-    public function getBlogMenu(): array
-    {
-        $years = [];
-        $getYears = $this->db->run(
-            "SELECT DISTINCT
-                date_part('year', published) AS blogyear,
-                date_part('month', published) AS blogmonth
-            FROM hull_blog_posts
-            WHERE status = 't'
-            GROUP BY
-                date_part('year', published),
-                date_part('month', published)
-            ORDER BY
-                blogyear DESC,
-                blogmonth ASC
-            "
-        );
-        if (!empty($getYears)) {
-            foreach ($getYears as $yr) {
-                $dt = new \DateTime($yr['blogyear'] . '-' . $yr['blogmonth'] . '-01');
-                $y = intval($yr['blogyear']);
-                if ($yr['blogmonth'] < 10) {
-                    // Left-pad with a single zero
-                    $yr['blogmonth'] = '0' . $yr['blogmonth'];
-                }
-                $years[$y][$yr['blogmonth']] = $dt->format('F');
-            }
-        }
-
-        return [
-            'years' => $years,
-            'categories' => $this->getCategoryTree(),
-            'tags' => $this->getTagCloud()
-        ];
-    }
-
     /**
      * Get all subcategories for a given category (defaults to root)
      *
@@ -661,6 +606,36 @@ class Blog extends BlueprintGear
             );
         }
         return $cats;
+    }
+
+    /**
+     * Returns the cache container for blog comments:
+     *
+     * @return CacheInterface
+     */
+    public function getCommentCache(): CacheInterface
+    {
+        if (\extension_loaded('apcu')) {
+            return (new MemoryCache())
+                ->personalize('BlogCommentCache');
+        }
+        return new FileCache(ROOT . '/tmp/cache/comments');
+    }
+
+    /**
+     * @param int $commentId
+     * @return int
+     */
+    public function getCommentDepth(int $commentId): int
+    {
+        $parent = $this->db->cell(
+            'SELECT replyto FROM hull_blog_comments WHERE commentid = ?',
+            $commentId
+        );
+        if (!$parent) {
+            return 0;
+        }
+        return (1 + $this->getCommentDepth($parent));
     }
 
     /**
@@ -759,6 +734,39 @@ class Blog extends BlueprintGear
          * Now return:
          */
         return $comment;
+    }
+
+    /**
+     * Get all of the parent series that a series belongs to.
+     *
+     * @param int $seriesId
+     * @param array $seenIds
+     * @param int $depth
+     * @return array
+     */
+    public function getParentSeries(
+        int $seriesId,
+        array $seenIds = [],
+        int $depth = 0
+    ): array {
+        $addendum = '';
+        if (!empty($seenIds)) {
+            $addendum = "AND i.series NOT IN " . $this->db->escapeValueSet($seenIds, 'int');
+        }
+        return $this->db->run("
+            SELECT
+                s.*,
+                i.listorder,
+                '".$depth."' as depth
+            FROM
+                hull_blog_series s
+            LEFT JOIN
+                hull_blog_series_items i
+                ON i.parent = s.seriesid
+            WHERE i.series = ?
+            " . $addendum,
+            $seriesId
+        );
     }
 
     /**
@@ -989,40 +997,6 @@ class Blog extends BlueprintGear
             $postId
         );
     }
-
-    /**
-     * Get all of the parent series that a series belongs to.
-     *
-     * @param int $seriesId
-     * @param array $seenIds
-     * @param int $depth
-     * @return array
-     */
-    public function getParentSeries(
-        int $seriesId,
-        array $seenIds = [],
-        int $depth = 0
-    ): array {
-        $addendum = '';
-        if (!empty($seenIds)) {
-            $addendum = "AND i.series NOT IN " . $this->db->escapeValueSet($seenIds, 'int');
-        }
-        return $this->db->run("
-            SELECT
-                s.*,
-                i.listorder,
-                '".$depth."' as depth
-            FROM
-                hull_blog_series s
-            LEFT JOIN
-                hull_blog_series_items i
-                ON i.parent = s.seriesid
-            WHERE i.series = ?
-            " . $addendum,
-            $seriesId
-        );
-    }
-
     /**
      * Get a preview snippet of a blog post
      *
@@ -1104,13 +1078,37 @@ class Blog extends BlueprintGear
             --$cut;
         }
         $post['snippet'] = \implode(
-            "\n\n",
-            \array_slice($sects, 0, $cut - 1)
-        )."\n";
+                "\n\n",
+                \array_slice($sects, 0, $cut - 1)
+            )."\n";
         if ($after) {
             $post['after_fold'] = "\n".\implode($split, \array_slice($sects, $cut - 1));
         }
         return $post;
+    }
+
+    /**
+     * Return information about the current tag
+     *
+     * @param string $slug
+     * @return array
+     * @throws EmulatePageNotFound
+     */
+    public function getTag(string $slug): array
+    {
+        $tag = $this->db->row(
+            'SELECT
+                *
+            FROM
+                hull_blog_tags
+            WHERE
+                slug = ?',
+            $slug
+        );
+        if (empty($tag)) {
+            throw new EmulatePageNotFound();
+        }
+        return $tag;
     }
 
     /**
@@ -1224,6 +1222,36 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get all of the base series
+     *
+     * @param int $num
+     * @param int $offset
+     * @return array
+     */
+    public function listBaseSeries(int $num = 20, int $offset = 0): array
+    {
+        $items = $this->db->run(
+            'SELECT
+                s.*,
+                COALESCE(i.listorder, s.seriesid) AS listorder
+            FROM
+                hull_blog_series s
+            LEFT OUTER JOIN
+                hull_blog_series_items i
+                ON
+                    i.series = s.seriesid
+            WHERE
+                i.parent IS NULL
+                AND s.seriesid IS NOT NULL
+            ORDER BY
+                listorder ASC
+            OFFSET '.$offset.'
+            LIMIT '.$num
+        );
+        return $items;
+    }
+
+    /**
      * Return an array of the most $num recent posts, including URL and title
      *
      * @param int $authorId
@@ -1308,36 +1336,6 @@ class Blog extends BlueprintGear
     }
 
     /**
-     * Get all of the base series
-     *
-     * @param int $num
-     * @param int $offset
-     * @return array
-     */
-    public function listBaseSeries(int $num = 20, int $offset = 0): array
-    {
-        $items = $this->db->run(
-            'SELECT
-                s.*,
-                COALESCE(i.listorder, s.seriesid) AS listorder
-            FROM
-                hull_blog_series s
-            LEFT OUTER JOIN
-                hull_blog_series_items i
-                ON
-                    i.series = s.seriesid
-            WHERE
-                i.parent IS NULL
-                AND s.seriesid IS NOT NULL
-            ORDER BY
-                listorder ASC
-            OFFSET '.$offset.'
-            LIMIT '.$num
-        );
-        return $items;
-    }
-
-    /**
      * Return an array of the most $num recent posts, including URL and title
      *
      * @param int $seriesId
@@ -1370,13 +1368,13 @@ class Blog extends BlueprintGear
                 $row = $this->getBlogPostById((int) $item['post']);
                 if (!empty($row)) {
                     $row['type'] = 'blogpost';
-                    $series_items [] = $row;
+                    $series_items []= $row;
                 }
             } elseif ($item['series']) {
                 $row = $this->getSeriesById((int) $item['series']);
                 if (!empty($row)) {
                     $row['type'] = 'series';
-                    $series_items [] = $row;
+                    $series_items []= $row;
                 }
             }
         }
@@ -1408,8 +1406,8 @@ class Blog extends BlueprintGear
                 p.status
                 AND t.tagid = ?
             ORDER BY published DESC
-            OFFSET '.$offset.'
-            LIMIT '.$num,
+            OFFSET ' . $offset . '
+            LIMIT ' . $num,
             $tagId
         );
 
@@ -1446,8 +1444,8 @@ class Blog extends BlueprintGear
                 status
                 AND blogyear = ?
             ORDER BY published DESC
-            OFFSET '.$offset.'
-            LIMIT '.$num,
+            OFFSET ' . $offset . '
+            LIMIT ' . $num,
             $year
         );
 
@@ -1487,8 +1485,8 @@ class Blog extends BlueprintGear
                 AND blogyear = ?
                 AND blogmonth = ?
             ORDER BY published DESC
-            OFFSET '.$offset.'
-            LIMIT '.$num,
+            OFFSET ' . $offset . '
+            LIMIT ' . $num,
             $year,
             $month
         );
@@ -1521,8 +1519,8 @@ class Blog extends BlueprintGear
             WHERE
                 status
             ORDER BY published DESC
-            OFFSET '.(int) $offset.'
-            LIMIT '.(int) $num
+            OFFSET ' . $offset . '
+            LIMIT ' . $num
         );
 
         if (empty($posts)) {

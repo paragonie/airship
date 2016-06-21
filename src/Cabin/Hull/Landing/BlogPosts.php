@@ -21,7 +21,7 @@ class BlogPosts extends LandingGear
      */
     protected $blog;
 
-    /**f
+    /**
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
@@ -352,7 +352,9 @@ class BlogPosts extends LandingGear
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
             if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
+                $blogRoll[$i]['snippet'] = \rtrim(
+                    $blogRoll[$i]['snippet'], "\n"
+                );
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
@@ -384,13 +386,20 @@ class BlogPosts extends LandingGear
     {
         $count = $this->blog->countByMonth($year, $month);
         list($offset, $limit) = $this->getOffsetAndLimit();
-        $blogRoll = $this->blog->listByMonth($year, $month, $limit, $offset);
+        $blogRoll = $this->blog->listByMonth(
+            $year,
+            $month,
+            $limit,
+            $offset
+        );
 
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
             if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
-                $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
+                $blogRoll[$i]['snippet'] = \rtrim(
+                    $blogRoll[$i]['snippet'], "\n"
+                );
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
         }
@@ -428,7 +437,11 @@ class BlogPosts extends LandingGear
     {
         list($offset, $limit) = $this->getOffsetAndLimit();
         $count = $this->blog->countByYear($year);
-        $blogRoll = $this->blog->listByYear($year, $limit, $offset);
+        $blogRoll = $this->blog->listByYear(
+            $year,
+            $limit,
+            $offset
+        );
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
@@ -464,10 +477,14 @@ class BlogPosts extends LandingGear
 
     /**
      * Blog post home
+     *
+     * @route /
      */
     public function index()
     {
-        $blogRoll = $this->blog->recentFullPosts(5);
+        $blogRoll = $this->blog->recentFullPosts(
+            (int) $this->config('homepage.blog-posts') ?? 5
+        );
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
@@ -505,7 +522,10 @@ class BlogPosts extends LandingGear
                 if (!$this->isLoggedIn()) {
                     $this->storeLensVar(
                         'blog_success',
-                        \__('Your comment has been submitted successfully, but it will not appear it has been approved by the crew.')
+                        \__(
+                            'Your comment has been submitted successfully, ' .
+                            'but it will not appear it has been approved by the crew.'
+                        )
                     );
                 }
                 unset($_POST['name']);
@@ -517,7 +537,9 @@ class BlogPosts extends LandingGear
         }
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;
 
-        $blogPost['series'] = $this->blog->getPostsSeries((int) $blogPost['postid']);
+        $blogPost['series'] = $this->blog->getPostsSeries(
+            (int) $blogPost['postid']
+        );
 
         $args = [
             'pageTitle' => $blogPost['title'],
@@ -530,7 +552,9 @@ class BlogPosts extends LandingGear
             $args['cached'] = true;
             $this->stasis('blog/read', $args);
         } else {
-            $comments = $this->blog->getCommentTree((int) $blogPost['postid']);
+            $comments = $this->blog->getCommentTree(
+                (int) $blogPost['postid']
+            );
             $args['comments'] = $comments;
             $this->lens('blog/read', $args);
         }

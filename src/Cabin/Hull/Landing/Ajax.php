@@ -22,7 +22,8 @@ class Ajax extends LandingGear
     protected $blog;
 
     /**
-     * Post-constructor called by AutoPilot
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
      */
     public function airshipLand()
     {

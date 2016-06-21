@@ -30,13 +30,28 @@ class PublicFiles extends BlueprintGear
             $part = \array_shift($parts);
             if (empty($directoryId)) {
                 $directoryId = $this->db->cell(
-                    'SELECT directoryid FROM airship_dirs WHERE cabin = ? AND parent IS NULL AND name = ?',
+                    'SELECT
+                         directoryid
+                     FROM
+                         airship_dirs
+                     WHERE
+                            cabin = ?
+                         AND parent IS NULL
+                         AND name = ?
+                     ',
                     $cabin,
                     $part
                 );
             } else {
                 $directoryId = $this->db->cell(
-                    'SELECT directoryid FROM airship_dirs WHERE parent = ? AND name = ?',
+                    'SELECT
+                         directoryid
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent = ?
+                         AND name = ?
+                     ',
                     $directoryId,
                     $part
                 );
@@ -64,13 +79,28 @@ class PublicFiles extends BlueprintGear
     ): array {
         if (empty($path)) {
             $fileInfo = $this->db->row(
-                'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ?',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory IS NULL
+                     AND cabin = ?
+                     AND filename = ?
+                 ',
                 $cabin,
                 $filename
             );
         } else {
             $fileInfo = $this->db->row(
-                'SELECT * FROM airship_files WHERE directory = ? AND filename = ?',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory = ?
+                     AND filename = ?
+                 ',
                 $this->getDirectoryId($cabin, $path),
                 $filename
             );

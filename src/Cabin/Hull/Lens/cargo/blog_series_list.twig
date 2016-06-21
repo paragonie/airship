@@ -7,7 +7,12 @@
     {% if ser.type == 'blogpost' %}
     <li class="series-blog">
         <a class="blog-post-title" href="/blog/{{ ser.blogyear|e('url') }}/{{ ser.blogmonth|e('url') }}/{{ ser.slug|e('url') }}">{#
-            #}{{ ser.title|e }}</a> ({{ ser.published|date("F j, Y") }} by <a href="/blog/author/{{ ser.authorslug|e('url') }}">{{ ser.authorname|e }}</a>)
+            #}{{ ser.title|e }}</a> {#
+            #}({#
+                #}{{ ser.published|date("F j, Y") }} {#
+                #}{{ __("by") }} {#
+                #}<a href="/blog/author/{{ ser.authorslug|e('url') }}">{{ ser.authorname|e }}</a>{#
+            #})
     </li>
     {% else %}
     <li class="series-series">

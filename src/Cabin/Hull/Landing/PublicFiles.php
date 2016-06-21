@@ -3,8 +3,10 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Cabin\Hull\Blueprint as BP;
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Alerts\Router\EmulatePageNotFound;
+use \Airship\Alerts\{
+    FileSystem\FileNotFound,
+    Router\EmulatePageNotFound
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -14,12 +16,20 @@ require_once __DIR__.'/init_gear.php';
  */
 class PublicFiles extends LandingGear
 {
+    /**
+     * @var string
+     */
     protected $cabin = 'Hull';
+
     /**
      * @var BP\PublicFiles
      */
     protected $files;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();
