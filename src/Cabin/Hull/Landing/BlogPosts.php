@@ -111,10 +111,6 @@ class BlogPosts extends LandingGear
             );
             return false;
         }
-        $_POST['name'] = '';
-        $_POST['email'] = '';
-        $_POST['url'] = '';
-        $_POST['message'] = '';
 
         return $this->blog->addCommentToPost(
             $post,
@@ -528,11 +524,10 @@ class BlogPosts extends LandingGear
                         )
                     );
                 }
-                unset($_POST['name']);
-                unset($_POST['email']);
-                unset($_POST['url']);
-                unset($_POST['message']);
-                $_POST = [];
+                \Airship\redirect(
+                    \Airship\LensFunctions\cabin_url() .
+                    'blog/' . $year . '/' . $month . '/' . $slug . '#comments'
+                );
             }
         }
         $mathJAX = \strpos($blogPost['body'], '$$') !== false;
