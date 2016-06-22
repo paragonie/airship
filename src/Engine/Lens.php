@@ -50,7 +50,6 @@ class Lens
         string $mime = 'text/html;charset=UTF-8'
     ): bool {
         if (!\headers_sent()) {
-            $this->sendStandardHeaders($mime);
             \ob_start();
             // We need to render this to make sure our CSP headers send!
             echo $this->twigEnv->render(
@@ -58,6 +57,7 @@ class Lens
                 \array_merge($this->stored, $params)
             );
             \ob_end_flush();
+            $this->sendStandardHeaders($mime);
             return true;
         }
         echo $this->twigEnv->render(
