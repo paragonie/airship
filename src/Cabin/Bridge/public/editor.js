@@ -34,7 +34,7 @@ $(document).ready(function() {
         );
     };
 
-    window.richTextWrapper = function(name, format_name) {
+    window['richTextWrapper'] = function(name, format_name) {
 
         richTextLookups[name] = format_name;
 
