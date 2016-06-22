@@ -1,5 +1,4 @@
-{% set formaction = cabin_url() ~ path_middle ~ '/' ~ cabin ~ '?dir=' ~ current %}
-<form action="{{ formaction|e('html_attr') }}" method="post" enctype="multipart/form-data">{{ form_token()}}
+<form method="post" enctype="multipart/form-data">{{ form_token() }}
     <div id="bridge_files_new_dir_form">
         <fieldset>
             <legend>{{ __("Create a New Directory") }}</legend>
