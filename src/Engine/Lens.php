@@ -56,8 +56,8 @@ class Lens
                 $base . '.twig',
                 \array_merge($this->stored, $params)
             );
-            \ob_end_flush();
             $this->sendStandardHeaders($mime);
+            \ob_end_flush();
             return true;
         }
         echo $this->twigEnv->render(
