@@ -321,25 +321,6 @@ function get_database(string $id = 'default'): Database
 }
 
 /**
- * Given a file path, only return the file name.
- *
- * @param string $fullPath
- * @param bool $trimExtension
- * @return string
- */
-function path_to_filename(string $fullPath, bool $trimExtension = false): string
-{
-    $pieces = \Airship\chunk($fullPath);
-    $lastPiece = \array_pop($pieces);
-    if ($trimExtension) {
-        $parts = \Airship\chunk($lastPiece, '.');
-        \array_pop($parts);
-        return \implode('.', $parts);
-    }
-    return $lastPiece;
-}
-
-/**
  * Get a base URL for a gravatar image
  *
  * @param string $email
@@ -525,6 +506,26 @@ function parseJSON(
 }
 
 /**
+ * Given a file path, only return the file name. Optionally, trim the
+ * extension.
+ *
+ * @param string $fullPath
+ * @param bool $trimExtension
+ * @return string
+ */
+function path_to_filename(string $fullPath, bool $trimExtension = false): string
+{
+    $pieces = \Airship\chunk($fullPath);
+    $lastPiece = \array_pop($pieces);
+    if ($trimExtension) {
+        $parts = \Airship\chunk($lastPiece, '.');
+        \array_pop($parts);
+        return \implode('.', $parts);
+    }
+    return $lastPiece;
+}
+
+/**
  * Redirect the user to a given URL. Optionally pass GET parameters.
  * 
  * @param string $destination The URL to redirect the user to
@@ -544,23 +545,6 @@ function redirect(
         \header('Location: '.$destination.'?'.\http_build_query($params));
     }
     exit;
-}
-
-/**
- * Fetch a query string from the stored queries file
- *
- * @param string $index Which index to replace
- * @param string $driver Which database driver
- * @param array $params Parameters to be replaced in the query string?
- * @return string
- * @throws NotImplementedException
- */
-function queryStringRoot(
-    string $index,
-    string $driver = '',
-    array $params = []
-): string {
-    return \Airship\queryString($index, $params, '', $driver);
 }
 
 /**
@@ -615,6 +599,23 @@ function queryString(
         $str = \str_replace('{{'.$token.'}}', $replacement, $str);
     }
     return $str;
+}
+
+/**
+ * Fetch a query string from the stored queries file
+ *
+ * @param string $index Which index to replace
+ * @param string $driver Which database driver
+ * @param array $params Parameters to be replaced in the query string?
+ * @return string
+ * @throws NotImplementedException
+ */
+function queryStringRoot(
+    string $index,
+    string $driver = '',
+    array $params = []
+): string {
+    return \Airship\queryString($index, $params, '', $driver);
 }
 
 /**
@@ -678,6 +679,8 @@ function slugFromTitle(string $title): string
 }
 
 /**
+ * Like PHP's `tempnam()` but allows you to specify the file extension.
+ *
  * @param string $prefix  Prefix
  * @param string $ext     File extension
  * @param string $dir     Which directory?
