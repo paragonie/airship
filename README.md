@@ -17,7 +17,7 @@ if your company requires one.
 
 ## Minimum Requirements
 
-* PHP 7.0.5 or newer
+* PHP 7.0 or newer
 * PECL Libsodium 1.0.6 or newer
 * Libsodium 1.0.10 or newer
 

@@ -130,6 +130,7 @@ class MyFiles extends FileManager
      *
      * @return bool
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function permCheck(): bool
     {
         return true; // You're logged in, so this is a no-brainer.

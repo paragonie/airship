@@ -42,6 +42,7 @@ class Translation
         }
         $str = '';
         while (empty($str)) {
+            /** @noinspection PhpUsageOfSilenceOperatorInspection */
             $str = @\sprintf($v, ...$params);
             \array_push($params, '');
         }

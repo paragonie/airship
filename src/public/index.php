@@ -17,6 +17,7 @@ use \Airship\Engine\{
  */
 
 // Are we still installing?
+/** @noinspection PhpUsageOfSilenceOperatorInspection */
 if (
     @\is_readable(dirname(__DIR__).'/tmp/installing.json')
         ||
@@ -143,13 +144,16 @@ if (!empty($state->universal['debug'])) {
         // Show previous throwables as well:
         $n = 1;
         $e = $e->getPrevious();
+        // The methods below exist in both \Exception and \Error.
         while ($e instanceof \Exception || $e instanceof \Error) {
             echo "\n", \str_repeat('#', 80), "\n";
+            /** @noinspection PhpUndefinedMethodInspection */
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",
                 $e->getCode(), "\n\n",
                 $e->getTraceAsString();
             ++$n;
+            /** @noinspection PhpUndefinedMethodInspection */
             $e = $e->getPrevious();
         }
     }

@@ -17,6 +17,7 @@ class Permissions extends BlueprintGear
 {
     const MAX_RECURSE_DEPTH = 100;
 
+    /** @noinspection PhpTooManyParametersInspection */
     /**
      * Build a hierarchical tree containing all of the groups' permissions
      *

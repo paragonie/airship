@@ -58,6 +58,7 @@ class File implements CacheInterface
     public function get(string $key)
     {
         $path = $this->getRelativePath($key);
+        /** @noinspection PhpUsageOfSilenceOperatorInspection */
         if (@\is_readable($path)) {
             return \json_decode(
                 \file_get_contents($path),

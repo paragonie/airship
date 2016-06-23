@@ -912,6 +912,7 @@ class CustomPages extends HullCustomPages
         return $this->db->commit();
     }
 
+    /** @noinspection PhpTooManyParametersInspection */
     /**
      * @param int $parent
      * @param int $destinationDir

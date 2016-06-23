@@ -20,6 +20,7 @@ if (\is_dir(CABIN_DIR.'/public')) {
         }
         
         // Create a symlink from public/static/* to Cabin/*/public
+        /** @noinspection PhpUsageOfSilenceOperatorInspection */
         @\symlink(
             CABIN_DIR.'/public',
             ROOT.'/public/static/'.$active['name']

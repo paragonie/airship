@@ -17,6 +17,7 @@ if (!\class_exists('LandingGear')) {
          * Class LandingGearBase
          * @package Airship\Cabin\Bridge\Landing
          */
+        /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
         class LandingGearBase extends Landing { }
     }
 
@@ -26,6 +27,7 @@ if (!\class_exists('LandingGear')) {
      * Class LandingGear
      * @package Airship\Cabin\Bridge\Landing
      */
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class LandingGear extends LandingGearBase
     {
         /**
@@ -56,6 +58,7 @@ if (!\class_exists('LoggedInUsersOnly')) {
      * Class LoggedInUsersOnly
      * @package Airship\Cabin\Bridge\Landing
      */
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class LoggedInUsersOnly extends LandingGear
     {
         /**
@@ -83,6 +86,7 @@ if (!\class_exists('AdminOnly')) {
      * Class AdminOnly
      * @package Airship\Cabin\Bridge\Landing
      */
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class AdminOnly extends LoggedInUsersOnly
     {
         /**

@@ -115,6 +115,7 @@ class Files extends FileManager
      *
      * @return bool
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function permCheck(): bool
     {
         return $this->isSuperUser(); // You're an admin!

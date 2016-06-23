@@ -11,6 +11,12 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 
+/**
+ * @param Database $db
+ * @param array $updates
+ * @return bool
+ * @throws TypeError
+ */
 function processUpdates(Database $db, array $updates = []): bool
 {
     $db->beginTransaction();

@@ -266,6 +266,11 @@ class Lens
      */
     public function listFilters(): array
     {
+        /**
+         * If Twig gives us a way to read this information, we'll use that
+         * instead.
+         */
+        /** @noinspection PhpInternalEntityUsedInspection */
         $filters = $this->twigEnv->getFilters();
         return \array_keys($filters);
     }

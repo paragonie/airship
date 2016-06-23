@@ -133,6 +133,7 @@ class AuthorFiles extends FileManager
      *
      * @return bool
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function permCheck(): bool
     {
         if ($this->isSuperUser()) {
