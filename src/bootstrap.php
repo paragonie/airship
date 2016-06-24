@@ -45,13 +45,6 @@ require_once ROOT . '/cabins.php';
  *    for the current cabin (set in cabins.php)
  */
 $active = $state->cabins[$state->active_cabin];
-if (!$active) {
-    \header('HTTP/1.1 404 Not Found');
-    echo \file_get_contents(
-        __DIR__ . '/no-cabin.html'
-    );
-    exit;
-}
 $state->lang = isset($active['lang']) 
     ? $active['lang']
     : 'en-us'; // default

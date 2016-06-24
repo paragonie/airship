@@ -23,16 +23,18 @@ if (IDE_HACKS) {
 /**
  * Cache the cabin configuration
  */
+$cabinDisabled = false;
 if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
     // Load the cabins from cache
     $config = \Airship\loadJSON(ROOT . '/tmp/cache/cabin_data.json');
     foreach ($config['cabins'] as $key => $cabin) {
-        if ($cabin['enabled']) {
             if ($ap::isActiveCabinKey($key, !empty($cabin['https']))) {
                 $state->active_cabin = $key;
+                if ($cabin['enabled']) {
+                    $cabinDisabled = true;
+                }
                 break;
             }
-        }
     }
     $state->cabins = $config['cabins'];
 } else {
@@ -108,19 +110,25 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
             $cabin['data'] = null;
         }
         if (empty($active_cabin) && $ap::isActiveCabinKey($key)) {
-            if ($cabin['active']) {
-                $active_cabin = $key;
+            $state->active_cabin = $key;
+            if ($cabin['enabled']) {
+                $cabinDisabled = true;
             }
         }
         $cabins[$key] = $cabin;
     }
-    /*
+    if (empty($cabinDisabled)) {
+        \header('HTTP/1.1 404 Not Found');
+        echo \file_get_contents(
+            __DIR__ . '/no-cabin.html'
+        );
+        exit;
+    }
     if (empty($active_cabin)) {
         $k = \array_keys($cabins);
         $active_cabin = \array_pop($k);
         unset($k);
     }
-    */
     $state->active_cabin = $active_cabin;
 
     $state->cabins = $cabins;

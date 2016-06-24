@@ -19,6 +19,7 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                     ],
                     'per_page' => 20
                 ],
+                'cache-secret' => 'gvLYN5VAR3gxcz938JeEtKLVXCTrTEa2h',
                 'recaptcha' => [
                     'site-key' => null,
                     'secret-key' => 'boo'
@@ -48,6 +49,7 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                     ],
                     'per_page' => 20
                 ],
+                'cache-secret' => 'gvLYN5VAR3gxcz938JeEtKLVXCTrTEa2h',
                 'file' => [
                     'cache' => 10800
                 ],
