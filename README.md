@@ -28,7 +28,7 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 ### Getting Started
 
  * [Five-minute overview of CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/5-Minute-Overview.md)
- * [Why choose CMS Airship over any other platform?](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md)
+ * **[Why choose CMS Airship over any other platform?](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md)**
  * [Introduction](https://github.com/paragonie/airship-docs/tree/master/en-us/01-intro)
  * [How to install CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/2-Installing.md)
 
