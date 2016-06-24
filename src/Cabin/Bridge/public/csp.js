@@ -7,6 +7,7 @@ $(".csp_add_btn").click(function() {
     }
     $("#csp_"+key+"_whitelist").append(
         "<li><input \n"+
+        "        class=\"full-width\"\n"+
         "        type=\"text\"\n"+
         "        placeholder=\""+placeholder+"\"\n"+
         "        name=\"content_security_policy["+key+"][allow][]\"\n"+

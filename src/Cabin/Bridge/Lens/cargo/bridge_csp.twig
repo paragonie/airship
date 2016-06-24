@@ -65,6 +65,7 @@
                     <ol id="csp_{{ key }}_whitelist">
                     {% for url in csp[key]['allow'] %}{% if url != '*' %}
                         <li><input
+                            class="full-width"
                             type="text"
                             placeholder="{{ ph }}"
                             name="content_security_policy[{{ key }}][allow][]"

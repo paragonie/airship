@@ -31,6 +31,7 @@
             '{hex}'
     */
     "*\/bridge": {
+            "enabled": true,
             // Only respond over HTTPS (recommended!):
             "https": false,
             // Used in cross-cabin hyperlinks:
@@ -49,6 +50,7 @@
             "name": "Bridge"
         },
         "*": {
+            "enabled": true,
             // Only respond over HTTPS (recommended!):
             "https": false,
             // Used in cross-cabin hyperlinks:

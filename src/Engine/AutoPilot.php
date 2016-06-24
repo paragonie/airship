@@ -319,6 +319,9 @@ class AutoPilot implements RouterInterface
         $path = \parse_url($url, PHP_URL_PATH) ?? '/';
 
         foreach ($state->cabins as $k => $cabin) {
+            if (!$cabin['enabled']) {
+                continue;
+            }
             if (self::isActiveCabinKey(
                 $k,
                 $cabin['https'] ?? false,

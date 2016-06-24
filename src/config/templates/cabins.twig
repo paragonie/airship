@@ -33,10 +33,11 @@
     */
 {% for route, cabin in cabins %}
     {{ route|je }}: {
-            // Only respond over HTTPS (recommended!):
-            "https": {{ cabin.https ? 'true' : 'false' }},
+            "enabled": {{ cabin['enabled'] ? 'true' : 'false' }},
             // Used in cross-cabin hyperlinks:
             "canon_url": {{ cabin['canon_url']|default('//')|je }},
+            // Only respond over HTTPS (recommended!):
+            "https": {{ cabin.https ? 'true' : 'false' }},
             "language": {{ cabin.language|default('en-us')|je }},
 {% if supplier %}
             "supplier": {{ cabin.supplier|je }},
