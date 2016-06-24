@@ -32,6 +32,11 @@ class Skyport extends BlueprintGear
     protected $installHash;
 
     /**
+     * @var string
+     */
+    protected $prefix = 'https://airship.paragonie.com/';
+
+    /**
      * Get the number of packages available
      *
      * @param string $type The package type
@@ -278,19 +283,15 @@ class Skyport extends BlueprintGear
      */
     public function getURL(string $type, string $supplier, string $name): string
     {
-        /**
-         * @todo Make this less hard-coded
-         */
-        $prefix = 'https://airship.paragonie.com/';
         switch (\strtolower($type)) {
             case 'cabin':
-                return $prefix . 'cabin/' . $supplier . '/' . $name;
+                return $this->prefix . 'cabin/' . $supplier . '/' . $name;
             case 'gadget':
-                return $prefix . 'gadget/' . $supplier . '/' . $name;
+                return $this->prefix . 'gadget/' . $supplier . '/' . $name;
             case 'motif':
-                return $prefix . 'motif/' . $supplier . '/' . $name;
+                return $this->prefix . 'motif/' . $supplier . '/' . $name;
             default:
-                return $prefix;
+                return $this->prefix;
         }
     }
 
