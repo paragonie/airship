@@ -7,13 +7,23 @@
 Airship is a content management system, blog engine, and application 
 development framework written for PHP 7.
 
-[![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
-
 Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
 
 [Commercial license are available for purchase](https://paragonie.com/contact)
 if your company requires one.
+
+## Benefits of CMS Airship
+
+1. [**Digitally signed automatic security updates.**](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#1-digitally-signed-automatic-security-updates)
+2. [The community is always in control of any add-ons it produces.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#2-the-community-is-always-in-control-of-any-add-ons-it-produces)
+3. [Supports a multi-site architecture out of the box.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#3-supports-a-multi-site-architecture-out-of-the-box)
+4. [Designed by progressive-minded application security professionals.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#4-designed-by-progressive-minded-application-security-professionals)
+5. [Our Gear system allows the framework to be extended.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#5-our-gear-system-allows-the-framework-to-be-extended)
+
+## Documentation
+
+See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 ## Minimum Requirements
 
@@ -21,14 +31,9 @@ if your company requires one.
 * PECL Libsodium 1.0.6 or newer
 * Libsodium 1.0.10 or newer
 
-## Documentation
-
-See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
-
 ### Getting Started
 
  * [Five-minute overview of CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/5-Minute-Overview.md)
- * **[Why choose CMS Airship over any other platform?](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md)**
  * [Introduction](https://github.com/paragonie/airship-docs/tree/master/en-us/01-intro)
  * [How to install CMS Airship](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/2-Installing.md)
 
@@ -43,3 +48,5 @@ Airship extensions come in three flavors:
 
 To create and/or manage these extensions, check out 
 [barge, our command line utility](https://github.com/paragonie/airship-barge).
+
+[![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
