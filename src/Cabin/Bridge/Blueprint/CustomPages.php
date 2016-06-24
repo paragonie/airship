@@ -217,6 +217,50 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * Create the redirects necessary for a directory being moved.
+     *
+     * @param array $old
+     * @param array $new
+     * @return bool
+     */
+    public function createRedirectsForMove(array $old, array $new): bool
+    {
+        $this->log(
+            'Creating directory redirects',
+            LogLevel::DEBUG,
+            [
+                'old' => $old,
+                'new' => $new
+            ]
+        );
+        $oldDir = !empty($old['path'])
+            ? $this->getParentDirFromStr($old['path'], $old['cabin'])
+            : null;
+
+        foreach ($this->listCustomPagesByDirectoryID($oldDir) as $page) {
+            $oldPath = \explode('/', $old['path']);
+            $oldPath []= $page['url'];
+            if ($old['cabin'] == $new['cabin']) {
+                $this->createSameCabinRedirect(
+                    \implode('/', $oldPath),
+                    $new['path'] . '/' . $page['url'],
+                    $old['cabin']
+                );
+            }
+        }
+        $children = $this->listSubDirectoriesByDirectoryID($oldDir);
+
+        foreach ($children as $dir) {
+            $_old = $old;
+            $_new = $new;
+            $_old['path'] .= '/' . $dir['url'];
+            $_new['path'] .= '/' . $dir['url'];
+            $this->createRedirectsForMove($_old, $_new);
+        }
+        return true;
+    }
+
+    /**
      * Redirect a directory, and all of its pages.
      *
      * @param array $old
@@ -267,7 +311,7 @@ class CustomPages extends HullCustomPages
                 }
                 ++$n;
                 $url = $page['url'] . '-' . $n;
-            } while (!$this->createPageRedirect($_old, $_new));
+            } while (!$this->createPageRedirect($_old, $_new, true));
         }
 
         foreach ($this->listSubDirectoriesByDirectoryID($oldDir) as $dir) {
@@ -863,6 +907,61 @@ class CustomPages extends HullCustomPages
             $parent,
             $cabin
         );
+    }
+
+    /**
+     * Move/rename a directory
+     *
+     * @param int $dirID
+     * @param string $url
+     * @param int $parent
+     * @param string $cabin
+     * @return bool
+     * @throws CustomPageCollisionException
+     * @throws \TypeError
+     */
+    public function moveDir(
+        int $dirID,
+        string $url = '',
+        int $parent = 0,
+        string $cabin = ''
+    ): bool {
+        $this->db->beginTransaction();
+        if ($parent > 0) {
+            $collision = $this->db->exists(
+                'SELECT COUNT(directoryid) FROM airship_custom_dir WHERE parent = ? AND url = ? AND directoryid != ?',
+                $parent,
+                $url,
+                $dirID
+            );
+        } else {
+            $collision = $this->db->exists(
+                'SELECT COUNT(directoryid) FROM airship_custom_dir WHERE parent IS NULL AND url = ? AND directoryid != ?',
+                $url,
+                $dirID
+            );
+        }
+        if ($collision) {
+            // Sorry, but no.
+            $this->db->rollBack();
+            throw new CustomPageCollisionException(
+                \trk('errors.pages.collision')
+            );
+        }
+        $this->db->update(
+            'airship_custom_dir',
+            [
+                'url' => $url,
+                'cabin' => $cabin,
+                'parent' => $parent > 0
+                    ? $parent
+                    : null
+            ],
+            [
+                'directoryid' => $dirID
+            ]
+        );
+        return $this->db->commit();
     }
 
     /**

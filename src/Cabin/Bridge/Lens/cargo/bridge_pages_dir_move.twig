@@ -1,0 +1,42 @@
+<h2>{{ __("Rename this Directory?") }}</h2>
+
+<pre>{{ cabin_url(cabin) ~ (parent ? parent ~ "/" ~ dir : dir) }}</pre>
+
+<form method="post">{{ form_token() }}
+    <fieldset>
+        <label for="destination">{{ __("Parent Directory:") }}</label>
+        <select id="destination" name="move_destination">
+            <option value=""></option>
+            {% for cab in cabins %}
+                <!-- {{ custom_dir_tree[cab]|json_encode(constant("JSON_PRETTY_PRINT")) }} -->
+                <option
+                    {% if not dirinfo.parent and dirinfo.cabin == cab %}
+                        selected="selected"
+                    {% endif %}
+                    value="{{ cab|e('html_attr') }}"
+                    class="depth0"
+                    data-cabin="{{ cab|e('html_attr') }}"
+                >{{ cab }}</option>
+                {% for subdir in custom_dir_tree[cab] %}
+                    {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                {% endfor %}
+            {% endfor %}
+        </select><br />
+        <label for="name">{{ __("Directory Name") }}:</label>
+        <input type="text" name="url" value="{{ dir|e('html_attr') }}" /><br />
+
+        <input type="checkbox" name="create_redirect" value="1" id="create_redirect" />
+        <label for="create_redirect">
+            {{ __("Create redirects from the old URL to the new URL for all contents?") }}
+        </label>
+    </fieldset>
+
+    <hr />
+
+    <button type="submit" name="rename_btn" value="confirm" class="pure-button pure-button-secondary">
+        {{  __("Rename Directory") }}
+    </button>
+    <a href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ parent }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+        Cancel
+    </a>
+</form>

@@ -1,3 +1,7 @@
+## Version 1.0.0 - 2016-06-??
+
+  * You can now move or rename directories in our custom page system.
+
 ## Version 0.3.0 - 2016-06-21
 
   * Implemented a secure account recovery implementation, wherein users can

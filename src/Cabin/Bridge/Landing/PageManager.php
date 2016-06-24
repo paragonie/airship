@@ -8,6 +8,7 @@ use \Airship\Engine\{
     AutoPilot,
     Bolt\Get,
     Gears,
+    Security\Util,
     State
 };
 use \Psr\Log\LogLevel;
@@ -91,7 +92,8 @@ class PageManager extends LoggedInUsersOnly
                         $post,
                         $cabin,
                         $cabins
-                    )) {
+                    )
+                    ) {
                         // Return to the parent directory.
                         \Airship\redirect(
                             $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'),
@@ -106,7 +108,11 @@ class PageManager extends LoggedInUsersOnly
 
         $this->lens('pages/dir_delete', [
             'cabins' => $cabins,
-            'custom_dir_tree' => $this->pg->getCustomDirTree($cabins, 0, (int) $dirInfo['directoryid']),
+            'custom_dir_tree' => $this->pg->getCustomDirTree(
+                $cabins,
+                0,
+                (int) $dirInfo['directoryid']
+            ),
             'dirinfo' => $dirInfo,
             'config' => $this->config(),
             // UNTRUSTED, PROVIDED BY THE USER:
@@ -236,7 +242,7 @@ class PageManager extends LoggedInUsersOnly
     /**
      * List all of the subdirectories and custom pages in a given directory
      *
-     * @param pages/{string}
+     * @param pages /{string}
      * @param string $cabin
      */
     public function forCabin(string $cabin = '')
@@ -357,14 +363,76 @@ class PageManager extends LoggedInUsersOnly
     }
 
     /**
-     * We're going to create a directory
+     * We're going to move/rename a directory
      *
-     * @todo
      * @route pages/{string}/renameDir
      */
-    public function renameDir()
+    public function renameDir(string $cabin)
     {
-        $this->lens('pages/dir_move');
+        $path = $this->determinePath($cabin);
+        if (!\is1DArray($_GET)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
+            );
+        }
+        $cabins = $this->getCabinNamespaces();
+        if (!\in_array($cabin, $cabins)) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        if (!$this->can('delete')) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+
+        // Split this up
+        $pieces = \explode('/', $path);
+        $dir = \array_shift($pieces);
+        $path = \implode('/', $pieces);
+
+        try {
+            $dirInfo = $this->pg->getDirInfo($cabin, $path, $dir);
+        } catch (CustomPageNotFoundException $ex) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
+            );
+            return;
+        }
+
+        $post = $this->post();
+        if (!empty($post)) {
+            // CAPTCHA verification and CSRF token both passed
+            if ($this->processMoveDir(
+                    $dirInfo,
+                    $post,
+                    $cabin,
+                    $cabins
+            )) {
+                // Return to the parent directory.
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'),
+                    [
+                        'dir' => $path
+                    ]
+                );
+            }
+        }
+        $this->lens(
+            'pages/dir_move',
+            [
+                'cabins' => $cabins,
+                'custom_dir_tree' => $this->pg->getCustomDirTree(
+                    $cabins,
+                    $dirInfo['parent'] ?? 0,
+                    (int) $dirInfo['directoryid']
+                ),
+                'dirinfo' => $dirInfo,
+                'config' => $this->config(),
+                    // UNTRUSTED, PROVIDED BY THE USER:
+                'parent' => $path,
+                'dir' => $dir,
+                'cabin' => $cabin,
+                'pathinfo' => \Airship\chunk($path)
+            ]
+        );
     }
 
     /**
@@ -754,6 +822,62 @@ class PageManager extends LoggedInUsersOnly
             ]);
         }
         return false;
+    }
+
+    /**
+     * Move/rename a directory.
+     *
+     * @param array $dirInfo
+     * @param array $post
+     * @param string $oldCabin
+     * @param array $cabins
+     * @return bool
+     */
+    protected function processMoveDir(
+        array $dirInfo,
+        array $post = [],
+        string $oldCabin = '',
+        array $cabins = []
+    ): bool {
+        $targetID = (int) $dirInfo['directoryid'];
+
+        if (\is_numeric($post['move_destination'])) {
+            $destination = (int) $post['move_destination'];
+            $newCabin = $this->pg->getCabinForDirectory($destination);
+            $newPieces = $this->pg->getDirectoryPieces($destination);
+            \array_pop($newPieces);
+            $newPieces[] = Util::charWhitelist(
+                $post['url'],
+                Util::NON_DIRECTORY
+            );
+            $newPath = \implode('/', $newPieces);
+        } elseif (!\in_array($post['move_destination'], $cabins)) {
+            // Cabin doesn't exist!
+            return false;
+        } else {
+            $newCabin = $post['move_destination'];
+            $newPath = Util::charWhitelist(
+                $post['url'],
+                Util::NON_DIRECTORY
+            );
+        }
+        if (!empty($post['create_redirect'])) {
+            $old = [
+                'cabin' => $oldCabin,
+                'path' => \implode('/', $this->pg->getDirectoryPieces($targetID))
+            ];
+            $new = [
+                'cabin' => $newCabin,
+                'path' => $newPath
+            ];
+            $this->pg->createRedirectsForMove($old, $new);
+        }
+        return $this->pg->moveDir(
+            $targetID,
+            $post['url'],
+            $destination ?? 0,
+            $newCabin
+        );
     }
 
     /**
