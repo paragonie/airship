@@ -35,6 +35,7 @@ class ConfigFilter extends InputFilterContainer
             ->addFilter('config_extra.file.cache', new IntFilter())
 
             ->addFilter('config_extra.homepage.blog-posts', (new IntFilter())->setDefault(5))
+            ->addFilter('config_extra.cache-secret', (new StringFilter())->setDefault(\Airship\uniqueId(33)))
 
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())

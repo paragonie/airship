@@ -52,31 +52,6 @@ class Blog extends BlueprintGear
     }
 
     /**
-     * Clears the static page cache
-     *
-     * @return bool
-     * @throws CustomPageNotFoundException
-     */
-    public function clearBlogCache(): bool
-    {
-        if (\extension_loaded('apcu')) {
-            return \apcu_clear_cache();
-        }
-        foreach (\Airship\list_all_files(ROOT . '/tmp/cache/static') as $f) {
-            if (\preg_match('#/([0-9a-z]+)$#', $f)) {
-                \unlink($f);
-            }
-        }
-        foreach (\Airship\list_all_files(ROOT . '/tmp/cache/csp_static') as $f) {
-            if (\preg_match('#/([0-9a-z]+)$#', $f)) {
-                \unlink($f);
-            }
-        }
-        \clearstatcache();
-        return true;
-    }
-
-    /**
      * Create a new category
      *
      * @param array $post
@@ -329,7 +304,7 @@ class Blog extends BlueprintGear
             $this->db->rollBack();
             return false;
         }
-        $this->clearBlogCache();
+        \Airship\clear_cache();
         return $this->db->commit();
     }
 
@@ -1256,7 +1231,7 @@ class Blog extends BlueprintGear
             );
         }
         if ($publish) {
-            $this->clearBlogCache();
+            \Airship\clear_cache();
         }
         return $this->db->commit();
     }

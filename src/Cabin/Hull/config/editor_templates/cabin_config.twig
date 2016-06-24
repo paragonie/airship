@@ -228,11 +228,27 @@
         </div>
         <div class="table-cell full-width">
             <input
-                    id="file_cache"
-                    type="text"
-                    name="{{ form_key_config }}[file][cache]"
-                    value="{{ config_extra['file']['cache']|e('html_attr') }}"
+                id="file_cache"
+                type="text"
+                name="{{ form_key_config }}[file][cache]"
+                value="{{ config_extra['file']['cache']|e('html_attr') }}"
             /> (seconds)
+        </div>
+    </div>
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="clear_cache">
+                {{ __("Clear Cache Secret") }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                class="full-width"
+                id="file_cache"
+                type="text"
+                name="{{ form_key_config }}[cache-secret]"
+                value="{{ config_extra['cache-secret']|e('html_attr') }}"
+            />
         </div>
     </div>
     <div class="table-row">

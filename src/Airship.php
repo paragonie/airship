@@ -15,6 +15,7 @@ use \Airship\Engine\{
     State
 };
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\ConstantTime\Binary;
 use \ParagonIE\Halite\{
     Asymmetric\Crypto,
     Asymmetric\SignatureSecretKey,
@@ -156,6 +157,29 @@ function autoload(string $namespace, string $directory): bool
 function chunk(string $str, string $token = '/'): array
 {
     return \explode($token, \trim($str, $token));
+}
+
+/**
+ * Clears all cached data.
+ *
+ * @return bool
+ */
+function clear_cache()
+{
+    if (\extension_loaded('apcu')) {
+        \apcu_clear_cache();
+    }
+    foreach (\Airship\list_all_files(ROOT . '/tmp/cache/static') as $f) {
+        if (\preg_match('#/([0-9a-z]+)$#', $f)) {
+            \unlink($f);
+        }
+    }
+    foreach (\Airship\list_all_files(ROOT . '/tmp/cache/csp_static') as $f) {
+        if (\preg_match('#/([0-9a-z]+)$#', $f)) {
+            \unlink($f);
+        }
+    }
+    \clearstatcache();
 }
 
 /**
@@ -748,5 +772,9 @@ function uniqueId(int $length = 24): string
     }
     $n = (int) ceil($length * 0.75);
     $str = \random_bytes($n);
-    return Base64UrlSafe::encode($str);
+    return Binary::safeSubstr(
+        Base64UrlSafe::encode($str),
+        0,
+        $length
+    );
 }

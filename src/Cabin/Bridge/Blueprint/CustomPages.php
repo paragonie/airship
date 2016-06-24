@@ -25,31 +25,6 @@ class CustomPages extends HullCustomPages
     use Cache;
 
     /**
-     * Clears the static page cache
-     *
-     * @return bool
-     * @throws CustomPageNotFoundException
-     */
-    public function clearPageCache(): bool
-    {
-        if (\extension_loaded('apcu')) {
-            return \apcu_clear_cache();
-        }
-        foreach (\Airship\list_all_files(ROOT.'/tmp/cache/static') as $f) {
-            if (\preg_match('#/([0-9a-z]+)$#', $f)) {
-                \unlink($f);
-            }
-        }
-        foreach (\Airship\list_all_files(ROOT.'/tmp/cache/csp_static') as $f) {
-            if (\preg_match('#/([0-9a-z]+)$#', $f)) {
-                \unlink($f);
-            }
-        }
-        \clearstatcache();
-        return true;
-    }
-
-    /**
      * Create a new page (and initial page version)
      *
      * @param string $cabin
@@ -1182,7 +1157,7 @@ class CustomPages extends HullCustomPages
                     ]
                 );
             }
-            $this->clearPageCache();
+            \Airship\clear_cache();
             return $this->db->commit();
         }
         $meta = !empty($post['metadata'])
@@ -1205,7 +1180,7 @@ class CustomPages extends HullCustomPages
         );
         if ($publish) {
             // Nuke the page cache
-            $this->clearPageCache();
+            \Airship\clear_cache();
         }
         return $this->db->commit();
     }

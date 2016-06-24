@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Cabin\Hull\Blueprint\Blog;
+use Airship\Engine\Continuum\Updaters\Airship;
 use \Airship\Engine\Contract\CacheInterface;
 
 require_once __DIR__.'/init_gear.php';
@@ -47,6 +48,25 @@ class Ajax extends LandingGear
                 'config' => $this->config()
             ]
         );
+    }
+
+    /**
+     * @route ajax/clear_cache{_string}
+     * @param string $key
+     */
+    public function clearCache(string $key)
+    {
+        if (!\hash_equals($this->config('cache-secret'), $key)) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Invalid cache-clearing secret value'
+            ]);
+        }
+        \Airship\clear_cache();
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => 'Cache cleared!'
+        ]);
     }
 
     /**
