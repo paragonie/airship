@@ -41,12 +41,18 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 Airship extensions come in three flavors:
 
-* **Cabins**: entire self-contained applications
-* **Gadgets**: alters the functionality of an existing cabin (or of the
+* **Cabins**: entire self-contained applications -- If you are developing a
+   custom web application, you want to create your own Cabin.
+* **Gadgets**: alters the functionality of an existing Cabin (or of the
   Engine itself)
-* **Motifs**: alters the apperance of an existing cabin
+* **Motifs**: alters the apperance of an existing Cabin
 
 To create and/or manage these extensions, check out 
 [barge, our command line utility](https://github.com/paragonie/airship-barge).
 
+### Screenshot
+
 [![Screenshot](https://i.imgur.com/h40F3eg.png)](https://cspr.ng)
+
+Airship is fully mobile responsive thanks to the [Pure CSS framework](http://purecss.io/).
+See it in action at [CSPR.NG](https://cspr.ng).
