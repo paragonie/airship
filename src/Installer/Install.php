@@ -329,7 +329,7 @@ class Install
             $this->finalConfigDatabases($twigEnv)
         );
         \file_put_contents(
-            ROOT.'/config/gears.json',
+            ROOT.'/config/gadgets.json',
             '[]'
         );
         \file_put_contents(

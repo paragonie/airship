@@ -11,7 +11,7 @@
 /src/Cabin/*/config/gadgets.json
 /src/Cabin/*/config/twig_vars.json
 /src/config/cabins.json
-/src/config/gears.json
+/src/config/gadgets.json
 /src/config/databases.json
 /src/config/keyring/*.skey
 /src/config/keyring/*.keypair

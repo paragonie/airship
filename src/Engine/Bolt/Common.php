@@ -68,4 +68,32 @@ trait Common
         }
         return $cabin;
     }
+
+    /**
+     * some-test-user/cabin--for-the-win =>
+     * Some_Test_User__Cabin_For_The_Win
+     *
+     * @param string $supplier
+     * @param string $cabin
+     * @return string
+     */
+    public function makeNamespace(string $supplier, string $cabin): string
+    {
+        $supplier = \preg_replace('/[^A-Za-z0-9_]/', '_', $supplier);
+        $exp = \explode('_', $supplier);
+        $supplier = \implode('_', \array_map('ucfirst', $exp));
+        $supplier = \preg_replace('/_{2,}/', '_', $supplier);
+
+        $cabin = \preg_replace('/[^A-Za-z0-9_]/', '_', $cabin);
+        $exp = \explode('_', $cabin);
+        $cabin = \implode('_', \array_map('ucfirst', $exp));
+        $cabin = \preg_replace('/_{2,}/', '_', $cabin);
+
+        return \implode('__',
+            [
+                \trim($supplier, '_'),
+                \trim($cabin, '_')
+            ]
+        );
+    }
 }

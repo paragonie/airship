@@ -56,28 +56,6 @@ var skyport = {
         );
     },
 
-    "updatePackage": function(type, supplier, pkg, version) {
-        if (!version) {
-            return;
-        }
-        $.post(
-            skyport.prefix + 'admin/skyport/update',
-            {
-                "type": type,
-                "supplier": supplier,
-                "package": pkg,
-                "version": version
-            },
-            function (response) {
-                if (response.status === 'ERROR') {
-                    alert(response.message);
-                }
-                // Otherwise, we assume we're doing fine.
-                skyport.viewPackage(type, supplier, pkg);
-            }
-        );
-    },
-
     "installPasswordPrompt": function(type, supplier, pkg) {
         var password = prompt("Please enter the password to unlock the Skyport");
         if (!password) {
@@ -138,6 +116,36 @@ var skyport = {
         );
     },
 
+    "removePackage": function(type, supplier, pkg) {
+        var password = arguments[3] || null;
+        $.post(
+            skyport.prefix + 'admin/skyport/remove',
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg,
+                "password": password
+            },
+            function (response) {
+                if (response.status === 'PROMPT') {
+                    return skyport.removePasswordPrompt(type, supplier, pkg);
+                } else if (response.status === 'ERROR') {
+                    alert(response.message);
+                }
+                // Otherwise, we assume we're doing fine.
+                skyport.viewPackage(type, supplier, pkg);
+            }
+        );
+    },
+
+    "removePasswordPrompt": function(type, supplier, pkg) {
+        var password = prompt("Please enter the password to unlock the Skyport");
+        if (!password) {
+            return false;
+        }
+        return skyport.removePackage(type, supplier, pkg, password);
+    },
+
     "setupLeftLinks": function() {
         $(".skyport-left-link").on('click', skyport.handleLeftLink);
         $("#skyport-search").on('change', skyport.handleSearchChange);
@@ -165,6 +173,13 @@ var skyport = {
                 $(this).data('package')
             )
         });
+        $("#skyport-uninstall-button").on('click', function() {
+            skyport.removePackage(
+                $(this).data('type'),
+                $(this).data('supplier'),
+                $(this).data('package')
+            )
+        });
         $("#skyport-upgrade-button").on('click', function() {
             skyport.updatePackage(
                 $(this).data('type'),
@@ -180,6 +195,28 @@ var skyport = {
                 $(this).data('package')
             )
         });
+    },
+
+    "updatePackage": function(type, supplier, pkg, version) {
+        if (!version) {
+            return;
+        }
+        $.post(
+            skyport.prefix + 'admin/skyport/update',
+            {
+                "type": type,
+                "supplier": supplier,
+                "package": pkg,
+                "version": version
+            },
+            function (response) {
+                if (response.status === 'ERROR') {
+                    alert(response.message);
+                }
+                // Otherwise, we assume we're doing fine.
+                skyport.viewPackage(type, supplier, pkg);
+            }
+        );
     },
 
     "viewPackage": function(type, supplier, pkg) {

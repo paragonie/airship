@@ -1880,3 +1880,17 @@ h2#comments {
 .package-buttons li {
     display: inline-block;
 }
+.pure-button-danger {
+    color: #ff6666;
+    transition: color 0.25s;
+}
+.pure-button-danger .fa {
+    color: #ffe08c !important;
+    transition: color 0.25s;
+}
+.pure-button-danger:hover {
+    color: #ff0000;
+}
+.pure-button-danger:hover .fa {
+    color: #ff9933 !important;
+}

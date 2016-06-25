@@ -29,6 +29,17 @@
     </li>
     {% if package.installed %} {# If it's already installed... #}
         <li>
+            <button
+                class="pure-button pure-button-primary pure-button-danger"
+                data-type="{{ package.packagetype|e('html_attr') }}"
+                data-package="{{ package.name|e('html_attr') }}"
+                data-supplier="{{ package.supplier|e('html_attr') }}"
+                id="skyport-uninstall-button"
+            >
+                <i class="fa fa-ban"></i> {{ __("Uninstall") }}
+            </button>
+        </li>
+        <li>
         {% if package.upgrades %} {# Show available upgrades#}
             <select
                 id="skyport-upgrade-version"

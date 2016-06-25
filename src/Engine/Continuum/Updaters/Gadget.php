@@ -189,6 +189,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
             $this->pharAlias
         );
         $newGadget->setAlias($this->pharAlias);
+        $metaData = $newGadget->getMetadata();
 
         // We need to do this while we're replacing files.
         $this->bringSiteDown();
@@ -208,6 +209,9 @@ class Gadget extends AutoUpdater implements ContinuumInterface
 
         // Make sure we update the version info. in the DB cache:
         $this->updateDBRecord('Gadget', $info);
+        if ($metaData) {
+            $this->updateJSON($info, $metaData);
+        }
     }
 
     /**
@@ -221,5 +225,36 @@ class Gadget extends AutoUpdater implements ContinuumInterface
     {
         $this->cabin = [$supplier, $name];
         return $this;
+    }
+
+    /**
+     * Update the version identifier stored in the gadgets.json file
+     *
+     * @param UpdateInfo $info
+     * @param array $metaData
+     */
+    public function updateJSON(UpdateInfo $info, array $metaData = [])
+    {
+        if (!empty($metaData['cabin'])) {
+            $gadgetConfigFile = ROOT .
+                '/Cabin/' .
+                $metaData['cabin'] .
+                '/config/gadgets.json';
+        } else {
+            $gadgetConfigFile = ROOT . '/config/gadgets.json';
+        }
+        $gadgetConfig = \Airship\loadJSON($gadgetConfigFile);
+        foreach ($gadgetConfig as $i => $gadget) {
+            if ($gadget['supplier'] === $info->getSupplierName()) {
+                if ($gadget['name'] === $info->getPackageName()) {
+                    $gadgetConfig[$i]['version'] = $info->getVersion();
+                    break;
+                }
+            }
+        }
+        \file_put_contents(
+            $gadgetConfigFile,
+            \json_encode($gadgetConfig, JSON_PRETTY_PRINT)
+        );
     }
 }

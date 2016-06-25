@@ -4,9 +4,12 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
 use \Airship\Engine\Security\{
+    Filter\GeneralFilterContainer,
+    Filter\StringFilter,
     HiddenString,
     Util
 };
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -279,6 +282,22 @@ class Skyport extends AdminOnly
                 ]);
             }
         }
+        try {
+            $filter = $this->getInputFilter();
+            $_POST = $filter($_POST);
+        } catch (\TypeError $ex) {
+            $this->log(
+                "Input violation",
+                LogLevel::ALERT,
+                \Airship\throwableToArray($ex)
+            );
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => \__(
+                    'Invalid input.'
+                )
+            ]);
+        }
 
         /**
          * @security We need to guarantee RCE isn't possible:
@@ -305,6 +324,73 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * Trigger the package uninstall process.
+     */
+    public function removePackage()
+    {
+        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => \__('Incomplete request.')
+            ]);
+        }
+        if ($this->skyport->isLocked()) {
+            $locked = true;
+            if ($this->skyport->isPasswordLocked() && !empty($_POST['password'])) {
+                $password = new HiddenString($_POST['password']);
+                if ($this->skyport->tryUnlockPassword($password)) {
+                    $_SESSION['airship_install_lock_override'] = true;
+                    $locked = false;
+                }
+                unset($password);
+            }
+            if ($locked) {
+                if ($this->skyport->isPasswordLocked()) {
+                    \Airship\json_response([
+                        'status' => 'PROMPT',
+                        'message' => \__(
+                            'The skyport is locked. To unlock the skyport, please provide the password.'
+                        )
+                    ]);
+                }
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__(
+                        'The skyport is locked. You cannot install packages from the web interface.'
+                    )
+                ]);
+            }
+        }
+
+        try {
+            $filter = $this->getInputFilter();
+            $post = $filter($_POST);
+        } catch (\TypeError $ex) {
+            $this->log(
+                "Input violation",
+                LogLevel::ALERT,
+                \Airship\throwableToArray($ex)
+            );
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Type Error'
+            ]);
+            return;
+        }
+
+        $output = $this->skyport->forceRemoval(
+            $post['type'],
+            $post['supplier'],
+            $post['package']
+        );
+
+        \Airship\json_response([
+            'status' => 'OK',
+            'message' => $output
+        ]);
+    }
+
+    /**
      * Trigger the package install process
      */
     public function updatePackage()
@@ -313,6 +399,23 @@ class Skyport extends AdminOnly
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
+            ]);
+        }
+        try {
+            $filter = $this->getInputFilter();
+            $filter->addFilter('version', new StringFilter());
+            $_POST = $filter($_POST);
+        } catch (\TypeError $ex) {
+            $this->log(
+                "Input violation",
+                LogLevel::ALERT,
+                \Airship\throwableToArray($ex)
+            );
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => \__(
+                    'Invalid input.'
+                )
             ]);
         }
 
@@ -362,5 +465,33 @@ class Skyport extends AdminOnly
             (int) $page,
             (int) ($page - 1) * $this->perPage
         ];
+    }
+
+    /**
+     * A filter for $_POST data
+     *
+     * @return GeneralFilterContainer
+     */
+    protected function getInputFilter(): GeneralFilterContainer
+    {
+        return (new GeneralFilterContainer())
+            ->addFilter(
+                'type',
+                (new StringFilter())->addCallback(
+                    function ($input): string
+                    {
+                        switch ($input) {
+                            case 'Cabin':
+                            case 'Gadget':
+                            case 'Motif':
+                                return $input;
+                            default:
+                                throw new \TypeError();
+                        }
+                    }
+                )
+            )
+            ->addFilter('supplier', new StringFilter())
+            ->addFilter('package', new StringFilter());
     }
 }

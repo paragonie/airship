@@ -5,6 +5,7 @@ use \Airship\Engine\{
     Gears,
     State
 };
+use \GuzzleHttp\Client as HTTPClient;
 
 if (!\defined('ROOT')) {
     require_once __DIR__.'/preload.php';
@@ -18,30 +19,13 @@ if (!\defined('ROOT')) {
  */
 
 /**
- * 1. Load all of the custom gears (if any).
- */
-$gears = \Airship\loadJSON(ROOT . '/config/gears.json');
-foreach ($gears as $gear) {
-
-    $ns = isset($gear['supplier'])
-        ? $gear['supplier'] . '\\' . $gear['name']
-        : $gear['name'];
-
-    // Load the gears first:
-    \Airship\autoload(
-        '\\Airship\\Gears\\' . $ns,
-        '~/Gears/'.\str_replace('\\', '/', $ns)
-    );
-}
-
-/**
- * 2. After loading the gears, we set up the cabins
+ * 1. Set up the cabins.
  */
 require_once ROOT . '/cabins.php';
 \Airship\autoload('\\Airship\\Cabin', '~/Cabin');
 
 /**
- * 3. Let's bootstrap the routes and other configuration
+ * 2. Let's bootstrap the routes and other configuration
  *    for the current cabin (set in cabins.php)
  */
 $active = $state->cabins[$state->active_cabin];
@@ -50,7 +34,7 @@ $state->lang = isset($active['lang'])
     : 'en-us'; // default
 
 /**
- * Defer execution if we are updating this Cabin:
+ * 3. Defer execution if we are updating this Cabin:
  */
 if (!\ISCLI) {
     $cabinFile = \implode(DIRECTORY_SEPARATOR, [
@@ -183,6 +167,6 @@ require_once ROOT."/config/logger.php";
  */
 $hail = Gears::get(
     'Hail',
-    new \GuzzleHttp\Client($state->universal['guzzle'])
+    new HTTPClient($state->universal['guzzle'])
 );
 $state->hail = $hail;

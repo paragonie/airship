@@ -84,6 +84,11 @@ class Gadget extends BaseInstaller
 
         // Move .phar file to its destination.
         if (!empty($metadata['cabin'])) {
+            $gadgetConfigFile = ROOT .
+                '/Cabin/' .
+                $metadata['cabin'] .
+                '/config/gadgets.json';
+
             // Cabin-specific gadget
             $cabin = ROOT . '/Cabin/' . $metadata['cabin'] . '/Gadgets';
             if (!\is_dir($cabin)) {
@@ -98,12 +103,28 @@ class Gadget extends BaseInstaller
                 \mkdir($cabin . '/' . $supplier, 0775);
             }
         } else {
+            $gadgetConfigFile = ROOT . '/config/gadgets.json';
             // Universal gadget. (Probably affects the Engine.)
             $filePath = ROOT . '/Gadgets/' . $supplier . '/' . $fileName;
             if (!\is_dir(ROOT . '/Gadgets/' . $supplier)) {
                 \mkdir(ROOT . '/Gadgets/' . $supplier, 0775);
             }
         }
+
+        $gadgetConfig = \Airship\loadJSON($gadgetConfigFile);
+        $gadgetConfig []= [
+            [
+                'supplier' => $supplier,
+                'name' => $this->package,
+                'version' => $metadata['version'] ?? null,
+                'path' => $filePath,
+                'enabled' => true
+            ]
+        ];
+        \file_put_contents(
+            $gadgetConfigFile,
+            \json_encode($gadgetConfig, JSON_PRETTY_PRINT)
+        );
         \rename($fileInfo->getPath(), $filePath);
 
         // If cabin-specific, add to the cabin's gadget.json

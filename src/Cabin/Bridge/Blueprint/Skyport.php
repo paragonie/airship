@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Blueprint;
 
 use \Airship\Alerts\Hail\NoAPIResponse;
 use \Airship\Engine\{
+    Bolt\Common,
     Continuum\Version,
     Hail,
     Security\HiddenString,
@@ -26,6 +27,8 @@ require_once __DIR__.'/init_gear.php';
  */
 class Skyport extends BlueprintGear
 {
+    use Common;
+
     /**
      * @var string
      */
@@ -101,6 +104,60 @@ class Skyport extends BlueprintGear
         return $count;
     }
 
+
+    /**
+     * Force a package to be removed.
+     *
+     * @param string $type
+     * @param string $supplier
+     * @param string $package
+     * @return string
+     * @throws \Exception
+     */
+    public function forceRemoval(
+        string $type,
+        string $supplier,
+        string $package
+    ): string {
+        $packageInfo = $this->getDetails($type, $supplier, $package);
+        if (empty($packageInfo)) {
+            throw new \Exception(
+                'Package not found!'
+            );
+        }
+        if (!$packageInfo['installed']) {
+            return 'Package is not installed.';
+        }
+        $return = "Package {$supplier}/{$package} ({$type}) found." .
+            " Proceeding with removal.\n";
+
+        switch ($type) {
+            case 'Cabin':
+                $return .= $this->removeCabin($packageInfo);
+                break;
+            case 'Gadget':
+                $return .= $this->removeGadget($packageInfo);
+                break;
+            case 'Motif':
+                $return .= $this->removeMotif($packageInfo);
+                break;
+        }
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_package_cache',
+            [
+                'installed' => false
+            ],
+            [
+                'packageid' => $packageInfo['packageid']
+            ]
+        );
+        if ($this->db->commit()) {
+            $return .= "Removed successfully.";
+        }
+
+        return $return;
+    }
 
     /**
      * @param string $type
@@ -479,5 +536,209 @@ class Skyport extends BlueprintGear
             return [];
         }
         return $response['packageMetadata'];
+    }
+
+    /**
+     * Remove a cabin
+     *
+     * @param array $info
+     * @return string
+     */
+    protected function removeCabin(array $info): string
+    {
+        $ret = '';
+        $cabins = \Airship\loadJSON(ROOT . '/config/cabins.json');
+        $search = $this->makeNamespace($info['supplier'], $info['name']);
+
+        foreach ($cabins as $i => $cabin) {
+            if ($cabin['name'] === $search) {
+                $ret .= "Removed {$search} from config/cabins.json\n";
+                if (\is_link(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $search)) {
+                    \unlink(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $search);
+                }
+                unset($cabins[$i]);
+            }
+        }
+        if (empty($ret)) {
+            return 'Cabin not configured or missing.';
+        }
+
+        $twigEnv = \Airship\configWriter(ROOT . 'config/templates');
+        // Save cabins.json
+        \file_put_contents(
+            ROOT . '/config/cabins.json',
+            $twigEnv->render('cabins.twig', ['cabins' => $cabins])
+        );
+        /**
+         * @security Watch this carefully:
+         */
+        $ret .= \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Cabin/' . $search));
+
+        return $ret;
+    }
+
+    /**
+     * Remove a gadget
+     *
+     * @param array $info
+     * @return string
+     */
+    protected function removeGadget(array $info): string
+    {
+        // Is this in the universal gadgets file?
+        $gadgets = \Airship\loadJSON(ROOT . '/config/gadgets.json');
+        $found = false;
+        foreach ($gadgets as $i => $gadget) {
+            if ($gadget['supplier'] === $info['supplier']) {
+                if ($gadget['name'] === $info['name']) {
+                    $found = true;
+                    \unlink(
+                        \implode(
+                            '/',
+                            [
+                                ROOT,
+                                'Gadgets',
+                                $info['supplier'],
+                                $info['supplier'] . $info['name'] . '.phar'
+                            ]
+                        )
+                    );
+                    unset($gadgets[$i]);
+                    break;
+                }
+            }
+        }
+        if ($found) {
+            \Airship\saveJSON(ROOT . '/config/cabins.json', $gadgets);
+            return "Gadget removed from global configuration.\n";
+        }
+        foreach (\glob(ROOT . '/Cabin/*') as $cabinDir) {
+            if (!\is_dir($cabinDir)) {
+                continue;
+            }
+            $cabin = \Airship\path_to_filename($cabinDir);
+            $gadgets = \Airship\loadJSON(
+                ROOT . '/Cabin/' . $cabin . '/config/gadgets.json'
+            );
+            $found = false;
+            foreach ($gadgets as $i => $gadget) {
+                if ($gadget['supplier'] === $info['supplier']) {
+                    if ($gadget['name'] === $info['name']) {
+                        $found = true;
+                        \unlink(
+                            \implode(
+                                '/',
+                                [
+                                    ROOT,
+                                    'Cabin',
+                                    $cabin,
+                                    'Gadgets',
+                                    $info['supplier'],
+                                    $info['supplier'] . $info['name'] . '.phar'
+                                ]
+                            )
+                        );
+                        unset($gadgets[$i]);
+                        break;
+                    }
+                }
+            }
+            if ($found) {
+                \Airship\saveJSON(ROOT . '/config/cabins.json', $gadgets);
+                return "Gadget removed.\n";
+            }
+        }
+        return "Gadget not found in any configuration.\n";
+    }
+
+    /**
+     * Remove a motif
+     *
+     * @param array $info
+     * @return string
+     */
+    protected function removeMotif(array $info): string
+    {
+        $ret = '';
+        foreach (\glob(ROOT . '/Cabin/*') as $cabinDir) {
+            if (!\is_dir($cabinDir)) {
+                continue;
+            }
+            $cabin = \Airship\path_to_filename($cabinDir);
+
+            // The cache file has a combined
+            $pathInfo = $this->getMotifPath($cabin, $info);
+            if (empty($pathInfo)) {
+                continue;
+            }
+            $ret .= "\tRemoving motif from {$cabin}.\n";
+            list ($key, $path) = $pathInfo;
+            $this->deleteMotifFromCabin($cabin, $key);
+            if (\is_dir(ROOT . '/Motifs/' . $path)) {
+                $ret .= \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Motifs/' . $path));
+                \clearstatcache();
+            }
+            if (\is_link(ROOT . '/Cabin/' . $cabin . '/Lens/motif/' . $key)) {
+                \unlink(ROOT . '/Cabin/' . $cabin . '/Lens/motif/' . $key);
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param string $cabin
+     * @param string $key
+     */
+    protected function deleteMotifFromCabin(string $cabin, string $key)
+    {
+        $filename = ROOT . '/Cabin/' . $cabin . '/config/motifs.json';
+        $motifs = \Airship\loadJSON($filename);
+        if (isset($motifs[$key])) {
+            unset($motifs[$key]);
+            \Airship\saveJSON($filename, $motifs);
+        }
+    }
+
+    /**
+     * Locate the path that hosts the motif
+     *
+     * @param string $cabin
+     * @param array $info
+     * @return string[]
+     */
+    protected function getMotifPath(string $cabin, array $info): array
+    {
+        if (\file_exists(ROOT . '/tmp/' . $cabin . '.motifs.json')) {
+            $motifs = \Airship\loadJSON(
+                ROOT . '/tmp/' . $cabin . '.motifs.json'
+            );
+            foreach ($motifs as $i => $motif) {
+                if ($motif['config']['supplier'] === $info['supplier']) {
+                    if ($motif['config']['name'] === $info['name']) {
+                        return [
+                            $i,
+                            ROOT . '/Motifs/' . $motif['path']
+                        ];
+                    }
+                }
+            }
+        } elseif (\file_exists(ROOT . '/Cabin/' . $cabin . '/config/motifs.json')) {
+            $motifs = \Airship\loadJSON(ROOT . '/Cabin/' . $cabin . '/config/motifs.json');
+            foreach ($motifs as $path => $motifConfig) {
+                if (!\file_exists(ROOT . '/Motif/' . $motifConfig['path'] . '/motif.json')) {
+                    continue;
+                }
+                $config = \Airship\loadJSON(ROOT . '/Motif/' . $motifConfig['path'] . '/motif.json');
+                if ($config['supplier'] === $info['supplier']) {
+                    if ($config['name'] === $info['name']) {
+                        return [
+                            $motifConfig['path'],
+                            ROOT . '/Motifs/' . $path
+                        ];
+                    }
+                }
+            }
+        }
+        return [];
     }
 }

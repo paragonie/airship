@@ -190,8 +190,6 @@ class Admin extends AdminOnly
             $this->loadJSONConfigFile('cabins.json');
         $settings['content_security_policy'] =
             $this->loadJSONConfigFile('content_security_policy.json');
-        $settings['gears'] =
-            $this->loadJSONConfigFile('gears.json');
         $settings['keyring'] =
             $this->loadJSONConfigFile('keyring.json');
 
