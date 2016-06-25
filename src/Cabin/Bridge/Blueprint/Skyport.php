@@ -708,29 +708,11 @@ class Skyport extends BlueprintGear
      */
     protected function getMotifPath(string $cabin, array $info): array
     {
-        if (\file_exists(ROOT . '/tmp/' . $cabin . '.motifs.json')) {
-            $motifs = \Airship\loadJSON(
-                ROOT . '/tmp/' . $cabin . '.motifs.json'
-            );
-            foreach ($motifs as $i => $motif) {
-                if ($motif['config']['supplier'] === $info['supplier']) {
-                    if ($motif['config']['name'] === $info['name']) {
-                        return [
-                            $i,
-                            ROOT . '/Motifs/' . $motif['path']
-                        ];
-                    }
-                }
-            }
-        } elseif (\file_exists(ROOT . '/Cabin/' . $cabin . '/config/motifs.json')) {
+        if (\file_exists(ROOT . '/Cabin/' . $cabin . '/config/motifs.json')) {
             $motifs = \Airship\loadJSON(ROOT . '/Cabin/' . $cabin . '/config/motifs.json');
             foreach ($motifs as $path => $motifConfig) {
-                if (!\file_exists(ROOT . '/Motif/' . $motifConfig['path'] . '/motif.json')) {
-                    continue;
-                }
-                $config = \Airship\loadJSON(ROOT . '/Motif/' . $motifConfig['path'] . '/motif.json');
-                if ($config['supplier'] === $info['supplier']) {
-                    if ($config['name'] === $info['name']) {
+                if ($motifConfig['supplier'] === $info['supplier']) {
+                    if ($motifConfig['name'] === $info['name']) {
                         return [
                             $motifConfig['path'],
                             ROOT . '/Motifs/' . $path

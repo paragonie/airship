@@ -40,6 +40,12 @@ class Motif extends BaseInstaller
         }
 
         $config[$name] = [
+            'enabled' =>
+                true,
+            'supplier' =>
+                $supplier,
+            'name' =>
+                $this->package,
             'path' =>
                 $supplier . '/' . $this->package
         ];
