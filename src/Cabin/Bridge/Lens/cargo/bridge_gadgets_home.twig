@@ -1,1 +1,33 @@
-Gadgets
+<h2>{{ __("Gadgets") }}</h2>
+<p>
+    {{ __(
+        "Gadgets are prepackaged upgrades for your Airship. " ~
+        "You can browse and install gadgets from the Skyport. " ~
+        "Gadgets come in two flavors:"
+    ) }}
+</p>
+<ol>
+    <li>{{ __("Universal Gadgets") }}</li>
+    <li>{{ __("Cabin-specific Gadgets") }}</li>
+</ol>
+
+<h3>{{ __("Manage Installed Gadgets") }}</h3>
+<ul>
+    <li>
+        <a href="{{ cabin_url() }}gadgets/universal">
+            {{ __("Universal Gadgets") }}
+        </a>
+    </li>
+    <li>
+        {{ __("Manage Gadgets for a specific Cabin") }}
+        <ul>
+            {% for cabin in cabins %}
+                <li>
+                    <a href="{{ cabin_url() }}gadgets/cabin/{{ cabin|e('url') }}">
+                        {{ __("Gadgets for <b>%s</b>", "default", cabin) }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>

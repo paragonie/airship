@@ -1,1 +1,18 @@
-Motif management
+<h2>{{ __("Motifs") }}</h2>
+<p>
+    {{ __(
+    "Motifs change the way your Airship looks and feels. " ~
+    "You can browse and install motifs from the Skyport. "
+    ) }}
+</p>
+
+<h3>{{ __("Manage Installed Motifs") }}</h3>
+<ul>
+    {% for cabin in cabins %}
+        <li>
+            <a href="{{ cabin_url() }}motifs/{{ cabin|e('url') }}">
+                {{ __("Motifs for <b>%s</b>", "default", cabin) }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

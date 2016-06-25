@@ -15,13 +15,30 @@ class Gadgets extends LoggedInUsersOnly
      */
     public function index()
     {
-        $this->lens('gadgets');
+        $this->lens(
+            'gadgets',
+            [
+                'cabins' => $this->getCabinNames()
+            ]
+        );
     }
 
     /**
      * @param string $cabinName
+     * @route gadgets/cabin/{string}
      */
-    public function manage(string $cabinName = '')
+    public function manageForCabin(string $cabinName = '')
+    {
+        $cabins = $this->getCabinNames();
+
+        $this->lens('gadget_manage');
+    }
+
+    /**
+     * @param string $cabinName
+     * @route gadgets/universal
+     */
+    public function manageUniversal(string $cabinName = '')
     {
         $this->lens('gadget_manage');
     }

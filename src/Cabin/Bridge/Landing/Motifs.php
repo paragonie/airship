@@ -15,11 +15,16 @@ class Motifs extends AdminOnly
      */
     public function index()
     {
-        $this->lens('motifs');
+        $this->lens(
+            'motifs',
+            [
+                'cabins' => $this->getCabinNames()
+            ]
+        );
     }
 
     /**
-     * @route motifs/manage/{string}
+     * @route motifs/{string}
      *
      * @param string $cabinName
      */

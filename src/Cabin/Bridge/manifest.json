@@ -163,20 +163,19 @@
         "forgot\\-password":
             ["Account", "recoverAccount"],
 
+        "gadgets/cabin/{string}":
+            ["Gadgets", "manageForCabin"],
+        "gadgets/universal":
+            ["Gadgets", "manageUniversal"],
         "gadgets":
             ["Gadgets", "index"],
-
-        /*
-        "gears":
-            ["Gears", "index"],
-        */
 
         "login":
             ["Account", "login"],
         "logout/(.*)":
             ["Account", "logout"],
 
-        "motifs/manage/{string}":
+        "motifs/{string}":
             ["Motifs", "manage"],
         "motifs":
             ["Motifs"],
