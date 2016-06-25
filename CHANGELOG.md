@@ -1,6 +1,9 @@
 ## Version 1.0.0 - 2016-06-??
 
   * You can now move or rename directories in our custom page system.
+  * Added an AJAX endpoint for clearing the cache remotely.
+  * Fixed Javascript race conditions that prevented the rich text editor from
+    loading reliably.
 
 ## Version 0.3.0 - 2016-06-21
 
