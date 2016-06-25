@@ -840,12 +840,15 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
         $userId = \Airship\LensFunctions\userid();
         if (empty($userId)) {
             $k = \array_keys($state->motifs)[0];
-            return $state->motifs[$k];
+            return $state->motifs[$k] ?? [];
         }
     }
     // Did we cache these preferences?
     if (isset($userCache[$userId])) {
         return $state->motifs[$userCache[$userId]];
+    }
+    if (count($state->motifs) === 0) {
+        return [];
     }
 
     $db = \Airship\get_database();
@@ -859,7 +862,7 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
         // Default
         $k = \array_keys($state->motifs)[0];
         $userCache[$userId] = $k;
-        return $state->motifs[$k];
+        return $state->motifs[$k] ?? [];
     }
 
     $userPrefs = \Airship\parseJSON($userPrefs, true);
@@ -881,7 +884,7 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
     // When all else fails, go with the first one
     $k = \array_keys($state->motifs)[0];
     $userCache[$userId] = $k;
-    return $state->motifs[$k];
+    return $state->motifs[$k] ?? [];
 }
 
 /**

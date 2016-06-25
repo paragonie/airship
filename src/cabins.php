@@ -110,14 +110,16 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
             $cabin['data'] = null;
         }
         if (empty($active_cabin) && $ap::isActiveCabinKey($key)) {
-            $state->active_cabin = $key;
             if ($cabin['enabled']) {
+                $active_cabin = $key;
+            } else {
                 $cabinDisabled = true;
             }
         }
         $cabins[$key] = $cabin;
     }
-    if (empty($cabinDisabled)) {
+
+    if ($cabinDisabled) {
         \header('HTTP/1.1 404 Not Found');
         echo \file_get_contents(
             __DIR__ . '/no-cabin.html'

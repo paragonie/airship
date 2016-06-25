@@ -34,6 +34,9 @@ if (\defined('CABIN_DIR') && \file_exists(ROOT.'/tmp/cache/' . CABIN_NAME . '.mo
 
         // Parse a particular motif:
         foreach ($motifsJSONData as $motif => $motifConfig) {
+            if (empty($motifConfig['enabled'])) {
+                continue;
+            }
             if (isset($motifConfig['path'])) {
                 $motifStart = CABIN_DIR . '/Lens/motif/' . $motif;
                 $motifEnd = ROOT . '/Motifs/' . $motifConfig['path'];

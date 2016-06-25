@@ -179,6 +179,9 @@ function clear_cache()
             \unlink($f);
         }
     }
+    foreach (\glob(ROOT . '/tmp/cache/*.json') as $file) {
+        \unlink($file);
+    }
     \clearstatcache();
 }
 
