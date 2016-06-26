@@ -2,6 +2,8 @@ CREATE TABLE airship_user_preferences (
     preferenceid BIGSERIAL PRIMARY KEY,
     userid BIGINT REFERENCES airship_users (userid),
     preferences JSONB NULL,
+    publicprofile BOOLEAN DEFAULT FALSE,
+    directoryinfo JSONB NULL,
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
