@@ -8,6 +8,9 @@
   * Cabins, Motifs, and Gadgets can now be uninstalled.
   * Added a help/support page that displays system information (for privileged
     users only) and links to the documentation and this Github repository.
+  * Administrators can post announcements which show up on the Bridge dashboard
+    when users log in. Once a user has read an announcement, they may dismiss
+    the message.
 
 ## Version 0.3.0 - 2016-06-21
 
