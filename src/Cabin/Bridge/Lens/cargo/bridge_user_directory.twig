@@ -7,7 +7,7 @@
     </div>
     {% for entry in directory %}
         <div class="user-directory-row table-row">
-            <div class="table-cell">
+            <div class="table-cell table-min-width table-pad-right">
                 <code title="{{ __("Public ID")|e('html_attr') }}" class="public-id">
                     <i class="fa fa-street-view"></i>{{ entry.uniqueid }}
                 </code>

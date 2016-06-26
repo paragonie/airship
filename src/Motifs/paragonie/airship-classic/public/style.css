@@ -1926,3 +1926,44 @@ h2#comments {
 .vertical-top {
     vertical-align: top;
 }
+#user-directory {
+    background-image: -webkit-linear-gradient(
+            top,
+            rgb(153, 153, 153) 0%,
+            rgb(204, 204, 204) 100%
+    );
+    background-image: -moz-linear-gradient(
+            top,
+            rgb(153, 153, 153) 0%,
+            rgb(204, 204, 204) 100%
+    );
+    background-image: -ms-linear-gradient(
+            top,
+            rgb(153, 153, 153) 0%,
+            rgb(204, 204, 204) 100%
+    );
+    background-image: -o-linear-gradient(
+            top,
+            rgb(153, 153, 153) 0%,
+            rgb(204, 204, 204) 100%
+    );
+    background-image: linear-gradient(
+            top,
+            rgb(153, 153, 153) 0%,
+            rgb(204, 204, 204) 100%
+    );
+    border: 1px solid #000;
+    margin: 1ex;
+}
+#user-directory .table-header .table-cell {
+    background-color: #333;
+    border-style: solid;
+    border-color: #000;
+    border-width: 0 0 1px 0;
+    color: #eee;
+    font-weight: bold;
+    padding: 2px;
+}
+#user-directory .table-row:nth-child(2n + 1) {
+    background-color: rgba(255, 255, 255, 0.2);
+}

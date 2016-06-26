@@ -1,8 +1,8 @@
 {
-  "airship-classic": {
-    "supplier": "paragonie",
-    "name": "airship-classic",
-    "enabled": true,
-    "path": "paragonie/airship-classic"
-  }
+    "airship-classic": {
+        "supplier": "paragonie",
+        "name": "airship-classic",
+        "enabled": true,
+        "path": "paragonie\/airship-classic"
+    }
 }
