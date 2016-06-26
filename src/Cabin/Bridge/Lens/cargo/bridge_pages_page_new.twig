@@ -41,7 +41,11 @@
                 Page Format:
             </label>
             <div class="table-cell">
-                {% include cargo("bridge_pages_select_format") %}
+                {% include cargo("bridge_pages_select_format") with {
+                    "format": _POST.format|default(
+                        cabin_config('editor.default-format')|default('Rich Text')
+                    )
+                } %}
             </div>
         </div>
     </div>

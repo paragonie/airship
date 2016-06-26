@@ -1,5 +1,5 @@
 {% extends base_template() %}
-{% set title = (__("Error ") ~ error)|e('html_attr') %}
+{% set title = (__("Error ") ~ error) %}
 
 {% block main %}
     <h2 class="bottom-pad">{{ error|e('html_attr') }}</h2>

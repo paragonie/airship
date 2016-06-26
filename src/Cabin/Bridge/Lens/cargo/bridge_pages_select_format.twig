@@ -1,6 +1,14 @@
 <select title="{{ __("Format")|e('html_attr') }}" name="format" id="format"{% if readonly %} readonly="readonly" disabled="disabled"{% endif %}>
-    <option {% if format == "HTML"  %} selected{% endif %} value="HTML">HTML</option>
-    <option {% if format == "Markdown"  %} selected{% endif %} value="Markdown">Markdown</option>
-    <option {% if format == "Rich Text"  %} selected{% endif %} value="Rich Text">Rich Text</option>
-    <option {% if format == "RST"  %} selected{% endif %} value="RST">ReStructuredText</option>
+    <option {% if format == "HTML"  %} selected{% endif %} value="HTML">
+        {{ __("HTML") }}
+    </option>
+    <option {% if format == "Markdown"  %} selected{% endif %} value="Markdown">
+        {{ __("Markdown") }}
+    </option>
+    <option {% if format == "Rich Text"  %} selected{% endif %} value="Rich Text">
+        {{ __("Rich Text (WYSIWYG)") }}
+    </option>
+    <option {% if format == "RST"  %} selected{% endif %} value="RST">
+        {{ __("ReStructuredText") }}
+    </option>
 </select>

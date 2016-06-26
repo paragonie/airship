@@ -38,7 +38,11 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
         $expectedOutput = [
             'config_extra' => [
                 'board' => [
-                    'enabled' => true],
+                    'enabled' => true
+                ],
+                'editor' => [
+                    'default-format' => 'Rich Text'
+                ],
                 'file' => [
                     'cache' => 900
                 ],

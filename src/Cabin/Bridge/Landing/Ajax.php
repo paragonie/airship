@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Alerts\CabinNotFound;
 use \Airship\Cabin\Bridge\Blueprint\{
+    Announcements,
     Author,
     Blog,
     Files,
@@ -19,6 +20,39 @@ require_once __DIR__.'/init_gear.php';
  */
 class Ajax extends LoggedInUsersOnly
 {
+    /**
+     * @route announcement/dismiss
+     */
+    public function dismissAnnouncement()
+    {
+        $announce_bp = $this->blueprint('Announcements');
+        if (IDE_HACKS) {
+            $db = \Airship\get_database();
+            $announce_bp = new Announcements($db);
+        }
+
+        if (empty($_POST['dismiss'])) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Insufficient parameters'
+            ]);
+        }
+        $result = $announce_bp->dismissForUser(
+            $this->getActiveUserId(),
+            $_POST['dismiss']
+        );
+        if ($result) {
+            \Airship\json_response([
+                'status' => 'OK',
+                'message' => ''
+            ]);
+        }
+        \Airship\json_response([
+            'status' => 'ERROR',
+            'message' => 'An unknown error has occurred.'
+        ]);
+    }
+
     /**
      * @route ajax/authors_get_photo
      */

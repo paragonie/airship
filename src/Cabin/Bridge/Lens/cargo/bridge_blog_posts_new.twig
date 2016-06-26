@@ -60,7 +60,9 @@
             <label class="table-cell" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {
-                    "format": _POST.format|default("Markdown")
+                    "format": _POST.format|default(
+                        cabin_config('editor.default-format')|default('Rich Text')
+                    )
                 } %}
             </div>
         </div>

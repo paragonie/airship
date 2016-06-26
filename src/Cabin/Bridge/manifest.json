@@ -56,6 +56,11 @@
         "ajax/rich_text_preview":
             ["Ajax", "richTextPreview"],
 
+        "announcement/dismiss":
+            ["Ajax", "dismissAnnouncement"],
+        "announce":
+            ["IndexPage", "announce"],
+
         "author/files/{id}/{string}/info":
             ["AuthorFiles", "getFileInfo"],
         "author/files/{id}/{string}/move":

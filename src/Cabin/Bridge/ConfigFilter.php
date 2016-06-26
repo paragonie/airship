@@ -26,6 +26,24 @@ class ConfigFilter extends InputFilterContainer
 
         /* config_extra */
             ->addFilter('config_extra.board.enabled', new BoolFilter())
+            ->addFilter(
+                'config_extra.editor.default-format',
+                (new StringFilter())
+                    ->setDefault('Rich Text')
+                    ->addCallback(
+                        function ($choice): string {
+                            switch ($choice) {
+                                case 'HTML':
+                                case 'Markdown':
+                                case 'Rich Text':
+                                case 'RST':
+                                    return $choice;
+                                default:
+                                    return 'Rich Text';
+                            }
+                        }
+                    )
+            )
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())
             ->addFilter('config_extra.password-reset.enabled', new BoolFilter())

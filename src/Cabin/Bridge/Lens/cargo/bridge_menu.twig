@@ -1,5 +1,12 @@
 <ul class="bridge-menu" id="bridge_main_menu_left" data-linkprefix="{{ cabin_url() }}">
     <li class="bridge-main-link"><a href="{{ cabin_url() }}">The Bridge</a></li>
+    {% if can_create("announce") %}
+        <li>
+            <a href="{{ cabin_url() }}announce" title="{{ __("Announce something to your Crew.")|e('html_attr') }}">
+                <i class="fa fa-bullhorn bridge-icon"></i>{{ __("Announce") }}
+            </a>
+        </li>
+    {% endif %}
     <li>
         <a href="{{ cabin_url() }}my/account">
             <i class="fa fa-gear bridge-icon"></i>{{  __("My Account") }}

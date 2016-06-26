@@ -1,0 +1,32 @@
+<h3 class="bottom-pad">{{ __("Announcements") }}</h3>
+{% if announcements %}
+    <div
+        id="announcements"
+        data-noentries="{{ __("No announcements.")|e('html_attr') }}"
+    >
+    {% for i, announce in announcements %}
+        <div
+            class="announcement"
+            id="announce-{{ announce['uniqueid']|e('html_attr') }}"
+        >
+            <h4>
+                {{ announce.title }}
+                <a class="announce-dismiss" data-id="{{ announce['uniqueid']|e('html_attr') }}">
+                    <i class="fa fa-close"></i>{{ __("Dismiss") }}
+                </a>
+            </h4>
+            <div class="announce-body">
+                {% if announce.format == 'Markdown' %}
+                    {{ announce.contents|CleanMarkdown }}
+                {% elseif announce.format == 'RST' %}
+                    {{ announce.contents|CleanRST }}
+                {% else %}
+                    {{ announce.contents|purify }}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <em>{{ __("No announcements.") }}</em>
+{% endif %}

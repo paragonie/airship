@@ -2,11 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use Airship\Cabin\Bridge\Blueprint\Author;
-use Airship\Cabin\Bridge\Blueprint\Blog;
-use Airship\Cabin\Bridge\Blueprint\CustomPages;
-use Airship\Engine\State;
-use ParagonIE\Halite\Halite;
+use \Airship\Cabin\Bridge\Blueprint\{
+    Announcements,
+    Author,
+    Blog,
+    CustomPages
+};
+use \Airship\Engine\State;
+use \ParagonIE\Halite\Halite;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -17,18 +20,44 @@ require_once __DIR__.'/init_gear.php';
 class IndexPage extends LandingGear
 {
     /**
+     * @route announce
+     */
+    public function announce()
+    {
+        if (!$this->isLoggedIn())  {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        if (!$this->can('create')) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        $announce_bp = $this->blueprint('Announcements');
+        if (IDE_HACKS) {
+            $announce_bp = new Announcements();
+        }
+
+        $post = $this->post();
+        if ($post) {
+            if ($announce_bp->createAnnouncement($post)) {
+                \Airship\redirect($this->airship_cabin_prefix);
+            }
+        }
+        $this->lens('announce');
+    }
+
+    /**
      * @route /
      */
     public function index()
     {
         if ($this->isLoggedIn())  {
             $author_bp = $this->blueprint('Author');
+            $announce_bp = $this->blueprint('Announcements');
             $blog_bp = $this->blueprint('Blog');
-            # $user_bp = $this->blueprint('UserAccounts');
             $page_bp = $this->blueprint('CustomPages');
             if (IDE_HACKS) {
                 $db = \Airship\get_database();
                 $author_bp = new Author($db);
+                $announce_bp = new Announcements($db);
                 $blog_bp = new Blog($db);
                 $page_bp = new CustomPages($db);
             }
@@ -43,7 +72,11 @@ class IndexPage extends LandingGear
                         $page_bp->numCustomPages(true),
                     'num_posts' =>
                         $blog_bp->numPosts(true)
-                ]
+                ],
+                'announcements' =>
+                    $announce_bp->getForUser(
+                        $this->getActiveUserId()
+                    )
             ]);
         } else {
             $this->lens('login');

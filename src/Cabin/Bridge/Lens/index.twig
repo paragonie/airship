@@ -3,3 +3,8 @@
 {% block main %}
     {% include cargo("bridge_home") ignore missing %}
 {% endblock %}
+
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/index.js"|cachebust }}"></script>
+{% endblock %}

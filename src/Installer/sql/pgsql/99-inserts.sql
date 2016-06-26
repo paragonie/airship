@@ -42,7 +42,8 @@ INSERT INTO airship_perm_contexts (contextid, cabin, locator) VALUES
     (20, 'Hull', '/'),
     (21, 'Bridge', 'blog'),
     (22, 'Bridge', 'cabin/([^/]+)'),
-    (23, 'Bridge', 'cabins/manage');
+    (23, 'Bridge', 'cabins/manage')
+    (24, 'Bridge', 'announcement/dismiss');
 
 INSERT INTO airship_perm_rules (context, groupid, action) VALUES
     (1, 1, 7),
@@ -132,7 +133,8 @@ INSERT INTO airship_perm_rules (context, groupid, action) VALUES
         (20, 5, 10),
     (21, 2, 1),
     (22, 2, 1),
-    (23, 6, 1);
+    (23, 6, 1),
+    (24, 2, 1);
 
 INSERT INTO hull_blog_authors (authorid, name, slug) VALUES
     (1, 'Captain', 'captain');

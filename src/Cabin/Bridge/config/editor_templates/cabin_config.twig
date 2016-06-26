@@ -60,6 +60,47 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="editor_default">
+                {{ __("Default Format")|e('html') }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <select
+                class="full-width"
+                id="editor_default"
+                name="{{ form_key_config }}[editor][default-format]"
+            >
+                <option
+                    value="HTML"
+                    {% if config_extra['editor']['default-format'] == 'HTML' %}
+                        selected="selected"
+                    {% endif %}
+                >{{ __("Raw HTML") }}</option>
+                <option
+                    value="Markdown"
+                    {% if config_extra['editor']['default-format'] == 'Markdown' %}
+                        selected="selected"
+                    {% endif %}
+                >{{ __("Markdown") }}</option>
+                <option
+                    value="Markdown"
+                    {% if config_extra['editor']['default-format'] == 'Rich Text' or not config_extra['editor']['default-format'] %}
+                        selected="selected"
+                    {% endif %}
+                >{{ __("Rich Text (WYSIWYG)") }}</option>
+                <option
+                    value="RST"
+                    {% if config_extra['editor']['default-format'] == 'RST' %}
+                        selected="selected"
+                    {% endif %}
+                >{{ __("ReStructuredText") }}</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
             {{ __("Registration:")|e('html') }}
         </div>
         <div class="table-cell full-width">

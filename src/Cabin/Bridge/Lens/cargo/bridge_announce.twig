@@ -1,0 +1,58 @@
+<h2 class="bottom-pad">{{ __("New Announcement") }}</h2>
+<form method="post">{{ form_token() }}
+    <div class="table full-width">
+        <div class="table-row">
+            <div class="table-min-width table-cell table-pad-right text-right">
+                <label for="announce-title">{#
+                    #}{{ __("Title") }}{#
+                #}</label>:
+            </div>
+            <div class="full-width table-cell">
+                <input
+                    class="full-width"
+                    id="announce-title"
+                    name="title"
+                    type="text"
+                />
+                <br />
+                <input
+                    type="checkbox"
+                    id="only_admins"
+                    name="only_admins"
+                    value="1"
+                />
+                <label for="only_admins">
+                    {{ __("Only display this announcment to administrator users?") }}
+                </label>
+            </div>
+        </div>
+
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="format">{{ __("Post Format") }}:</label>
+        </div>
+        <div class="table-cell bottom-extra-pad">
+            {% include cargo("bridge_pages_select_format") with {
+                "format": _POST.format|default(
+                    cabin_config('editor.default-format')|default('Rich Text')
+                )
+            } %}
+        </div>
+    </div>
+
+    <div class="bridge_announce_body_wrapper">
+        {% include cargo("rich_text_editor") with {
+            "contents": _POST.contents|default(""),
+            "name": "contents",
+            "placeholder": ""
+        } %}
+    </div>
+
+    <hr />
+
+    <div>
+        <button type="submit" class="pure-button pure-button-primary">
+            <i class="fa fa-bullhorn"></i>
+            {{ __("Post Announcement") }}
+        </button>
+    </div>
+</form>
