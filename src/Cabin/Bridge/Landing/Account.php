@@ -225,6 +225,31 @@ class Account extends LandingGear
     }
 
     /**
+     * A directory of public users
+     *
+     * @param string $page
+     * @route users{_page}
+     */
+    public function publicDirectory(string $page = '')
+    {
+        list($offset, $limit) = $this->getOffsetAndLimit($page);
+        $directory = $this->acct->getDirectory($offset, $limit);
+        $this->lens(
+            'user_directory',
+            [
+                'directory' => $directory,
+                'pagination' => [
+                    'base' => $this->airship_cabin_prefix . '/users',
+                    'suffix' => '/',
+                    'count' => $this->acct->countPublicUsers(),
+                    'page' => (int) \ceil($offset / ($limit ?? 1)) + 1,
+                    'per_page' => $limit
+                ]
+            ]
+        );
+    }
+
+    /**
      * @route recover-account
      * @param string $token
      */
@@ -846,5 +871,24 @@ class Account extends LandingGear
                 $this->config('two-factor.length') ?? 6
             )
         );
+    }
+
+    /**
+     * Gets [offset, limit] based on configuration
+     *
+     * @param string $page
+     * @param int $per_page
+     * @return int[]
+     */
+    protected function getOffsetAndLimit($page = null, int $per_page = 0)
+    {
+        if ($per_page === 0) {
+            $per_page = $this->config('user-directory.per-page') ?? 20;
+        }
+        $page = (int) (!empty($page) ? $page : ($_GET['page'] ?? 0));
+        if ($page < 1) {
+            $page = 1;
+        }
+        return [($page - 1) * $per_page, $per_page];
     }
 }

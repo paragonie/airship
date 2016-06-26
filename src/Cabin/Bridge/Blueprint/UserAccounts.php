@@ -35,6 +35,19 @@ class UserAccounts extends BlueprintGear
     const RECOVERY_CHAR_LENGTH = (self::RECOVERY_SELECTOR_BYTES * 4 / 3) + (self::RECOVERY_TOKEN_BYTES * 4 / 3);
 
     /**
+     * Get the number of users with a public profile.
+     *
+     * @return int
+     */
+    public function countPublicUsers(): int
+    {
+        $num = $this->db->cell(
+            'SELECT count(*) FROM airship_users WHERE publicprofile'
+        );
+        return (int) $num;
+    }
+
+    /**
      * Create a new user group
      *
      * @param array $post
@@ -267,6 +280,32 @@ class UserAccounts extends BlueprintGear
             ]
         );
         return $this->db->commit();
+    }
+
+    /**
+     * Get the user directory.
+     *
+     * @param int $offset
+     * @param int $limit
+     * @return array
+     */
+    public function getDirectory(int $offset = 0, int $limit = 20): array
+    {
+        $rows = $this->db->run(
+            'SELECT
+                 uniqueid,
+                 display_name
+             FROM
+                 airship_users
+             WHERE
+                 publicprofile
+             ORDER BY display_name ASC, uniqueid ASC
+             OFFSET ' . $offset . ' LIMIT ' . $limit
+        );
+        if (empty($rows)) {
+            return [];
+        }
+        return $rows;
     }
 
     /**

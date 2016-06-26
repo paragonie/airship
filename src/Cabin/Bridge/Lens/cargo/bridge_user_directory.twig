@@ -1,0 +1,28 @@
+<h2>{{ __("User Directory") }}</h2>
+
+<div id="user-directory" class="table full-width">
+    <div class="user-directory-row table-row table-header">
+        <div class="table-cell">{{ __("Public ID") }}</div>
+        <div class="table-cell">{{ __("Display Name") }}</div>
+    </div>
+    {% for entry in directory %}
+        <div class="user-directory-row table-row">
+            <div class="table-cell">
+                <code title="{{ __("Public ID")|e('html_attr') }}" class="public-id">
+                    <i class="fa fa-street-view"></i>{{ entry.uniqueid }}
+                </code>
+            </div>
+            <div class="table-cell">
+                {% if entry['display_name'] %}
+                    {{ entry['display_name']|e('html_attr') }}
+                {% else %}
+                    &mdash;
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div id="bridge_user_pagination">
+    {% include cargo("bridge_user_pagination") %}
+</div>

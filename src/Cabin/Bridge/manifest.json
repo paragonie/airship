@@ -242,6 +242,9 @@
         "redirects":
             ["Redirects", "index"],
 
+        "users{_page}":
+            ["Account", "publicDirectory"],
+
         "":
             ["IndexPage", "index"]
     },

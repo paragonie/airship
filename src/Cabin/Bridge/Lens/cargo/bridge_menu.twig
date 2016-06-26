@@ -184,6 +184,28 @@
             </ul>
         </li>
     {% endif %}
+    <li>
+        <a href="{{ cabin_url() }}help">
+            <i class="fa fa-question-circle bridge-icon"></i>{{  __("Help / Support") }}
+        </a>
+        <ul>
+            <li>
+                <a href="https://github.com/paragonie/airship-docs">
+                    <i class="fa fa-book bridge-icon"></i>{{  __("Documentation") }}
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/paragonie/airship/issues">
+                    <i class="fa fa-bug bridge-icon"></i>{{  __("Report a Bug") }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="{{ cabin_url() }}users">
+            <i class="fa fa-street-view bridge-icon"></i>{{  __("User Directory") }}
+        </a>
+    </li>
     {% if can_read("my/preferences") %}
         <li>
             <a href="{{ cabin_url() }}my/preferences">

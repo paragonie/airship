@@ -13,6 +13,7 @@ CREATE TABLE airship_users (
     allow_reset BOOLEAN DEFAULT FALSE,
     gpg_public_key TEXT,
     custom_fields JSONB NULL,
+    publicprofile BOOLEAN DEFAULT FALSE,
     superuser BOOLEAN DEFAULT FALSE,
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
