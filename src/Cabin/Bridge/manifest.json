@@ -147,6 +147,9 @@
         "crew":
             ["Crew", "index"],
 
+        "error{_string}":
+            ["IndexPage", "error"],
+
         "file_manager/{string}/info":
             ["Files", "getFileInfo"],
         "file_manager/{string}/move":

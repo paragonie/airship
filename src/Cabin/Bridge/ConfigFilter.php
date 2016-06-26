@@ -52,6 +52,11 @@ class ConfigFilter extends InputFilterContainer
                 (new IntFilter())
                     ->setDefault(30)
             )
+            ->addFilter(
+                'config_extra.user-directory.per-page',
+                (new IntFilter())
+                    ->setDefault(20)
+            )
 
         /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())

@@ -4,6 +4,10 @@ namespace Airship\UnitTests\Cabin\Hull;
 
 use Airship\Cabin\Hull\ConfigFilter;
 
+/**
+ * Class ConfigFilterTest
+ * @package Airship\UnitTests\Cabin\Hull
+ */
 class ConfigFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testHappyPath()

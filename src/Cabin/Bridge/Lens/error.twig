@@ -1,0 +1,15 @@
+{% extends base_template() %}
+{% set title = (__("Error ") ~ error)|e('html_attr') %}
+
+{% block main %}
+    <h2 class="bottom-pad">{{ error|e('html_attr') }}</h2>
+    {% if error == '403 Forbidden' %}
+        <p>
+            {{ __("You have not been granted access to this resource.") }}
+        </p>
+    {% else %}
+        <p>
+            {{ __("An unknown error has occurred.") }}
+        </p>
+    {% endif %}
+{% endblock %}

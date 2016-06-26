@@ -4,6 +4,10 @@ namespace Airship\UnitTests\Cabin\Bridge;
 
 use Airship\Cabin\Bridge\ConfigFilter;
 
+/**
+ * Class ConfigFilterTest
+ * @package Airship\UnitTests\Cabin\Bridge
+ */
 class ConfigFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testHappyPath()
@@ -52,6 +56,9 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                     'label' => '',
                     'length' => 0,
                     'period' => 30
+                ],
+                'user-directory' => [
+                    'per-page' => 20
                 ]
             ],
             'twig_vars' => [

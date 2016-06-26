@@ -51,6 +51,32 @@ class IndexPage extends LandingGear
     }
 
     /**
+     * @route error
+     */
+    public function error()
+    {
+        if (empty($_GET['error'])) {
+            \Airship\redirect($this->airship_cabin_prefix);
+        }
+        if ($_GET['error'] === '403 Forbidden') {
+            \header('HTTP/1.1 403 Forbidden');
+        }
+        switch ($_GET['error']) {
+            case '403 Forbidden':
+                $this->lens(
+                    'error',
+                    [
+                        'error' =>
+                            \__($_GET['error'])
+                    ]
+                );
+                break;
+            default:
+                \Airship\redirect($this->airship_cabin_prefix);
+        }
+    }
+
+    /**
      * @route help
      */
     public function helpPage()
