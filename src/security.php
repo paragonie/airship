@@ -18,7 +18,7 @@ use \ParagonIE\HPKPBuilder\HPKPBuilder;
  * First, Content-Security-Policy headers:
  */
 $cspCacheFile = ROOT . '/tmp/cache/csp.' . AutoPilot::$active_cabin . '.json';
-if (\file_exists($cspCacheFile)) {
+if (\file_exists($cspCacheFile) && \filesize($cspCacheFile) > 0) {
     $csp = CSPBuilder::fromFile($cspCacheFile);
 } else {
     $cspfile = ROOT . '/config/Cabin/' . AutoPilot::$active_cabin . '/content_security_policy.json';
@@ -47,7 +47,7 @@ $state->CSP = $csp;
  */
 if (AutoPilot::isHTTPSConnection()) {
     $hpkpCacheFile = ROOT . '/tmp/cache/hpkp.' . AutoPilot::$active_cabin . '.json';
-    if (\file_exists($hpkpCacheFile)) {
+    if (\file_exists($hpkpCacheFile) && \filesize($hpkpCacheFile) > 0) {
         $hpkp = HPKPBuilder::fromFile($hpkpCacheFile);
         $state->HPKP = $hpkp;
     } else {

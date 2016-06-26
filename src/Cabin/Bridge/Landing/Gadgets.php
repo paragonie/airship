@@ -18,7 +18,7 @@ class Gadgets extends LoggedInUsersOnly
         $this->lens(
             'gadgets',
             [
-                'cabins' => $this->getCabinNames()
+                'cabins' => $this->getCabinNamespaces()
             ]
         );
     }
@@ -29,9 +29,34 @@ class Gadgets extends LoggedInUsersOnly
      */
     public function manageForCabin(string $cabinName = '')
     {
-        $cabins = $this->getCabinNames();
+        $cabins = $this->getCabinNamespaces();
+        if (!\in_array($cabinName, $cabins)) {
+            \Airship\redirect($this->airship_cabin_prefix . '/gadgets');
+        }
+        if (!$this->can('update')) {
+            \Airship\redirect($this->airship_cabin_prefix . '/gadgets');
+        }
+        $gadgets = \Airship\loadJSON(
+            ROOT . '/Cabin/' . $cabinName . '/config/gadgets.json'
+        );
+        $post = $this->post();
+        if ($post) {
+            if ($this->updateCabinGadgets($gadgets, $post, $cabinName)) {
+                \Airship\clear_cache();
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/gadgets/cabin/' . $cabinName
+                );
+            }
+        }
 
-        $this->lens('gadget_manage');
+        $this->lens(
+            'gadget_manage',
+            [
+                'cabins' => $cabins,
+                'gadgets' => $gadgets,
+                'title' => \__('Gadgets for %s', 'default', $cabinName)
+            ]
+        );
     }
 
     /**
@@ -40,6 +65,72 @@ class Gadgets extends LoggedInUsersOnly
      */
     public function manageUniversal(string $cabinName = '')
     {
-        $this->lens('gadget_manage');
+        $cabins = $this->getCabinNamespaces();
+        $gadgets = \Airship\loadJSON(ROOT . '/config/gadgets.json');
+        if (!$this->can('update')) {
+            \Airship\redirect($this->airship_cabin_prefix . '/gadgets');
+        }
+        $post = $this->post();
+        if ($post) {
+            if ($this->updateUniversalGadgets($gadgets, $post)) {
+                \Airship\clear_cache();
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/gadgets/universal'
+                );
+            }
+        }
+
+        $this->lens(
+            'gadget_manage',
+            [
+                'cabins' => $cabins,
+                'gadgets' => $gadgets,
+                'title' => \__('Manage Universal Gadgets')
+            ]
+        );
+    }
+
+    /**
+     * Update the gadgets for a given Cabin
+     *
+     * @param array $gadgets
+     * @param array $post
+     * @param string $cabin
+     * @return bool
+     */
+    protected function updateCabinGadgets(
+        array $gadgets,
+        array $post,
+        string $cabin = ''
+    ): bool {
+        $sortedGadgets = [];
+        foreach (\array_unique($post['gadget_order']) as $i => $index) {
+            $gadgets[$index]['enabled'] = !empty($post['gadget_enabled'][$index]);
+            $sortedGadgets []= $gadgets[$index];
+            unset($gadgets[$index]);
+        }
+        // Just in case any were omitted
+        foreach ($gadgets as $gadget) {
+            $gadget['enabled'] = false;
+            $sortedGadgets []= $gadget;
+        }
+        return \Airship\saveJSON(
+            ROOT . '/Cabin/' . $cabin . '/config/gadgets.json',
+            $sortedGadgets
+        );
+    }
+
+    /**
+     * Update the universal gadgets
+     *
+     * @param array $gadgets
+     * @param array $post
+     * @return bool
+     */
+    protected function updateUniversalGadgets(
+        array $gadgets,
+        array $post
+    ): bool {
+        return false;
     }
 }

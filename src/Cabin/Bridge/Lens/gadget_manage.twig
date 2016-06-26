@@ -1,0 +1,9 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_gadgets_manage") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/gadgets.js"|cachebust }}"></script>
+{% endblock %}

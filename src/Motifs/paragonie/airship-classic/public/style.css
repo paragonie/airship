@@ -1894,3 +1894,17 @@ h2#comments {
 .pure-button-danger:hover .fa {
     color: #ff9933 !important;
 }
+
+#gadgets_list {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    display: block;
+    list-style: none;
+    padding: 0.25em 0;
+}
+#gadgets_list li {
+    border: 1px solid #000;
+    background-color: #253049;
+    color: #fff;
+    margin: 0.25em;
+}

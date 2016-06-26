@@ -656,13 +656,6 @@ function queryStringRoot(
  */
 function saveJSON(string $file, $data = null): bool
 {
-    // Very specific checks
-    if (!\file_exists($file)) {
-        throw new FileNotFound($file);
-    }
-    if (!\is_readable($file)) {
-        throw new AccessDenied($file);
-    }
     return \file_put_contents(
         $file,
         \json_encode($data, JSON_PRETTY_PRINT)

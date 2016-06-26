@@ -1,0 +1,33 @@
+<h2>{{ title }}</h2>
+
+{% if gadgets %}
+<form method="post">{{ form_token() }}
+<p>
+    {{ __(
+        "Drag and drop the Gadgets below to change the order in which they are loaded. " ~
+        "Uncheck the box to disable (but not uninstall) a given Gadget."
+    ) }}
+</p>
+
+<ol id="gadgets_list">{% for i, gadget in gadgets %}
+    <li class="gadget-draggable" id="gadget-{{ i|e('html_attr') }}">
+        <input type="hidden" name="gadget_order[]" value="{{ i }}" />
+        <input type="checkbox"
+           class="large_checkbox"
+           title="Enabled"
+           id="gadget-{{ i|e('html_attr') }}-enabled"
+           name="gadget_enabled[{{ i }}]"
+           value="1"
+            {% if gadget.enabled %} checked="checked"{% endif %}
+        />
+        {{ gadget.supplier }}/{{ gadget.name }}
+    </li>
+{% endfor %}</ol>
+<button type="submit" class="pure-button pure-button-primary">
+    {{ __("Save") }}
+</button>
+<a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}gadgets">{{ __("Cancel") }}</a>
+</form>
+{% else %}
+    <p>{{ __("No Gadgets installed.") }}</p>
+{% endif %}
