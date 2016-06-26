@@ -23,7 +23,7 @@
             {% endfor %}
         </select><br />
         <label for="name">{{ __("Directory Name") }}:</label>
-        <input type="text" name="url" value="{{ dir|e('html_attr') }}" /><br />
+        <input id="name" type="text" name="url" value="{{ dir|e('html_attr') }}" /><br />
 
         <input type="checkbox" name="create_redirect" value="1" id="create_redirect" />
         <label for="create_redirect">

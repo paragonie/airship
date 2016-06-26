@@ -9,9 +9,6 @@ use \Airship\Engine\Bolt\{
     Orderable,
     Slug
 };
-use \Airship\Cabin\Hull\Exceptions\{
-    CustomPageNotFoundException
-};
 use \Airship\Engine\Bolt\Cache;
 
 require_once __DIR__.'/init_gear.php';

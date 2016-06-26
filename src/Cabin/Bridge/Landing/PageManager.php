@@ -365,6 +365,7 @@ class PageManager extends LoggedInUsersOnly
     /**
      * We're going to move/rename a directory
      *
+     * @param string $cabin
      * @route pages/{string}/renameDir
      */
     public function renameDir(string $cabin)
