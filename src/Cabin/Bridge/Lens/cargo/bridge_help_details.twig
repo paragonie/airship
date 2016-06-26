@@ -1,0 +1,60 @@
+{# This is like the phpinfo() of CMS Airship. #}
+
+<h3>{{ __("Debug Information") }}</h3>
+
+<p>
+    {{ __("Some of this information may be useful for troubleshooting your Airship.") }}
+</p>
+
+<div id="help-debug-info" class="table">
+
+    <div class="table-row">
+        <div class="table-cell table-min-width vertical-top table-pad-right text-right">
+            {{ __("Cabins") }}:
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            {% for cabin in helpInfo['cabin_names'] %}
+                <fieldset>
+                    <legend>{{ cabin }}</legend>
+                    <textarea readonly="readonly" title="Config" class="help-textarea">{#
+                        #}{{ helpInfo['cabins'][cabin]|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+                    #}</textarea>
+                </fieldset>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width vertical-top table-pad-right text-right">
+            {{ __("Gear Inheritance") }}:
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            <textarea readonly="readonly" title="Gears" class="help-textarea">{#
+                #}{{ helpInfo['gears']|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+            #}</textarea>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width vertical-top table-pad-right text-right">
+            {{ __("PHP Configuration") }}:
+        </div>
+        <div class="table-cell full-width bottom-extra-pad">
+            <textarea readonly="readonly" title="Gears" class="help-textarea">{#
+                #}{{ helpInfo['php']|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+            #}</textarea>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width vertical-top table-pad-right text-right">
+            {{ __("Universal") }}:
+        </div>
+        <div class="table-cell full-width">
+            <textarea readonly="readonly" title="Universal" class="help-textarea">{#
+                #}{{ helpInfo['universal']|json_encode(constant("JSON_PRETTY_PRINT")) }}{#
+            #}</textarea>
+        </div>
+    </div>
+
+</div>

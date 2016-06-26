@@ -283,6 +283,9 @@ function get_ancestors(string $class): array
     $classes = [$class];
     $class = \get_parent_class($class);
     while ($class) {
+        if ($class[0] !== '\\') {
+            $class = '\\' . $class;
+        }
         $classes[] = $class;
         $class = \get_parent_class($class);
     }

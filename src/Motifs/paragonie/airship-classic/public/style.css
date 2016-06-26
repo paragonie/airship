@@ -1908,3 +1908,21 @@ h2#comments {
     color: #fff;
     margin: 0.25em;
 }
+#help-debug-info {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    margin: 1ex;
+    padding: 1ex;
+}
+.help-textarea {
+    background-color: transparent;
+    font-family: monospace, monospace;
+    font-size: 11pt;
+    min-height: 9.66em;
+    min-width: 20em;
+    max-width: 100%;
+    width: calc(100% - 1em);
+}
+.vertical-top {
+    vertical-align: top;
+}

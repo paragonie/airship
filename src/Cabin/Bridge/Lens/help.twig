@@ -1,0 +1,38 @@
+{% extends base_template() %}
+{% set title = __("Airship v" ~ airship) %}
+
+{% block main %}
+    <h2>{{ __("CMS Airship - Help/Support") }}</h2>
+    <p>
+        {{ __(
+            "Need assistance with your Airship?"
+        ) }}
+    </p>
+    <ul>
+        <li>
+            <a href="https://github.com/paragonie/airship-docs">
+                <i class="fa fa-book icon-pad-right"></i>{#
+                #}{{ __("Read the Airship Documentation") }}{#
+            #}</a>
+            &mdash;
+            {{ __("The solution for the problem you are experiencing may already be documented.") }}
+        </li>
+        <li>
+            <a href="https://github.com/paragonie/airship/issues">
+                <i class="fa fa-github icon-pad-right"></i>{#
+                #}{{ __("Report a Bug") }}{#
+            #}</a>
+            &mdash;
+            {{ __("Please search the Github issues before opening a new one in case it was already reported.") }}
+        </li>
+    </ul>
+    {% if can_read() %}
+        {% include cargo("bridge_help_details") %}
+    {% else %}
+        <p>
+            {{ __(
+                "You do not have permission to view system information."
+            ) }}
+        </p>
+    {% endif %}
+{% endblock %}
