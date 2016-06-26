@@ -39,7 +39,7 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 ## Customizing Your Airship
 
-Airship extensions come in three flavors:
+Airship extensions come in three flavors ([detailed explanations](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/1-Lingo-Jargon.md#airship-extension-types)):
 
 * **Cabins**: entire self-contained applications -- If you are developing a
    custom web application, you want to create your own Cabin.
