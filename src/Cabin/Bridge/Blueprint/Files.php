@@ -93,8 +93,11 @@ class Files extends BlueprintGear
      * @param string $subdirectory
      * @return bool
      */
-    public function deleteDir(string $cabin, string $root, string $subdirectory): bool
-    {
+    public function deleteDir(
+        string $cabin,
+        string $root,
+        string $subdirectory
+    ): bool {
         $dir = empty($root)
             ? $subdirectory
             : $root . '/' . $subdirectory;
@@ -219,8 +222,10 @@ class Files extends BlueprintGear
      * @param string $cabin
      * @return array
      */
-    public function getChildrenOf($directoryId = null, string $cabin = ''): array
-    {
+    public function getChildrenOf(
+        $directoryId = null,
+        string $cabin = ''
+    ): array {
         if (empty($directoryId)) {
             $children = $this->db->run(
                 'SELECT * FROM airship_dirs WHERE parent IS NULL AND cabin = ? ORDER BY name ASC',
@@ -240,6 +245,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Get the contents of a given cabin/directory, recursively
+     *
      * @param string $cabin
      * @param string $base
      * @param string $thisDir
@@ -345,6 +352,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Build a recursive directory tree
+     *
      * @param string $cabin
      * @param string $rootDir
      * @param string $ignore
@@ -389,7 +398,7 @@ class Files extends BlueprintGear
                 $pieces . $child['name']
             );
             foreach ($subDirs as $sub) {
-                $dirs [] = $sub;
+                $dirs []= $sub;
             }
         }
         return $dirs;
@@ -452,14 +461,19 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Get detailed file information
+     *
      * @param string $cabin
      * @param array $path
      * @param string $filename
      * @return array
      * @throws FileNotFound
      */
-    public function getFileInfo(string $cabin = '', $path = null, string $filename = ''): array
-    {
+    public function getFileInfo(
+        string $cabin = '',
+        $path = null,
+        string $filename = ''
+    ): array {
         if (empty($path)) {
             $fileInfo = $this->db->row(
                 'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ?',
@@ -485,6 +499,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Get the MIME type for a given file.
+     *
      * @param string $filePath
      * @return string
      */
@@ -494,6 +510,8 @@ class Files extends BlueprintGear
     }
 
     /**
+     * Does this file have a valid filename?
+     *
      * @param string $name
      * @return bool
      */
@@ -741,9 +759,10 @@ class Files extends BlueprintGear
     }
 
     /**
-     * Process an upload. Either it returns an array with useful data, OR it throws an UploadError
+     * Process an upload. Either it returns an array with useful data,
+     * OR it throws an UploadError
      *
-     * @param null $directoryId
+     * @param int|null $directoryId
      * @param string $cabin
      * @param array $file
      * @param array $attribution Who uploaded it?
@@ -861,16 +880,30 @@ class Files extends BlueprintGear
         string $cabin = ''
     ): string {
         if (empty($directoryId)) {
-            $sub = ' directory IS NULL and cabin = ?';
+            $queryString = 'SELECT
+                count(*)
+            FROM
+                airship_files
+            WHERE
+                    filename = ? 
+                AND directory IS NULL
+                AND cabin = ?';
             $subParam = $cabin;
         } else {
-            $sub = 'directory = ?';
+            $queryString = 'SELECT
+                count(*)
+            FROM
+                airship_files
+            WHERE
+                    filename = ? 
+                AND directory = ?';
             $subParam = $directoryId;
         }
+
         $iterName = $name . '.' . $ext;
         $i = 1;
         while ($this->db->exists(
-            'SELECT count(*) FROM airship_files WHERE filename = ? AND '.$sub,
+            $queryString,
             $iterName,
             $subParam
         )) {
@@ -915,7 +948,8 @@ class Files extends BlueprintGear
     private function moveUploadedFile(string $tmp_name, string $ext): string
     {
         if (\in_array(\strtolower($ext), $this->badFileExtensions)) {
-            // Just to be extra cautious. The internal filename isn't that important anyway.
+            // Just to be extra cautious. The internal filename isn't that
+            // important anyway.
             $ext = 'txt';
         }
         $dir1 = \Sodium\bin2hex(\random_bytes(1));
@@ -925,7 +959,9 @@ class Files extends BlueprintGear
             \mkdir($base, 0775, true);
         }
         do {
-            $filename = \Sodium\bin2hex(\random_bytes(22)) . '.' . \strtolower($ext);
+            $filename = \Sodium\bin2hex(\random_bytes(22)) .
+                '.' .
+                \strtolower($ext);
         } while (\file_exists($base . DIRECTORY_SEPARATOR . $filename));
 
         if (!\move_uploaded_file($tmp_name, $base . DIRECTORY_SEPARATOR . $filename)) {
@@ -951,6 +987,7 @@ class Files extends BlueprintGear
             $this->deleteFile($file);
         }
         $this->db->beginTransaction();
+
         foreach ($this->getChildrenOf($directory, $cabin) as $dir) {
             $this->recursiveDelete((int) $dir['directoryid'], $cabin);
         }

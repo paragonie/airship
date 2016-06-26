@@ -32,7 +32,12 @@ class UserAccounts extends BlueprintGear
     const DEFAULT_MIN_SCORE = 3; // for Zxcvbn
     const RECOVERY_SELECTOR_BYTES = 24;
     const RECOVERY_TOKEN_BYTES = 33;
-    const RECOVERY_CHAR_LENGTH = (self::RECOVERY_SELECTOR_BYTES * 4 / 3) + (self::RECOVERY_TOKEN_BYTES * 4 / 3);
+
+    const RECOVERY_CHAR_LENGTH = (
+        (self::RECOVERY_SELECTOR_BYTES * 4 / 3)
+            +
+        (self::RECOVERY_TOKEN_BYTES * 4 / 3)
+    );
 
     /**
      * Get the number of users with a public profile.

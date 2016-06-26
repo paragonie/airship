@@ -160,6 +160,8 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Get the available packages (based on data provided by Keyggdrasil)
+     *
      * @param string $type
      * @param string $query Search query
      * @param int $offset
@@ -232,8 +234,11 @@ class Skyport extends BlueprintGear
      * @param string $name
      * @return array
      */
-    public function getDetails(string $type, string $supplier, string $name): array
-    {
+    public function getDetails(
+        string $type,
+        string $supplier,
+        string $name
+    ): array {
         $package = $this->db->row(
             'SELECT 
                  *
@@ -251,7 +256,10 @@ class Skyport extends BlueprintGear
         if (empty($package)) {
             return [];
         }
-        $package['skyport_metadata'] = \json_decode($package['skyport_metadata'], true);
+        $package['skyport_metadata'] = \json_decode(
+            $package['skyport_metadata'],
+            true
+        );
         $package['versions'] = $this->getNewVersions($package);
         return $package;
     }
@@ -264,8 +272,11 @@ class Skyport extends BlueprintGear
      * @param int $limit
      * @return array
      */
-    public function getInstalled(bool $grouped = false, int $offset = 0, int $limit): array
-    {
+    public function getInstalled(
+        bool $grouped = false,
+        int $offset = 0,
+        int $limit = 20
+    ): array {
         $exts = $this->db->run('
             SELECT
                 *
@@ -295,6 +306,8 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Dynamic content for the left menu of the Skyport.
+     *
      * @return array
      */
     public function getLeftMenu()
@@ -353,6 +366,9 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Is the skyport locked? This prevents packages from being installed or
+     * removed.
+     *
      * @return bool
      */
     public function isLocked(): bool
@@ -365,6 +381,9 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Is the skyport password-protected? This prevents packages from being
+     * installed or removed without a separate password?
+     *
      * @return bool
      */
     public function isPasswordLocked(): bool
@@ -374,6 +393,7 @@ class Skyport extends BlueprintGear
         }
         $this->installHash = \file_get_contents(ROOT . '/config/install.lock');
         if (\preg_match('/^3142[0-9a-f]{300,}$/', $this->installHash)) {
+            // This looks like an encrypted password hash.
             return true;
         }
         return false;
@@ -392,7 +412,11 @@ class Skyport extends BlueprintGear
         string $supplier,
         string $pkg
     ): bool {
-        $metadata = $this->getPackageMetadata($type, $supplier, $pkg);
+        $metadata = $this->getPackageMetadata(
+            $type,
+            $supplier,
+            $pkg
+        );
         if (empty($metadata)) {
             return false;
         }
@@ -553,8 +577,9 @@ class Skyport extends BlueprintGear
         foreach ($cabins as $i => $cabin) {
             if ($cabin['name'] === $search) {
                 $ret .= "Removed {$search} from config/cabins.json\n";
-                if (\is_link(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $search)) {
-                    \unlink(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $search);
+                $symlink = ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $search;
+                if (\is_link($symlink)) {
+                    \unlink($symlink);
                 }
                 unset($cabins[$i]);
             }
@@ -686,6 +711,8 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Deletes a motif from a cabin's configuration
+     *
      * @param string $cabin
      * @param string $key
      */

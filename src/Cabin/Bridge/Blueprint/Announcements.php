@@ -19,7 +19,7 @@ class Announcements extends BlueprintGear
     /**
      * Post a new announcement
      *
-     * @param array $post
+     * @param array $post POST data from the Landing
      * @return bool
      */
     public function createAnnouncement(array $post): bool
@@ -89,6 +89,8 @@ class Announcements extends BlueprintGear
     }
 
     /**
+     * Get a particular announcement, given its unique ID.
+     *
      * @param string $uniqueID
      * @return array
      */

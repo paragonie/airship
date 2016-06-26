@@ -424,7 +424,7 @@ class Blog extends BlueprintGear
     }
 
     /**
-     * Get the latest version of
+     * Get the latest version of a blog post
      *
      * @param int $postId
      * @return array
@@ -889,6 +889,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * List tags (paginated, sortable).
+     *
      * @param int $offset
      * @param int $limit
      * @param string $sort
@@ -923,6 +925,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get the number of items in a given series.
+     *
      * @param int $seriesId
      * @return int
      */
@@ -1030,6 +1034,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Publish an unapproved blog comment.
+     *
      * @param int $commentId
      * @return bool
      */
@@ -1234,6 +1240,8 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Insert/delete/rearrange the contents of a series.
+     *
      * @param int $seriesId
      * @param array $oldItems
      * @param array $post
@@ -1245,8 +1253,8 @@ class Blog extends BlueprintGear
         array $post
     ): bool {
         $this->db->beginTransaction();
-        $newItems = \explode(',', $post['items']);
 
+        $newItems = \explode(',', $post['items']);
         $inserts = \array_diff($newItems, $oldItems);
         $deletes = \array_diff($oldItems, $newItems);
 
@@ -1380,7 +1388,7 @@ class Blog extends BlueprintGear
         $query = 'SELECT count(*) FROM view_hull_blog_list WHERE blogmonth = ? AND blogyear = ? AND slug = ?';
         $slug = $base_slug = \Airship\slugFromTitle($title);
         $i = 1;
-        while ($this->db->cell($query, $month, $year, $slug) > 0) {
+        while ($this->db->exists($query, $month, $year, $slug)) {
             $slug = $base_slug . '-' . ++$i;
         }
         return $slug;

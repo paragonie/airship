@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use Airship\Alerts\Database\QueryError;
+use \Airship\Alerts\Database\QueryError;
 use \Airship\Cabin\Hull\Blueprint\CustomPages as HullCustomPages;
 use \Airship\Cabin\Hull\Exceptions\{
     CustomPageCollisionException,
@@ -32,8 +32,11 @@ class CustomPages extends HullCustomPages
      * @param array $post
      * @return bool
      */
-    public function createDir(string $cabin, string $path, array $post = []): bool
-    {
+    public function createDir(
+        string $cabin,
+        string $path,
+        array $post = []
+    ): bool {
         if (empty($post['url'])) {
             return false;
         }
@@ -276,7 +279,7 @@ class CustomPages extends HullCustomPages
                 if ($n > self::MAX_DEDUP) {
                     // Don't let this go on forever.
                     $this->log(
-                        'Spinner',
+                        'Create redirect -- too much recursion',
                         LogLevel::DEBUG,
                         [
                             'new' => $_new
@@ -308,19 +311,30 @@ class CustomPages extends HullCustomPages
      * @param bool $allowCrossCabin
      * @return bool
      */
-    public function createPageRedirect(array $old, array $new, bool $allowCrossCabin = false): bool
-    {
+    public function createPageRedirect(
+        array $old,
+        array $new,
+        bool $allowCrossCabin = false
+    ): bool {
         if (!$allowCrossCabin && ($old['cabin'] !== $new['cabin'])) {
             return false;
         }
         $cabin = $old['cabin'];
+
         $oldPath = !empty($old['directory'])
-            ? $this->getPathFromDirectoryId((int) $old['directory'], $cabin)
+            ? $this->getPathFromDirectoryId(
+                (int) $old['directory'],
+                $cabin
+            )
             : [];
         $oldPath []= $old['url'];
         $oldURL = \implode('/', $oldPath);
+
         $newPath = !empty($new['directory'])
-            ? $this->getPathFromDirectoryId((int) $new['directory'], $cabin)
+            ? $this->getPathFromDirectoryId(
+                (int) $new['directory'],
+                $cabin
+            )
             : [];
         $newPath []= $new['url'];
         $newURL = \implode('/', $newPath);
@@ -398,8 +412,11 @@ class CustomPages extends HullCustomPages
      * @param int $skip
      * @return array
      */
-    public function getCustomDirTree(array $cabins, int $selected, int $skip = 0): array
-    {
+    public function getCustomDirTree(
+        array $cabins,
+        int $selected,
+        int $skip = 0
+    ): array {
         $tree = [];
         foreach ($cabins as $cabin) {
             $tree[$cabin] = $this->getCustomDirChildren(
@@ -490,6 +507,8 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * Get all of the parents for a given directory, as an array
+     *
      * @param int $directoryID
      * @return array
      */
@@ -529,6 +548,7 @@ class CustomPages extends HullCustomPages
             $pageId
         );
     }
+
     /**
      * Get the latest published version ID of a custom page
      *
@@ -948,8 +968,11 @@ class CustomPages extends HullCustomPages
      * @return bool
      * @throws CustomPageCollisionException
      */
-    public function movePage(int $pageId, string $url = '', int $destinationDir = 0): bool
-    {
+    public function movePage(
+        int $pageId,
+        string $url = '',
+        int $destinationDir = 0
+    ): bool {
         $this->db->beginTransaction();
         if ($destinationDir > 0) {
             $collision = $this->db->cell(
@@ -1065,12 +1088,18 @@ class CustomPages extends HullCustomPages
     public function numCustomPages($published = null): int
     {
         if ($published === null) {
-            return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page');
+            return (int) $this->db->cell(
+                'SELECT count(pageid) FROM airship_custom_page'
+            );
         }
         if ($published) {
-            return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE active');
+            return (int) $this->db->cell(
+                'SELECT count(pageid) FROM airship_custom_page WHERE active'
+            );
         }
-        return (int) $this->db->cell('SELECT count(pageid) FROM airship_custom_page WHERE NOT active');
+        return (int) $this->db->cell(
+            'SELECT count(pageid) FROM airship_custom_page WHERE NOT active'
+        );
     }
 
     /**
@@ -1186,6 +1215,8 @@ class CustomPages extends HullCustomPages
     }
 
     /**
+     * Save changes to a custom redirect
+     *
      * @param int $redirectID
      * @param array $post
      * @return bool
@@ -1220,8 +1251,10 @@ class CustomPages extends HullCustomPages
      * @param string $column
      * @return string
      */
-    protected function uniqueId(string $table, string $column = 'uniqueid'): string
-    {
+    protected function uniqueId(
+        string $table,
+        string $column = 'uniqueid'
+    ): string {
         do {
             $unique = \Airship\uniqueId();
         } while (
