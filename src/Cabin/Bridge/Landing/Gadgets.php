@@ -131,6 +131,20 @@ class Gadgets extends LoggedInUsersOnly
         array $gadgets,
         array $post
     ): bool {
-        return false;
+        $sortedGadgets = [];
+        foreach (\array_unique($post['gadget_order']) as $i => $index) {
+            $gadgets[$index]['enabled'] = !empty($post['gadget_enabled'][$index]);
+            $sortedGadgets []= $gadgets[$index];
+            unset($gadgets[$index]);
+        }
+        // Just in case any were omitted
+        foreach ($gadgets as $gadget) {
+            $gadget['enabled'] = false;
+            $sortedGadgets []= $gadget;
+        }
+        return \Airship\saveJSON(
+            ROOT . '/config/gadgets.json',
+            $sortedGadgets
+        );
     }
 }
