@@ -35,36 +35,6 @@ class UserAccounts extends BlueprintGear
     const RECOVERY_CHAR_LENGTH = (self::RECOVERY_SELECTOR_BYTES * 4 / 3) + (self::RECOVERY_TOKEN_BYTES * 4 / 3);
 
     /**
-     * @var string
-     */
-    protected $table = 'airship_users';
-
-    /**
-     * @var string
-     */
-    protected $grouptable = 'airship_users_groups';
-
-    /**
-     * @var string[]
-     */
-    protected $f = [
-        'userid' => 'userid',
-        'username' => 'username',
-        'uniqueid' => 'uniqueid',
-        'password' => 'password',
-        'display_name' => 'display_name',
-        'real_name' => 'real_name',
-        'email' => 'email',
-        'birthdate' => 'birthdate',
-        'gpg_public_key' => 'gpg_public_key',
-        'allow_reset' => 'allow_reset',
-        'custom_fields' => 'custom_fields',
-        'superuser' => 'superuser',
-        'created' => 'created',
-        'modified' => 'modified'
-    ];
-
-    /**
      * Create a new user group
      *
      * @param array $post
@@ -154,31 +124,34 @@ class UserAccounts extends BlueprintGear
                 // We'll fail silently for now.
             }
         }
-        $this->db->insert($this->table, [
-            $this->f['username'] =>
-                $post['username'],
-            $this->f['password'] =>
-                $this->airship_auth->createHash(
-                    new HiddenString($post['passphrase'])
-                ),
-            $this->f['uniqueid'] =>
-                $this->generateUniqueId(),
-            $this->f['email'] =>
-                $post['email'] ?? '',
-            $this->f['display_name'] =>
-                $post['display_name'] ?? '',
-            $this->f['allow_reset'] =>
-                !empty($post['allow_reset']),
-            $this->f['gpg_public_key'] =>
-                $fingerprint
-        ]);
+        $this->db->insert(
+            'airship_users',
+            [
+                'username' =>
+                    $post['username'],
+                'password' =>
+                    $this->airship_auth->createHash(
+                        new HiddenString($post['passphrase'])
+                    ),
+                'uniqueid' =>
+                    $this->generateUniqueId(),
+                'email' =>
+                    $post['email'] ?? '',
+                'display_name' =>
+                    $post['display_name'] ?? '',
+                'allow_reset' =>
+                    !empty($post['allow_reset']),
+                'gpg_public_key' =>
+                    $fingerprint
+            ]
+        );
         $userid = $this->db->cell(
             'SELECT
-                '.$this->e($this->f['userid']).'
+                userid
             FROM
-                '.$this->e($this->table).'
+                airship_users
             WHERE
-                '.$this->e($this->f['username']).' = ?',
+                username = ?',
             $post['username']
         );
 
@@ -186,7 +159,7 @@ class UserAccounts extends BlueprintGear
         $default_groups = $state->universal['default-groups'] ?? [2];
         foreach ($default_groups as $grp) {
             $this->db->insert(
-                $this->grouptable,
+                'airship_users_groups',
                 [
                     'userid' => $userid,
                     'groupid' => $grp
@@ -257,7 +230,7 @@ class UserAccounts extends BlueprintGear
         // Manage group changes:
         foreach ($insert as $ins) {
             $this->db->insert(
-                $this->grouptable,
+                'airship_users_groups',
                 [
                     'userid' => $userId,
                     'groupid' => $ins
@@ -266,7 +239,7 @@ class UserAccounts extends BlueprintGear
         }
         foreach ($delete as $del) {
             $this->db->delete(
-                $this->grouptable,
+                'airship_users_groups',
                 [
                     'userid' => $userId,
                     'groupid' => $del
@@ -275,11 +248,11 @@ class UserAccounts extends BlueprintGear
         }
 
         foreach (['username', 'uniqueid', 'email', 'display_name', 'real_name'] as $f) {
-            $updates[$this->f[$f]] = $post[$f] ?? null;
+            $updates[$f] = $post[$f] ?? null;
         }
 
         if (!empty($post['password'])) {
-            $updates[$this->f['password']] = $this->airship_auth->createHash(
+            $updates['password'] = $this->airship_auth->createHash(
                 new HiddenString($post['password'])
             );
         }
@@ -287,7 +260,7 @@ class UserAccounts extends BlueprintGear
         $updates['custom_fields'] = \json_encode(\json_decode($post['custom_fields'], true));
 
         $this->db->update(
-            $this->table,
+            'airship_users',
             $updates,
             [
                 'userid' => $userId
@@ -471,13 +444,7 @@ class UserAccounts extends BlueprintGear
     public function getUniqueId(int $userId): string
     {
         $unique = $this->db->cell(
-            'SELECT '.
-                $this->e($this->f['uniqueid']).
-            ' FROM '.
-                $this->e($this->table).
-            ' WHERE '.
-                $this->e($this->f['userid']).
-            ' = ?',
+            'SELECT uniqueid FROM airship_users WHERE userid = ?',
             $userId
         );
         if (empty($unique)) {
@@ -499,9 +466,10 @@ class UserAccounts extends BlueprintGear
             'SELECT
                  *
              FROM
-                 '.$this->e($this->table).'
+                 airship_users
              WHERE
-                 '.$this->e($this->f['userid']).' = ?',
+                 userid = ?
+             ',
             $userId
         );
         if (empty($user)) {
@@ -527,9 +495,9 @@ class UserAccounts extends BlueprintGear
             'SELECT
                  userid
              FROM
-                 '.$this->e($this->table).'
+                 airship_users
              WHERE
-                 '.$this->e($this->f['username']).' = ?',
+                 username = ?',
             $username
         );
         if (empty($userId)) {
@@ -567,7 +535,7 @@ class UserAccounts extends BlueprintGear
     public function getUsersGroups(int $userId): array
     {
         $groups =  $this->db->first(
-            'SELECT groupid FROM '.$this->e($this->grouptable).' WHERE userid = ?',
+            'SELECT groupid FROM airship_users_groups WHERE userid = ?',
             $userId
         );
         if (empty($groups)) {
@@ -664,11 +632,11 @@ class UserAccounts extends BlueprintGear
     {
         $num = $this->db->cell(
             'SELECT
-                count('.$this->e($this->f['userid']).')
+                count(userid)
             FROM
-                '.$this->e($this->table).'
+                airship_users
             WHERE
-                '.$this->e($this->f['username']).' = ?',
+                username = ?',
             $username
         );
         
@@ -695,14 +663,14 @@ class UserAccounts extends BlueprintGear
         string $dir = 'ASC'
     ): array {
         $users =  $this->db->run(
-            'SELECT ' .
-                '* ' .
-            ' FROM ' .
-                $this->e($this->table).
-            ' ORDER BY ' .
-                $this->e($sortBy) . ' ' . $dir.
-            ' OFFSET ' . $offset .
-            ' LIMIT ' . $limit
+            'SELECT 
+                * 
+             FROM 
+                airship_users
+             ORDER BY 
+                ' . $this->e($sortBy) . ' ' . $dir . '
+             OFFSET ' . $offset . '
+             LIMIT ' . $limit
         );
         if (empty($users)) {
             return [];
@@ -717,9 +685,7 @@ class UserAccounts extends BlueprintGear
      */
     public function numUsers(): int
     {
-        return (int) $this->db->cell(
-            'SELECT count(*) FROM ' . $this->e($this->table)
-        );
+        return (int) $this->db->cell('SELECT count(*) FROM airship_users');
     }
 
 
@@ -760,11 +726,13 @@ class UserAccounts extends BlueprintGear
     {
         $this->db->beginTransaction();
         $this->db->update(
-            $this->table,[
-                $this->f['password'] =>
+            'airship_users',
+            [
+                'password' =>
                     $this->airship_auth->createHash($passphrase)
-            ], [
-                $this->f['userid'] =>
+            ],
+            [
+                'userid' =>
                     $accountId
             ]
         );
@@ -821,20 +789,22 @@ class UserAccounts extends BlueprintGear
             : '[]';
 
         $this->db->update(
-            $this->table, [
-                $this->f['display_name'] =>
+            'airship_users',
+            [
+                'display_name' =>
                     $post['display_name'] ?? '',
-                $this->f['email'] =>
+                'email' =>
                     $post['email'] ?? '',
-                $this->f['custom_fields'] =>
+                'custom_fields' =>
                     $post['custom_fields'] ?? '',
-                $this->f['gpg_public_key'] =>
+                'gpg_public_key' =>
                     $fingerprint,
-                $this->f['allow_reset'] =>
+                'allow_reset' =>
                     !empty($post['allow_reset']),
-            ], [
-                $this->f['userid'] =>
-                    $account[$this->f['userid']]
+            ],
+            [
+                'userid' =>
+                    $account['userid']
             ]
         );
         return $this->db->commit();
@@ -847,11 +817,19 @@ class UserAccounts extends BlueprintGear
      * @param array $preferences
      * @return bool
      */
-    public function updatePreferences(int $userId, array $preferences = []): bool
-    {
+    public function updatePreferences(
+        int $userId,
+        array $preferences = []
+    ): bool {
         $this->db->beginTransaction();
 
-        if ($this->db->exists('SELECT count(preferenceid) FROM airship_user_preferences WHERE userid = ?', $userId)) {
+        $queryString = 'SELECT
+            count(preferenceid)
+        FROM
+            airship_user_preferences
+        WHERE
+            userid = ?';
+        if ($this->db->exists($queryString, $userId)) {
             $this->db->update(
                 'airship_user_preferences',
                 [
@@ -880,11 +858,7 @@ class UserAccounts extends BlueprintGear
     protected function generateUniqueId(): string
     {
         $unique = '';
-        $query = 'SELECT count(*) FROM ' .
-                $this->e($this->table) .
-            ' WHERE ' .
-                $this->e($this->f['uniqueid']) .
-            ' = ?';
+        $query = 'SELECT count(*) FROM airship_users WHERE uniqueid = ?';
         do {
             if (!empty($unique)) {
                 // This will probably never be executed. It will be a nice easter egg if it ever does.
