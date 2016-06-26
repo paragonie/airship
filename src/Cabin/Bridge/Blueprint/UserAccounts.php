@@ -270,41 +270,6 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
-     * Get the data necessary to recover an account.
-     *
-     * @param string $selector
-     * @param int $maxTokenLife
-     * @return array
-     */
-    public function getRecoveryData(string $selector, int $maxTokenLife): array
-    {
-        if ($maxTokenLife < 10) {
-            $maxTokenLife = '0' . $maxTokenLife;
-        }
-        $dateTime = new \DateTime('now');
-        $dateTime->sub(
-            new \DateInterval('PT' . $maxTokenLife . 'S')
-        );
-        $result = $this->db->row(
-            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created > ?',
-            $selector,
-            $dateTime->format(\AIRSHIP_DATE_FORMAT)
-        );
-        if (empty($result)) {
-            return [];
-        }
-
-        // Clean up:
-        $this->db->delete(
-            'airship_user_recovery',
-            [
-                'selector' => $selector
-            ]
-        );
-        return $result;
-    }
-
-    /**
      * @param int $groupId
      * @return array
      */
@@ -391,6 +356,41 @@ class UserAccounts extends BlueprintGear
             );
         }
         return $groups;
+    }
+
+    /**
+     * Get the data necessary to recover an account.
+     *
+     * @param string $selector
+     * @param int $maxTokenLife
+     * @return array
+     */
+    public function getRecoveryData(string $selector, int $maxTokenLife): array
+    {
+        if ($maxTokenLife < 10) {
+            $maxTokenLife = '0' . $maxTokenLife;
+        }
+        $dateTime = new \DateTime('now');
+        $dateTime->sub(
+            new \DateInterval('PT' . $maxTokenLife . 'S')
+        );
+        $result = $this->db->row(
+            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created > ?',
+            $selector,
+            $dateTime->format(\AIRSHIP_DATE_FORMAT)
+        );
+        if (empty($result)) {
+            return [];
+        }
+
+        // Clean up:
+        $this->db->delete(
+            'airship_user_recovery',
+            [
+                'selector' => $selector
+            ]
+        );
+        return $result;
     }
 
     /**
@@ -797,6 +797,8 @@ class UserAccounts extends BlueprintGear
                     $post['email'] ?? '',
                 'custom_fields' =>
                     $post['custom_fields'] ?? '',
+                'publicprofile' =>
+                    !empty($post['publicprofile']),
                 'gpg_public_key' =>
                     $fingerprint,
                 'allow_reset' =>
