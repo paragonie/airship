@@ -4,6 +4,10 @@
   * Added an AJAX endpoint for clearing the cache remotely.
   * Fixed Javascript race conditions that prevented the rich text editor from
     loading reliably.
+  * Cabins, Motifs, and Gadgets can now be disabled (and remain installed).
+  * Cabins, Motifs, and Gadgets can now be uninstalled.
+  * Added a help/support page that displays system information (for privileged
+    users only) and links to the documentation and this Github repository.
 
 ## Version 0.3.0 - 2016-06-21
 

@@ -1,0 +1,23 @@
+<h2 class="bottom-pad">{{ __("Motifs for %s", "default", cabin_name) }}</h2>
+
+<form method="post">{{ form_token() }}
+    <ul id="motifs-for-cabin">
+{% for key, motif in motifs %}
+    <li>
+        <input
+            id="motif-{{ key|e('html_attr') }}"
+            type="checkbox"
+            name="motifs_enabled[{{ key|e('html_attr') }}]"
+            value="1"
+            {% if motif.enabled %} checked="checked"{% endif %}
+        />
+        <label for="motif-{{ key|e('html_attr') }}">
+            {{ motif.name }}/{{ motif.supplier }}
+        </label>
+    </li>
+{% endfor %}
+    </ul>
+    <button class="pure-button pure-button-primary">
+        {{ __("Save Motif Settings") }}
+    </button>
+</form>
