@@ -7,10 +7,10 @@
 
 *The sky is only the beginning.*
 
-Airship is a content management system, blog engine, and application 
+CMS Airship is a content management system, blog engine, and application 
 development framework written for PHP 7.
 
-Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
+CMS Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
 
 [Commercial license are available for purchase](https://paragonie.com/contact)
@@ -42,10 +42,9 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 ## Customizing Your Airship
 
-Airship extensions come in three flavors ([detailed explanations](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/1-Lingo-Jargon.md#airship-extension-types)):
+CMS Airship extensions come in three flavors ([detailed explanations](https://github.com/paragonie/airship-docs/blob/master/en-us/01-intro/1-Lingo-Jargon.md#airship-extension-types)):
 
-* **Cabins**: entire self-contained applications -- If you are developing a
-   custom web application, you want to create your own Cabin.
+* **Cabins**: self-contained applications
 * **Gadgets**: alters the functionality of an existing Cabin (or of the
   Engine itself)
 * **Motifs**: alters the apperance of an existing Cabin
