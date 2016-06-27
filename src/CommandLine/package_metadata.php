@@ -12,6 +12,8 @@ use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 require_once \dirname(__DIR__).'/bootstrap.php';
 
 /**
+ * Package metadata updates.
+ *
  * @param Database $db
  * @param array $updates
  * @return bool
@@ -36,9 +38,14 @@ function processUpdates(Database $db, array $updates = []): bool
     return $db->commit();
 }
 
-$channels = \Airship\loadJSON(ROOT . '/config/channels.json');
+$channels = \Airship\loadJSON(
+    ROOT . '/config/channels.json'
+);
 $state = State::instance();
-$lastScan = \file_get_contents(ROOT . '/tmp/last_metadata_update.txt');
+
+$lastScan = \file_get_contents(
+    ROOT . '/tmp/last_metadata_update.txt'
+);
 if ($lastScan === false) {
     $lastScan = '1970-01-01\T00:00:00';
 }
@@ -63,7 +70,8 @@ if ($state->hail instanceof Hail) {
                     if (\processUpdates($db, ['packageMetadata'])) {
                         file_put_contents(
                             ROOT . '/tmp/last_metadata_update.txt',
-                            (new \DateTime())->format(\AIRSHIP_DATE_FORMAT)
+                            (new \DateTime())
+                                ->format(\AIRSHIP_DATE_FORMAT)
                         );
                         exit(0);
                     }

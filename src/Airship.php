@@ -156,7 +156,10 @@ function autoload(string $namespace, string $directory): bool
  */
 function chunk(string $str, string $token = '/'): array
 {
-    return \explode($token, \trim($str, $token));
+    return \explode(
+        $token,
+        \trim($str, $token)
+    );
 }
 
 /**
@@ -169,12 +172,29 @@ function clear_cache()
     if (\extension_loaded('apcu')) {
         \apcu_clear_cache();
     }
-    foreach (\Airship\list_all_files(ROOT . '/tmp/cache/static') as $f) {
-        if (\preg_match('#/([0-9a-z]+)$#', $f)) {
-            \unlink($f);
+    $dirs = [
+        'comments',
+        'csp_hash',
+        'csp_static',
+        'html_purifier',
+        'markdown',
+        'static'
+    ];
+    foreach ($dirs as $dir) {
+        foreach (\Airship\list_all_files(ROOT . '/tmp/cache/' . $dir) as $f) {
+            if (\is_dir($f)) {
+                continue;
+            }
+            if (\preg_match('#/([0-9a-z]+)$#', $f)) {
+                \unlink($f);
+            }
         }
     }
-    foreach (\Airship\list_all_files(ROOT . '/tmp/cache/csp_static') as $f) {
+    // Nuke the Twig cache separately:
+    foreach (\Airship\list_all_files(ROOT . '/tmp/cache/twig') as $f) {
+        if (\is_dir($f)) {
+            continue;
+        }
         if (\preg_match('#/([0-9a-z]+)$#', $f)) {
             \unlink($f);
         }
@@ -196,9 +216,15 @@ function configWriter(string $rootDir): \Twig_Environment
     $twigLoader = new \Twig_Loader_Filesystem($rootDir);
     $twigEnv = new \Twig_Environment($twigLoader);
     $twigEnv->addFilter(
-        new \Twig_SimpleFilter('je', function ($data, int $indents = 0) {
-            \Airship\LensFunctions\je($data, $indents);
-        })
+        new \Twig_SimpleFilter(
+            'je',
+            function ($data, int $indents = 0) {
+                \Airship\LensFunctions\je(
+                    $data,
+                    $indents
+                );
+            }
+        )
     );
     return $twigEnv;
 }
@@ -339,7 +365,10 @@ function get_database(string $id = 'default'): Database
             $k = \array_keys($state->database_connections[$id])[0];
             $_cache[$id] = $state->database_connections[$id][$k];
         } else {
-            $r = \random_int(0, \count($state->database_connections[$id]) - 1);
+            $r = \random_int(
+                0,
+                \count($state->database_connections[$id]) - 1
+            );
             $k = \array_keys($state->database_connections[$id])[$r];;
             $_cache[$id] = $state->database_connections[$id][$k];
         }
@@ -358,7 +387,8 @@ function get_database(string $id = 'default'): Database
  */
 function get_gravatar_url(string $email): string
 {
-    return 'https://www.gravatar.com/avatar/'.\md5(\strtolower(\trim($email)));
+    return 'https://www.gravatar.com/avatar/' .
+        \md5(\strtolower(\trim($email)));
 }
 
 /**
@@ -371,6 +401,8 @@ function get_gravatar_url(string $email): string
 function getReCaptcha(string $secretKey, array $opts = []): ReCaptcha
 {
     $state = State::instance();
+
+    // Merge arrays:
     $opts = $opts + $state->universal['guzzle'];
 
     // Forcefully route this over Tor
@@ -645,7 +677,12 @@ function queryStringRoot(
     string $driver = '',
     array $params = []
 ): string {
-    return \Airship\queryString($index, $params, '', $driver);
+    return \Airship\queryString(
+        $index,
+        $params,
+        '',
+        $driver
+    );
 }
 
 /**
@@ -697,8 +734,19 @@ function secure_shuffle(array &$array)
  */
 function slugFromTitle(string $title): string
 {
-    $slug = \preg_replace('#[^A-Za-z0-9]#', '-', \strtolower($title));
-    return \trim(\preg_replace('#\-{2,}#', '-', $slug), '-');
+    $slug = \preg_replace(
+        '#[^A-Za-z0-9]#',
+        '-',
+        \strtolower($title)
+    );
+    return \trim(
+        \preg_replace(
+            '#\-{2,}#',
+            '-',
+            $slug
+        ),
+        '-'
+    );
 }
 
 /**

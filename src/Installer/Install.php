@@ -7,8 +7,8 @@ use \Airship\Engine\{
     State
 };
 use \Airship\Engine\Security\CSRF;
-use \ParagonIE\Halite\Password;
 use \GuzzleHttp\Client;
+use \ParagonIE\Halite\Password;
 use \ParagonIE\ConstantTime\Base64;
 
 /**
@@ -23,18 +23,22 @@ class Install
      * @var Database
      */
     protected $db;
+
     /**
      * @var bool
      */
     protected $autoSave = true;
+
     /**
      * @var \Twig_Environment
      */
     protected $twig;
+
     /**
      * @var array
      */
     protected $data;
+
     /**
      * @var CSRF
      */
@@ -59,7 +63,12 @@ class Install
             $this->data['token'] = Base64::encode(
                 \random_bytes(33)
             );
-            \setcookie('installer', $this->data['token'], \time() + 8640000, '/');
+            \setcookie(
+                'installer',
+                $this->data['token'],
+                \time() + 8640000,
+                '/'
+            );
         } elseif (empty($_COOKIE['installer'])) {
             echo 'No installer authorization token found.', "\n";
             exit(255);
@@ -133,7 +142,7 @@ class Install
      * @param string $template
      * @return bool
      */
-    protected function display(string $template)
+    protected function display(string $template): bool
     {
         $data = $this->data;
         $data['POST'] = $_POST;
@@ -153,14 +162,14 @@ class Install
         if (\extension_loaded('pgsql') && \extension_loaded('pdo_pgsql')) {
             $drivers['pgsql'] = 'PostgreSQL';
         }
-        if (\extension_loaded('mysql') && \extension_loaded('pdo_mysql')) {
-            $drivers['mysql'] = 'MySQL';
-        }
         
         // While our Database class supports these, our core architecture
         // does not explicitly support them yet. Use at your own risk:
         
         /*
+        if (\extension_loaded('mysql') && \extension_loaded('pdo_mysql')) {
+            $drivers['mysql'] = 'MySQL';
+        }
         if (\extension_loaded('sqlite') && \extension_loaded('pdo_sqlite')) {
             $drivers['sqlite'] = 'SQLite';
         }
@@ -272,8 +281,8 @@ class Install
         if (!empty($post['passphrase'])) {
             // Password was changed:
             $this->data['admin']['passphrase'] = Password::hash(
-                    $post['passphrase'],
-                    $state->keyring['auth.password_key']
+                $post['passphrase'],
+                $state->keyring['auth.password_key']
             );
         }
         $this->data['cabins'] = $post['cabin'];
@@ -306,7 +315,10 @@ class Install
                 ]
             );
             $this->data['tor_installed'] = (
-                \stripos((string) $response->getBody(), 'Example rendezvous points page') !== false
+                \stripos(
+                    (string) $response->getBody(),
+                    'Example rendezvous points page'
+                ) !== false
             );
         } catch (\RuntimeException $e) {
             $this->data['tor_installed'] = false;
@@ -318,22 +330,24 @@ class Install
      */
     protected function finalConfiguration()
     {
-        $twigEnv = \Airship\configWriter(ROOT.'/config/templates');
+        $twigEnv = \Airship\configWriter(
+            ROOT . '/config/templates'
+        );
 
         \file_put_contents(
-            ROOT.'/config/cabins.json',
+            ROOT . '/config/cabins.json',
             $this->finalConfigCabins($twigEnv)
         );
         \file_put_contents(
-            ROOT.'/config/databases.json',
+            ROOT . '/config/databases.json',
             $this->finalConfigDatabases($twigEnv)
         );
         \file_put_contents(
-            ROOT.'/config/gadgets.json',
+            ROOT . '/config/gadgets.json',
             '[]'
         );
         \file_put_contents(
-            ROOT.'/config/universal.json',
+            ROOT . '/config/universal.json',
             $this->finalConfigUniversal($twigEnv)
         );
     }
@@ -356,24 +370,21 @@ class Install
                 'name' => $name
             ];
 
-            \file_put_contents(
+            \Airship\saveJSON(
                 ROOT . '/Cabin/' . $name . '/config/config.json',
-                \json_encode(
-                    $this->data['config_extra'][$name] ?? [],
-                    JSON_PRETTY_PRINT
-                )
+                $this->data['config_extra'][$name] ?? []
             );
-            \file_put_contents(
+            \Airship\saveJSON(
                 ROOT . '/Cabin/' . $name . '/config/twig_vars.json',
-                \json_encode(
-                    $this->data['twig_vars'][$name] ?? [],
-                    JSON_PRETTY_PRINT
-                )
+                $this->data['twig_vars'][$name] ?? []
             );
         }
-        return $twig->render('cabins.twig', [
-            'cabins' => $cabins
-        ]);
+        return $twig->render(
+            'cabins.twig',
+            [
+                'cabins' => $cabins
+            ]
+        );
     }
     
     /**
@@ -457,6 +468,7 @@ class Install
     }
 
     /**
+     * Set up the database tables, views, etc.
      *
      */
     protected function finalDatabaseSetup()
@@ -466,7 +478,7 @@ class Install
         // Let's iterate through the SQL files and run them all
         $driver = $this->db->getDriver();
         $files = \Airship\list_all_files(
-            ROOT.'/Installer/sql/'.$driver,
+            ROOT . '/Installer/sql/' . $driver,
             'sql'
         );
         \sort($files);
@@ -494,7 +506,7 @@ class Install
      */
     protected function finalDatabasePrimary(): Database
     {
-        $databases = \Airship\loadJSON(ROOT.'/config/databases.json');
+        $databases = \Airship\loadJSON(ROOT . '/config/databases.json');
         $dbConf = $databases['default'][0];
         $conf = [
             isset($dbConf['dsn'])
@@ -609,10 +621,13 @@ class Install
             'SELECT userid FROM airship_users WHERE username = ?',
             $this->data['admin']['username']
         );
-        $this->db->insert('airship_users_groups', [
-            'userid' => $userid,
-            'groupid' => self::GROUP_ADMIN
-        ]);
+        $this->db->insert(
+            'airship_users_groups',
+            [
+                'userid' => $userid,
+                'groupid' => self::GROUP_ADMIN
+            ]
+        );
         
         // Log in as the user
         $_SESSION['userid'] = $userid;

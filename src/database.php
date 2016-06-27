@@ -15,7 +15,9 @@ use \Airship\Engine\{
  */
 
 $dbgear = Gears::getName('Database');
-$databases = \Airship\loadJSON(ROOT . '/config/databases.json');
+$databases = \Airship\loadJSON(
+    ROOT . '/config/databases.json'
+);
 $dbPool = [];
 
 // Needed for IDE code completion:

@@ -27,12 +27,17 @@ if (\file_exists($cspCacheFile) && \filesize($cspCacheFile) > 0) {
 
         // Merge the cabin-specific policy with the base policy
         if (!empty($cabinPolicy['inherit'])) {
-            $basePolicy = \Airship\loadJSON(ROOT . '/config/content_security_policy.json');
-            $cabinPolicy = \Airship\csp_merge($cabinPolicy, $basePolicy);
+            $basePolicy = \Airship\loadJSON(
+                ROOT . '/config/content_security_policy.json'
+            );
+            $cabinPolicy = \Airship\csp_merge(
+                $cabinPolicy,
+                $basePolicy
+            );
         }
-        \file_put_contents(
+        \Airship\saveJSON(
             $cspCacheFile,
-            \json_encode($cabinPolicy, JSON_PRETTY_PRINT)
+            $cabinPolicy
         );
         $csp = CSPBuilder::fromFile($cspCacheFile);
     } else {
