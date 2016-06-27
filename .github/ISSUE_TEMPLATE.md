@@ -1,3 +1,5 @@
+- [ ] Check this box if this is a security vulnerability.
+
 ### Summary
 
 
@@ -10,10 +12,14 @@
 
 
 
-### Common Issues
+### Relevant Debug Information
 
-Please make sure all these boxes are checked before you submit your issue.
+If you access `$bridge_url/help` as a privileged user, you will be greeted with
+a bunch of JSON scripts. At minimum, the "PHP Configuration" box will be useful
+for diagnosing any problems. Please paste it below:
 
-- [ ] You are running a supported version of PHP (7.0.x) (Run `php -v` from the command line)
-- [ ] You have libsodium 1.0.9 or newer installed
-- [ ] You have version 1.0.3 or newer of the PHP extension for libsodium installed
+```json
+. . . PASTE RELEVANT CONFIGURATION JSON IN PLACE OF THIS . . .
+```
+
+Alternatively, feel free to delete this section.

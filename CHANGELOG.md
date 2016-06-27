@@ -1,4 +1,4 @@
-## Version 1.0.0 - 2016-06-??
+## Version 1.0.0 - 2016-06-27
 
   * You can now move or rename directories in our custom page system.
   * Added an AJAX endpoint for clearing the cache remotely.
