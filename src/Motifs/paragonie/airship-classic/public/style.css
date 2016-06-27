@@ -1970,3 +1970,22 @@ h2#comments {
 .announce-dismiss {
     cursor: pointer;
 }
+#announcements {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid #000;
+    margin: 0 1ex 1ex 1ex;
+    padding: 0.5ex;
+}
+.announcement + .announcement {
+    margin-top: 1em;
+}
+.announcement h3 {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.announcement h3 a {
+    font-size: 12pt;
+}
+.announce-body {
+    padding-left: 1em;
+    padding-right: 1em;
+}
