@@ -26,7 +26,7 @@ class CustomPages extends BlueprintGear
      * @param string $cabin
      * @return CustomPages
      */
-    public function setCabin(string $cabin): CustomPages
+    public function setCabin(string $cabin): self
     {
         $this->cabin = $cabin;
         return $this;
@@ -57,7 +57,10 @@ class CustomPages extends BlueprintGear
             WHERE
                   directoryid = ?
               AND parent NOT IN ' .
-                $this->db->escapeValueSet($idsEncountered, 'int'),
+                $this->db->escapeValueSet(
+                    $idsEncountered,
+                    'int'
+                ),
             $directoryId
         );
         if (empty($row)) {
@@ -70,7 +73,12 @@ class CustomPages extends BlueprintGear
             // Did it match this row's cabin?
             if ($row['cabin'] !== $cabin) {
                 throw new CustomPageNotFoundException(
-                    \trk('errors.pages.directory_wrong_cabin', $row['url'], $cabin, $row['cabin'])
+                    \trk(
+                        'errors.pages.directory_wrong_cabin',
+                        $row['url'],
+                        $cabin,
+                        $row['cabin']
+                    )
                 );
             }
         }
@@ -87,7 +95,11 @@ class CustomPages extends BlueprintGear
 
         // Append the current ID to the encountered IDs list
         $idsEncountered[] = $directoryId;
-        $pieces = $this->getPathFromDirectoryId($row['parent'], $row['cabin'], $idsEncountered);
+        $pieces = $this->getPathFromDirectoryId(
+            (int) $row['parent'],
+            $row['cabin'],
+            $idsEncountered
+        );
         $pieces[] = $row['url'];
         return $pieces;
     }
@@ -101,8 +113,11 @@ class CustomPages extends BlueprintGear
      * @return int
      * @throws CustomPageNotFoundException
      */
-    public function getDirectoryId(string $dir, int $parent = 0, string $cabin = ''): int
-    {
+    public function getDirectoryId(
+        string $dir,
+        int $parent = 0,
+        string $cabin = ''
+    ): int {
         if (empty($cabin)) {
             $cabin = $this->cabin;
         }
@@ -234,6 +249,7 @@ class CustomPages extends BlueprintGear
         }
         return $page;
     }
+
     /**
      * Get information about a custom page.
      *
@@ -285,7 +301,10 @@ class CustomPages extends BlueprintGear
             throw new CustomPageNotFoundException("Page ID: ".$pageId);
         }
         if (!empty($latest['metadata'])) {
-            $latest['metadata'] = \json_decode($latest['metadata'], true);
+            $latest['metadata'] = \json_decode(
+                $latest['metadata'],
+                true
+            );
         } else {
             $latest['metadata'] = [];
         }

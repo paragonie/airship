@@ -52,6 +52,7 @@ class BlogPosts extends LandingGear
             );
             return false;
         }
+
         if (!$this->isLoggedIn() && !$this->config('blog.comments.guests')) {
             $this->storeLensVar(
                 'blog_error',

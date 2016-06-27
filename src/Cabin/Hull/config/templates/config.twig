@@ -1,18 +1,20 @@
 {
     "blog": {
         "cachelists": {{ config['blog']['comments']['cachelists'] ? 'true' : 'false' }},
-        "per_page": {{ config['blog']['comments']['per_page']|je }},
         "comments": {
             "depth_max": {{ config['blog']['comments']['comments']['depth_max']|je }},
             "enabled": {{ config['blog']['comments']['enabled'] ? 'true' : 'false' }},
-            "guests": {{ config['blog']['comments']['guests'] ? 'true' : 'false' }}
-        }
+            "guests": {{ config['blog']['comments']['guests'] ? 'true' : 'false' }},
+            "recaptcha": {{ config['blog']['comments']['recaptcha'] ? 'true' : 'false' }}
+        },
+        "per_page": {{ config['blog']['comments']['per_page']|je }}
+    },
+    "cache-secret": {{ config['cache-secret']|je }},
+    "file": {
+        "cache": {{ config['file']['cache']|je }}
     },
     "homepage": {
         "blog-posts": {{ config['homepage']['blog-posts']|je }}
-    },
-    "file": {
-        "cache": {{ config['file']['cache']|je }}
     },
     "recaptcha": {
         "secret-key": {{ config['recaptcha']['secret-key']|je }},

@@ -46,8 +46,11 @@ class IndexPage extends LandingGear
             $mathJAX |= \strpos($blog['body'], '$$') !== false;
         }
 
-        $this->stasis('index', [
+        $args = [
             'blogposts' => $blogRoll
-        ]);
+        ];
+        $this->config('blog.cachelists')
+            ? $this->stasis('index', $args)
+            : $this->lens('index', $args);
     }
 }
