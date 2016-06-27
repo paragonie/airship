@@ -10,7 +10,7 @@
         </div>
         <div class="table-row">
             <label class="table-cell">
-                Page Name:
+                {{ __("Page Name") }}:
             </label>
             <div class="table-cell">
                 {{ dir }}/<input title="{{ __("URL") }}" type="text" required="required" name="url" />
@@ -38,7 +38,7 @@
         </div>
         <div class="table-row">
             <label class="table-cell">
-                Page Format:
+                {{ __("Page Format") }}:
             </label>
             <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {

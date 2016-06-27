@@ -24,7 +24,12 @@
                 <select name="category" id="blog_post_category" class="treeselect">
                     <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
-                        {{ bcatmac.selectBox(category, _POST.category|default(0)) }}
+                        {{
+                            bcatmac.selectBox(
+                                category,
+                                _POST.category|default(0)
+                            )
+                        }}
                     {% endfor %}
                 </select>
             </div>
@@ -37,7 +42,7 @@
                     <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
                     {% for auth in authors %}
                         <option{#
-                            #} value="{{ auth.authorid }}"{#
+                            #} value="{{ auth.authorid|e('html_attr') }}"{#
                             #}{% if _POST.author %}{#
                                 #}{% if auth.authorid == _POST.author %}{#
                                     #} selected="selected"{#
@@ -47,7 +52,11 @@
                             #}{% endif %}>{{ auth.name }}</option>
                     {% endfor %}
                 </select>
-                <a href="{{ cabin_url() }}author/new" target="_blank" title="{{ __("Create an Author Profile")|e('html_attr') }}">{#
+                <a
+                    href="{{ cabin_url() }}author/new"
+                    target="_blank"
+                    title="{{ __("Create an Author Profile")|e('html_attr') }}"
+                >{#
                     #}<i class="fa fa-user-plus"></i>{#
                         #}{% if not authors %}{#
                             #}{{ __("Create an Author Profile Now") }}{#

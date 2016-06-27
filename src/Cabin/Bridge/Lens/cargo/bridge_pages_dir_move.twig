@@ -8,7 +8,6 @@
         <select id="destination" name="move_destination">
             <option value=""></option>
             {% for cab in cabins %}
-                <!-- {{ custom_dir_tree[cab]|json_encode(constant("JSON_PRETTY_PRINT")) }} -->
                 <option
                     {% if not dirinfo.parent and dirinfo.cabin == cab %}
                         selected="selected"
@@ -33,10 +32,28 @@
 
     <hr />
 
-    <button type="submit" name="rename_btn" value="confirm" class="pure-button pure-button-secondary">
+    <button
+        class="pure-button pure-button-secondary"
+        name="rename_btn"
+        type="submit"
+        value="confirm"
+    >
         {{  __("Rename Directory") }}
     </button>
-    <a href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ parent }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
-        Cancel
+    <a
+        class="pure-button pure-button-tertiary"
+        href="{{
+            (
+                cabin_url() ~
+                "pages/" ~
+                    cabin ~
+                "?dir=" ~
+                    parent
+            )|e('html_attr')
+        }}"
+        id="cancel_btn"
+        type="button"
+    >
+        {{ __("Cancel") }}
     </a>
 </form>

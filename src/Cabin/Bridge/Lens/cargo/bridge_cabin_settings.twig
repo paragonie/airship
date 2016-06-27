@@ -7,7 +7,13 @@
             </label>
         </div>
         <div class="table-cell">
-            <input class="full-width" type="text" id="bridge_cabin_name" name="config[name]" value="{{ config.name|e('html_attr') }}" /><br />
+            <input
+                class="full-width"
+                type="text"
+                id="bridge_cabin_name"
+                name="config[name]"
+                value="{{ config.name|e('html_attr') }}"
+            />
         </div>
     </div>
     <div class="table-row">
@@ -17,12 +23,33 @@
             </label>
         </div>
         <div class="table-cell">
-            <input class="full-width" type="text" id="bridge_path" name="config[path]" value="{{ config.path|e('html_attr') }}" /><br />
-            <input id="bridge_enabled" class="inblock" type="checkbox" name="config[enabled]" value="1" {% if config.enabled %} checked="checked"{% endif %} />
+            <input
+                class="full-width"
+                type="text"
+                id="bridge_path"
+                name="config[path]"
+                value="{{ config.path|e('html_attr') }}"
+            /><br />
+            <input
+                id="bridge_enabled"
+                class="inblock"
+                type="checkbox"
+                name="config[enabled]"
+                value="1"
+                {% if config.enabled %} checked="checked"{% endif %}
+            />
             <label for="bridge_enabled" class="inblock">
                 {{ __("Is this Cabin enabled?") }}
             </label><br />
-            <input id="bridge_https" class="inblock" type="checkbox" name="config[https]" value="1" {% if config.https %} checked="checked"{% endif %} />
+
+            <input
+                id="bridge_https"
+                class="inblock"
+                type="checkbox"
+                name="config[https]"
+                value="1"
+                {% if config.https %} checked="checked"{% endif %}
+            />
             <label for="bridge_https" class="inblock">
                 {{ __("Only allow HTTPS connections? (Recommended)") }}
             </label>
