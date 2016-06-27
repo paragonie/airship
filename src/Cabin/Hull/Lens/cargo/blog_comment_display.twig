@@ -12,8 +12,14 @@
                 {{ data.metadata.name }}
             {% endif %}
         {% endif %}
-        <time id="comment-{{ data.commentid }}" datetime="{{ data.created }}">{{ data.created|date('M j, Y H:i A') }}</time>
-        <a class="comment-link" href="#comment-{{ data.commentid }}"><i class="fa fa-link"></i> {{ __("Link") }}</a>
+        <time
+            id="comment-{{ data.commentid }}"
+            datetime="{{ data.created|e('html_attr') }}"
+        >{{ data.created|date('M j, Y H:i A') }}</time>
+        <a
+            class="comment-link"
+            href="#comment-{{ data.commentid|e('html_attr') }}"
+        ><i class="fa fa-link"></i> {{ __("Link") }}</a>
         {% if depth + 1 < cabin_custom_config()['blog']['comments']['depth_max'] %}
             <a{#
                 #} href="#reply-to"{#
@@ -46,7 +52,9 @@
         #}</div>
     {% endif %}
         <div class="table-cell">
-            <div class="blog-comment-body">{{ data.message|default("")|CleanMarkdown }}</div>
+            <div class="blog-comment-body">{{
+                data.message|default("")|CleanMarkdown
+            }}</div>
         </div>
     </div>
 </div>

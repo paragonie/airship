@@ -22,7 +22,10 @@
                                 <option{#
                                     #} class="select-author-name"{#
                                     #}{% if author.default_author_for_user %} selected="selected"{% endif %}{#
-                                    #} value="{{ author.authorid|e('html_attr') }}">{{ author.name }}</option>
+                                    #} value="{{ author.authorid|e('html_attr') }}"
+                                >
+                                    {{ author.name }}
+                                </option>
                             {% endfor %}
                             </optgroup>
                         </select> <a href="{{ cabin_url('Bridge') }}author">{{ __("Create a New Author") }}</a>
@@ -31,7 +34,11 @@
             {% endif %}
             <div class="form-row guest-comment-field">
                 <div class="form-column blog-comment-label">
-                    <label for="name"{% if not userid() %} class="required-form"{% endif %}>{{ __("Your Name") }}</label>:
+                    <label
+                        for="name"
+                        {% if not userid() %}
+                        class="required-form"{% endif %}
+                    >{{ __("Your Name") }}</label>:
                 </div>
                 <div class="form-colum blog-comment-name-wrapper">
                     <input{#

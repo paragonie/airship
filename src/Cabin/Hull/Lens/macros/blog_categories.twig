@@ -1,6 +1,9 @@
 {% macro blogCategories(data, depth) %}
     <li>
-        <a href="/blog/category/{{ data.slug|e('url') }}"><i class="fa fa-folder{% if data.children %}-open{% endif %}"></i> {{ data.name }}</a>
+        <a href="/blog/category/{{ data.slug|e('url') }}">
+            <i class="fa fa-folder{% if data.children %}-open{% endif %}"></i>
+            {{ data.name }}
+        </a>
         {% if data.children %}
             <ol class="blog_categories">
                 {% for child in data.children %}

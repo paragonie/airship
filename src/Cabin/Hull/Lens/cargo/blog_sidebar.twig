@@ -35,7 +35,10 @@
     <div class="blog-sidebar-tagcloud-wrapper"><ol class="tagcloud">
         {% for tag in blogmenu.tags %}{% if tag.post_ratio > 0.1 %}
             <li>
-            <a href="{{ cabin_url() }}blog/tag/{{ tag.slug|e('html_attr') }}" style="font-size: {{ ((tag.post_ratio * 50) + 50) }}%;{% if tag.post_ratio > 1 %} font-weight: bold;{% endif %}">
+            <a href="{{ cabin_url() }}blog/tag/{{ tag.slug|e('html_attr') }}"
+               style="font-size: {{ ((tag.post_ratio * 50) + 50) }}%;
+                    {% if tag.post_ratio > 1 %} font-weight: bold;{% endif %}
+               ">
                 {{ tag.name }}
             </a>
             </li>{% endif %}

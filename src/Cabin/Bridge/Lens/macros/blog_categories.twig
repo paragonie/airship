@@ -3,7 +3,15 @@
     #}{% if catdata.children %}
     <ul class="blogcat_child">
         {% for child in catdata.children %}
-            {{ _self.frontCatTree(child, catpdata.groupid, this_cargo, can_edit, depth + 1) }}
+            {{
+                _self.frontCatTree(
+                    child,
+                    catpdata.groupid,
+                    this_cargo,
+                    can_edit,
+                    depth + 1
+                )
+            }}
         {% endfor %}
     </ul>
 {% endif %}</li>
@@ -17,11 +25,11 @@
     #}{% endif %}
     {% if not selected or catdata.categoryid != selected %}
     <option
-            value="{{ catdata.categoryid|e }}"
+            value="{{ catdata.categoryid|e('html_attr') }}"
             data-ancestors="{{ catdata.ancestors|json_encode }}"
             data-fullpath="{{ fullpath|e('html_attr') }}"
             class="treeselect {#
-            #}branch_{{ depth|default(0)|e }}{#
+            #}branch_{{ depth|default(0)|e('html_attr') }}{#
             #}{% if catdata.children %}{#
                 #} treeselect_parent{#
             #}{% endif %}"
@@ -29,12 +37,20 @@
                 selected="selected"
             {% endif %}
     >
-        {{ catdata.name|e }}
+        {{ catdata.name }}
     </option>
         {% if catdata.children %}
             {% for child in catdata.children %}
                 {% if child.categoryid not in catdata.ancestors %}
-                    {{ _self.selectBox(child, selected|default(''), catdata.categoryid, fullpath, depth + 1) }}
+                    {{
+                        _self.selectBox(
+                            child,
+                            selected|default(''),
+                            catdata.categoryid,
+                            fullpath,
+                            depth + 1
+                        )
+                    }}
                 {% endif %}
             {% endfor %}
         {% endif %}
