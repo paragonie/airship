@@ -11,6 +11,9 @@
   * Administrators can post announcements which show up on the Bridge dashboard
     when users log in. Once a user has read an announcement, they may dismiss
     the message.
+  * Bugfix: The Content-Security-Policy management tools didn't allow users to
+    allow `data:` URIs because of a Twig template error. Instead of slicing at
+    `[-4:]`, we were slicing at `[4:]`.
 
 ## Version 0.3.0 - 2016-06-21
 
