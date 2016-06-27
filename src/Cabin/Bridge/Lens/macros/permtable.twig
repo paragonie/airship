@@ -1,13 +1,13 @@
 {% macro permTable(groupdata, parentid, depth = 0) %}
 <tr class="perm_row"{#
-        #} data-id="{{ groupdata.groupid }}"{#
-        #} data-parent="{{ parentid|default(0) }}"{#
-        #} id="group_{{ groupdata.groupid }}"{#
+        #} data-id="{{ groupdata.groupid|e('html_attr') }}"{#
+        #} data-parent="{{ parentid|default(0)|e('html_attr') }}"{#
+        #} id="group_{{ groupdata.groupid|e('html_attr') }}"{#
         #} data-children=""{#
         #} data-ancestors=""{#
     #}>
     <td class="permtable_name perm_row_group depth_{{ depth|default(0) }}">
-        <div class="perm_groupname">{{ groupdata.name|e }}</div>
+        <div class="perm_groupname">{{ groupdata.name }}</div>
     </td>
     {% for label, value in groupdata.perms %}<td class="permtable_perm{#
                 #}{% if groupdata.superuser %}{#
@@ -24,18 +24,25 @@
                     #}" title="{{ groupdata.name|e('html_attr') }} - {{ label|ucfirst|e('html_attr') }}: {{ __("No")|e('html_attr') }}{#
                 #}{% endif %}{#
                 #}" {#
-            #}id="group_{{ groupdata.groupid }}_{{ label|e }}" {#
-            #}data-group="{{ groupdata.groupid }}" {#
-            #}data-label="{{ label|e }}"{#
+            #}id="group_{{ groupdata.groupid|e('html_attr') }}_{{ label|e('html_attr') }}" {#
+            #}data-group="{{ groupdata.groupid|e('html_attr') }}" {#
+            #}data-label="{{ label|e('html_attr') }}"{#
             #}><!--
-         --><input class="perms_checkbox" type="checkbox" name="group_perms[{{ groupdata.groupid|e }}][{{ label|e }}]" value="1"{#
+         --><input
+                class="perms_checkbox"
+                type="checkbox"
+                name="group_perms[{{ groupdata.groupid|e('html_attr') }}][{{ label|e('html_attr') }}]"
+                value="1"{#
             #}{% if groupdata.superuser %}{#
                 #} checked="true" disabled="disabled" {#
             #}{% elseif value %}{#
                 #} checked="checked"{#
-            #}{% endif %} id="group_{{ groupdata.groupid }}_{{ label|e }}_cbox" data-id="{{ groupdata.groupid }}" /><!--
-         --><label id="group_{{ groupdata.groupid }}_{{ label|e }}_indicator" {#
-            #} for="group_{{ groupdata.groupid }}_{{ label|e }}_cbox" {#
+            #}{% endif %}
+                id="group_{{ groupdata.groupid|e('html_attr') }}_{{ label|e('html_attr') }}_cbox"
+                data-id="{{ groupdata.groupid|e('html_attr') }}"
+            /><!--
+         --><label id="group_{{ groupdata.groupid }}_{{ label|e('html_attr') }}_indicator" {#
+            #} for="group_{{ groupdata.groupid }}_{{ label|e('html_attr') }}_cbox" {#
             #}{% if groupdata.superuser %}{#
                 #}data-default="admin" data-state="admin"><i class="fa fa-bolt perm-admin"></i>{#
             #}{% elseif value %}{#
@@ -60,8 +67,8 @@
         #} id="group_{{ groupdata.groupid }}"{#
     #}>
     <td class="permtable_name depth_{{ depth|default(0) }}">
-        <div class="perm_groupname"><a href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid }}">{#
-            #}{{ groupdata.name|e }}{#
+        <div class="perm_groupname"><a href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid|e('html_attr') }}">{#
+            #}{{ groupdata.name }}{#
         #}</a></div>
     </td>
     {% for label, value in groupdata.perms %}{#

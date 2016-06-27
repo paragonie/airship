@@ -6,18 +6,18 @@
                 <input
                     class="perms_user_checkbox"
                     type="checkbox"
-                    name="user_perms[{{ user.userid|e }}][{{ act|e }}]" value="1"
+                    name="user_perms[{{ user.userid|e('html_attr') }}][{{ act|e('html_attr') }}]" value="1"
                     {% if perms[act] %}
                         checked="checked"
                     {% endif %}
-                    id="user_{{ user.userid }}_{{ act|e }}_cbox"
-                    data-action="{{ act|e }}"
-                    data-id="{{ user.userid|e }}"
+                    id="user_{{ user.userid|e('html_attr') }}_{{ act|e('html_attr') }}_cbox"
+                    data-action="{{ act|e('html_attr') }}"
+                    data-id="{{ user.userid|e('html_attr') }}"
                 />
                 <label
                     class="perms_user_label"
-                    id="user_{{ user.userid }}_{{ act|e }}_indicator"
-                    for="user_{{ user.userid }}_{{ act|e }}_cbox"
+                    id="user_{{ user.userid|e('html_attr') }}_{{ act|e('html_attr') }}_indicator"
+                    for="user_{{ user.userid|e('html_attr') }}_{{ act|e('html_attr') }}_cbox"
                     {% if perms[act] %}
                         data-default="on" data-state="on"
                     {% else %}

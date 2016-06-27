@@ -1,13 +1,21 @@
 <div id="pagination">
-    {% set num_pages = (pagination.count / pagination.per_page|default(20))|ceil %}
+    {% set num_pages = (
+        pagination.count / pagination.per_page|default(20)
+    )|ceil %}
     {% if num_pages > 0 %}
     <ul class="pages">
         {% if pagination.page > 1 %}
             <li class="pagination_first" title="Go to the first page">{#
-                #}<a href="{{ pagination.base }}">&laquo;</a>{#
+                #}<a href="{{ pagination.base|e('html_attr') }}">&laquo;</a>{#
             #}</li>
             <li class="pagination_prev" title="Go to the previous page">{#
-                #}<a href="{{ pagination.base ~ pagination.suffix|default('/') ~ (pagination.page - 1) }}">&lsaquo;</a>{#
+                #}<a href="{{
+                    (
+                        pagination.base ~
+                        pagination.suffix|default('/') ~
+                        (pagination.page - 1)
+                    )|e('html_attr')
+                }}">&lsaquo;</a>{#
             #}</li>
         {% else %}
             <li class="pagination_first" title="Go to the first page">&laquo;</li>
@@ -59,16 +67,33 @@
                     page_hide_2
                 {%  endif %}
                 {% endspaceless %}">{#
-                    #}<a href="{{ pagination.base ~ pagination.suffix|default('/') ~ p }}">{{ p }}</a>{#
+                    #}<a href="{{
+                        (
+                            pagination.base ~
+                            pagination.suffix|default('/') ~
+                            p
+                        )|e('html_attr')
+                    }}">{{ p }}</a>{#
                 #}</li>
             {% endif %}
         {% endfor %}
         {% if num_pages - pagination.page > 0 %}
             <li class="pagination_next" title="Go to the next page">{#
-                #}<a href="{{ pagination.base ~ pagination.suffix|default('/') ~ (pagination.page + 1) }}">&rsaquo;</a>{#
+                #}<a href="{{
+                    (
+                        pagination.base ~
+                        pagination.suffix|default('/') ~
+                        (pagination.page + 1)
+                    )|e('html_attr')
+                }}">&rsaquo;</a>{#
             #}</li>
             <li class="pagination_last" title="Go to the last page">{#
-                #}<a href="{{ pagination.base ~ pagination.suffix|default('/') ~ num_pages }}">&raquo;</a>{#
+                #}<a href="{{ (
+                        pagination.base ~
+                        pagination.suffix|default('/') ~
+                        num_pages
+                    )|e('html_attr')
+                }}">&raquo;</a>{#
             #}</li>
         {% else %}
             <li class="pagination_next" title="Go to the next page">&rsaquo;</li>

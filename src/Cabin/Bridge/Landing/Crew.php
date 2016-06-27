@@ -51,7 +51,9 @@ class Crew extends AdminOnly
         $post = $this->post();
         if (!empty($post)) {
             if ($this->account->createGroup($post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/crew/groups');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/groups'
+                );
             }
         }
 

@@ -6,8 +6,8 @@ var editors = {};
 window.richTextLookups = {};
 window.editor_is_wysiwyg = false;
 window.editor_html_wrapper = {};
-$(document).ready(function() {
 
+$(document).ready(function() {
     window.richTextUpdate = function(_name, show_after) {
         var prefix = $("#bridge_main_menu_left").data("linkprefix");
         $.post(
@@ -35,12 +35,12 @@ $(document).ready(function() {
     };
 
     window['richTextWrapper'] = function(name, format_name) {
-
         richTextLookups[name] = format_name;
 
-        $("#rich_text_" + name +"_edit_tab").addClass("active_tab");
+        var editTab = $("#rich_text_" + name +"_edit_tab");
+        editTab.addClass("active_tab");
 
-        $("#rich_text_" + name +"_edit_tab").click(function(e) {
+        editTab.click(function(e) {
             var _name = $(this).parent().parent().data('name');
             $(this).parent().each(function () {
                 $("a").removeClass("active_tab");
@@ -67,7 +67,9 @@ $(document).ready(function() {
                     } else if (window.editor_is_wysiwyg) {
                         var cache_body = $("#rich_text_" + k).val();
                         delete editors[k];
-                        $("#rich_text_" + k + "_wrapper").html(window.editor_html_wrapper[k]);
+                        $("#rich_text_" + k + "_wrapper").html(
+                            window.editor_html_wrapper[k]
+                        );
                         $("#rich_text_" + k).val(cache_body);
                         $("#rich_text_" + k + "_tabs").show();
                     }
@@ -79,11 +81,10 @@ $(document).ready(function() {
             }
         });
 
-
         $("#rich_text_" + name + "_text").show();
         $("#rich_text_" + name + "_preview").hide();
 
-        if ($("#"+format_name).val() === "Rich Text") {
+        if ($("#" + format_name).val() === "Rich Text") {
             useWysiwyg(name);
         }
 

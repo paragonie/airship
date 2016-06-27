@@ -5,7 +5,14 @@
             {% set leaf_cargo = cargo("bridge_blog_category_tree") %}
             {% if categories %}
             {% for category in categories %}
-                {{ bcatmac.frontCatTree(category, null, leaf_cargo, can_update()) }}
+                {{
+                    bcatmac.frontCatTree(
+                        category,
+                        null,
+                        leaf_cargo,
+                        can_update()
+                    )
+                }}
             {% endfor %}
             {% else %}
                 {{ __("No categories found.") }}

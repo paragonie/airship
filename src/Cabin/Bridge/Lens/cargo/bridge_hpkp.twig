@@ -97,7 +97,7 @@
                     class="full-width"
                     title="{{ __("Public key hash")|e('html') }}"
                     type="text"
-                    name="config[hpkp][hashes][{{ i }}][hash]"
+                    name="config[hpkp][hashes][{{ i|e('html_attr') }}][hash]"
                     value="{{ h.hash|e('html_attr') }}"
                 />
                 </li>

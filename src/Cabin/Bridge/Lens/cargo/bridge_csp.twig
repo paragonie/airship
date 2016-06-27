@@ -48,32 +48,37 @@
                 <legend>
                     <input
                         class="csp_disable_all"
-                        id="csp_{{ key }}_disable_security"
+                        id="csp_{{ key|e('html_attr') }}_disable_security"
                         data-key="{{ key|e('html_attr') }}"
                         type="checkbox"
-                        name="content_security_policy[{{ key }}][disable-security]"
+                        name="content_security_policy[{{ key|e('html_attr') }}][disable-security]"
                         value="1"
                         {% if '*' in csp[key]['allow'] %}
                             checked="checked"
                         {% endif %}
                     />
-                    <label for="csp_{{ key }}_disable_security">
+                    <label for="csp_{{ key|e('html_attr') }}_disable_security">
                         {{ __("Disable all security for this directive?") }}
                     </label>
                 </legend>
-                <div id="csp_{{ key }}_inner">
-                    <ol id="csp_{{ key }}_whitelist">
+                <div id="csp_{{ key|e('html_attr') }}_inner">
+                    <ol id="csp_{{ key|e('html_attr') }}_whitelist">
                     {% for url in csp[key]['allow'] %}{% if url != '*' %}
                         <li><input
                             class="full-width"
                             type="text"
-                            placeholder="{{ ph }}"
-                            name="content_security_policy[{{ key }}][allow][]"
+                            placeholder="{{ ph|e('html_attr') }}"
+                            name="content_security_policy[{{ key|e('html_attr') }}][allow][]"
                             value="{{ url|e('html_attr') }}"
                         /></li>
                     {% endif %}{% endfor %}
                     </ol>
-                    <button type="button" data-key="{{ key|e('html_attr') }}" id="csp_{{ key|e('html_attr') }}_add" class="pure-button pure-button-tertiary csp_add_btn">
+                    <button
+                        type="button"
+                        data-key="{{ key|e('html_attr') }}"
+                        id="csp_{{ key|e('html_attr') }}_add"
+                        class="pure-button pure-button-tertiary csp_add_btn"
+                    >
                         <i class="fa fa-plus-circle"></i>{#
                         #}{% if key == 'plugin-types' %}{#
                             #}{{ btn }}{#
@@ -87,55 +92,55 @@
                         <hr />
                         {% if key in ['script-src', 'style-src'] %}
                         <input
-                            id="csp_{{ key }}_unsafe_inline"
+                            id="csp_{{ key|e('html_attr') }}_unsafe_inline"
                             type="checkbox"
-                            name="content_security_policy[{{ key }}][unsafe-inline]"
+                            name="content_security_policy[{{ key|e('html_attr') }}][unsafe-inline]"
                             value="1"
                             {% if csp[key]['unsafe-inline'] %}
                                 checked="checked"
                             {% endif %}
                         />
-                        <label for="csp_{{ key }}_unsafe_inline">
+                        <label for="csp_{{ key|e('html_attr') }}_unsafe_inline">
                             {{ __("Allow unsafe inline?") }}
                         </label><br />
                         {% if key == 'script-src' %}
                             <input
-                                id="csp_{{ key }}_unsafe_eval"
+                                id="csp_{{ key|e('html_attr') }}_unsafe_eval"
                                 type="checkbox"
-                                name="content_security_policy[{{ key }}][unsafe-eval]"
+                                name="content_security_policy[{{ key|e('html_attr') }}][unsafe-eval]"
                                 value="1"
                                 {% if csp[key]['unsafe-eval'] %}
                                     checked="checked"
                                 {% endif %}
                             />
-                            <label for="csp_{{ key }}_unsafe_eval">
+                            <label for="csp_{{ key|e('html_attr') }}_unsafe_eval">
                                 {{ __("Allow eval()?") }}
                             </label><br />
                         {% endif %}
                     {% endif %}
                     <input
-                        id="csp_{{ key }}_self"
+                        id="csp_{{ key|e('html_attr') }}_self"
                         type="checkbox"
-                        name="content_security_policy[{{ key }}][self]"
+                        name="content_security_policy[{{ key|e('html_attr') }}][self]"
                         value="1"
                         {% if csp[key]['self'] %}
                             checked="checked"
                         {% endif %}
                     />
-                    <label for="csp_{{ key }}_self">
+                    <label for="csp_{{ key|e('html_attr') }}_self">
                         {{ __("Allow self-references?") }}
                     </label><br />
-                    {% if key[4:] == '-src' %}
+                    {% if key[-4:] == '-src' %}
                         <input
-                            id="csp_{{ key }}_self"
+                            id="csp_{{ key|e('html_attr') }}_self"
                             type="checkbox"
-                            name="content_security_policy[{{ key }}][data]"
+                            name="content_security_policy[{{ key|e('html_attr') }}][data]"
                             value="1"
                             {% if csp[key]['data'] %}
                                 checked="checked"
                             {% endif %}
                         />
-                        <label for="csp_{{ key }}_self">
+                        <label for="csp_{{ key|e('html_attr') }}_self">
                             {{ __("Allow data URIs?") }}
                         </label>
                     {% endif %}

@@ -3,16 +3,28 @@
         "enabled": {{ config['board']['enabled'] ? 'true' : 'false' }},
         "captcha": {{ config['board']['captcha'] ? 'true' : 'false' }}
     },
+    "editor": {
+        "default-format": {{ config['editor']['default-format']|je }}
+    },
+    "file": {
+        "cache": {{ config['file']['cache'] }}
+    },
     "password-reset": {
         "enabled": {{ config['password-reset']['enabled'] ? 'true' : 'false' }},
         "logout": {{ config['password-reset']['logout'] ? 'true' : 'false' }},
         "ttl": {{ config['password-reset']['ttl']|je }}
     },
-    "file": {
-        "cache": {{ config['file']['cache'] }}
-    },
     "recaptcha": {
         "secret-key": {{ config['recaptcha']['secret-key']|je }},
         "site-key": {{ config['recaptcha']['site-key']|je }}
+    },
+    "two-factor": {
+        "issuer": {{ config['two-factor']['issuer']|default("")|je }},
+        "label": {{ config['two-factor']['label']|default("")|je }},
+        "length": {{ config['two-factor']['length']|default(6)|je }},
+        "period": {{ config['two-factor']['period']|default(30)|je }},
+    },
+    "user-directory": {
+        "per-page": {{ config['user-directory']['per-page'|default(20)|je }}
     }
 }

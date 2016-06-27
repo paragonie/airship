@@ -11,7 +11,7 @@
                         name="directory"
                         {% if _POST.directory %}{#
                             #}{% if form_status.status != "SUCCESS" %}{#
-                                #} value="{{ _POST.directory|e('html_attr') }}"{#
+                                #} value="{{ _POST.directory|default('')|e('html_attr') }}"{#
                             #}{% endif %}{#
                         #}{% endif %}
                     />

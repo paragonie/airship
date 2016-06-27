@@ -29,8 +29,11 @@ class Blog extends BlueprintGear
      * @param bool $published
      * @return bool
      */
-    public function addCommentToPost(array $post, int $blogPostId, bool $published = false): bool
-    {
+    public function addCommentToPost(
+        array $post,
+        int $blogPostId,
+        bool $published = false
+    ): bool {
         $replyTo = isset($post['reply_to'])
             ? $this->checkCommentReplyTo(
                 (int) $post['reply_to'],
@@ -48,7 +51,9 @@ class Blog extends BlueprintGear
         }
 
         if (!empty($post['author'])) {
-            $authors = $this->getAuthorsForUser($this->getActiveUserId());
+            $authors = $this->getAuthorsForUser(
+                $this->getActiveUserId()
+            );
             if (!\in_array($post['author'], $authors)) {
                 $this->db->rollBack();
                 return false;
@@ -82,7 +87,8 @@ class Blog extends BlueprintGear
         if (!empty($commentId)) {
             // Insert the comment
             $this->db->insert(
-                'hull_blog_comment_versions', [
+                'hull_blog_comment_versions',
+                [
                     'comment' => $commentId,
                     'approved' => $published ?? false,
                     'message' => $post['message']
@@ -708,7 +714,10 @@ class Blog extends BlueprintGear
             $versionId
         );
         if (isset($comment['metadata'])) {
-            $comment['metadata'] = \json_decode($comment['metadata'], true);
+            $comment['metadata'] = \json_decode(
+                $comment['metadata'],
+                true
+            );
         }
 
         /**
@@ -725,7 +734,9 @@ class Blog extends BlueprintGear
             $commentId
         );
         foreach ($children as $child) {
-            $data = $this->getCommentWithChildren((int) $child['commentid']);
+            $data = $this->getCommentWithChildren(
+                (int) $child['commentid']
+            );
             if (!empty($data)) {
                 $comment['children'][] = $data;
             }
@@ -751,7 +762,8 @@ class Blog extends BlueprintGear
     ): array {
         $addendum = '';
         if (!empty($seenIds)) {
-            $addendum = "AND i.series NOT IN " . $this->db->escapeValueSet($seenIds, 'int');
+            $addendum = "AND i.series NOT IN " .
+                $this->db->escapeValueSet($seenIds, 'int');
         }
         return $this->db->run("
             SELECT
@@ -1025,12 +1037,18 @@ class Blog extends BlueprintGear
             return $post;
         }
         $cutoff = null;
+        $regex = '#^([' .
+                \preg_quote(
+                    '!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~',
+                    '#'
+                ) .
+            '])#';
         foreach ($lines as $i => $line) {
             if (empty($line)) {
                 continue;
             }
             if ($post['format'] === 'RST') {
-                if (\preg_match('#^(['.\preg_quote('!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~', '#').'])#', $line[0], $m)) {
+                if (\preg_match($regex, $line[0], $m)) {
                     if ($i > 2 && \trim($line) === \str_repeat($m[1], \strlen($line))) {
                         $cutoff = $i;
                         break;
@@ -1068,6 +1086,8 @@ class Blog extends BlueprintGear
             ? "\n"
             : "\n\n";
         $sects = \explode($split, $post['body']);
+
+        // 37% is approximately 1/e (the mathematical constant)
         $cut = (int) \ceil(0.37 * \count($sects));
         if ($sects < 2) {
             $post['snippet'] = $post['body'];
@@ -1118,9 +1138,9 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function getTags(int $num = 10, int $offset = 0)
+    public function getTags(int $num = 10, int $offset = 0): array
     {
-        return $this->db->run(
+        $tags = $this->db->run(
             'SELECT
                 t.tagid,
                 t.name,
@@ -1144,6 +1164,10 @@ class Blog extends BlueprintGear
             OFFSET '.$offset.'
             LIMIT '.$num
         );
+        if (empty($tags)) {
+            return [];
+        }
+        return $tags;
     }
 
     /**
@@ -1248,6 +1272,9 @@ class Blog extends BlueprintGear
             OFFSET '.$offset.'
             LIMIT '.$num
         );
+        if (empty($items)) {
+            return [];
+        }
         return $items;
     }
 
@@ -1294,8 +1321,11 @@ class Blog extends BlueprintGear
      * @param int $offset
      * @return array
      */
-    public function listByCategories(array $categories = [], int $num = 20, int $offset = 0): array
-    {
+    public function listByCategories(
+        array $categories = [],
+        int $num = 20,
+        int $offset = 0
+    ): array {
         if (empty($categories)) {
             $posts = $this->db->run(
                 'SELECT
@@ -1317,7 +1347,10 @@ class Blog extends BlueprintGear
                     view_hull_blog_post
                 WHERE
                     status
-                    AND categoryid IN ' . $this->db->escapeValueSet($categories, 'int') . '
+                    AND categoryid IN ' . $this->db->escapeValueSet(
+                        $categories,
+                        'int'
+                    ) . '
                 ORDER BY published DESC
                 OFFSET ' . $offset . '
                 LIMIT ' . $num
@@ -1365,13 +1398,17 @@ class Blog extends BlueprintGear
 
         foreach ($items as $item) {
             if ($item['post']) {
-                $row = $this->getBlogPostById((int) $item['post']);
+                $row = $this->getBlogPostById(
+                    (int) $item['post']
+                );
                 if (!empty($row)) {
                     $row['type'] = 'blogpost';
                     $series_items []= $row;
                 }
             } elseif ($item['series']) {
-                $row = $this->getSeriesById((int) $item['series']);
+                $row = $this->getSeriesById(
+                    (int) $item['series']
+                );
                 if (!empty($row)) {
                     $row['type'] = 'series';
                     $series_items []= $row;

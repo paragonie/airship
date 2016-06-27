@@ -3,7 +3,7 @@
         {% if comment.author %}
             <div class="table-cell">{{ __("Author") }}:</div>
             <div class="table-cell">{#
-                #}<a href="{{ cabin_url() }}author/edit/{{ comment.author }}">{#
+                #}<a href="{{ cabin_url() }}author/edit/{{ comment.author|e('url') }}">{#
                     #}{{ comment.authorname|e('html_attr') }}{#
                 #}</a>{#
             #}</div>
@@ -36,7 +36,7 @@
             <div class="table-cell">{#
                 #}{% set author_avatar = get_avatar(comment.author, 'comment') %}{#
                 #}{% if author_avatar %}{#
-                    #}<a href="{{ cabin_url() }}author/photos/{{ comment.author }}">{#
+                    #}<a href="{{ cabin_url() }}author/photos/{{ comment.author|e('url') }}">{#
                     #}<img
                         src="{{ author_avatar|e('html_attr') }}"
                         class="blog-comment-avatar"
@@ -52,7 +52,7 @@
             <div class="table-cell">{{ __("Avatar") }}:</div>
             <div class="table-cell">{#
                 #}<img
-                    src="{{ comment.metadata.email|gravatar }}"
+                    src="{{ comment.metadata.email|gravatar|e('html_attr') }}"
                     alt="{{ comment.metadata.name|e('html_attr') }}"
                     title="{{ comment.metadata.name|e('html_attr') }}"
                 />{#
@@ -75,7 +75,7 @@
                 <a href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}">{#
                     #}{{ __("Comment #%s", "default", comment.replyto|number_format) }}</a>
                 {% if comment.parent.author %}{#
-                    #}by <a href="{{ cabin_url() }}author/edit/{{ comment.parent.author }}">{#
+                    #}by <a href="{{ cabin_url() }}author/edit/{{ comment.parent.author|e('url') }}">{#
                         #}{{ comment.parent.authorname|e('html_attr') }}{#
                     #}</a>{#
                 #}{% elseif comment.parent.metadata.name %}{#

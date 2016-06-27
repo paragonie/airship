@@ -255,7 +255,10 @@ class AutoPilot implements RouterInterface
             $path = self::makePath($path);
             if (self::testLanding($path, $_SERVER['REQUEST_URI'], $args)) {
                 self::$mypath = $path;
-                self::$path = \substr($_SERVER['REQUEST_URI'], \strlen(self::$patternPrefix) + 1);
+                self::$path = \substr(
+                    $_SERVER['REQUEST_URI'],
+                    \strlen(self::$patternPrefix) + 1
+                );
                 try {
                     // Attempt to serve the page:
                     return $this->serve($landing, \array_slice($args, 1));
@@ -440,7 +443,11 @@ class AutoPilot implements RouterInterface
     {
         // If we're still here, let's try the fallback handler
         if (isset($this->cabin['data']['route_fallback'])) {
-            \preg_match('#^/?' . self::$patternPrefix . '/(.*)$#', $_SERVER['REQUEST_URI'], $args);
+            \preg_match(
+                '#^/?' . self::$patternPrefix . '/(.*)$#',
+                $_SERVER['REQUEST_URI'],
+                $args
+            );
             try {
                 return $this->serve(
                     $this->cabin['data']['route_fallback'],
@@ -462,7 +469,7 @@ class AutoPilot implements RouterInterface
         \header('HTTP/1.1 404 Not Found');
         exit(255);
     }
-    
+
     /**
      * Do not allow insecure HTTP request to proceed
      *
@@ -480,7 +487,7 @@ class AutoPilot implements RouterInterface
         }
         return true;
     }
-    
+
     /**
      * Is this user currently connected over HTTPS?
      *

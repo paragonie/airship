@@ -22,6 +22,9 @@ class File implements CacheInterface
     const HASH_SIZE = 32;
     const PERMS = 0775;
 
+    /**
+     * @var string
+     */
     protected $baseDir = '';
 
     /**
@@ -127,7 +130,10 @@ class File implements CacheInterface
 
         if (!($cacheKey instanceof Key)) {
             throw new InvalidType(
-                \trk('errors.type.wrong_class', '\ParagonIE\Halite\Key')
+                \trk(
+                    'errors.type.wrong_class',
+                    '\ParagonIE\Halite\Key'
+                )
             );
         }
 

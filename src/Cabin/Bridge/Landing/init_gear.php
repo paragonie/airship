@@ -13,21 +13,21 @@ if (!\class_exists('LandingGear')) {
 
     // Make autocomplete work with existing IDEs:
     if (IDE_HACKS) {
+        /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
         /**
          * Class LandingGearBase
          * @package Airship\Cabin\Bridge\Landing
          */
-        /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
         class LandingGearBase extends Landing { }
     }
 
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     /**
      * This is a common landing gear for all Bridge components
      *
      * Class LandingGear
      * @package Airship\Cabin\Bridge\Landing
      */
-    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class LandingGear extends LandingGearBase
     {
         /**
@@ -54,11 +54,11 @@ if (!\class_exists('LandingGear')) {
 }
 
 if (!\class_exists('LoggedInUsersOnly')) {
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     /**
      * Class LoggedInUsersOnly
      * @package Airship\Cabin\Bridge\Landing
      */
-    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class LoggedInUsersOnly extends LandingGear
     {
         /**
@@ -82,11 +82,11 @@ if (!\class_exists('LoggedInUsersOnly')) {
     }
 }
 if (!\class_exists('AdminOnly')) {
+    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     /**
      * Class AdminOnly
      * @package Airship\Cabin\Bridge\Landing
      */
-    /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
     class AdminOnly extends LoggedInUsersOnly
     {
         /**

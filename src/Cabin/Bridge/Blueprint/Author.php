@@ -160,7 +160,6 @@ class Author extends BlueprintGear
         return $this->photosDir;
     }
 
-
     /**
      * Get all of the photos in the various
      *
@@ -214,8 +213,11 @@ class Author extends BlueprintGear
      * @param bool $includeId
      * @return array
      */
-    public function getAvailablePhotos(int $authorID, string $cabin = '', bool $includeId = false): array
-    {
+    public function getAvailablePhotos(
+        int $authorID,
+        string $cabin = '',
+        bool $includeId = false
+    ): array {
         $slug = $this->db->cell(
             'SELECT slug FROM hull_blog_authors WHERE authorid = ?',
             $authorID
@@ -250,7 +252,11 @@ class Author extends BlueprintGear
              WHERE
                  (f.type LIKE 'image/%' OR f.type LIKE 'x-image/%') 
                      AND
-                 f.directory IN " . $this->db->escapeValueSet($directoryIDs, 'int')
+                 f.directory IN " .
+                $this->db->escapeValueSet(
+                    $directoryIDs,
+                    'int'
+                )
         );
         if (empty($files)) {
             return [];
@@ -356,7 +362,7 @@ class Author extends BlueprintGear
     }
 
     /**
-     * Get the number of photos uploaded for this author
+     * Get the number of files uploaded for this author
      *
      * @param int $authorId
      * @return int
@@ -390,6 +396,7 @@ class Author extends BlueprintGear
         }
         return 0;
     }
+
     /**
      * Get the available photo contexts
      *
@@ -465,7 +472,7 @@ class Author extends BlueprintGear
     }
 
     /**
-     * Get the slug
+     * Get the slug for a given Author (given its ID)
      *
      * @param int $authorId
      * @return string
@@ -483,7 +490,7 @@ class Author extends BlueprintGear
     }
 
     /**
-     * Get the users
+     * Get the users that have access to an Author.
      *
      * @param int $authorId
      * @return array
@@ -510,6 +517,7 @@ class Author extends BlueprintGear
     }
 
     /**
+     * Get the number of Authors that exist.
      * 
      * @return int
      */
@@ -559,6 +567,8 @@ class Author extends BlueprintGear
     }
 
     /**
+     * Save the photo to display in a given context.
+     *
      * @param int $authorId
      * @param string $context
      * @param string $cabin
@@ -587,11 +597,11 @@ class Author extends BlueprintGear
 
         $options = $this->getAvailablePhotos($authorId, $cabin, true);
 
-        $exists = $this->db->cell(
+        $exists = $this->db->exists(
             'SELECT count(*) FROM hull_blog_author_photos WHERE author = ? AND context = ?',
             $authorId,
             $contextId
-        ) > 0;
+        );
         foreach ($options as $opt) {
             if ($opt['filename'] === $filename) {
                 if ($exists) {
@@ -707,11 +717,11 @@ class Author extends BlueprintGear
         if ($userId < 1) {
             $userId = $this->getActiveUserId();
         }
-        return $this->db->cell(
+        return $this->db->exists(
             'SELECT count(*) FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
             $authorId,
             $userId
-        ) > 0;
+        );
     }
 
     /**
@@ -726,7 +736,7 @@ class Author extends BlueprintGear
         if ($userId < 1) {
             $userId = $this->getActiveUserId();
         }
-        return $this->db->cell(
+        return (bool) $this->db->cell(
             'SELECT in_charge FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
             $authorId,
             $userId

@@ -7,7 +7,16 @@
         {{ __("Delete this File") }}
     </button>
 
-    <a class="pure-button pure-button-tertiary" href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ dir|e('url') }}">
+    <a
+        class="pure-button pure-button-tertiary"
+        href="{{
+            cabin_url() ~
+            path_middle ~
+            "/" ~
+            cabin|e('url') ~
+            "/?dir=" ~
+            dir|e('url')
+        }}">
         {{ __("No") }}
     </a>
 </form>

@@ -93,9 +93,17 @@ require_once ROOT . '/bootstrap.php';
  */
 $autoUpdater = Gears::get('AutoUpdater', $hail);
 if ($autoUpdater->needsUpdate()) {
+    $script = ROOT . '/CommandLine/continuum.php';
+
+    /**
+     * @security Make sure this is never compromised:
+     */
     \shell_exec(
-        'php -dphar.readonly=0 ' . ROOT . '/CommandLine/continuum.php >/dev/null 2>&1 &'
+        'php -dphar.readonly=0 ' .
+            \escapeshellarg($script) .
+        ' >/dev/null 2>&1 &'
     );
+
     \file_put_contents(
         ROOT.'/tmp/last_update_check.txt',
         time()
@@ -107,12 +115,22 @@ if ($autoUpdater->needsUpdate()) {
  */
 \define('CABIN_NAME', $active['name']);
 \define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
+
 // Turn all of this cabins' Landings and Blueprints into gears:
 require ROOT . '/cabin_gears.php';
 
-$autoPilot = Gears::get('AutoPilot', $active, $lens, $dbPool);
+$autoPilot = Gears::get(
+    'AutoPilot',
+    $active,
+    $lens,
+    $dbPool
+);
+
 if ($autoPilot instanceof AutoPilot) {
-    $autoPilot->setActiveCabin($active, $state->active_cabin);
+    $autoPilot->setActiveCabin(
+        $active,
+        $state->active_cabin
+    );
 }
 
 // Load everything else:

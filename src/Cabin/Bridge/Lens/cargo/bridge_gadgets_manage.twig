@@ -11,12 +11,12 @@
 
 <ol id="gadgets_list">{% for i, gadget in gadgets %}
     <li class="gadget-draggable" id="gadget-{{ i|e('html_attr') }}">
-        <input type="hidden" name="gadget_order[]" value="{{ i }}" />
+        <input type="hidden" name="gadget_order[]" value="{{ i|e('html_attr') }}" />
         <input type="checkbox"
            class="large_checkbox"
            title="Enabled"
            id="gadget-{{ i|e('html_attr') }}-enabled"
-           name="gadget_enabled[{{ i }}]"
+           name="gadget_enabled[{{ i|e('html_attr') }}]"
            value="1"
             {% if gadget.enabled %} checked="checked"{% endif %}
         />

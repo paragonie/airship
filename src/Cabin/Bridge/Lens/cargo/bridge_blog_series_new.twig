@@ -58,7 +58,9 @@
     <h3 class="nomargin">{{ __("Series Contents") }}</h3>
 
     {% include cargo("bridge_blog_series_sortable") with {
-        "items": series_items|default([])
+        "items": series_items|default(
+            []
+        )
     } %}
 
     <fieldset class="form-button-group">

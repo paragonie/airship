@@ -252,9 +252,6 @@ class Gadget extends AutoUpdater implements ContinuumInterface
                 }
             }
         }
-        \file_put_contents(
-            $gadgetConfigFile,
-            \json_encode($gadgetConfig, JSON_PRETTY_PRINT)
-        );
+        \Airship\saveJSON($gadgetConfigFile, $gadgetConfig);
     }
 }

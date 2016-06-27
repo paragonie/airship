@@ -5,13 +5,15 @@
                 <label for="author_name">{{ __("Author Name") }}:</label>
             </div>
             <div class="table-cell">
-                <input{#
-                    #} class="full-width"{#
-                    #} id="author_name"{#
-                    #} name="name"{#
-                    #} placeholder="{{ __("e.g. Information Technology Department")|e('html_attr') }}"{#
-                    #} type="text"{#
-                #} />
+                <input
+                     class="full-width"
+                     id="author_name"
+                     name="name"
+                     placeholder="{{
+                        __("e.g. Information Technology Department")|e('html_attr')
+                     }}"
+                     type="text"
+                 />
             </div>
         </div>
 
@@ -20,7 +22,12 @@
                 <label for="byline">{{ __("Byline") }}</label>:
             </div>
             <div class="table-cell">
-                <input id="byline" type="text" name="byline" value="{{ post.byline|e('html_attr') }}" />
+                <input
+                    id="byline"
+                    type="text"
+                    name="byline"
+                    value="{{ post.byline|e('html_attr') }}"
+                />
             </div>
         </div>
 

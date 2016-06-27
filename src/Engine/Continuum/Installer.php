@@ -115,6 +115,7 @@ abstract class Installer
      */
     public function clearCache(): bool
     {
+        \Airship\clear_cache();
         $dirs = [
             'csp_hash',
             'csp_static',

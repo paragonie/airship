@@ -121,7 +121,7 @@ function cachebust($relative_path)
         );
     }
     // Special value
-    return $relative_path.'?404NotFound';
+    return $relative_path . '?404NotFound';
 }
 
 /**
@@ -170,11 +170,16 @@ function cargo(...$args)
  * @param string $algo
  * @return string
  */
-function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha384'): string
-{
+function csp_hash(
+    string $file,
+    string $dir = 'script-src',
+    string $algo = 'sha384'
+): string {
     $state = State::instance();
     if (isset($state->CSP)) {
-        $checksum = CryptoUtil::hash('Content Security Policy Hash:' . $file);
+        $checksum = CryptoUtil::hash(
+            'Content Security Policy Hash:' . $file
+        );
         $h1 = substr($checksum, 0, 2);
         $h2 = substr($checksum, 2, 2);
         $fhash = substr($checksum, 4);
@@ -231,7 +236,8 @@ function csp_hash(string $file, string $dir = 'script-src', string $algo = 'sha3
             $state->CSP->preHash($dir, $preHash, $algo);
 
             $dirName = \implode(
-                '/', [
+                '/',
+                [
                     ROOT,
                     'tmp',
                     'cache',
@@ -271,7 +277,11 @@ function csp_hash_str(
     if (isset($state->CSP)) {
         if ($state->CSP instanceof CSPBuilder) {
             $preHash = \hash($algo, $str, true);
-            $state->CSP->preHash($dir, Base64::encode($preHash), $algo);
+            $state->CSP->preHash(
+                $dir,
+                Base64::encode($preHash),
+                $algo
+            );
             return $str;
         }
     }
@@ -525,7 +535,9 @@ function logout_token(): string
     if (\array_key_exists($idx, $_SESSION)) {
         return $_SESSION[$idx];
     }
-    $_SESSION[$idx] = \Sodium\bin2hex(\random_bytes(16));
+    $_SESSION[$idx] = \Sodium\bin2hex(
+        \random_bytes(16)
+    );
     return $_SESSION[$idx];
 }
 
@@ -561,7 +573,8 @@ function render_markdown(string $string = '', bool $return = false): string
     $hash = substr($checksum, 4);
 
     $cacheDir = \implode(
-        '/', [
+        '/',
+        [
             ROOT,
             'tmp',
             'cache',
@@ -671,7 +684,9 @@ function purify(string $string = '')
     if ($state === null) {
         $state = State::instance();
     }
-    $checksum = CryptoUtil::hash('HTML Purifier' . $string);
+    $checksum = CryptoUtil::hash(
+        'HTML Purifier' . $string
+    );
 
     $h1 = substr($checksum, 0, 2);
     $h2 = substr($checksum, 2, 2);
@@ -780,10 +795,14 @@ function user_authors(int $userId = null): array
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->run(
+    $authors = $db->run(
         'SELECT * FROM view_hull_users_authors WHERE userid = ?',
         $userId
     );
+    if (empty($authors)) {
+        return [];
+    }
+    return $authors;
 }
 
 /**
@@ -799,10 +818,14 @@ function user_author_ids(int $userId = null): array
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->first(
+    $authors = $db->first(
         'SELECT authorid FROM hull_blog_author_owners WHERE userid = ?',
         $userId
     );
+    if (empty($authors)) {
+        return [];
+    }
+    return $authors;
 }
 
 /**
@@ -818,10 +841,14 @@ function user_display_name(int $userId = null): string
         $userId = \Airship\LensFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->cell(
+    $displayName = $db->cell(
         'SELECT COALESCE(display_name, username) FROM airship_users WHERE userid = ?',
         $userId
     );
+    if (empty($displayName)) {
+        return '';
+    }
+    return $displayName;
 }
 
 /**
@@ -836,6 +863,9 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
     static $userCache = [];
     $state = State::instance();
 
+    if (count($state->motifs) === 0) {
+        return [];
+    }
     if (empty($userId)) {
         $userId = \Airship\LensFunctions\userid();
         if (empty($userId)) {
@@ -846,9 +876,6 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
     // Did we cache these preferences?
     if (isset($userCache[$userId])) {
         return $state->motifs[$userCache[$userId]];
-    }
-    if (count($state->motifs) === 0) {
-        return [];
     }
 
     $db = \Airship\get_database();

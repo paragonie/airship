@@ -65,7 +65,7 @@ class Permissions extends BlueprintGear
             );
         }
 
-        // Nothing? Return null
+        // Nothing? Return an empty array
         if (empty($groups)) {
             return [];
         }
@@ -182,7 +182,7 @@ class Permissions extends BlueprintGear
      *
      * @param string $cabin Which cabin does this apply to?
      * @param int $contextId Context IDs (see permissions sql)
-     * @param array $actions Actions in Scope [ [id => label], [id2 => label2]  ]
+     * @param array $actions Actions in Scope [[id => label], [id2 => label2]]
      * @return array
      */
     public function buildUserList(
@@ -482,12 +482,18 @@ class Permissions extends BlueprintGear
     }
 
     /**
+     * Update the label for a given action.
+     *
      * @param string $cabin
      * @param string $actionId
      * @param array $post
      * @return bool
      */
-    public function saveAction(string $cabin, string $actionId, array $post = []): bool
+    public function saveAction(
+        string $cabin,
+        string $actionId,
+        array $post = []
+    ): bool
     {
         $this->db->beginTransaction();
         if (!empty($post['label'])) {
@@ -506,15 +512,19 @@ class Permissions extends BlueprintGear
     }
 
     /**
-     * Saves a permission context. This affects the context itself as well as the whitelist.
+     * Saves a permission context. This affects the context itself as well as
+     * the whitelist.
      *
-     * @param string $cabin
-     * @param int $contextId
-     * @param array $post
+     * @param string $cabin   Which Cabin?
+     * @param int $contextId  Which context?
+     * @param array $post     POST data
      * @return bool
      */
-    public function saveContext(string $cabin, int $contextId, array $post): bool
-    {
+    public function saveContext(
+        string $cabin,
+        int $contextId,
+        array $post
+    ): bool {
         $actions = $this->getActionNames($cabin);
         $actionIds = \array_flip($actions);
 
@@ -550,6 +560,10 @@ class Permissions extends BlueprintGear
             'cabin' => $cabin,
             'contextid' => $contextId
         ]);
+
+        // Insert then delete rules based on the changes made:
+
+        // Insert new group rules:
         foreach ($groupInsert as $group => $inserts) {
             foreach ($inserts as $lbl => $val) {
                 if ($val) {
@@ -561,6 +575,7 @@ class Permissions extends BlueprintGear
                 }
             }
         }
+        // Delete old group rules:
         foreach ($groupDelete as $group => $deletes) {
             foreach ($deletes as $lbl => $val) {
                 if ($val) {
@@ -572,10 +587,12 @@ class Permissions extends BlueprintGear
                 }
             }
         }
-        foreach ($userDelete as $user => $deletes) {
-            foreach ($deletes as $lbl => $val) {
+
+        // Insert new user rules:
+        foreach ($userInsert as $user => $inserts) {
+            foreach ($inserts as $lbl => $val) {
                 if ($val) {
-                    $this->db->delete('airship_perm_rules', [
+                    $this->db->insert('airship_perm_rules', [
                         'context' => $contextId,
                         'userid' => $user,
                         'action' => $actionIds[$lbl]
@@ -583,10 +600,11 @@ class Permissions extends BlueprintGear
                 }
             }
         }
-        foreach ($userInsert as $user => $inserts) {
-            foreach ($inserts as $lbl => $val) {
+        // Delete old user rules:
+        foreach ($userDelete as $user => $deletes) {
+            foreach ($deletes as $lbl => $val) {
                 if ($val) {
-                    $this->db->insert('airship_perm_rules', [
+                    $this->db->delete('airship_perm_rules', [
                         'context' => $contextId,
                         'userid' => $user,
                         'action' => $actionIds[$lbl]
@@ -615,7 +633,11 @@ class Permissions extends BlueprintGear
                 $tree = $return[$c];
                 continue;
             }
-            $tree = $this->flattenContextTree($tree, $return[$c], $actions);
+            $tree = $this->flattenContextTree(
+                $tree,
+                $return[$c],
+                $actions
+            );
         }
         return $tree;
     }

@@ -1,10 +1,17 @@
-<div class="rich-text-wrapper" data-name="{{ name|e('html_attr') }}" id="rich_text_{{ name|e('html_attr') }}_wrapper">
+<div
+    class="rich-text-wrapper"
+    data-name="{{ name|e('html_attr') }}"
+    id="rich_text_{{ name|e('html_attr') }}_wrapper"
+>
     <div class="rich_text_show_one">
-        <div class="rich_text_textarea_wrapper" id="rich_text_{{ name|e('html_attr') }}_text">
+        <div
+            class="rich_text_textarea_wrapper"
+            id="rich_text_{{ name|e('html_attr') }}_text"
+        >
             {% include cargo("rich_text_toolbar") %}
             <textarea
                 class="full-textarea editable"
-                name="{{ name }}"
+                name="{{ name|e('html_attr') }}"
                 id="rich_text_{{ name|e('html_attr') }}"
                 placeholder="{{ placeholder|e('html_attr') }}"
                 {% if readonly %}
@@ -14,13 +21,20 @@
             #}{{ contents|e('html_attr') }}{#
             #}</textarea>
         </div>
-        <div id="rich_text_{{ name|e('html_attr') }}_preview" class="richtext-render"></div>
+        <div
+            id="rich_text_{{ name|e('html_attr') }}_preview"
+            class="richtext-render"
+        ></div>
     </div>
-    <div class="rich_text_tab_row" id="rich_text_{{ name|e('html_attr') }}_tabs">
+    <div
+        class="rich_text_tab_row"
+        id="rich_text_{{ name|e('html_attr') }}_tabs"
+    >
         <a id="rich_text_{{ name|e('html_attr') }}_edit_tab">{{ __("Edit") }}</a>
         <a id="rich_text_{{ name|e('html_attr') }}_preview_tab">{{ __("Preview") }}</a>
     </div>
 </div>
+
 <script nonce="{{ csp_nonce() }}">
 function deferUntilExists(func, poll, delay, counter) {
     var counter = counter || 0;
@@ -45,12 +59,12 @@ if (typeof($) === 'undefined') {
     deferUntilExists(
         function () {
             window['richTextWrapper'](
-                    "{{ name|e("html_attr") }}",
-                    "{{ format_element|default("format")|e("html_attr") }}"
+                "{{ name|e("html_attr") }}",
+                "{{ format_element|default("format")|e("html_attr") }}"
             );
         },
         "richTextWrapper",
-        100
+        100 // milliseconds
     );
 } else {
     /**

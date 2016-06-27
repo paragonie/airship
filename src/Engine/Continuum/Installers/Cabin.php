@@ -34,7 +34,10 @@ class Cabin extends BaseInstaller
      */
     public function clearCache(): bool
     {
-        $name = $this->makeNamespace($this->supplier->getName(), $this->package);
+        $name = $this->makeNamespace(
+            $this->supplier->getName(),
+            $this->package
+        );
         $toDelete = [
             \implode(
                 DIRECTORY_SEPARATOR,
@@ -70,7 +73,6 @@ class Cabin extends BaseInstaller
                 \unlink($file);
             }
         }
-        \clearstatcache();
         return parent::clearCache();
     }
 
@@ -81,8 +83,10 @@ class Cabin extends BaseInstaller
      * @param array $metadata
      * @return bool
      */
-    protected function configure(string $nameSpace, array $metadata = []): bool
-    {
+    protected function configure(
+        string $nameSpace,
+        array $metadata = []
+    ): bool {
         if (!$this->defaultCabinConfig($nameSpace)) {
             return false;
         }
@@ -181,7 +185,9 @@ class Cabin extends BaseInstaller
      */
     protected function defaultCabinConfig(string $nameSpace): bool
     {
-        $twigEnv = \Airship\configWriter(ROOT . '/Cabin/' . $nameSpace . '/config/templates');
+        $twigEnv = \Airship\configWriter(
+            ROOT . '/Cabin/' . $nameSpace . '/config/templates'
+        );
         return \file_put_contents(
             ROOT . '/Cabin/' . $nameSpace . '/config/config.json',
             $twigEnv->render('config.twig') // No arguments.
@@ -202,8 +208,16 @@ class Cabin extends BaseInstaller
      */
     public function install(InstallFile $fileInfo): bool
     {
-        $ns = $this->makeNamespace($this->supplier->getName(), $this->package);
-        $alias = 'cabin.' . $this->supplier->getName() . '.' . $this->package . '.phar';
+        $ns = $this->makeNamespace(
+            $this->supplier->getName(),
+            $this->package
+        );
+        $alias = 'cabin.' .
+            $this->supplier->getName() .
+            '.' .
+            $this->package .
+            '.phar';
+
         $updater = new \Phar(
             $fileInfo->getPath(),
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME
@@ -215,8 +229,16 @@ class Cabin extends BaseInstaller
         $updater->extractTo(ROOT . '/Cabin/' . $ns);
 
         // Run the update trigger.
-        if (\file_exists(ROOT . '/Cabin/' . $ns . '/update_trigger.php')) {
-            \shell_exec('php -dphar.readonly=0 ' . ROOT . '/Cabin/' . $ns . '/update_trigger.php >/dev/null 2>&1 &');
+        $updateTrigger = ROOT . '/Cabin/' . $ns . '/update_trigger.php';
+        if (\file_exists($updateTrigger)) {
+            /**
+             * @security Make sure arbitrary RCE isn't possible here.
+             */
+            \shell_exec(
+                'php -dphar.readonly=0 ' .
+                    \escapeshellarg($updateTrigger) .
+                ' >/dev/null 2>&1 &'
+            );
         }
 
         // Free up the updater alias
@@ -234,8 +256,10 @@ class Cabin extends BaseInstaller
      * @param array $metadata
      * @return bool
      */
-    protected function updateCabinsRegistry(string $nameSpace, array $metadata): bool
-    {
+    protected function updateCabinsRegistry(
+        string $nameSpace,
+        array $metadata
+    ): bool {
         // Default route
         $defaultPath = $metadata['default_path']
             ?? '*/' . $this->supplier->getName() . '/' . $this->package;

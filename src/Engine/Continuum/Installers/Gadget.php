@@ -18,7 +18,14 @@ use \Psr\Log\LogLevel;
  */
 class Gadget extends BaseInstaller
 {
+    /**
+     * @var string
+     */
     protected $type = 'Gadget';
+
+    /**
+     * @var string
+     */
     protected $ext = 'phar';
 
     /**
@@ -39,10 +46,7 @@ class Gadget extends BaseInstaller
             'name' =>
                 $this->package
         ];
-        return \file_put_contents(
-            $configFile,
-            \json_encode($gadgets, JSON_PRETTY_PRINT)
-        ) !== false;
+        return \Airship\saveJSON($configFile, $gadgets);
     }
 
     /**
@@ -121,10 +125,7 @@ class Gadget extends BaseInstaller
                 'enabled' => true
             ]
         ];
-        \file_put_contents(
-            $gadgetConfigFile,
-            \json_encode($gadgetConfig, JSON_PRETTY_PRINT)
-        );
+        \Airship\saveJSON($gadgetConfigFile, $gadgetConfig);
         \rename($fileInfo->getPath(), $filePath);
 
         // If cabin-specific, add to the cabin's gadget.json

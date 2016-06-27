@@ -15,7 +15,14 @@
                             data-cabin="{{ cab|e('html_attr') }}"
                         >{{ cab }}</option>
                         {% for subdir in custom_dir_tree[cab] %}
-                            {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                            {{
+                                cdir.dirTree(
+                                    subdir,
+                                    cab,
+                                    cab,
+                                    1
+                                )
+                            }}
                         {% endfor %}
                     {% endfor %}
                 {% endspaceless %}</select>/<input title="URL" type="text" required="required" name="url" value="{{ pageinfo.url|e('url') }}" />
@@ -38,7 +45,12 @@
                 <button type="submit" name="save_btn" value="confirm" class="pure-button pure-button-secondary">
                     {{  __("Save Changes") }}
                 </button>
-                <button data-href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ dir }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
+                <button
+                    class="pure-button pure-button-tertiary"
+                    data-href="{{ cabin_url() ~ "pages/" ~ cabin|e('url') ~ "?dir=" ~ dir|e('url') }}"
+                    id="cancel_btn"
+                    type="button"
+                >
                     {{ __("Cancel") }}
                 </button>
             </div>

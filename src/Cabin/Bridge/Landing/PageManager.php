@@ -39,6 +39,7 @@ class PageManager extends LoggedInUsersOnly
     }
 
     /**
+     * Delete a directory in the custom page system
      *
      * @route pages/{string}/deleteDir
      * @param string $cabin
@@ -84,7 +85,10 @@ class PageManager extends LoggedInUsersOnly
                     $secretKey,
                     $this->config('recaptcha.curl-opts') ?? []
                 );
-                $resp = $rc->verify($post['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+                $resp = $rc->verify(
+                    $post['g-recaptcha-response'],
+                    $_SERVER['REMOTE_ADDR']
+                );
                 if ($resp->isSuccess()) {
                     // CAPTCHA verification and CSRF token both passed
                     if ($this->processDeleteDir(
@@ -365,6 +369,7 @@ class PageManager extends LoggedInUsersOnly
     /**
      * We're going to move/rename a directory
      *
+     * @param string $cabin
      * @route pages/{string}/renameDir
      */
     public function renameDir(string $cabin)
@@ -457,7 +462,11 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         try {
-            $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
+            $page = $this->pg->getPageInfo(
+                $cabin,
+                $path,
+                $_GET['page']
+            );
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
                 'Page not found',
@@ -532,6 +541,7 @@ class PageManager extends LoggedInUsersOnly
             'pathinfo' => \Airship\chunk($path)
         ]);
     }
+
     /**
      * We're going to view a page's history
      *
@@ -607,7 +617,9 @@ class PageManager extends LoggedInUsersOnly
             (int) $version['page'],
             $version['versionid']
         );
-        $latestId = $this->pg->getLatestVersionId((int) $version['page']);
+        $latestId = $this->pg->getLatestVersionId(
+            (int) $version['page']
+        );
 
         $this->lens('pages/page_history_view', [
             'cabins' => $cabins,
@@ -895,9 +907,12 @@ class PageManager extends LoggedInUsersOnly
             return false;
         }
         if ($this->pg->createDir($cabin, $parent, $post)) {
-            \Airship\redirect($this->airship_cabin_prefix . '/pages/'.$cabin, [
-                'dir' => $parent
-            ]);
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/pages/' . $cabin,
+                [
+                    'dir' => $parent
+                ]
+            );
         }
         return true;
     }
@@ -915,7 +930,14 @@ class PageManager extends LoggedInUsersOnly
         string $path,
         array $post = []
     ): bool {
-        if (!\Airship\all_keys_exist(['url', 'format', 'page_body', 'save_btn', 'metadata'], $post)) {
+        $expected = [
+            'url',
+            'format',
+            'page_body',
+            'save_btn',
+            'metadata'
+        ];
+        if (!\Airship\all_keys_exist($expected, $post)) {
             return false;
         }
 

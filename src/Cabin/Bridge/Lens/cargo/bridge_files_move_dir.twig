@@ -18,7 +18,13 @@
                 </select>
             </div>
             <div class="width50 table-cell">
-                <input title="{{ __("New Directory Name")|e('html_attr') }}" class="full-width" type="text" name="new_name" value="{{ dir_name|e('html_attr') }}" />
+                <input
+                    class="full-width"
+                    name="new_name"
+                    title="{{ __("New Directory Name")|e('html_attr') }}"
+                    type="text"
+                    value="{{ dir_name|e('html_attr') }}"
+                />
             </div>
             <div class="table-cell table-btn-right">
                 <button type="submit" name="submit_btn" value="confirm" class="pure-button pure-button-secondary">
@@ -26,7 +32,10 @@
                 </button>
             </div>
             <div class="table-cell table-btn-right">
-                <a class="pure-button pure-button-tertiary" href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ dir|e('url') }}">
+                <a
+                    class="pure-button pure-button-tertiary"
+                    href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin|e('url') ~ "/?dir=" ~ dir|e('url') }}"
+                >
                     {{ __("Cancel") }}
                 </a>
             </div>

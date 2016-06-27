@@ -5,7 +5,7 @@
     "<a href=\"" ~ cabin_url() ~ "my/account\" title=\"" ~ __("Change Display Name")|e('html_attr') ~ "\">" ~
         "<i class=\"fa fa-pencil-square\"></i>" ~
         "</a> ",
-    ("<strong title=\"Public ID: " ~ user_unique_id() ~ "\">" ~ user_display_name() ~ "</strong>")|raw
+    ("<strong title=\"Public ID: " ~ user_unique_id()|e('html_attr') ~ "\">" ~ user_display_name() ~ "</strong>")|raw
 ) }}
     (<code title="{{ __("This is your public ID.")|e('html_attr') }}" id="my-public-id"><i class="fa fa-street-view"></i>{{ user_unique_id() }}</code>).
 </div>

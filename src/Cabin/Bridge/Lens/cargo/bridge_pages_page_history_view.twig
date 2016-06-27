@@ -54,7 +54,12 @@
 </div>
 
 <div class="bridge_page_rich_text_wrapper">
-    {% include cargo("rich_text_editor") with {"name": "page_body", "placeholder": "", "contents": version.body|default(''), "readonly" : true} %}
+    {% include cargo("rich_text_editor") with {
+        "name": "page_body",
+        "placeholder": "",
+        "contents": version.body|default(''),
+        "readonly" : true
+    } %}
 </div>
 
 <fieldset class="form-metadata-wrapper">

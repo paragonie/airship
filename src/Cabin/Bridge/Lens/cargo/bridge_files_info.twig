@@ -14,7 +14,7 @@
             {{ __("Directory") }}:
         </div>
         <div class="table-cell">
-            <a href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin ~ "/?dir=" ~ dir|e('url') }}">{#
+            <a href="{{ cabin_url() ~ path_middle ~ "/" ~ cabin|e('url') ~ "/?dir=" ~ dir|e('url') }}">{#
                 #}{{ dir|default('/') }}{#
             #}</a>
         </div>
@@ -33,7 +33,11 @@
             {% else %}
                 {% set rdir = "" %}
             {% endif %}
-            <a href="{{ cabin_url(cabin) ~ "files/" ~ rdir ~ file.filename|e('url') }}">{#
+            <a href="{{ cabin_url(cabin) ~ (
+                    "files/" ~
+                    rdir ~
+                    file.filename|e('html_attr')
+                ) }}">{#
                 #}{{ file.filename }}{#
             #}</a>
         </div>

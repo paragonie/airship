@@ -157,7 +157,12 @@ class Skyport extends AdminOnly
      */
     public function ajaxRefreshPackageInfo()
     {
-        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+        $expected = [
+            'package',
+            'supplier',
+            'type'
+        ];
+        if (!\Airship\all_keys_exist($expected, $_POST)) {
             echo 'Invalid POST request.', "\n";
             return;
         }
@@ -208,7 +213,12 @@ class Skyport extends AdminOnly
      */
     public function ajaxViewPackageInfo()
     {
-        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+        $expected = [
+            'package',
+            'supplier',
+            'type'
+        ];
+        if (!\Airship\all_keys_exist($expected, $_POST)) {
             echo 'Invalid POST request.', "\n";
             return;
         }
@@ -249,7 +259,12 @@ class Skyport extends AdminOnly
      */
     public function installPackage()
     {
-        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+        $expected = [
+            'package',
+            'supplier',
+            'type'
+        ];
+        if (!\Airship\all_keys_exist($expected, $_POST)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
@@ -328,7 +343,12 @@ class Skyport extends AdminOnly
      */
     public function removePackage()
     {
-        if (!\Airship\all_keys_exist(['type', 'supplier', 'package'], $_POST)) {
+        $expected = [
+            'package',
+            'supplier',
+            'type'
+        ];
+        if (!\Airship\all_keys_exist($expected, $_POST)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
@@ -395,7 +415,13 @@ class Skyport extends AdminOnly
      */
     public function updatePackage()
     {
-        if (!\Airship\all_keys_exist(['type', 'supplier', 'package', 'version'], $_POST)) {
+        $expected = [
+            'package',
+            'supplier',
+            'type',
+            'version'
+        ];
+        if (!\Airship\all_keys_exist($expected, $_POST)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
@@ -438,7 +464,9 @@ class Skyport extends AdminOnly
                 )
             ]
         );
-        $output = \shell_exec('php -dphar.readonly=0 ' . ROOT . '/CommandLine/update_one.sh ' . $args);
+        $output = \shell_exec(
+            'php -dphar.readonly=0 ' . ROOT . '/CommandLine/update_one.sh ' . $args
+        );
 
         \Airship\json_response([
             'status' => 'OK',

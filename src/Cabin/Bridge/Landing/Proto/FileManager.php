@@ -22,11 +22,16 @@ class FileManager extends LoggedInUsersOnly
     protected $attribution = []; // For uploads
     protected $root_dir = '';
     protected $path_middle = '';
+
     /**
      * @var Files
      */
     protected $files;
 
+    /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
     public function airshipLand()
     {
         parent::airshipLand();
@@ -45,6 +50,7 @@ class FileManager extends LoggedInUsersOnly
     }
 
     /**
+     * Confirm directory deletion
      *
      * @param string $path
      * @param string $cabin
@@ -81,13 +87,14 @@ class FileManager extends LoggedInUsersOnly
             'dir_contents' => $contents,
             // Untrusted, from the end user:
             'parent_dir' => $parent,
-            'dir' => $path,
+            'dir' => $this->root_dir . '/' . $path,
             'cabin' => $cabin,
             'pathinfo' => $publicPath
         ]);
     }
 
     /**
+     * Confirm file deletion
      *
      * @param string $file
      * @param string $path
@@ -120,7 +127,7 @@ class FileManager extends LoggedInUsersOnly
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
             // Untrusted, from the end user:
-            'dir' => $path,
+            'dir' => $this->root_dir . '/' . $path,
             'cabin' => $cabin,
             'pathinfo' => $publicPath
         ]);
@@ -162,7 +169,6 @@ class FileManager extends LoggedInUsersOnly
      */
     protected function commonMoveDir(string $path, string $cabin)
     {
-
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -212,6 +218,7 @@ class FileManager extends LoggedInUsersOnly
     }
 
     /**
+     * Move/rename a file
      *
      * @param string $file
      * @param string $path
@@ -304,6 +311,8 @@ class FileManager extends LoggedInUsersOnly
     }
 
     /**
+     * Create a new directory for file uploads
+     *
      * @param int $directoryId
      * @param string $cabin
      * @param array $post

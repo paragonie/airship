@@ -20,6 +20,7 @@ trait Cache
      * @var File
      */
     public $airship_filecache_object;
+
     /**
      * @var File
      */
@@ -40,8 +41,12 @@ trait Cache
             $this->airship_cspcache_object = (new SharedMemory())
                 ->personalize('contentSecurityPolicy:');
         } else {
-            $this->airship_filecache_object = new File(ROOT . '/tmp/cache/static');
-            $this->airship_cspcache_object = new File(ROOT . '/tmp/cache/csp_static');
+            $this->airship_filecache_object = new File(
+                ROOT . '/tmp/cache/static'
+            );
+            $this->airship_cspcache_object = new File(
+                ROOT . '/tmp/cache/csp_static'
+            );
         }
     }
 }

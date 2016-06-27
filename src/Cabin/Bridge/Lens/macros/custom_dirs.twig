@@ -2,9 +2,15 @@
     <option {#
         #}{% if data.selected %}selected="selected"{% endif %} {#
         #}class="depth{{ depth|e('html_attr') }}" {#
-        #}data-fullpath="{{ fullpath ~ "/" ~ data.url|e('url') }}" {#
+        #}data-fullpath="{{
+            (
+                fullpath ~
+                "/" ~
+                data.url|e('url')
+            )|e('html_attr')
+        }}" {#
         #}data-cabin="{{ cabin|e('url') }}" {#
-        #}value="{{ data.directoryid }}"{#
+        #}value="{{ data.directoryid|e('html_attr') }}"{#
         #}>{{ data.url }}</option>
     {% if data.children %}
         {% for child in data.children %}

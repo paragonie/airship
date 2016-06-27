@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
+use \Airship\Engine\{
+    Gadgets,
+    State
+};
 
 /**
  * @global array $active The active cabin configuration
@@ -10,13 +13,14 @@ use \Airship\Engine\State;
  */
 
 // Let's make sure we populate the symlinks
-if (\is_dir(CABIN_DIR.'/public')) {
-    if (!\is_link(ROOT.'/public/static/'.$active['name'])) {
+if (\is_dir(CABIN_DIR . '/public')) {
+    $link = ROOT . '/public/static/' . $active['name'];
+    if (!\is_link($link)) {
         // Remove copies, we only allow symlinks in static
-        if (\is_dir(ROOT.'/public/static/'.$active['name'])) {
-            \rmdir(ROOT.'/public/static/'.$active['name']);
-        } elseif (\file_exists(ROOT.'/public/static/'.$active['name'])) {
-            \unlink(ROOT.'/public/static/'.$active['name']);
+        if (\is_dir($link)) {
+            \rmdir($link);
+        } elseif (\file_exists($link)) {
+            \unlink($link);
         }
         
         // Create a symlink from public/static/* to Cabin/*/public
@@ -30,26 +34,27 @@ if (\is_dir(CABIN_DIR.'/public')) {
 
 // Let's load the default cargo modules
 if (\is_dir(CABIN_DIR.'/Lens/cargo')) {
-    if (\file_exists(ROOT.'/tmp/cache/cargo-'.$active['name'].'.cache.json')) {
-        $data = Airship\loadJSON(ROOT.'/tmp/cache/cargo-'.$active['name'].'.cache.json');
+    $cargoCacheFile = ROOT.'/tmp/cache/cargo-'.$active['name'].'.cache.json';
+    if (\file_exists($cargoCacheFile)) {
+        $data = Airship\loadJSON($cargoCacheFile);
         $state->cargo = $data;
     } else {
         $dir = \getcwd();
-        \chdir(CABIN_DIR.'/Lens');
+        \chdir(CABIN_DIR . '/Lens');
         foreach (\Airship\list_all_files('cargo', 'twig') as $cargo) {
             $idx = \str_replace(
                 ['__', '/'],
                 ['',   '__'],
                 \substr($cargo, 6, -5)
             );
-            \Airship\Engine\Gadgets::loadCargo($idx, $cargo);
+            Gadgets::loadCargo($idx, $cargo);
         }
         \chdir($dir);
         
         // Store the cache file
-        \file_put_contents(
-            ROOT.'/tmp/cache/cargo-'.$active['name'].'.cache.json',
-            \json_encode($state->cargo, JSON_PRETTY_PRINT)
+        \Airship\saveJSON(
+            $cargoCacheFile,
+            $state->cargo
         );
     }
 }
