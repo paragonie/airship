@@ -89,7 +89,9 @@
             <div class="table-cell bridge_blog_post_tags">
                 {% include cargo("bridge_blog_post_tags") with {
                     "tags": tags,
-                    "checked": _POST.tags|default([])
+                    "checked": _POST.tags|default(
+                        []
+                    )
                 } %}
             </div>
         </div>

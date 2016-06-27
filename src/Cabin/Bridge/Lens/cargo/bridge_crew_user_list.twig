@@ -26,7 +26,7 @@
                 <div class="table-cell table-2-btn-left">
                     <a{#
                         #} class="pure-button pure-button-secondary"{#
-                        #} href="{{ cabin_url() }}crew/users/edit/{{ u.userid }}"{#
+                        #} href="{{ cabin_url() }}crew/users/edit/{{ u.userid|e('html_attr') }}"{#
                         #} title="{{ __("View/Edit User")|e('html_attr') }}"{#
                     #}>
                         <i class="fa fa-pencil"></i>
@@ -40,7 +40,11 @@
                     </a>
                 </div>
                 <div class="table-cell monospace">
-                    {{ u.display_name|e('html_attr')|default('&mdash;')|raw }}
+                    {{
+                        (
+                            u.display_name|e('html_attr')
+                        )|default('&mdash;')|raw
+                    }}
                 </div>
                 <div class="table-cell monospace">
                     {{ u.username|e('html_attr') }}

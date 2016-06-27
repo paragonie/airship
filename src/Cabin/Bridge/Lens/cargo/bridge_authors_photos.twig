@@ -5,7 +5,11 @@
         "Finally, select the new photo you want to use in this context."
     ) }}
 </p>
-<div id="photo-selector" data-authorid="{{ author.authorid|e('html_attr') }}" data-authorslug="{{ author.slug|e('html_attr') }}">
+<div
+    id="photo-selector"
+    data-authorid="{{ author.authorid|e('html_attr') }}"
+    data-authorslug="{{ author.slug|e('html_attr') }}"
+>
     <div id="three-way-split" class="full-width">
         <div class="table-row">
             <div class="table-cell"><strong>{{ __("Context") }}</strong></div>

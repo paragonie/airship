@@ -17,10 +17,20 @@
         <select id="destination" name="move_destination">
             <option value=""></option>
             {% for cab in cabins %}
-                <!-- {{ custom_dir_tree[cab]|json_encode(constant("JSON_PRETTY_PRINT")) }} -->
-                <option value="{{ cab|e('html_attr') }}" class="depth0" data-cabin="{{ cab|e('html_attr') }}">{{ cab }}</option>
+                <option
+                    class="depth0"
+                    data-cabin="{{ cab|e('html_attr') }}"
+                    value="{{ cab|e('html_attr') }}"
+                >{{ cab }}</option>
                 {% for subdir in custom_dir_tree[cab] %}
-                    {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                    {{
+                        cdir.dirTree(
+                            subdir,
+                            cab,
+                            cab,
+                            1
+                        )
+                    }}
                 {% endfor %}
             {% endfor %}
         </select><br />
@@ -38,7 +48,12 @@
     <button type="submit" name="delete_btn" value="confirm" class="pure-button pure-button-secondary">
         {{  __("Delete Directory") }}
     </button>
-    <a href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ parent }}" type="button" id="cancel_btn" class="pure-button pure-button-tertiary">
-        Cancel
+    <a
+        class="pure-button pure-button-tertiary"
+        href="{{ cabin_url() ~ "pages/" ~ cabin|e('url') ~ "?dir=" ~ parent|e('url') }}"
+        id="cancel_btn"
+        type="button"
+    >
+        {{ __("Cancel") }}
     </a>
 </form>

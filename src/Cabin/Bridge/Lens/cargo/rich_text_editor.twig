@@ -11,7 +11,7 @@
             {% include cargo("rich_text_toolbar") %}
             <textarea
                 class="full-textarea editable"
-                name="{{ name }}"
+                name="{{ name|e('html_attr') }}"
                 id="rich_text_{{ name|e('html_attr') }}"
                 placeholder="{{ placeholder|e('html_attr') }}"
                 {% if readonly %}

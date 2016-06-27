@@ -38,9 +38,15 @@
             <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
             <div class="table-cell bottom-pad">
                 <select name="category" id="blog_post_category" class="treeselect">
-                    <option value="0"> -{{ __("None") }}- </option>
+                    <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
-                        {{ bcatmac.selectBox(category, _POST.category|default(blogpost.category)) }}
+                        {{
+                            bcatmac.selectBox(
+                                category,
+                                _POST.category|default(
+                                    blogpost.category)
+                            )
+                        }}
                     {% endfor %}
                 </select>
             </div>
@@ -74,7 +80,9 @@
             <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell bottom-pad">
                 {% include cargo("bridge_pages_select_format") with {
-                    "format": _POST.format|default(latest.format)
+                    "format": _POST.format|default(
+                        latest.format
+                    )
                 } %}
             </div>
         </div>
@@ -113,7 +121,9 @@
                     name="description"
                     placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
                     value="{{ (
-                        _POST.description|default(blogpost.description)
+                        _POST.description|default(
+                            blogpost.description
+                        )
                     )|e('html_attr') }}"
                 />
             </div>
@@ -125,7 +135,9 @@
         {% include cargo("rich_text_editor") with {
             "name": "blog_post_body",
             "placeholder": "",
-            "contents": _POST.blog_post_body|default(latest.body)
+            "contents": _POST.blog_post_body|default(
+                latest.body
+            )
         } %}
     </div>
 

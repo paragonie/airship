@@ -21,7 +21,8 @@
             <div class="table-cell">
                 <input type="checkbox" id="superuser" name="superuser" />{#
                 #}<label for="superuser">{{ __(
-                    "Grant admin access to all members of this group (and any groups that inherit permissions from it)?"
+                    "Grant admin access to all members of this group " ~
+                    "(and any groups that inherit permissions from it)?"
                 ) }}</label>
             </div>
         </div>
@@ -32,7 +33,7 @@
             </div>
             <div class="table-cell">
                 <select title="{{ __("Parent")|e('html_attr') }}" name="parent" id="groups_parents">
-                    <option value=""> -- {{ __("None") }} --</option>
+                    <option value=""> -- {{ __("None") }} -- </option>
                     {% for g in groups %}
                         {{ grpmac.selectBox(g) }}
                     {% endfor %}

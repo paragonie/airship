@@ -1,7 +1,10 @@
 <ul id="blog_series_items_sortable">
     {% spaceless %}
     {% for key, item in items %}
-        {% include cargo("bridge_blog_series_item") with {"key": key, "item": item} %}
+        {% include cargo("bridge_blog_series_item") with {
+            "key": key,
+            "item": item
+        } %}
     {% endfor %}
     {% endspaceless %}
 </ul>

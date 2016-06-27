@@ -87,7 +87,7 @@ class FileManager extends LoggedInUsersOnly
             'dir_contents' => $contents,
             // Untrusted, from the end user:
             'parent_dir' => $parent,
-            'dir' => $path,
+            'dir' => $this->root_dir . '/' . $path,
             'cabin' => $cabin,
             'pathinfo' => $publicPath
         ]);
@@ -127,7 +127,7 @@ class FileManager extends LoggedInUsersOnly
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
             // Untrusted, from the end user:
-            'dir' => $path,
+            'dir' => $this->root_dir . '/' . $path,
             'cabin' => $cabin,
             'pathinfo' => $publicPath
         ]);

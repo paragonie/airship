@@ -21,7 +21,13 @@
     </li>
     {% if can_read("author") %}
     <li>
-        <a href="{{ cabin_url() }}author" title="{{ __("Author profiles are like pen names")|e('html_attr') }}">
+        <a
+            href="{{ cabin_url() }}author"
+            title="{{ __(
+                    "Author profiles are like pen names"
+                )|e('html_attr')
+            }}"
+        >
             <i class="fa fa-user-secret bridge-icon"></i>{{ __("Authors") }}
         </a>
     </li>

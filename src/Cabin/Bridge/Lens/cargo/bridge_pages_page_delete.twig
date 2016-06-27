@@ -30,7 +30,7 @@
     <button
         class="pure-button pure-button-tertiary"
         id="cancel_btn"
-        data-href="{{ cabin_url() ~ "pages/" ~ cabin ~ "?dir=" ~ dir }}"
+        data-href="{{ cabin_url() ~ "pages/" ~ cabin|e('url') ~ "?dir=" ~ dir|e('url') }}"
         type="button"
     >
         {{ __("Cancel") }}

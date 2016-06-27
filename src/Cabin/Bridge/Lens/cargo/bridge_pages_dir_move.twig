@@ -17,7 +17,14 @@
                     data-cabin="{{ cab|e('html_attr') }}"
                 >{{ cab }}</option>
                 {% for subdir in custom_dir_tree[cab] %}
-                    {{ cdir.dirTree(subdir, cab, cab, 1) }}
+                    {{
+                        cdir.dirTree(
+                            subdir,
+                            cab,
+                            cab,
+                            1
+                        )
+                    }}
                 {% endfor %}
             {% endfor %}
         </select><br />
@@ -46,10 +53,10 @@
             (
                 cabin_url() ~
                 "pages/" ~
-                    cabin ~
+                    cabin|e('url') ~
                 "?dir=" ~
-                    parent
-            )|e('html_attr')
+                    parent|e('url')
+            )
         }}"
         id="cancel_btn"
         type="button"

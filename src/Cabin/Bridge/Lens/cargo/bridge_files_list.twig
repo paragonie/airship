@@ -9,8 +9,8 @@
     <div class="bridge_file_list_contents_row header_row"
     >
         <div>{{ __("File / Directory") }}</div>
-        <div>Created</div>
-        <div>Modified</div>
+        <div>{{ __("Created") }}</div>
+        <div>{{ __("Modified") }}</div>
         <div></div>
     </div>
     {% if subdirs %}
@@ -21,7 +21,7 @@
             >
                 <div class="monospace">
                     <a href="{{ cabin_url() }}{{ path_middle }}/{{ cabin|e('url') }}?dir={% if current %}{#
-                        #}{{ current ~ "/" ~ dir.name|e('url') }}{#
+                        #}{{ current|e('url') ~ "/" ~ dir.name|e('url') }}{#
                     #}{% else %}{#
                         #}{{ dir.name|e('url') }}{#
                     #}{% endif %}">

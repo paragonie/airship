@@ -2,6 +2,9 @@
 {% if form_status %}
     <p class="form_status_{{ form_status.status|e('html_attr') }}">{{ form_status.message }}</p>
 {% endif %}
-<div id="bridge_files_navigation" data-middle="{{ path_middle|e('html_attr') }}">{% include cargo("bridge_files_navigation") %}</div>
+<div
+    id="bridge_files_navigation"
+    data-middle="{{ path_middle|e('html_attr') }}"
+>{% include cargo("bridge_files_navigation") %}</div>
 <div id="bridge_files_list">{% include cargo("bridge_files_list") %}</div>
 {% if can_create() %}<div id="bridge_files_list_forms">{% include cargo("bridge_files_list_forms") %}</div>{% endif %}

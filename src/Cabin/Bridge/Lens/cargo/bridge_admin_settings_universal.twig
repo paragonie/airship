@@ -169,7 +169,12 @@
         <div class="table-cell">
             <select id="guest_groups" name="universal[guest_groups][]" id="guest_groups" multiple="multiple">
                 {% for g in groups %}
-                    {{ grpmac.selectBox(g, universal["guest_groups"]) }}
+                    {{
+                        grpmac.selectBox(
+                            g,
+                            universal["guest_groups"]
+                        )
+                    }}
                 {% endfor %}
             </select>
         </div>
@@ -214,7 +219,7 @@
                             name="universal[rate-limiting][expire]"
                             placeholder="{{ __("43200 = 12 hours")|e('html_attr') }}"
                             value="{{ universal['rate-limiting']['expire']|e('html_attr') }}"
-                        /> (seconds)
+                        /> ({{ __("seconds") }})
                     </div>
                 </div>
 
@@ -229,7 +234,7 @@
                             placeholder="0.25"
                             name="universal[rate-limiting][first-delay]"
                             value="{{ universal['rate-limiting']['first-delay']|e('html_attr') }}"
-                        /> (seconds)
+                        /> ({{ __("seconds") }})
                     </div>
                 </div>
 
@@ -277,7 +282,7 @@
                             type="text"
                             name="universal[rate-limiting][log-after]"
                             value="{{ universal['rate-limiting']['log-after']|e('html_attr') }}"
-                        /> (failed attempts)
+                        /> ({{ __("failed attempts") }})
                     </div>
                 </div>
 
