@@ -14,7 +14,14 @@ use \Psr\Log\LogLevel;
  */
 class Motif extends BaseInstaller
 {
+    /**
+     * @var string
+     */
     protected $type = 'Motif';
+
+    /**
+     * @var string
+     */
     protected $ext = 'zip';
 
     /**
@@ -58,10 +65,7 @@ class Motif extends BaseInstaller
             );
         }
 
-        return \file_put_contents(
-            $configFile,
-            \json_encode($config, JSON_PRETTY_PRINT)
-        ) !== false;
+        return \Airship\saveJSON($configFile, $config);
     }
 
     /**

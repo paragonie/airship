@@ -13,6 +13,9 @@ use \Airship\Alerts\TranslationKeyNotFound;
  */
 class Translation
 {
+    /**
+     * @var array
+     */
     private $phrases = [];
     
     /**
@@ -50,6 +53,8 @@ class Translation
     }
 
     /**
+     * Literal translation (provided by gettext())
+     *
      * @param string $message
      * @param string $domain
      * @return string
