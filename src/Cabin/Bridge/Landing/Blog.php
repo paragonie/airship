@@ -422,6 +422,7 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * Create a new category
      *
      * @route blog/category/new
      */
@@ -483,6 +484,8 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * Create a new blog series
+     *
      * @route blog/series/new
      */
     public function newSeries()
@@ -517,8 +520,9 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
-     * @param string $commentId
+     * View a comment
      *
+     * @param string $commentId
      * @route blog/comments/view/{id}
      */
     public function viewComment(string $commentId = '')

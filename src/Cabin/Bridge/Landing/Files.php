@@ -110,12 +110,12 @@ class Files extends FileManager
         return $this->commonSelectCabin();
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * Permissions check
      *
      * @return bool
      */
-    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function permCheck(): bool
     {
         return $this->isSuperUser(); // You're an admin!

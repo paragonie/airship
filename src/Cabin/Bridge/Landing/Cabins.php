@@ -63,29 +63,6 @@ class Cabins extends LoggedInUsersOnly
     }
 
     /**
-     * Ensure that a cabin link exists
-     *
-     * @param string $cabin
-     * @return bool
-     */
-    protected function ensureCabinLinkExists(string $cabin): bool
-    {
-        if (!\is_dir(ROOT . '/Cabin/Bridge/Lens/cabin_links/')) {
-            \mkdir(ROOT . '/Cabin/Bridge/Lens/cabin_links/', 0775);
-        }
-        if (!\is_link(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
-            if (\file_exists(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
-                \unlink(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin);
-            }
-            return \symlink(
-                ROOT . '/Cabin/' . $cabin . '/config/editor_templates',
-                ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin
-            );
-        }
-        return true;
-    }
-
-    /**
      * Update Cabin configuration
      *
      * @route cabins/manage{_string}
@@ -161,6 +138,29 @@ class Cabins extends LoggedInUsersOnly
             'name' => $cabinName,
             'config' => $settings
         ]);
+    }
+
+    /**
+     * Ensure that a cabin link exists
+     *
+     * @param string $cabin
+     * @return bool
+     */
+    protected function ensureCabinLinkExists(string $cabin): bool
+    {
+        if (!\is_dir(ROOT . '/Cabin/Bridge/Lens/cabin_links/')) {
+            \mkdir(ROOT . '/Cabin/Bridge/Lens/cabin_links/', 0775);
+        }
+        if (!\is_link(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
+            if (\file_exists(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin)) {
+                \unlink(ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin);
+            }
+            return \symlink(
+                ROOT . '/Cabin/' . $cabin . '/config/editor_templates',
+                ROOT . '/Cabin/Bridge/Lens/cabin_links/' . $cabin
+            );
+        }
+        return true;
     }
 
     /**

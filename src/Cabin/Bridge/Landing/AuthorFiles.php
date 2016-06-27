@@ -128,12 +128,12 @@ class AuthorFiles extends FileManager
         $this->commonSelectCabin();
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * Permissions check
      *
      * @return bool
      */
-    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function permCheck(): bool
     {
         if ($this->isSuperUser()) {

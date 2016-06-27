@@ -180,5 +180,4 @@ class Redirects extends LoggedInUsersOnly
             ]
         );
     }
-
 }

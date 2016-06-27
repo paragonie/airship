@@ -70,16 +70,22 @@ class Permissions extends AdminOnly
     {
         $actionId = (int) $actionId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
-            \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/crew/permissions'
+            );
         }
         $post = $this->post();
         $action = $this->perms->getAction($cabin, $actionId);
         if (empty($action)) {
-            \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions/' . $cabin);
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/crew/permissions/' . $cabin
+            );
         }
         if (!empty($post)) {
             if ($this->perms->saveAction($cabin, $actionId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions/' . $cabin);
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/permissions/' . $cabin
+                );
             }
         }
         $this->lens(
@@ -101,12 +107,16 @@ class Permissions extends AdminOnly
     {
         $contextId = (int) $contextId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
-            \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/crew/permissions'
+            );
         }
 
         $context = $this->perms->getContext($contextId, $cabin);
         if (empty($context)) {
-            \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions' . $cabin);
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/crew/permissions' . $cabin
+            );
         }
 
         // Handle post data
@@ -138,7 +148,10 @@ class Permissions extends AdminOnly
         $users = [];
         foreach ($userPerms as $userid => $userPerm) {
             $userid = (int) $userid;
-            $users[$userid] = $this->users->getUserAccount($userid, true);
+            $users[$userid] = $this->users->getUserAccount(
+                $userid,
+                true
+            );
             unset($users[$userid]['password']);
         }
         $this->lens(

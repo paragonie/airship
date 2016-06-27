@@ -34,8 +34,7 @@
     "script-src": {
         "allow": [
             "https:\/\/www.google.com",
-            "https:\/\/www.gstatic.com",
-            "https:\/\/cspr.ng"
+            "https:\/\/www.gstatic.com"
         ],
         "unsafe-inline": false,
         "unsafe-eval": false,

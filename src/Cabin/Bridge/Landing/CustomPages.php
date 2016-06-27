@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
+use \Airship\Cabin\Hull\Landing\CustomPages as HullCustomPages;
+
 /**
  * Class CustomPages
  *
@@ -9,7 +11,7 @@ namespace Airship\Cabin\Bridge\Landing;
  *
  * @package Airship\Cabin\Bridge\Landing
  */
-class CustomPages extends \Airship\Cabin\Hull\Landing\CustomPages
+class CustomPages extends HullCustomPages
 {
     /**
      * @var string
