@@ -35,13 +35,13 @@
                         <th class="permtable_header_name" rowspan="2">
                             Group
                         </th>
-                        <th colspan="{{ actions|length }}" class="text-center">
+                        <th colspan="{{ actions|length|e('html_attr') }}" class="text-center">
                             Permissions
                         </th>
                     </tr>
                     <tr class="perm_header">
                         {% for act in actions %}
-                            <th class="permtable_header_action read_only">{{ act|capitalize|e }}</th>
+                            <th class="permtable_header_action read_only">{{ act|capitalize }}</th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -60,7 +60,7 @@
                         </tr>
                         <tr class="perm_header">
                             {% for act in actions %}
-                                <th class="permtable_header_action read_only">{{ act|capitalize|e }}</th>
+                                <th class="permtable_header_action read_only">{{ act|capitalize }}</th>
                             {% endfor %}
                         </tr>
                     {% for userid, perms in userlist %}
@@ -70,7 +70,7 @@
                         #}>
                             <td class="permtable_name depth_0">
                                 <div class="perm_username">
-                                    <a href="{{ cabin_url() }}crew/users/edit/{{ userid }}">{#
+                                    <a href="{{ cabin_url() }}crew/users/edit/{{ userid|e('html_attr') }}">{#
                                         #}{{ username }}{#
                                     #}</a>
                                 </div>
