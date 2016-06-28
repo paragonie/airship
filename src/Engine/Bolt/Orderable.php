@@ -16,7 +16,7 @@ trait Orderable
      *
      * @param string $defaultIndex
      * @param bool $defaultDesc
-     * @return array
+     * @return string[]
      */
     public function getSortArgs(
         string $defaultIndex,

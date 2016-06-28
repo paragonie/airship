@@ -74,14 +74,14 @@ class Database implements DBInterface
             );
         } elseif (!\is_string($dsn)) {
             throw new \TypeError('DSN must be string or array');
-        } elseif (strpos($dsn, ':') !== false) {
-            $dbEngine = explode(':', $dsn)[0];
+        } elseif (\strpos($dsn, ':') !== false) {
+            $dbEngine = \explode(':', $dsn)[0];
         }
 
         // Database engine specific DSN addendums
         switch ($dbEngine) {
             case 'mysql':
-                if (strpos($dsn, ';charset=') === false) {
+                if (\strpos($dsn, ';charset=') === false) {
                     // If no charset is specified, default to UTF-8
                     $dsn .= ';charset=utf8';
                 }

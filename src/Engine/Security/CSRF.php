@@ -120,8 +120,12 @@ class CSRF
             return false;
         }
 
+        if (\strpos($_POST[self::FORM_TOKEN], ':') === false) {
+            return false;
+        }
+
         // Let's pull the POST data
-        list ($index, $token) = explode(':', $_POST[self::FORM_TOKEN]);
+        list ($index, $token) = \explode(':', $_POST[self::FORM_TOKEN]);
         
         if (empty($index) || empty($token)) {
             return false;
