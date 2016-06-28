@@ -365,6 +365,7 @@ class Install
         foreach ($this->data['cabins'] as $name => $conf) {
             $cabins[$conf['path']] = [
                 'https' => !empty($conf['https']),
+                'enabled' => true,
                 'language' => $conf['lang'],
                 'canon_url' => $conf['canon_url'],
                 'name' => $name
