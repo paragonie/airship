@@ -454,7 +454,7 @@ class Account extends LandingGear
     {
         $state = State::instance();
 
-        if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
+        if (empty($post['username']) || empty($post['passphrase'])) {
             $this->lens(
                 'board',
                 [
@@ -506,7 +506,7 @@ class Account extends LandingGear
     {
         $state = State::instance();
 
-        if (!\Airship\all_keys_exist(['username', 'passphrase'], $post)) {
+        if (empty($post['username']) || empty($post['passphrase'])) {
             $this->lens('login', [
                 'post_response' => [
                     'message' => \__('Please fill out the form entirely'),
