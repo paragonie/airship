@@ -8,6 +8,7 @@ use \Airship\Engine\{
 };
 use \Airship\Engine\Security\CSRF;
 use \GuzzleHttp\Client;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\Password;
 use \ParagonIE\ConstantTime\Base64;
 
@@ -611,9 +612,11 @@ class Install
      */
     protected function finalProcessAdminAccount()
     {
+        $sessionCanary = Base64UrlSafe::encode(\random_bytes(33));
         $this->db->insert('airship_users', [
             'username' => $this->data['admin']['username'],
             'password' => $this->data['admin']['passphrase'],
+            'session_canary' => $sessionCanary,
             'uniqueid' => \Airship\uniqueId()
         ]);
         
@@ -632,6 +635,7 @@ class Install
         
         // Log in as the user
         $_SESSION['userid'] = $userid;
+        $_SESSION['session_canary'] = $sessionCanary;
     }
 
     /**

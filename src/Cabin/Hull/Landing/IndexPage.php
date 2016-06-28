@@ -35,7 +35,7 @@ class IndexPage extends LandingGear
         }
 
         $blogRoll = $this->blog->recentFullPosts(
-            $this->config('homepage.blog-posts') ?? 5
+            (int) ($this->config('homepage.blog-posts') ?? 5)
         );
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {

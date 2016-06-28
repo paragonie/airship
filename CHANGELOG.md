@@ -1,3 +1,8 @@
+## Version 1.0.2 - 2016-06-28
+
+  * Fixed a default configuration issue which caused Cabins to be disabled.
+  * Improved the UX of the Installer. Populate more default settings.
+
 ## Version 1.0.1 - 2016-06-27
 
   * Fixed a syntax error that snuck into our installer SQL code.

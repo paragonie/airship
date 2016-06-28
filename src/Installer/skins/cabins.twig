@@ -64,14 +64,42 @@
                     "enabled": true,
                     "captcha": true
                 },
+                "editor": {
+                    "default-format": "Markdown"
+                },
                 "file": {
-                    "cache": 900
+                    "cache": 3600
+                },
+                "password-reset": {
+                    "enabled": true,
+                    "logout": true,
+                    "ttl": 30
+                },
+                "recaptcha": {
+                    "secret-key": "",
+                    "site-key": ""
                 },
                 "two-factor": {
+                    "issuer": "",
+                    "label": "",
                     "length": 6,
                     "period": 30
+                },
+                "user-directory": {
+                    "per-page": 20
                 }
             } %}
+            {% set motifs =
+                {
+                    "name": {
+                        "config": {
+                            "display_name": "Airship Classic (You can change this later)",
+                            "name": "airship-classic",
+                            "supplier": "paragonie",
+                        }
+                    }
+                }
+            %}
             {% set twig_vars = {
                 "title": "Airship Blog",
                 "tagline": "Even the sky shall not limit you."
@@ -94,8 +122,14 @@
             <label for="hull_url">
                 Canon URL (for hyperlinks from other Cabins):
             </label>
-            <input id="hull_url" class="pure-input-1" type="text" name="cabin[Hull][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}" />
-            
+            <input
+                id="hull_url"
+                class="pure-input-1"
+                type="text"
+                name="cabin[Hull][canon_url]"
+                value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}"
+            />
+
             <div>
                 <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" checked="checked" />
                 <label for="hull_https" class="inblock">
@@ -122,18 +156,24 @@
             {% set config_extra = {
                 "blog": {
                     "cachelists": false,
-                    "per_page": "20",
                     "comments": {
+                        "depth_max": 5,
                         "enabled": true,
                         "guests": true,
                         "recaptcha": true
-                    }
+                    },
+                    "per_page": 20
                 },
+                "cache-secret": "",
                 "file": {
-                    "cache": 900
+                    "cache": 3600
                 },
                 "homepage": {
-                    "blog-posts": 5
+                    "blog-posts": 3
+                },
+                "recaptcha": {
+                    "secret-key": "",
+                    "site-key": ""
                 }
             } %}
             {% set twig_vars = {
