@@ -483,6 +483,7 @@ a.pure-button-tertiary:hover,
     display: inline-block;
     padding-right: 4px;
     text-shadow: #000 1px 1px 1px;
+    transition: color 0.2s;
     width: 1em;
 }
 a:hover .bridge-icon {
@@ -506,15 +507,25 @@ a:hover .bridge-icon {
     border: 2px solid #010308;
     box-shadow: rgba(0, 0, 0, 0.5) 0 0.66ex 1.66ex;
 }
-#bridge_left a {
-    color: #EFE5C8;
+#bridge_left a,
+#bridge_left a:visited {
+    color: #ffe04c;
+    text-decoration: none;
+    transition: color 0.2s;
 }
 #bridge_left a:hover,
 #bridge_left a:active {
-    color: #ffe04c;
+    color: #EFE5C8;
 }
 #bridge_main {
     background-color: rgba(255, 255, 255, 0.43);
+}
+.bridge-main-link a {
+    color: #ddd !important;
+    transition: color 0.2s;
+}
+.bridge-main-link a:hover {
+    color: #fff !important;
 }
 .login-form-wrapper fieldset > legend {
     font-weight: bold;
@@ -1130,7 +1141,7 @@ select .depth3 {
     border: 1px solid #000;
 }
 .test-cabin-list li {
-    background-color: #C1B3E8 !important;
+    background-color: rgba(0, 0, 51, 0.1) !important;
     border: 1px solid #000;
     display: block;
     padding: 0.25ex;
@@ -1332,41 +1343,41 @@ fieldset.preferences > legend {
 }
 #cabin_accordion h3,
 #admin_settings_accordion h3 {
-    background-color: #122654;
+    background-color: #242634;
     background-image: -webkit-linear-gradient(
             top,
-            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             rgba(255, 255, 255, 0) 10%,
-            rgba(255, 255, 255, 0.1) 25%,
-            rgba(0, 0, 0, 0.33) 100%
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(0, 0, 0, 0.167) 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             rgba(255, 255, 255, 0) 10%,
-            rgba(255, 255, 255, 0.1) 25%,
-            rgba(0, 0, 0, 0.33) 100%
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(0, 0, 0, 0.167) 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             rgba(255, 255, 255, 0) 10%,
-            rgba(255, 255, 255, 0.1) 25%,
-            rgba(0, 0, 0, 0.33) 100%
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(0, 0, 0, 0.167) 100%
     );
     background-image: -o-linear-gradient(
             top,
-            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             rgba(255, 255, 255, 0) 10%,
-            rgba(255, 255, 255, 0.1) 25%,
-            rgba(0, 0, 0, 0.33) 100%
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(0, 0, 0, 0.167) 100%
     );
     background-image: linear-gradient(
             top,
-            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             rgba(255, 255, 255, 0) 10%,
-            rgba(255, 255, 255, 0.1) 25%,
-            rgba(0, 0, 0, 0.33) 100%
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(0, 0, 0, 0.167) 100%
     );
     border: 1px solid #000;
     color: #fff;
@@ -1385,7 +1396,7 @@ fieldset.preferences > legend {
 }
 #cabin_accordion h3.ui-state-active,
 #admin_settings_accordion h3.ui-state-active {
-    background-color: #451d80;
+    background-color: #454550;
     border: 1px solid #000;
     text-shadow: #000 0 1px 1px, #000 0 1px 2px;
 }

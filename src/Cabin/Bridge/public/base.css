@@ -56,6 +56,9 @@ footer {
         display: block;
         vertical-align: top;
     }
+    #bridge_left {
+        max-width: calc(25% - 1rem);
+    }
 }
 @media (min-width: 768px) {
     .blog-wrapper {
@@ -102,6 +105,9 @@ footer {
         padding-right: 1ex;
         text-align: right;
         width: 160px;
+    }
+    #bridge_left {
+        max-width: calc(20% - 1rem) !important;
     }
 }
 .center {
@@ -376,9 +382,14 @@ label.required-form::after {
 }
 #bridge_left {
     display: table-cell;
+    line-height: 1.25;
+    min-width: 50px;
     vertical-align: top;
-    width: calc(25% - 1rem);
-    width: 24.5%;
+    white-space: nowrap;
+    width: 1px;
+}
+#bridge_left ul {
+    padding-right: 10px;
 }
 #bridge_main {
     display: table-cell;
