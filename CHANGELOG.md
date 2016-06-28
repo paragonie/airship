@@ -1,3 +1,8 @@
+## Version 1.0.3 - Not released yet
+
+  * [#41](https://github.com/paragonie/airship/issues/41):
+    Don't raise an `E_NOTICE` upon receiving an invalid CSRF token.
+
 ## Version 1.0.2 - 2016-06-28
 
   * Fixed a default configuration issue which caused Cabins to be disabled.
