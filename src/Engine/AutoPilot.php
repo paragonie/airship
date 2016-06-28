@@ -451,7 +451,7 @@ class AutoPilot implements RouterInterface
             try {
                 return $this->serve(
                     $this->cabin['data']['route_fallback'],
-                    \explode('/', $args[1] ?? '')
+                    \explode('/', ($args[1] ?? ''))
                 );
             } catch (FallbackLoop $e) {
                 $state = State::instance();

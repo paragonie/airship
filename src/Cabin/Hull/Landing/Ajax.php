@@ -77,7 +77,7 @@ class Ajax extends LandingGear
             $this->blog = new Blog();
         }
         $cache = $this->blog->getCommentCache();
-        $blog = (string) $_POST['blogpost'] ?? '';
+        $blog = (string) ($_POST['blogpost'] ?? '');
         if (empty($blog)) {
             \Airship\json_response([
                 'status' => 'error',

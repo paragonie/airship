@@ -126,7 +126,7 @@ class CustomPages extends HullCustomPages
                 'metadata' => !empty($post['metadata'])
                     ? \json_encode($post['metadata'])
                     : '[]',
-                'body' => $post['page_body'] ?? ''
+                'body' => ($post['page_body'] ?? '')
             ]
         );
         return $this->db->commit();
@@ -1204,7 +1204,7 @@ class CustomPages extends HullCustomPages
                 'formatting' => (string) $post['format'] ?? 'HTML',
                 'bridge_user' => (int) $this->getActiveUserId(),
                 'metadata' => (string) $meta,
-                'body' => (string) $post['page_body'] ?? ''
+                'body' => (string) ($post['page_body'] ?? '')
             ]
         );
         if ($publish) {

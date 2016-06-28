@@ -73,7 +73,7 @@ class Skyport extends AdminOnly
                     break;
             }
         }
-        $query = $post['query'] ?? '';
+        $query = (string) ($post['query'] ?? '');
         $numAvailable = $this->skyport->countAvailable($type);
         list($page, $offset) = $this->getPaginated($numAvailable);
 
