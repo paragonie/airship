@@ -1,3 +1,7 @@
+## Version 1.0.1 - 2016-06-27
+
+  * Fixed a syntax error that snuck into our installer SQL code.
+
 ## Version 1.0.0 - 2016-06-27
 
   * You can now move or rename directories in our custom page system.
