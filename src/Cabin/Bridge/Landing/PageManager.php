@@ -644,7 +644,7 @@ class PageManager extends LoggedInUsersOnly
     protected function determinePath(string &$cabin): string
     {
         $this->httpGetParams($cabin);
-        if (empty($_GET['dir'])) {
+        if (!\array_key_exists('dir', $_GET)) {
             return '';
         }
         if (!\is_string($_GET['dir'])) {
