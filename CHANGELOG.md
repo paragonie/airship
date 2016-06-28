@@ -1,7 +1,9 @@
-## Version 1.0.3 - Not released yet
+## Unreleased
 
   * [#41](https://github.com/paragonie/airship/issues/41):
     Don't raise an `E_NOTICE` upon receiving an invalid CSRF token.
+  * Various user interface improvements based on feedback from the initial
+    launch.
 
 ## Version 1.0.2 - 2016-06-28
 
