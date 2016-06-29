@@ -1,13 +1,18 @@
 {
+    "child-src": {
+        "allow": [
+            "https:\/\/www.google.com"
+        ],
+        "self": true,
+        "data": false
+    },
     "connect-src": {
         "allow": [],
         "self": true,
         "data": false
     },
-    "child-src": {
-        "allow": [
-            "https:\/\/www.google.com"
-        ],
+    "font-src": {
+        "allow": [],
         "self": true,
         "data": false
     },
@@ -17,11 +22,6 @@
         "data": false
     },
     "frame-ancestors": {
-        "allow": [],
-        "self": true,
-        "data": false
-    },
-    "font-src": {
         "allow": [],
         "self": true,
         "data": false
@@ -38,6 +38,16 @@
         "self": true,
         "data": false
     },
+    "object-src": {
+        "allow": [],
+        "self": false,
+        "data": false
+    },
+    "plugin-types": {
+        "allow": [
+            "application\/javascript"
+        ]
+    },
     "script-src": {
         "allow": [
             "https:\/\/www.google.com",
@@ -49,11 +59,6 @@
     "style-src": {
         "allow": [],
         "unsafe-inline": true
-    },
-    "plugin-types": {
-        "allow": [
-            "application\/javascript"
-        ]
     },
     "upgrade-insecure-requests": false
 }

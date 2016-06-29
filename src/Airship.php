@@ -692,10 +692,12 @@ function queryStringRoot(
  * @param mixed $data
  * @return bool
  * @throws AccessDenied
- * @throws FileNotFound
  */
 function saveJSON(string $file, $data = null): bool
 {
+    if (!\is_writable($file)) {
+        throw new AccessDenied($file);
+    }
     return \file_put_contents(
         $file,
         \json_encode($data, JSON_PRETTY_PRINT)

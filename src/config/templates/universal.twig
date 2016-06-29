@@ -14,6 +14,7 @@
     "cookie_index": {
         "auth_token": {{ universal["cookie_index"]["auth_token"]|je }}
     },
+    "default-groups": {{ universal["default-groups"]|default([2])|je(1) }},
     "debug": {{ universal.debug ? 'true' : 'false' }},
     "email": {
         "from": {{ universal["email"]["from"]|je }}
