@@ -13,9 +13,10 @@ use \Airship\Engine\Bolt\{
     Security as SecurityBolt
 };
 use \Airship\Engine\Contract\DBInterface;
-use \Airship\Engine\Security\CSRF;
-use Airship\Engine\Security\Filter\GeneralFilterContainer;
-use Airship\Engine\Security\Filter\InputFilterContainer;
+use \Airship\Engine\Security\{
+    CSRF,
+    Filter\InputFilterContainer
+};
 use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\{
     Alerts\InvalidType,
