@@ -1,9 +1,12 @@
-## Unreleased
+## Version 2.0.0 - Not Released Yet
 
   * [#41](https://github.com/paragonie/airship/issues/41):
     Don't raise an `E_NOTICE` upon receiving an invalid CSRF token.
   * Various user interface improvements based on feedback from the initial
     launch.
+  * You can now pass an input filter to `$this->post()` from a landing and it
+    will be enforced upon the POST data. If a type error occurs, it simply
+    returns `false`.
 
 ## Version 1.0.2 - 2016-06-28
 

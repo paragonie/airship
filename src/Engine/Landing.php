@@ -14,6 +14,8 @@ use \Airship\Engine\Bolt\{
 };
 use \Airship\Engine\Contract\DBInterface;
 use \Airship\Engine\Security\CSRF;
+use Airship\Engine\Security\Filter\GeneralFilterContainer;
+use Airship\Engine\Security\Filter\InputFilterContainer;
 use \ParagonIE\CSPBuilder\CSPBuilder;
 use \ParagonIE\Halite\{
     Alerts\InvalidType,
@@ -312,21 +314,48 @@ class Landing
     /**
      * Grab post data, but only if the CSRF token is valid
      *
+     * @param InputFilterContainer $filterContainer - Type filter for POST data
      * @param bool $ignoreCSRFToken - Don't validate CSRF tokens
      *
      * @return array|bool
      * @throws SecurityAlert
      */
-    protected function post(bool $ignoreCSRFToken = false)
-    {
+    protected function post(
+        InputFilterContainer $filterContainer = null,
+        bool $ignoreCSRFToken = false
+    ) {
         if ($this->airship_http_method !== 'POST' || empty($_POST)) {
             return false;
         }
         if ($ignoreCSRFToken) {
+            if ($filterContainer) {
+                try {
+                    return $filterContainer($_POST);
+                } catch (\TypeError $ex) {
+                    $this->log(
+                        'Input validation threw a TypeError',
+                        LogLevel::ALERT,
+                        \Airship\throwableToArray($ex)
+                    );
+                    return false;
+                }
+            }
             return $_POST;
         }
 
         if ($this->airship_csrf->check()) {
+            if ($filterContainer) {
+                try {
+                    return $filterContainer($_POST);
+                } catch (\TypeError $ex) {
+                    $this->log(
+                        'Input validation threw a TypeError',
+                        LogLevel::ALERT,
+                        \Airship\throwableToArray($ex)
+                    );
+                    return false;
+                }
+            }
             return $_POST;
         }
         $state = State::instance();
