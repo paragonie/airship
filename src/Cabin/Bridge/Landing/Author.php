@@ -7,6 +7,11 @@ use \Airship\Cabin\Bridge\{
     Exceptions\UserFeedbackException
 };
 use \Airship\Engine\Bolt\Orderable as OrderableBolt;
+use \Airship\Engine\Security\Filter\{
+    BoolFilter,
+    GeneralFilterContainer,
+    StringFilter
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -43,7 +48,7 @@ class Author extends LoggedInUsersOnly
      */
     public function create()
     {
-        $post = $this->post();
+        $post = $this->post($this->getFilter());
         if (!empty($post['name'])) {
             if ($this->author->createAuthor($post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/author/');
@@ -73,7 +78,7 @@ class Author extends LoggedInUsersOnly
             }
         }
 
-        $post = $this->post();
+        $post = $this->post($this->getFilter());
         if (!empty($post['name'])) {
             if ($this->author->updateAuthor($authorId, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/author/');
@@ -209,7 +214,13 @@ class Author extends LoggedInUsersOnly
 
         // Only someone in charge can add/remove users:
         if ($inCharge) {
-            $post = $this->post();
+            $post = $this->post(
+                (new GeneralFilterContainer())
+                    ->addFilter('add_user', new StringFilter())
+                    ->addFilter('in_charge', new BoolFilter())
+                    ->addFilter('remove_user', new StringFilter())
+                    ->addFilter('toggle_owner', new StringFilter())
+            );
             if ($post) {
                 if ($this->manageAuthorUsers($authorId, $post)) {
                     \Airship\redirect($this->airship_cabin_prefix . '/author/users/' . $authorId);
@@ -258,5 +269,17 @@ class Author extends LoggedInUsersOnly
             $this->storeLensVar('form_error', (string) $ex);
         }
         return false;
+    }
+
+    /**
+     * @return GeneralFilterContainer
+     */
+    protected function getFilter(): GeneralFilterContainer
+    {
+        return (new GeneralFilterContainer())
+            ->addFilter('name', new StringFilter())
+            ->addFilter('byline', new StringFilter())
+            ->addFilter('format', (new StringFilter())->setDefault('Markdown'))
+            ->addFilter('biography', new StringFilter());
     }
 }
