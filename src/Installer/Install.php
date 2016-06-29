@@ -2,13 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Installer;
 
+use\ Airship\Alerts\Database\DBException;
 use \Airship\Engine\{
     Database,
     State
 };
 use \Airship\Engine\Security\CSRF;
 use \GuzzleHttp\Client;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 use \ParagonIE\Halite\Password;
 use \ParagonIE\ConstantTime\Base64;
 
@@ -192,6 +193,32 @@ class Install
             $post['database'][0]['host'] = 'localhost';
         }
         $this->data['database'] = $post['database'];
+        try {
+            $conf = [
+                isset($post['database'][0]['dsn'])
+                    ? $post['database'][0]['dsn']
+                    : $post['database'][0]
+            ];
+
+            if (isset($post['database'][0]['username']) && isset($post['database'][0]['password'])) {
+                $conf[] = $post['database'][0]['username'];
+                $conf[] = $post['database'][0]['password'];
+                if (isset($post['database'][0]['options'])) {
+                    $conf[] = $post['database'][0]['options'];
+                }
+            } elseif (isset($post['database'][0]['options'])) {
+                $conf[1] = '';
+                $conf[2] = '';
+                $conf[3] = $post['database'][0]['options'];
+            }
+            if (empty($conf)) {
+            }
+            Database::factory($post['database']);
+            unset($this->data['db_error']);
+        } catch (DBException $ex) {
+            $this->data['db_error'] = $ex->getMessage();
+            \Airship\redirect('/');
+        }
         $this->data['step'] = 2;
         \Airship\redirect('/');
     }

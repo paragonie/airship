@@ -11,9 +11,14 @@
             <h2>Database Configuration</h2>
             <p>
                 Before you can launch your Airship, you'll need to have your own
-                MySQL or PostgreSQL database. If you're not sure what this is,
+                PostgreSQL database. If you're not sure what this is,
                 contact your hosting provider and ask for details.
             </p>
+            {% if db_error %}
+            <p>
+                {{ db_error }}
+            </p>
+            {% endif %}
             <div id="databases">
                 <fieldset>
                     <legend>Primary Database</legend>
