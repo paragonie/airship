@@ -11,6 +11,12 @@ use \Airship\Engine\{
     Security\Util,
     State
 };
+use \Airship\Engine\Security\Filter\{
+    BoolFilter,
+    InputFilterContainer,
+    GeneralFilterContainer,
+    StringFilter
+};
 use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
@@ -222,7 +228,16 @@ class PageManager extends LoggedInUsersOnly
         }
         $latest = $this->pg->getLatestDraft($page['pageid']);
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('publish', new BoolFilter())
+                ->addFilter(
+                    'format',
+                    (new StringFilter())
+                        ->setDefault('Rich Text')
+                )
+                ->addFilter('body', new StringFilter())
+        );
         if (!empty($post)) {
             $this->processEditPage(
                 (int) $page['pageid'],
@@ -313,7 +328,18 @@ class PageManager extends LoggedInUsersOnly
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $post = $this->post();
+        $filter =(new GeneralFilterContainer())
+            ->addFilter(
+                'url',
+                (new StringFilter())
+                    ->addCallback(function ($str): string {
+                        if (Util::stringLength($str) < 1) {
+                            throw new \TypeError();
+                        }
+                        return $str;
+                    })
+            );
+        $post = $this->post($filter);
         if (!empty($post)) {
             $this->processNewDir(
                 $cabin,
@@ -348,7 +374,7 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
 
-        $post = $this->post();
+        $post = $this->post($this->getPageFilter());
         if (!empty($post)) {
             $this->processNewPage(
                 $cabin,
@@ -357,13 +383,15 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/page_new', [
-            'cabins' => $cabins,
-            // UNTRUSTED, PROVIDED BY THE USER:
-            'dir' => $path,
-            'cabin' => $cabin,
-            'pathinfo' => \Airship\chunk($path)
-        ]);
+        $this->lens('pages/page_new',
+            [
+                'cabins' => $cabins,
+                // UNTRUSTED, PROVIDED BY THE USER:
+                'dir' => $path,
+                'cabin' => $cabin,
+                'pathinfo' => \Airship\chunk($path)
+            ]
+        );
     }
 
     /**
@@ -402,7 +430,7 @@ class PageManager extends LoggedInUsersOnly
             return;
         }
 
-        $post = $this->post();
+        $post = $this->post($this->getRenameFilter());
         if (!empty($post)) {
             // CAPTCHA verification and CSRF token both passed
             if ($this->processMoveDir(
@@ -480,7 +508,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $post = $this->post();
+        $post = $this->post($this->getRenameFilter());
         if (!empty($post)) {
             $this->processMovePage(
                 $page,
@@ -810,10 +838,13 @@ class PageManager extends LoggedInUsersOnly
     ): bool {
         if (\is_numeric($post['directory'])) {
             $post['cabin'] = $this->pg->getCabinForDirectory($post['directory']);
-        } else {
+        } elseif (\is_string($post['directory'])) {
             // We're setting this to the root directory of a cabin
             $post['cabin'] = $post['directory'];
             $post['directory'] = 0;
+        } else {
+            // Invalid input.
+            return false;
         }
         // Actually process the new page:
         if (
@@ -1030,5 +1061,26 @@ class PageManager extends LoggedInUsersOnly
             }
         }
         return \preg_match('#^(static|js|img|fonts|css)/#', $uri) === 0;
+    }
+
+    /**
+     * @return InputFilterContainer
+     */
+    protected function getPageFilter(): InputFilterContainer
+    {
+        return (new GeneralFilterContainer())
+            ->addFilter('url', new StringFilter())
+            ->addFilter('format', new StringFilter())
+            ->addFilter('page_body', new StringFilter());
+    }
+
+    /**
+     * @return InputFilterContainer
+     */
+    protected function getRenameFilter(): InputFilterContainer
+    {
+        return (new GeneralFilterContainer())
+            ->addFilter('create_redirect', new BoolFilter())
+            ->addFilter('url', new StringFilter());
     }
 }

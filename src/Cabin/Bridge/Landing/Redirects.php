@@ -3,6 +3,11 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\CustomPages;
+use \Airship\Engine\Security\Filter\{
+    GeneralFilterContainer,
+    StringFilter
+};
+use \Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -76,7 +81,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('update')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
-        $post = $this->post();
+        $post = $this->post($this->getFilter());
         $redirect = $this->pg->getRedirect($cabin, (int) $redirectId);
         if (empty($redirect)) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
@@ -150,7 +155,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
-        $post = $this->post();
+        $post = $this->post($this->getFilter());
         if ($post) {
             if (\Airship\all_keys_exist(['old_url', 'new_url'], $post)) {
                 if (\preg_match('#^https?://#', $post['new_url'])) {
@@ -179,5 +184,22 @@ class Redirects extends LoggedInUsersOnly
                 'cabin' => $cabin
             ]
         );
+    }
+
+    /**
+     * @return GeneralFilterContainer
+     */
+    protected function getFilter(): GeneralFilterContainer
+    {
+        $urlFilter = (new StringFilter())
+            ->addCallback(function ($input): string {
+                if ($input === null || $input === '') {
+                    throw new \TypeError('Expected non-empty string');
+                }
+                return $input;
+            });
+        return (new GeneralFilterContainer())
+            ->addFilter('new_url', $urlFilter)
+            ->addFilter('old_url', $urlFilter);
     }
 }

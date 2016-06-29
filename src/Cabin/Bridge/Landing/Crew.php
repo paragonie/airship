@@ -4,6 +4,12 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Engine\Bolt\Get;
+use \Airship\Engine\Security\Filter\{
+    BoolFilter,
+    IntFilter,
+    GeneralFilterContainer,
+    StringFilter
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -48,7 +54,12 @@ class Crew extends AdminOnly
      */
     public function createGroup()
     {
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+                ->addFilter('parent', new IntFilter())
+                ->addFilter('superuser', new BoolFilter())
+        );
         if (!empty($post)) {
             if ($this->account->createGroup($post)) {
                 \Airship\redirect(
@@ -72,7 +83,12 @@ class Crew extends AdminOnly
     public function editGroup(string $groupId = '')
     {
         $groupId = (int) $groupId;
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+                ->addFilter('parent', new IntFilter())
+                ->addFilter('superuser', new BoolFilter())
+        );
         if (!empty($post)) {
             if ($this->account->editGroup($groupId, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/crew/groups');
@@ -100,7 +116,18 @@ class Crew extends AdminOnly
     {
         $userId = (int) $userId;
         $user = $this->account->getUserAccount($userId, true);
-        $post = $this->post();
+        $strFilter = new StringFilter();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('username', $strFilter)
+                ->addFilter('password', $strFilter)
+                ->addFilter('email', $strFilter)
+                ->addFilter('uniqueid', $strFilter)
+                ->addFilter('display_name', $strFilter)
+                ->addFilter('real_name', $strFilter)
+
+        );
+        // 'username', 'uniqueid', 'email', 'display_name', 'real_name'
         if ($post) {
             if ($this->account->editUser($userId, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/crew/users');
