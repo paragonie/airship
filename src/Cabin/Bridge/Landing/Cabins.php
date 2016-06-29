@@ -5,7 +5,7 @@ namespace Airship\Cabin\Bridge\Landing;
 use \Airship\Alerts\FileSystem\FileNotFound;
 
 use \Airship\Engine\Security\Filter\{
-    InputFilterContainer,
+    ArrayFilter,
     GeneralFilterContainer
 };
 
@@ -92,7 +92,16 @@ class Cabins extends LoggedInUsersOnly
         $cabin = \Airship\loadJSON(
             ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'cabins.json'
         );
-        $post = $this->post();
+
+        // Apply the cabin's input filter:
+        $filterName = '\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter';
+        if (\class_exists($filterName)) {
+            $filter = new $filterName;
+        } else {
+            $filter = (new GeneralFilterContainer())
+                ->addFilter('content_security_policy', new ArrayFilter());
+        }
+        $post = $this->post($filter);
         if (!empty($post)) {
             if ($this->saveSettings($cabinName, $cabin, $post)) {
                 \Airship\redirect(
@@ -211,13 +220,6 @@ class Cabins extends LoggedInUsersOnly
         $ds = DIRECTORY_SEPARATOR;
         $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
 
-        // Apply the cabin's input filter:
-        $filterName = '\\Airship\\Cabin\\' . $cabinName . '\\ConfigFilter';
-        if (\class_exists($filterName)) {
-            $filter = new $filterName;
-            $post = $filter($post);
-        }
-
         // Content-Security-Policy
         $csp = [];
         foreach ($post['content_security_policy'] as $dir => $rules) {
@@ -282,22 +284,22 @@ class Cabins extends LoggedInUsersOnly
             $twig_vars = $post['twig_vars'];
         }
         if (!empty($config_extra)) {
-            \file_put_contents(
+            \Airship\saveJSON(
                 ROOT . DIRECTORY_SEPARATOR . 'config' .
                 DIRECTORY_SEPARATOR . 'Cabin'.
                 DIRECTORY_SEPARATOR . $cabinName .
                 DIRECTORY_SEPARATOR . 'config.json',
-                \json_encode($config_extra, JSON_PRETTY_PRINT)
+                $config_extra
             );
         }
 
         if (!empty($twig_vars)) {
-            \file_put_contents(
+            \Airship\saveJSON(
                 ROOT . DIRECTORY_SEPARATOR . 'config' .
                     DIRECTORY_SEPARATOR . 'Cabin'.
                     DIRECTORY_SEPARATOR . $cabinName .
                     DIRECTORY_SEPARATOR . 'twig_vars.json',
-                \json_encode($twig_vars, JSON_PRETTY_PRINT)
+                $twig_vars
             );
         }
 

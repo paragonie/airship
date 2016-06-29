@@ -7,6 +7,7 @@ use \Airship\Alerts\FileSystem\{
 };
 use \Airship\Engine\{
     Database,
+    Security\Util,
     State
 };
 use \ParagonIE\Halite\File as HaliteFile;
@@ -530,7 +531,9 @@ class Files extends BlueprintGear
             // Once again, this is just looking to create a headache down the road.
             return false;
         }
-        if (\mb_strlen($name, '8bit') === 1) {
+        if (Util::stringLength($name) < 1) {
+            return false;
+        } elseif (Util::stringLength($name) === 1) {
             // Single byte directory/file names must be a printable ASCII character.
             // Preferably: one that is legible and semantically meaningful.
             return 0 < \preg_match('#^[A-Za-z0-9\-_~=\+]$#', $name[0]);

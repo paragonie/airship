@@ -94,7 +94,9 @@ class Blog extends BlueprintGear
                 'author' =>
                     $post['author'],
                 'category' =>
-                    $post['category'] ?? null,
+                    $post['category'] > 0
+                        ? $post['category']
+                        : null,
                 'description' =>
                     $post['description'],
                 'format' =>
@@ -171,7 +173,7 @@ class Blog extends BlueprintGear
                 'preamble' =>
                     $post['preamble'] ?? '',
                 'format' =>
-                    $post['format'] ?? 'HTML',
+                    $post['format'] ?? 'Rich Text',
                 'config' =>
                     $post['config']
                         ? \json_encode($post['config'])
@@ -185,6 +187,9 @@ class Blog extends BlueprintGear
 
         $listOrder = 0;
         foreach (\explode(',', $post['items']) as $item) {
+            if (\strpos($item, '_') === false) {
+                continue;
+            }
             list ($type, $itemId) = \explode('_', $item);
             if ($type === 'series') {
                 $_insert = $insert;
@@ -234,10 +239,6 @@ class Blog extends BlueprintGear
         $this->db->beginTransaction();
         try {
             if (!empty($formData['create_redirect'])) {
-                if (empty($formData)) {
-                    $this->db->rollBack();
-                    return false;
-                }
                 $blogUrl = \implode('/', [
                     'blog',
                     $blogPost['blogyear'],
@@ -256,7 +257,7 @@ class Blog extends BlueprintGear
                         'airship_custom_redirect',
                         [
                             'oldpath' => $blogUrl,
-                            'newpath' => $formData['redirect_url'] ?? '/',
+                            'newpath' => $formData['redirect_url'],
                             'cabin' => $cabin,
                             'same_cabin' => $cabin === $this->cabin
                         ]
@@ -266,7 +267,7 @@ class Blog extends BlueprintGear
                         'airship_custom_redirect',
                         [
                             'oldpath' => $blogUrl,
-                            'newpath' => $formData['redirect_url'] ?? '/',
+                            'newpath' => $formData['redirect_url'],
                             'cabin' => $this->cabin,
                             'same_cabin' => false
                         ]
@@ -1307,6 +1308,9 @@ class Blog extends BlueprintGear
 
         $listOrder = 0;
         foreach ($newItems as $new) {
+            if (\strpos($new, '_') === false) {
+                continue;
+            }
             list ($type, $itemId) = \explode('_', $new);
             if (\in_array($new, $inserts)) {
                 switch ($type) {

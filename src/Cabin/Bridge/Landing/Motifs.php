@@ -49,7 +49,7 @@ class Motifs extends AdminOnly
         foreach (\array_keys($motifs) as $i) {
             $filter->addFilter('motifs.' . $i . '.enabled', new BoolFilter());
         }
-        $post = $this->post();
+        $post = $this->post($filter);
         if ($post) {
             if ($this->updateMotifs($motifs, $post, $cabinName)) {
                 \Airship\clear_cache();

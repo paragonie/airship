@@ -47,7 +47,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
-        $post = $this->post();
+        $post = $this->post(/* No data is passed */);
         $redirectId = (int) $redirectId;
         $redirect = $this->pg->getRedirect($cabin, $redirectId);
 

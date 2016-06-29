@@ -5,9 +5,15 @@ namespace Airship\Cabin\Bridge\Landing;
 use \Airship\Cabin\Bridge\Blueprint as BP;
 use \Airship\Engine\Bolt\Orderable;
 use \Airship\Engine\Security\Filter\{
+    ArrayFilter,
+    BoolFilter,
+    FloatFilter,
     InputFilterContainer,
-    GeneralFilterContainer
+    IntFilter,
+    GeneralFilterContainer,
+    StringFilter
 };
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -85,7 +91,15 @@ class Blog extends LoggedInUsersOnly
             }
         }
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('create_redirect', new BoolFilter())
+                ->addFilter(
+                    'redirect_url',
+                    (new StringFilter())
+                        ->setDefault('/')
+            )
+        );
         if (!empty($post)) {
             if ($this->processDeletePost($post, $authorsAllowed, $blogPost)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
@@ -110,7 +124,11 @@ class Blog extends LoggedInUsersOnly
     public function editCategory(string $id = '')
     {
         $id = (int) $id;
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+                ->addFilter('preamble', new StringFilter())
+        );
         if (!empty($post)) {
             if ($this->blog->updateCategory($id, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
@@ -163,7 +181,32 @@ class Blog extends LoggedInUsersOnly
         $categories = $this->blog->getCategoryTree();
         $tags = $this->blog->getTags();
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('author', new IntFilter())
+                ->addFilter('blog_post_body', new StringFilter())
+                ->addFilter('category', new IntFilter())
+                ->addFilter('description', new StringFilter())
+                ->addFilter(
+                    'format',
+                    (new StringFilter())
+                        ->setDefault('Rich Text')
+                )
+                ->addFilter('redirect_slug', new BoolFilter())
+                ->addFilter('save_btn', new StringFilter())
+                ->addFilter('slug', new StringFilter())
+                ->addFilter(
+                    'title',
+                    (new StringFilter())->addCallback(
+                        function ($input): string {
+                            if (Util::stringLength($input) < 1) {
+                                throw new \TypeError();
+                            }
+                            return $input;
+                        }
+                    )
+                )
+        );
         if (!empty($post)) {
             if ($this->processEditPost($post, $authorsAllowed, $blogPost)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
@@ -224,7 +267,15 @@ class Blog extends LoggedInUsersOnly
             }
         }
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer)
+                ->addFilter('name', new StringFilter())
+                ->addFilter('author', new IntFilter())
+                ->addFilter('preamble', new StringFilter())
+                ->addFilter('format', new StringFilter())
+                ->addFilter('config', new ArrayFilter())
+                ->addFilter('items', new StringFilter())
+        );
         if (!empty($post)) {
             if ($this->processEditSeries(
                 $post,
@@ -259,7 +310,10 @@ class Blog extends LoggedInUsersOnly
         }
         $tag = $this->blog->getTagInfo($id);
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+        );
         if (!empty($post)) {
             if ($this->processEditTag($id, $post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/tag');
@@ -397,7 +451,10 @@ class Blog extends LoggedInUsersOnly
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
         list($sort, $dir) = $this->getSortArgs('name');
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+        );
         if (!empty($post)) {
             $this->blog->createTag($post);
         }
@@ -435,7 +492,12 @@ class Blog extends LoggedInUsersOnly
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
         }
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('name', new StringFilter())
+                ->addFilter('parent', new IntFilter())
+                ->addFilter('preamble', new StringFilter())
+        );
         if (!empty($post)) {
             if ($this->blog->createCategory($post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
@@ -468,7 +530,30 @@ class Blog extends LoggedInUsersOnly
         $categories = $this->blog->getCategoryTree();
         $tags = $this->blog->getTags();
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('author', new IntFilter())
+                ->addFilter('blog_post_body', new StringFilter())
+                ->addFilter('category', new IntFilter())
+                ->addFilter('description', new StringFilter())
+                ->addFilter(
+                    'format',
+                    (new StringFilter())
+                        ->setDefault('Rich Text')
+                )
+                ->addFilter('save_btn', new StringFilter())
+                ->addFilter(
+                    'title',
+                    (new StringFilter())->addCallback(
+                        function ($input): string {
+                            if (Util::stringLength($input) < 1) {
+                                throw new \TypeError();
+                            }
+                            return $input;
+                        }
+                    )
+                )
+        );
         if (!empty($post)) {
             $authorsAllowed = [];
             foreach ($authors as $a) {
@@ -506,7 +591,15 @@ class Blog extends LoggedInUsersOnly
             );
         }
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer)
+                ->addFilter('name', new StringFilter())
+                ->addFilter('author', new IntFilter())
+                ->addFilter('preamble', new StringFilter())
+                ->addFilter('format', new StringFilter())
+                ->addFilter('config', new ArrayFilter())
+                ->addFilter('items', new StringFilter())
+        );
         if (!empty($post)) {
             $authorsAllowed = [];
             foreach ($authors as $a) {
@@ -532,7 +625,10 @@ class Blog extends LoggedInUsersOnly
     public function viewComment(string $commentId = '')
     {
         $commentId = (int) $commentId;
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer)
+                ->addFilter('comment_btn', new StringFilter())
+        );
         if (!empty($post)) {
             switch ($post['comment_btn']) {
                 case 'publish':

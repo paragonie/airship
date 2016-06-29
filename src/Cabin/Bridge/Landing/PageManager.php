@@ -11,11 +11,8 @@ use \Airship\Engine\{
     Security\Util,
     State
 };
-use \Airship\Engine\Security\Filter\{
-    BoolFilter,
-    InputFilterContainer,
-    GeneralFilterContainer,
-    StringFilter
+use Airship\Engine\Security\Filter\{
+    BoolFilter, InputFilterContainer, GeneralFilterContainer, IntFilter, StringFilter
 };
 use \Psr\Log\LogLevel;
 
@@ -84,7 +81,11 @@ class PageManager extends LoggedInUsersOnly
             $this->lens('pages/bad_config');
         }
 
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('create_redirect', new BoolFilter())
+                ->addFilter('move_destination', new IntFilter())
+        );
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
                 $rc = \Airship\getReCaptcha(
@@ -166,7 +167,11 @@ class PageManager extends LoggedInUsersOnly
         if (empty($secretKey)) {
             $this->lens('pages/bad_config');
         }
-        $post = $this->post();
+        $post = $this->post(
+            (new GeneralFilterContainer())
+                ->addFilter('create_redirect', new BoolFilter())
+                ->addFilter('redirect_to', new StringFilter())
+        );
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
                 $rc = \Airship\getReCaptcha(
