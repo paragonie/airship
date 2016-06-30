@@ -1,12 +1,21 @@
-## Version 2.0.0 - Not Released Yet
+## Version 1.1.0 - 2016-07-01
 
   * [#41](https://github.com/paragonie/airship/issues/41):
     Don't raise an `E_NOTICE` upon receiving an invalid CSRF token.
+  * [#42](https://github.com/paragonie/airship/issues/42):
+    We now have a Dockerfile for easy deployment. Thanks [@kelunik](https://github.com/kelunik).
+  * [#47](https://github.com/paragonie/airship/issues/47):
+    If you make a typo when filling in the database credentials on first run,
+    it will no longer proceed silently then fail catastrophically in the last
+    step.
+  * [#50](https://github.com/paragonie/airship/issues/50):
+    Display the correct version in the Installer.
   * Various user interface improvements based on feedback from the initial
     launch.
   * You can now pass an input filter to `$this->post()` from a landing and it
     will be enforced upon the POST data. If a type error occurs, it simply
     returns `false`.
+  *  
 
 ## Version 1.0.2 - 2016-06-28
 
