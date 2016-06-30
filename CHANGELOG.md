@@ -15,7 +15,8 @@
   * You can now pass an input filter to `$this->post()` from a landing and it
     will be enforced upon the POST data. If a type error occurs, it simply
     returns `false`.
-  *  
+  * Fixed a bug that prevented CAPTCHAs from loading on static blog posts.
+    Thanks [@kyhwana](https://github.com/kyhwana) for reporting this.
 
 ## Version 1.0.2 - 2016-06-28
 
