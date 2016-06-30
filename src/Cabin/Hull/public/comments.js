@@ -27,9 +27,14 @@ window.replyTo = function(commentId, author) {
 };
 
 window.getCommentForm = function(cabinURL) {
-    $.get(
+    var blogBody = $("#blog-post-body");
+    $.post(
         cabinURL + "ajax/blog_comment_form",
-        {},
+        {
+            "year": blogBody.data('year'),
+            "month": blogBody.data('month'),
+            "slug": blogBody.data('slug')
+        },
         function (response) {
             $("#blog-comment-form-container").html(response);
         }

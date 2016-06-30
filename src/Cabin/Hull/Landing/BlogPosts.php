@@ -69,13 +69,15 @@ class BlogPosts extends LandingGear
             return false;
         }
         if ($this->isLoggedIn() && !$this->isSuperUser()) {
-            $allowedAuthors = $this->blog->getAuthorsForUser($this->getActiveUserId());
-            if (!\in_array($post['author'], $allowedAuthors)) {
-                $this->storeLensVar(
-                    'blog_error',
-                    \__('You do not have permission to post as this author.')
-                );
-                return false;
+            if (!empty($post['author'])) {
+                $allowedAuthors = $this->blog->getAuthorsForUser($this->getActiveUserId());
+                if (!\in_array($post['author'], $allowedAuthors)) {
+                    $this->storeLensVar(
+                        'blog_error',
+                        \__('You do not have permission to post as this author.')
+                    );
+                    return false;
+                }
             }
         }
         $msg = \trim($post['message']);
@@ -94,16 +96,20 @@ class BlogPosts extends LandingGear
             // No CAPTCHA necessary
             $published = true;
             $can_comment = true;
-        } elseif (isset($post['g-recaptcha-response'])) {
-            $rc = \Airship\getReCaptcha(
-                $this->config('recaptcha.secret-key'),
-                $this->config('recaptcha.curl-opts') ?? []
-            );
-            $resp = $rc->verify(
-                $post['g-recaptcha-response'],
-                $_SERVER['REMOTE_ADDR']
-            );
-            $can_comment = $resp->isSuccess();
+        } elseif ($this->config('blog.comments.recaptcha')) {
+            if (isset($post['g-recaptcha-response'])) {
+                $rc = \Airship\getReCaptcha(
+                    $this->config('recaptcha.secret-key'),
+                    $this->config('recaptcha.curl-opts') ?? []
+                );
+                $resp = $rc->verify(
+                    $post['g-recaptcha-response'],
+                    $_SERVER['REMOTE_ADDR']
+                );
+                $can_comment = $resp->isSuccess();
+            }
+        } else {
+            $can_comment = true;
         }
 
         if (!$can_comment) {
@@ -514,18 +520,9 @@ class BlogPosts extends LandingGear
     public function readPost(string $year, string $month, string $slug)
     {
         $blogPost = $this->blog->getBlogPost($year, $month, $slug);
-        $post = $this->post(new CommentFilter());
+        $post = $this->post(new CommentFilter(), true);
         if ($post) {
             if ($this->addComment($post, (int) $blogPost['postid'])) {
-                if (!$this->isLoggedIn()) {
-                    $this->storeLensVar(
-                        'blog_success',
-                        \__(
-                            'Your comment has been submitted successfully, ' .
-                            'but it will not appear it has been approved by the crew.'
-                        )
-                    );
-                }
                 \Airship\redirect(
                     \Airship\LensFunctions\cabin_url() .
                     'blog/' . $year . '/' . $month . '/' . $slug . '#comments'

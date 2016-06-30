@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Cabin\Hull\Blueprint\Blog;
+use Airship\Cabin\Hull\Filter\Ajax\CommentForm;
 use \Airship\Engine\Contract\CacheInterface;
 
 require_once __DIR__.'/init_gear.php';
@@ -41,9 +42,36 @@ class Ajax extends LandingGear
         if (IDE_HACKS) {
             $this->blog = new Blog();
         }
+        $filter = new CommentForm();
+        try {
+            $post = $filter($_POST);
+        } catch (\TypeError $ex) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Invalid POST data'
+            ]);
+            return;
+        }
+
+        $formAction = '/' .
+            \trim(
+                \implode(
+                    '/',
+                    [
+                        $this->airship_cabin_prefix,
+                        'blog',
+                        $post['year'],
+                        $post['month'],
+                        $post['slug']
+                    ]
+                ),
+                '/'
+            );
+
         $this->lens(
             'blog/comment_form',
             [
+                'form_action' => $formAction,
                 'config' => $this->config()
             ]
         );

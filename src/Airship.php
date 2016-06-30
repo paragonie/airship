@@ -695,7 +695,7 @@ function queryStringRoot(
  */
 function saveJSON(string $file, $data = null): bool
 {
-    if (!\is_writable($file)) {
+    if (\file_exists($file) && !\is_writable($file)) {
         throw new AccessDenied($file);
     }
     return \file_put_contents(

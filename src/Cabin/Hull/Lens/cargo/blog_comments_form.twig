@@ -7,7 +7,12 @@
         #}{% elseif blog_error %}{#
             #}<p class="blog-comment-error">{{ __(blog_error) }}</p>{#
         #}{% endif %}
-        <form method="post" class="comment-form">{{ form_token() }}
+        <form method="post" class="comment-form">
+            {% if form_action %}
+                {{ form_token(form_action) }}
+            {% else %}
+                {{ form_token() }}
+            {% endif %}
             <div class="form-row" id="reply-to"></div>
             {% if userid() %}
                 <div class="form-row">
@@ -95,7 +100,7 @@
                 </div>
             </div>
 
-            {% if config.recaptcha['comments']['recaptcha'] %}
+            {% if config.blog['comments']['recaptcha'] %}
                 {% if not can('publish') %}
                     <div class="form-column blog-comment-label">
                         <label for="g-recaptcha">{{ __("CAPTCHA") }}:</label>
@@ -115,4 +120,7 @@
         </form>
     {% endif %}
     </div>
+{% endif %}
+{% if form_action %}
+<script src="{{ csp_hash("https://www.google.com/recaptcha/api.js", "script-src", "sha384") }}"></script>
 {% endif %}

@@ -21,7 +21,13 @@
                     </ul>
                 {% endif %}
             </div>
-            <div class="blog-post-body">
+            <div
+                class="blog-post-body"
+                id="blog-post-body"
+                data-year="{{ blogpost.blogyear|e('html_attr') }}"
+                data-month="{{ blogpost.blogmonth|e('html_attr') }}"
+                data-slug="{{ blogpost.slug|e('html_attr') }}"
+            >
                 {% include cargo("blog_read_body") %}
             </div>
             {% spaceless %}
