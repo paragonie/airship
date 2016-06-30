@@ -20,10 +20,8 @@ RUN service postgresql start && sleep 3 && \
     su postgres -c "createuser airship" && \
     su postgres -c "createdb -O airship airship"
 
-WORKDIR /var/www
-RUN git clone https://github.com/paragonie/airship.git
+COPY . /var/www/airship
 WORKDIR /var/www/airship
-RUN git checkout v1.0.2
 RUN composer install --no-dev
 
 RUN chown -R www-data:www-data .
