@@ -239,12 +239,15 @@ nav ul.navigation > li:hover a {
     color: #eee;
     vertical-align: top;
 }
-.blog-sidebar a {
-    color: #EFE5C8;
+.blog-sidebar a,
+.blog-sidebar a:visited {
+    color: gold;
+    text-decoration: none;
+    text-shadow: #222 1px 0 0;
 }
 .blog-sidebar a:hover,
 .blog-sidebar a:active {
-    color: gold;
+    color: #EFE5C8;
 }
 .blog-sidebar h4 {
     margin: 0;
