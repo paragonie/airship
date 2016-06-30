@@ -56,6 +56,7 @@ class Install
     {
         $this->twig = $twig;
         $this->data = $data;
+        $this->data['airship_version'] = \AIRSHIP_VERSION;
         $this->csrf = new CSRF();
         
         // We do this to prevent someone from coming along and reading your
