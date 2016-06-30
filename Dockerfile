@@ -31,8 +31,8 @@ ENV CONF /etc/apache2/sites-enabled/airship.conf
 
 RUN echo "<VirtualHost *:80>" > $CONF && \
     echo "DocumentRoot /var/www/airship/src/public" >> $CONF && \
-    echo "ErrorLog ${APACHE_LOG_DIR}/error.log" >> $CONF && \
-    echo "CustomLog ${APACHE_LOG_DIR}/access.log combined" >> $CONF && \
+    echo "ErrorLog /dev/stderr" >> $CONF && \
+    echo "CustomLog /dev/stdout combined" >> $CONF && \
     echo "<Directory />" >> $CONF && \
     echo "RewriteEngine On" >> $CONF && \
     echo "RewriteCond %{REQUEST_FILENAME} -f [OR]" >> $CONF && \
