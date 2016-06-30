@@ -58,6 +58,7 @@ footer p {
     margin: 0;
     padding: 7px;
     padding: calc(6px + 1px);
+    text-align: center;
 }
 a {
     color: #A86018;
@@ -72,9 +73,6 @@ a:active, a:hover {
 header {
     color: #081022;
     background-color: #EFE5C8;
-}
-footer p {
-    text-align: center;
 }
 .header_wrap {
     padding: 3px;
@@ -103,7 +101,13 @@ header h2 {
 }
 .footer-hull a,
 .footer-bridge a {
-    color: gold !important;
+    color: gold;
+    text-decoration: none;
+}
+.footer-hull a:hover,
+.footer-bridge a:hover {
+    color: #EFE5C8;
+    text-decoration: none;
 }
 nav {
     background-color: #333;
