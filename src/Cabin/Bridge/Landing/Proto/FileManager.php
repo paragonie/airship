@@ -7,16 +7,12 @@ use \Airship\Alerts\FileSystem\{
     UploadError
 };
 use \Airship\Cabin\Bridge\Blueprint\Files;
-use \Airship\Engine\Bolt\Get;
-use \Airship\Engine\Security\Util;
-use \Airship\Engine\Security\Filter\{
-    ArrayFilter,
-    BoolFilter,
-    FloatFilter,
-    IntFilter,
-    GeneralFilterContainer,
-    StringFilter
+use \Airship\Cabin\Bridge\Filter\FileManager\{
+    MoveDirFilter,
+    MoveFileFilter,
+    NewDirFilter
 };
+use \Airship\Engine\Bolt\Get;
 use \Airship\Cabin\Bridge\Landing\LoggedInUsersOnly;
 use \Psr\Log\LogLevel;
 
@@ -28,8 +24,19 @@ class FileManager extends LoggedInUsersOnly
 {
     use Get;
 
+    /**
+     * @var array
+     */
     protected $attribution = []; // For uploads
+
+    /**
+     * @var string
+     */
     protected $root_dir = '';
+
+    /**
+     * @var string
+     */
     protected $path_middle = '';
 
     /**
@@ -195,19 +202,7 @@ class FileManager extends LoggedInUsersOnly
             $path
         );
 
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('new_dir', new StringFilter())
-                ->addFilter(
-                    'new_name',
-                    (new StringFilter())->addCallback(function ($name): string {
-                        if (Util::stringLength($name) < 1) {
-                            throw new \TypeError();
-                        }
-                        return $name;
-                    })
-                )
-        );
+        $post = $this->post(new MoveDirFilter());
         if (!empty($post)) {
             if ($this->files->moveDir($cabin, $this->root_dir, $path, $post)) {
                 \Airship\redirect(
@@ -257,19 +252,7 @@ class FileManager extends LoggedInUsersOnly
         } else {
             $fileInfo = $this->files->getFileInfo($cabin, $root, $file);
         }
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('new_dir', new StringFilter())
-                ->addFilter(
-                    'new_name',
-                    (new StringFilter())->addCallback(function ($name): string {
-                        if (Util::stringLength($name) < 1) {
-                            throw new \TypeError();
-                        }
-                        return $name;
-                    })
-                )
-        );
+        $post = $this->post(new MoveFileFilter());
         if (!empty($post)) {
             $this->files->moveFile($fileInfo, $post, $cabin);
             \Airship\redirect(
@@ -302,11 +285,7 @@ class FileManager extends LoggedInUsersOnly
     {
         list($publicPath, $root) = $this->loadCommonData($path, $cabin);
 
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('submit_btn', new StringFilter())
-                ->addFilter('directory', new StringFilter())
-        );
+        $post = $this->post(new NewDirFilter());
         if (!empty($post['submit_btn'])) {
             switch ($post['submit_btn']) {
                 case 'new_dir':

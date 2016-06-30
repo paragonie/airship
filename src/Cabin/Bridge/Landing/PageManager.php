@@ -3,6 +3,14 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\CustomPages;
+use \Airship\Cabin\Bridge\Filter\PageManager\{
+    DeleteDirFilter,
+    DeletePageFilter,
+    EditPageFilter,
+    NewDirFilter,
+    PageFilter,
+    RenameFilter
+};
 use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
 use \Airship\Engine\{
     AutoPilot,
@@ -10,9 +18,6 @@ use \Airship\Engine\{
     Gears,
     Security\Util,
     State
-};
-use Airship\Engine\Security\Filter\{
-    BoolFilter, InputFilterContainer, GeneralFilterContainer, IntFilter, StringFilter
 };
 use \Psr\Log\LogLevel;
 
@@ -81,11 +86,7 @@ class PageManager extends LoggedInUsersOnly
             $this->lens('pages/bad_config');
         }
 
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('create_redirect', new BoolFilter())
-                ->addFilter('move_destination', new IntFilter())
-        );
+        $post = $this->post(new DeleteDirFilter());
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
                 $rc = \Airship\getReCaptcha(
@@ -167,11 +168,7 @@ class PageManager extends LoggedInUsersOnly
         if (empty($secretKey)) {
             $this->lens('pages/bad_config');
         }
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('create_redirect', new BoolFilter())
-                ->addFilter('redirect_to', new StringFilter())
-        );
+        $post = $this->post(new DeletePageFilter());
         if (!empty($post)) {
             if (isset($post['g-recaptcha-response'])) {
                 $rc = \Airship\getReCaptcha(
@@ -233,16 +230,7 @@ class PageManager extends LoggedInUsersOnly
         }
         $latest = $this->pg->getLatestDraft($page['pageid']);
 
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('publish', new BoolFilter())
-                ->addFilter(
-                    'format',
-                    (new StringFilter())
-                        ->setDefault('Rich Text')
-                )
-                ->addFilter('body', new StringFilter())
-        );
+        $post = $this->post(new EditPageFilter());
         if (!empty($post)) {
             $this->processEditPage(
                 (int) $page['pageid'],
@@ -333,18 +321,8 @@ class PageManager extends LoggedInUsersOnly
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $filter =(new GeneralFilterContainer())
-            ->addFilter(
-                'url',
-                (new StringFilter())
-                    ->addCallback(function ($str): string {
-                        if (Util::stringLength($str) < 1) {
-                            throw new \TypeError();
-                        }
-                        return $str;
-                    })
-            );
-        $post = $this->post($filter);
+
+        $post = $this->post(new NewDirFilter());
         if (!empty($post)) {
             $this->processNewDir(
                 $cabin,
@@ -379,7 +357,7 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
 
-        $post = $this->post($this->getPageFilter());
+        $post = $this->post(new PageFilter());
         if (!empty($post)) {
             $this->processNewPage(
                 $cabin,
@@ -435,7 +413,7 @@ class PageManager extends LoggedInUsersOnly
             return;
         }
 
-        $post = $this->post($this->getRenameFilter());
+        $post = $this->post(new RenameFilter());
         if (!empty($post)) {
             // CAPTCHA verification and CSRF token both passed
             if ($this->processMoveDir(
@@ -513,7 +491,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $post = $this->post($this->getRenameFilter());
+        $post = $this->post(new RenameFilter());
         if (!empty($post)) {
             $this->processMovePage(
                 $page,

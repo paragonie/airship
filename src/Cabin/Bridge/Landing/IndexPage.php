@@ -8,10 +8,7 @@ use \Airship\Cabin\Bridge\Blueprint\{
     Blog,
     CustomPages
 };
-use \Airship\Engine\Security\Filter\{
-    GeneralFilterContainer,
-    StringFilter
-};
+use \Airship\Cabin\Bridge\Filter\AnnounceFilter;
 use \Airship\Engine\State;
 use \ParagonIE\Halite\Halite;
 
@@ -39,16 +36,7 @@ class IndexPage extends LandingGear
             $announce_bp = new Announcements();
         }
 
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('contents', new StringFilter())
-                ->addFilter(
-                    'contents',
-                    (new StringFilter())
-                        ->setDefault('Rich Text')
-                )
-                ->addFilter('title', new StringFilter())
-        );
+        $post = $this->post(new AnnounceFilter());
         if ($post) {
             if ($announce_bp->createAnnouncement($post)) {
                 \Airship\redirect($this->airship_cabin_prefix);

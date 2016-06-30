@@ -4,6 +4,14 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Alerts\Security\UserNotFound;
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use \Airship\Cabin\Bridge\Filter\Account\{
+    BoardFilter,
+    LoginFilter,
+    MyAccountFilter,
+    PreferencesFilter,
+    RecoveryFilter,
+    TwoFactorFilter
+};
 use \Airship\Engine\{
     AutoPilot,
     Bolt\Security,
@@ -12,9 +20,6 @@ use \Airship\Engine\{
 };
 use \Airship\Engine\Security\{
     AirBrake,
-    Filter\BoolFilter,
-    Filter\GeneralFilterContainer,
-    Filter\StringFilter,
     HiddenString,
     Util
 };
@@ -77,7 +82,7 @@ class Account extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
 
-        $post = $this->post($this->getBoardFilterContainer());
+        $post = $this->post(new BoardFilter());
         if (!empty($post)) {
             // Optional: CAPTCHA enforcement
             if ($this->config('board.captcha')) {
@@ -122,7 +127,7 @@ class Account extends LandingGear
             // You're already logged in!
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $post = $this->post($this->getLoginFilterContainer());
+        $post = $this->post(new LoginFilter());
         if (!empty($post)) {
             $this->processLogin($post);
             return;
@@ -166,7 +171,7 @@ class Account extends LandingGear
         if (!empty($account['gpg_public_key'])) {
             $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
         }
-        $post = $this->post($this->getMyAccountFilterContainer());
+        $post = $this->post(new MyAccountFilter());
         if (!empty($post)) {
             $this->processAccountUpdate($post, $account, $gpg_public_key);
             return;
@@ -214,11 +219,7 @@ class Account extends LandingGear
 
         }
 
-        $filters = $this->getPreferencesFilterContainer(
-            $cabins,
-            $motifs
-        );
-        $post = $this->post($filters);
+        $post = $this->post(PreferencesFilter::fromConfig($cabins, $motifs));
         if (!empty($post)) {
             if ($this->savePreferences($post['prefs'], $cabins, $motifs)) {
                 $prefs = $post['prefs'];
@@ -271,7 +272,7 @@ class Account extends LandingGear
         if (empty($enabled)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $post = $this->post($this->getAccountRecoveryFilterContainer());
+        $post = $this->post(new RecoveryFilter());
         if ($post) {
             if ($this->processRecoverAccount($post)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/login');
@@ -321,7 +322,7 @@ class Account extends LandingGear
         }
         $this->twoFactorPreamble();
         $userID = $this->getActiveUserId();
-        $post = $this->post($this->getTwoFactorFilterContainer());
+        $post = $this->post(new TwoFactorFilter());
         if ($post) {
             $this->acct->toggleTwoFactor($userID, $post);
         }
@@ -359,52 +360,6 @@ class Account extends LandingGear
         }
         return false;
     }
-
-    /**
-     * @return GeneralFilterContainer
-     */
-    protected function getAccountRecoveryFilterContainer(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter(
-                'forgot_passphrase_for',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 1) {
-                            throw new \TypeError();
-                        }
-                    })
-            );
-    }
-
-    /**
-     * Get the input filter container for registering
-     *
-     * @return GeneralFilterContainer
-     */
-    protected function getBoardFilterContainer(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter(
-                'username',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 1) {
-                            throw new \TypeError();
-                        }
-                    })
-            )
-            ->addFilter(
-                'passphrase',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 1) {
-                            throw new \TypeError();
-                        }
-                    })
-            );
-    }
-
     /**
      * Return the public key corresponding to a fingerprint
      *
@@ -421,101 +376,6 @@ class Account extends LandingGear
         } catch (\Crypt_GPG_Exception $ex) {
             return '';
         }
-    }
-
-
-    /**
-     * @return GeneralFilterContainer
-     */
-    protected function getLoginFilterContainer(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter(
-                'username',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 1) {
-                            throw new \TypeError();
-                        }
-                    })
-            )
-            ->addFilter(
-                'passphrase',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 1) {
-                            throw new \TypeError();
-                        }
-                    })
-            )
-            ->addFilter(
-                'two_factor',
-                (new StringFilter())
-                    ->addCallback(function ($string) {
-                        if (Util::stringLength($string) < 6) {
-                            throw new \TypeError();
-                        } elseif (Util::stringLength($string) > 8) {
-                            throw new \TypeError();
-                        }
-                    })
-            );
-    }
-
-    /**
-     * @return GeneralFilterContainer
-     */
-    protected function getMyAccountFilterContainer(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter('allow_reset', new BoolFilter())
-            ->addFilter('display_name', new StringFilter())
-            ->addFilter('email', new StringFilter())
-            ->addFilter('gpg_public_key', new StringFilter())
-            ->addFilter('passphrase', new StringFilter())
-            ->addFilter('publicprofile', new BoolFilter())
-            ->addFilter('real_name', new StringFilter());
-    }
-
-    /**
-     * Get the filter container for the Preferences form
-     *
-     * @param string[] $cabinNamespaces
-     * @param array $motifs
-     * @return GeneralFilterContainer
-     */
-    protected function getPreferencesFilterContainer(
-        array $cabinNamespaces = [],
-        array $motifs = []
-    ): GeneralFilterContainer {
-        $filterContainer = new GeneralFilterContainer();
-        foreach ($cabinNamespaces as $cabin) {
-            $activeCabin = $motifs[$cabin];
-            $filterContainer->addFilter(
-                'prefs.motif.' . $cabin,
-                (new StringFilter())->addCallback(
-                    function ($selected) use ($cabin, $activeCabin): string {
-                        foreach ($activeCabin as $cabinConfig) {
-                            if ($selected === $cabinConfig['path']) {
-                                return $selected;
-                            }
-                        }
-                        return '';
-                    }
-                )
-            );
-        }
-        return $filterContainer;
-    }
-
-    /**
-     * @return GeneralFilterContainer
-     */
-    protected function getTwoFactorFilterContainer(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter('enable_2factor', new BoolFilter())
-            ->addFilter('reset_secret', new BoolFilter())
-        ;
     }
 
     /**

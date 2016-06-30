@@ -3,13 +3,10 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint as BP;
-use \Airship\Engine\Security\Filter\{
-    ArrayFilter,
-    BoolFilter,
-    FloatFilter,
-    IntFilter,
-    GeneralFilterContainer,
-    StringFilter
+use \Airship\Cabin\Bridge\Filter\Permissions\{
+    CabinSubmenuFilter,
+    SaveActionFilter,
+    SaveContextFilter
 };
 
 require_once __DIR__.'/init_gear.php';
@@ -51,11 +48,7 @@ class Permissions extends AdminOnly
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
         }
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('new_action', new StringFilter())
-                ->addFilter('new_context', new StringFilter())
-        );
+        $post = $this->post(new CabinSubmenuFilter());
         if (!empty($post)) {
             $this->processCabinSubmenu($cabin, $post);
         }
@@ -86,10 +79,7 @@ class Permissions extends AdminOnly
                 $this->airship_cabin_prefix . '/crew/permissions'
             );
         }
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('label', new StringFilter())
-        );
+        $post = $this->post(new SaveActionFilter());
         $action = $this->perms->getAction($cabin, $actionId);
         if (empty($action)) {
             \Airship\redirect(
@@ -135,10 +125,7 @@ class Permissions extends AdminOnly
         }
 
         // Handle post data
-        $post = $this->post(
-            (new GeneralFilterContainer())
-                ->addFilter('context', new StringFilter())
-        );
+        $post = $this->post(new SaveContextFilter());
         if (!empty($post)) {
             if ($this->perms->saveContext($cabin, $contextId, $post)) {
                 \Airship\redirect(

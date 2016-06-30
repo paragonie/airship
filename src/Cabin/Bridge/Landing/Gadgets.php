@@ -2,12 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Engine\Security\Filter\{
-    BoolFilter,
-    GeneralFilterContainer,
-    InputFilterContainer,
-    IntFilter
-};
+use \Airship\Cabin\Bridge\Filter\GadgetsFilter;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -46,7 +41,7 @@ class Gadgets extends LoggedInUsersOnly
         $gadgets = \Airship\loadJSON(
             ROOT . '/Cabin/' . $cabinName . '/config/gadgets.json'
         );
-        $post = $this->post($this->getFilter($gadgets));
+        $post = $this->post(GadgetsFilter::fromConfig(\array_keys($gadgets)));
         if ($post) {
             if ($this->updateCabinGadgets($gadgets, $post, $cabinName)) {
                 \Airship\clear_cache();
@@ -77,7 +72,7 @@ class Gadgets extends LoggedInUsersOnly
         if (!$this->can('update')) {
             \Airship\redirect($this->airship_cabin_prefix . '/gadgets');
         }
-        $post = $this->post($this->getFilter($gadgets));
+        $post = $this->post(GadgetsFilter::fromConfig(\array_keys($gadgets)));
         if ($post) {
             if ($this->updateUniversalGadgets($gadgets, $post)) {
                 \Airship\clear_cache();
@@ -153,19 +148,5 @@ class Gadgets extends LoggedInUsersOnly
             ROOT . '/config/gadgets.json',
             $sortedGadgets
         );
-    }
-
-    /**
-     * @return InputFilterContainer
-     */
-    protected function getFilter(array $gadgets = []): InputFilterContainer
-    {
-        $filter = new GeneralFilterContainer();
-        foreach (\array_keys($gadgets) as $k) {
-            $filter
-                ->addFilter('gadget_enabled.' . $k, new BoolFilter())
-                ->addFilter('gadget_order.' . $k, new IntFilter());
-        }
-        return $filter;
     }
 }

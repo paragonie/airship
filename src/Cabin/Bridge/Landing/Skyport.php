@@ -3,13 +3,12 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
+use \Airship\Cabin\Bridge\Filter\SkyportFilter;
 use \Airship\Engine\Security\{
-    Filter\GeneralFilterContainer,
-    Filter\StringFilter,
     HiddenString,
     Util
 };
-use Psr\Log\LogLevel;
+use \Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -298,7 +297,7 @@ class Skyport extends AdminOnly
             }
         }
         try {
-            $filter = $this->getInputFilter();
+            $filter = new SkyportFilter();
             $_POST = $filter($_POST);
         } catch (\TypeError $ex) {
             $this->log(
@@ -383,7 +382,7 @@ class Skyport extends AdminOnly
         }
 
         try {
-            $filter = $this->getInputFilter();
+            $filter = new SkyportFilter();
             $post = $filter($_POST);
         } catch (\TypeError $ex) {
             $this->log(
@@ -428,8 +427,7 @@ class Skyport extends AdminOnly
             ]);
         }
         try {
-            $filter = $this->getInputFilter();
-            $filter->addFilter('version', new StringFilter());
+            $filter = new SkyportFilter();
             $_POST = $filter($_POST);
         } catch (\TypeError $ex) {
             $this->log(
@@ -493,33 +491,5 @@ class Skyport extends AdminOnly
             (int) $page,
             (int) ($page - 1) * $this->perPage
         ];
-    }
-
-    /**
-     * A filter for $_POST data
-     *
-     * @return GeneralFilterContainer
-     */
-    protected function getInputFilter(): GeneralFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter(
-                'type',
-                (new StringFilter())->addCallback(
-                    function ($input): string
-                    {
-                        switch ($input) {
-                            case 'Cabin':
-                            case 'Gadget':
-                            case 'Motif':
-                                return $input;
-                            default:
-                                throw new \TypeError();
-                        }
-                    }
-                )
-            )
-            ->addFilter('supplier', new StringFilter())
-            ->addFilter('package', new StringFilter());
     }
 }

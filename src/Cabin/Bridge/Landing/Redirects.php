@@ -3,11 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\CustomPages;
-use \Airship\Engine\Security\Filter\{
-    GeneralFilterContainer,
-    StringFilter
-};
-use \Airship\Engine\Security\Util;
+use \Airship\Cabin\Bridge\Filter\RedirectFilter;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -45,18 +41,24 @@ class Redirects extends LoggedInUsersOnly
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins) && !$this->can('delete')) {
-            \Airship\redirect($this->airship_cabin_prefix . '/redirects');
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/redirects'
+            );
         }
         $post = $this->post(/* No data is passed */);
         $redirectId = (int) $redirectId;
         $redirect = $this->pg->getRedirect($cabin, $redirectId);
 
         if (empty($redirect)) {
-            \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/redirects/' . $cabin
+            );
         }
         if ($post) {
             if ($this->pg->deleteRedirect($redirectId)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/redirects/' . $cabin
+                );
             }
         }
         $this->lens(
@@ -81,7 +83,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('update')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
-        $post = $this->post($this->getFilter());
+        $post = $this->post(new RedirectFilter());
         $redirect = $this->pg->getRedirect($cabin, (int) $redirectId);
         if (empty($redirect)) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
@@ -155,7 +157,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
-        $post = $this->post($this->getFilter());
+        $post = $this->post(new RedirectFilter());
         if ($post) {
             if (\Airship\all_keys_exist(['old_url', 'new_url'], $post)) {
                 if (\preg_match('#^https?://#', $post['new_url'])) {
@@ -184,22 +186,5 @@ class Redirects extends LoggedInUsersOnly
                 'cabin' => $cabin
             ]
         );
-    }
-
-    /**
-     * @return GeneralFilterContainer
-     */
-    protected function getFilter(): GeneralFilterContainer
-    {
-        $urlFilter = (new StringFilter())
-            ->addCallback(function ($input): string {
-                if ($input === null || $input === '') {
-                    throw new \TypeError('Expected non-empty string');
-                }
-                return $input;
-            });
-        return (new GeneralFilterContainer())
-            ->addFilter('new_url', $urlFilter)
-            ->addFilter('old_url', $urlFilter);
     }
 }

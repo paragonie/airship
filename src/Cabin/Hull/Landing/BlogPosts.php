@@ -4,12 +4,7 @@ namespace Airship\Cabin\Hull\Landing;
 
 use \Airship\Alerts\Router\EmulatePageNotFound;
 use \Airship\Cabin\Hull\Blueprint\Blog;
-use \Airship\Engine\Security\Filter\{
-    GeneralFilterContainer,
-    InputFilterContainer,
-    IntFilter,
-    StringFilter
-};
+use \Airship\Cabin\Hull\Filter\BlogPosts\CommentFilter;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -519,7 +514,7 @@ class BlogPosts extends LandingGear
     public function readPost(string $year, string $month, string $slug)
     {
         $blogPost = $this->blog->getBlogPost($year, $month, $slug);
-        $post = $this->post($this->getCommentFilter());
+        $post = $this->post(new CommentFilter());
         if ($post) {
             if ($this->addComment($post, (int) $blogPost['postid'])) {
                 if (!$this->isLoggedIn()) {
@@ -560,19 +555,6 @@ class BlogPosts extends LandingGear
             $args['comments'] = $comments;
             $this->lens('blog/read', $args);
         }
-    }
-
-    /**
-     * @return InputFilterContainer
-     */
-    protected function getCommentFilter(): InputFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter('name', new StringFilter())
-            ->addFilter('email', new StringFilter())
-            ->addFilter('url', new StringFilter())
-            ->addFilter('author', new IntFilter())
-            ->addFilter('message', new StringFilter());
     }
 
     /**
