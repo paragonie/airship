@@ -20,10 +20,8 @@ RUN service postgresql start && sleep 3 && \
     su postgres -c "createuser airship" && \
     su postgres -c "createdb -O airship airship"
 
-WORKDIR /var/www
-RUN git clone https://github.com/paragonie/airship.git
+COPY . /var/www/airship
 WORKDIR /var/www/airship
-RUN git checkout v1.0.2
 RUN composer install --no-dev
 
 RUN chown -R www-data:www-data .
@@ -33,8 +31,8 @@ ENV CONF /etc/apache2/sites-enabled/airship.conf
 
 RUN echo "<VirtualHost *:80>" > $CONF && \
     echo "DocumentRoot /var/www/airship/src/public" >> $CONF && \
-    echo "ErrorLog ${APACHE_LOG_DIR}/error.log" >> $CONF && \
-    echo "CustomLog ${APACHE_LOG_DIR}/access.log combined" >> $CONF && \
+    echo "ErrorLog /dev/stderr" >> $CONF && \
+    echo "CustomLog /dev/stdout combined" >> $CONF && \
     echo "<Directory />" >> $CONF && \
     echo "RewriteEngine On" >> $CONF && \
     echo "RewriteCond %{REQUEST_FILENAME} -f [OR]" >> $CONF && \
@@ -51,4 +49,4 @@ ENV APACHE_RUN_DIR /var/run/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 
-CMD ["apache2", "-D", "FOREGROUND"]
+CMD ["bash", "-c", "service postgresql start & apache2 -D FOREGROUND"]
