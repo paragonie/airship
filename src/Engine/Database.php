@@ -126,12 +126,12 @@ class Database implements DBInterface
             case 'mysql':
                 $dsn = $dbConf['driver'].':';
                 if (isset($dbConf['host'])) {
-                    $dsn .= 'host='.$dbConf['host'].';';
+                    $dsn .= 'host=' . $dbConf['host'] . ';';
                 }
-                if (isset($dbConf['port'])) {
-                    $dsn .= 'port='.$dbConf['port'].';';
+                if (!empty($dbConf['port'])) {
+                    $dsn .= 'port=' . $dbConf['port'] . ';';
                 }
-                $dsn .= 'dbname='.$dbConf['database'];
+                $dsn .= 'dbname=' . $dbConf['database'];
                 return [
                     $dsn,
                     $dbConf['driver'],
@@ -142,10 +142,10 @@ class Database implements DBInterface
             case 'pgsql':
                 $dsn = $dbConf['driver'].':';
                 if (isset($dbConf['host'])) {
-                    $dsn .= 'host='.$dbConf['host'].';';
+                    $dsn .= 'host=' . $dbConf['host'] . ';';
                 }
-                if (isset($dbConf['port'])) {
-                    $dsn .= 'port='.$dbConf['port'].';';
+                if (!empty($dbConf['port'])) {
+                    $dsn .= 'port=' . $dbConf['port'] . ';';
                 }
                 $dsn .= 'dbname='.$dbConf['database'];
                 return [

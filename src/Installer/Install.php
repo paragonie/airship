@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Installer;
 
-use\ Airship\Alerts\Database\DBException;
+use \Airship\Alerts\Database\DBException;
 use \Airship\Engine\{
     Database,
     State
@@ -195,26 +195,15 @@ class Install
         }
         $this->data['database'] = $post['database'];
         try {
-            $conf = [
-                isset($post['database'][0]['dsn'])
-                    ? $post['database'][0]['dsn']
-                    : $post['database'][0]
-            ];
-
-            if (isset($post['database'][0]['username']) && isset($post['database'][0]['password'])) {
-                $conf[] = $post['database'][0]['username'];
-                $conf[] = $post['database'][0]['password'];
-                if (isset($post['database'][0]['options'])) {
-                    $conf[] = $post['database'][0]['options'];
-                }
-            } elseif (isset($post['database'][0]['options'])) {
-                $conf[1] = '';
-                $conf[2] = '';
-                $conf[3] = $post['database'][0]['options'];
-            }
-            if (empty($conf)) {
-            }
-            Database::factory($post['database']);
+            $db = $post['database'][0];
+            Database::factory([
+                'driver' => $db['driver'],
+                'host' => $db['host'],
+                'port' => $db['port'],
+                'database' => $db['dbname'],
+                'username' => $db['username'],
+                'password' => $db['password']
+            ]);
             unset($this->data['db_error']);
         } catch (DBException $ex) {
             $this->data['db_error'] = $ex->getMessage();
