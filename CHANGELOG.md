@@ -1,3 +1,15 @@
+## Version 1.1.1 - 2016-07-01
+
+  Fixes for bugs reported by [@kelunik](https://github.com/kelunik) and
+  [@co60ca](https://github.com/co60ca).
+  
+  * [#61](https://github.com/paragonie/airship/issues/61):
+    Comments need a min-height attribute.
+  * [#62](https://github.com/paragonie/airship/issues/62), [#64](https://github.com/paragonie/airship/issues/64):
+    The default configuration is wrong.
+  * [#66](https://github.com/paragonie/airship/issues/66):
+    The default configuration broke the 2FA page.
+
 ## Version 1.1.0 - 2016-07-01
 
   * [#41](https://github.com/paragonie/airship/issues/41):
