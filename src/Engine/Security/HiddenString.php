@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use ParagonIE\Halite\Util as CryptoUtil;
+use \ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Class HiddenString
