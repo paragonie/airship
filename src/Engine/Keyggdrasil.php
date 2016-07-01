@@ -482,7 +482,6 @@ class Keyggdrasil
      */
     protected function updatePackageQueue(TreeUpdate $update, int $treeUpdateID)
     {
-        $this->db->beginTransaction();
         $packageId = $this->db->cell(
             "SELECT
                   packageid 
@@ -529,7 +528,6 @@ class Keyggdrasil
                     $treeUpdateID
             ]
         );
-        $this->db->commit();
     }
 
     /**
