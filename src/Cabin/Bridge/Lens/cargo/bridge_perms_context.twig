@@ -1,5 +1,7 @@
 {% import "macros/permtable.twig" as ptable %}
 
+{% if message %}<p>{{ message }}</p>{% endif %}
+
 <h2 class="nomargin">{{ __("Manage Permissions") }}</h2>
 
 <form method="post">{{ form_token() }}

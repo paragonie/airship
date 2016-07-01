@@ -177,3 +177,7 @@ INSERT INTO airship_tree_updates (channel, channelupdateid, data, merkleroot) VA
     '{"action":"CREATE","date_generated":"2016-06-04T16:05:00","public_key":"6731558f53c6edf15c7cc1e439b15c18d6dfc1fd2c66f9fda8c56cfe7d37110b","supplier":"pragonie","type":"signing","master":"{\"public_key\":\"1d9b44a5ec7be970dcb07efa81e661cb493f700953c0c26e5161b9cf0637e7f1\",\"signature\":\"017bb2dbe6fa75d3240f330be532bf8d9aced0654f257b5670edbd44c52f892459b5b314f095cd1df65346035a4b927dd4edbcfee677d4ebd5f861d6789fc301\"}"}',
     '940c0456c19d3606b27c89d15a82523f8fdb83928b4d27e027058a279665b124afc7af4188098704058bf067f0349b32c9a8c7f244499623d5d9f7b6e1fa986d'
 );
+
+INSERT INTO hull_blog_photo_contexts (label, display_name) VALUES
+    ('bio', 'Biography'),
+    ('comment', 'Comments');

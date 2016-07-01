@@ -133,7 +133,10 @@ class Permissions extends AdminOnly
                         '/crew/permissions/' .
                         $cabin .
                         '/context/' .
-                        $contextId
+                        $contextId,
+                    [
+                        'msg' => 'saved'
+                    ]
                 );
             }
         }
@@ -159,6 +162,15 @@ class Permissions extends AdminOnly
             );
             unset($users[$userid]['password']);
         }
+        if (!empty($_GET['msg'])) {
+            if ($_GET['msg'] === 'saved') {
+                $this->storeLensVar(
+                    'message',
+                    \__('Your changes have been saved.')
+                );
+            }
+        }
+
         $this->lens(
             'perms/context',
             [

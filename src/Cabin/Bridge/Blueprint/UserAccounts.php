@@ -847,6 +847,8 @@ class UserAccounts extends BlueprintGear
                     $fingerprint,
                 'allow_reset' =>
                     !empty($post['allow_reset']),
+                'real_name' =>
+                    $post['real_name'] ?? ''
             ],
             [
                 'userid' =>
