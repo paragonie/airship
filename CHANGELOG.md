@@ -3,13 +3,17 @@
   * [#41](https://github.com/paragonie/airship/issues/41):
     Don't raise an `E_NOTICE` upon receiving an invalid CSRF token.
   * [#42](https://github.com/paragonie/airship/issues/42):
-    We now have a Dockerfile for easy deployment. Thanks [@kelunik](https://github.com/kelunik).
+    We now have a Dockerfile for easy deployment. Thanks [@kelunik](https://github.com/kelunik)
+    and [@co60ca](https://github.com/co60ca).
   * [#47](https://github.com/paragonie/airship/issues/47):
     If you make a typo when filling in the database credentials on first run,
     it will no longer proceed silently then fail catastrophically in the last
     step.
   * [#50](https://github.com/paragonie/airship/issues/50):
     Display the correct version in the Installer.
+  * [#56](https://github.com/paragonie/airship/issues/56):
+    If libsodium is not set up correctly, show an error page explaining the
+    problem and guiding the user towards the solution. Thanks [@co60ca](https://github.com/co60ca).
   * Various user interface improvements based on feedback from the initial
     launch.
   * You can now pass an input filter to `$this->post()` from a landing and it
