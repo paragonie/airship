@@ -1,3 +1,10 @@
+## Version 1.1.3
+
+  * Fixed `E_NOTICE`s with the auto-updater.
+  * Identified a bug in the backend server that wasn't publishing commit hashes
+    in CMS Airship core updates. Going forward, the commit hash should be
+    included in each release.
+
 ## Version 1.1.2 - 2016-07-01
 
   * Fixed a stored XSS vulnerability introduced by using `sprintf()`, which
