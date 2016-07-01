@@ -10,12 +10,12 @@ use \Airship\Engine\Security\Filter\{
 
 /**
  * Class CommentFilter
- * @package Airship\Cabin\Bridge\Filter\Account
+ * @package Airship\Cabin\Hull\Filter\BlogPosts
  */
 class CommentFilter extends InputFilterContainer
 {
     /**
-     * NewDirFilter constructor.
+     * CommentDirFilter constructor.
      */
     public function __construct()
     {
