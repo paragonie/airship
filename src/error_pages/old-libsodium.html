@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CMS Airship - Cabin Not Found</title>
+</head>
+<style>
+    body{
+        background-color: #eee;
+        margin: 40px auto;
+        max-width: 650px;
+        line-height: 1.6;
+        font-size: 18px;
+        color: #444;
+        padding:0 10px
+    }
+    h1,h2,h3 {
+        line-height: 1.2;
+    }
+</style>
+
+<body>
+<h1>Error: Outdated Version of Libsodium</h1>
+<p>
+    CMS Airship's minimum requirements are:
+</p>
+<ul>
+    <li>PHP 7.0</li>
+    <li>libsodium 1.0.9</li>
+    <li>PECL libsodium 1.0.6</li>
+</ul>
+<p>
+    We detected an older version of either libsodium or PECL libsodium. If you
+    were relying on your operating system's package manager for libsodium, it's
+    highly likely you are stuck with <code>1.0.3</code> or <code>1.0.8</code>,
+    instead of the minimum CMS Airship needs.
+</p>
+<p>
+    CMS Airship uses the Argon2i password hashing function which was not added
+    to libsodium until <code>1.0.9</code>; this is an absolute minimum version.
+</p>
+<h2>Solution</h2>
+<p>
+    Please follow the <a href="https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium">instructions
+    for compiling libsodium from source</a> (and petition your package maintainer
+    to stop providing stale versions of security-critical libraries).
+</p>
+<p>
+    You will almost certainly need to run <code>pecl uninstall libsodiun</code>
+    first. Take care to compile the underlying library before running
+    <code>pecl upgrade</code> again.
+</p>
+<hr />
+<p>
+    CMS Airship is Free software developed by
+    <a href="https://paragonie.com">Paragon Initiative Enterprises.</a>
+</p>
+</body>
+</html>

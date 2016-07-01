@@ -153,6 +153,10 @@ $twigEnv->addGlobal('SERVER', $_SERVER);
 require_once ROOT.'/keys.php';
 try {
     $step = \Airship\loadJSON(ROOT . '/tmp/installing.json');
+    if (empty($step)) {
+        \file_put_contents(ROOT . '/tmp/installing.json', '[]');
+        $step = [];
+    }
 } catch (FileNotFound $e) {
     \file_put_contents(ROOT . '/tmp/installing.json', '[]');
     try {

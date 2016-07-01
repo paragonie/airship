@@ -122,7 +122,7 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
     if ($cabinDisabled) {
         \header('HTTP/1.1 404 Not Found');
         echo \file_get_contents(
-            __DIR__ . '/no-cabin.html'
+            __DIR__ . '/error_pages/no-cabin.html'
         );
         exit;
     }

@@ -57,7 +57,10 @@ class Install
      */
     public function __construct(\Twig_Environment $twig, array $data = [])
     {
-        if (!Halite::isLibsodiumSetupCorrectly(true)) {
+        if (!Halite::isLibsodiumSetupCorrectly()) {
+            echo \file_get_contents(
+                \dirname(__DIR__) . '/error_pages/old-libsodium.html'
+            );
             exit(255);
         }
         $this->twig = $twig;
