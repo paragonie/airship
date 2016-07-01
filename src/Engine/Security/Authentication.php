@@ -197,6 +197,8 @@ class Authentication
                 \trk('errors.security.invalid_persistent_token')
             );
         }
+        \Sodium\memzero($token);
+
         $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
         $val = CryptoUtil::raw_hash(
             Binary::safeSubstr($decoded, self::SELECTOR_BYTES)
@@ -213,6 +215,8 @@ class Authentication
             );
         }
         $stored = \Sodium\hex2bin($record[$f['validator']]);
+        \Sodium\memzero($record[$f['validator']]);
+
         if (!\hash_equals($stored, $val)) {
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')

@@ -638,7 +638,11 @@ class Account extends LandingGear
                 $this->airship_cookie->store(
                     $state->universal['cookie_index']['auth_token'],
                     $this->airship_auth->createAuthToken($userID),
-                    \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
+                    \time() + (
+                        $state->universal['long-term-auth-expire']
+                            ??
+                        self::DEFAULT_LONGTERMAUTH_EXPIRE
+                    ),
                     '/',
                     $state->universal['session_config']['cookie_domain'] ?? '',
                     $httpsOnly ?? false,
@@ -843,10 +847,13 @@ class Account extends LandingGear
         }
 
         if ($this->acct->updatePreferences($this->getActiveUserId(), $prefs)) {
-            $this->storeLensVar('post_response', [
-                'message' => \__('Preferences saved successfully.'),
-                'status' => 'success'
-            ]);
+            $this->storeLensVar(
+                'post_response',
+                [
+                    'message' => \__('Preferences saved successfully.'),
+                    'status' => 'success'
+                ]
+            );
             return true;
         }
         return false;
@@ -894,10 +901,17 @@ class Account extends LandingGear
         if ($per_page === 0) {
             $per_page = $this->config('user-directory.per-page') ?? 20;
         }
-        $page = (int) (!empty($page) ? $page : ($_GET['page'] ?? 0));
+        $page = (int) (
+            !empty($page)
+                ? $page
+                : ($_GET['page'] ?? 0)
+        );
         if ($page < 1) {
             $page = 1;
         }
-        return [($page - 1) * $per_page, $per_page];
+        return [
+            ($page - 1) * $per_page,
+            $per_page
+        ];
     }
 }
