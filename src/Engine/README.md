@@ -9,6 +9,7 @@ API.
 
 ```php
 <?php
+declare(strict_types=1);
 namespace Airship\Gears\Nikic\FastRoute;
 
 \Airship\Engine\Gears::extract('AutoPilot', 'AutoPilotShim', __NAMESPACE__);

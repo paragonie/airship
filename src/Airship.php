@@ -14,8 +14,10 @@ use \Airship\Engine\{
     Database,
     State
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\ConstantTime\Binary;
+use \ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary
+};
 use \ParagonIE\Halite\{
     Asymmetric\Crypto,
     Asymmetric\SignatureSecretKey,

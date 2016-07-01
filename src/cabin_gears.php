@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Airship\Engine\Gears;
+use \Airship\Engine\Gears;
 
 /**
  * Let's gearify the current cabin:

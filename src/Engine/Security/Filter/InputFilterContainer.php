@@ -2,13 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security\Filter;
 
-use Airship\Engine\Contract\Security\{
+use \Airship\Engine\Contract\Security\{
     FilterInterface,
     FilterContainerInterface
 };
 
 /**
  * Class InputFilterContainer
+ *
+ * Contains a set of filter rules, useful for enforcing a strict type on
+ * unstrucutred data (e.g. HTTP POST parameters).
+ *
  * @package Airship\Engine\Security\Filter
  */
 abstract class InputFilterContainer implements FilterContainerInterface
@@ -30,8 +34,10 @@ abstract class InputFilterContainer implements FilterContainerInterface
      * @param FilterInterface $filter
      * @return FilterContainerInterface
      */
-    public function addFilter(string $path, FilterInterface $filter): FilterContainerInterface
-    {
+    public function addFilter(
+        string $path,
+        FilterInterface $filter
+    ): FilterContainerInterface {
         if (!isset($this->filterMap[$path])) {
             $this->filterMap[$path] = [];
         }

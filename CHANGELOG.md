@@ -21,6 +21,9 @@
     returns `false`.
   * Fixed a bug that prevented CAPTCHAs from loading on static blog posts.
     Thanks [@kyhwana](https://github.com/kyhwana) for reporting this.
+  * The "parent category" select box now renders properly.
+  * The authors' photos menu is properly prepopulated by the contexts we use
+    in Airship. Extensions are free to supply their own contexts.
 
 ## Version 1.0.2 - 2016-06-28
 

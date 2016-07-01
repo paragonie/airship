@@ -18,7 +18,7 @@
                     <select id="parent" class="treeselect" name="parent">{% spaceless %}
                             <option value="0"> -{{ __("None")|e('html_attr') }}- </option>
                             {% for cat in categories %}
-                                {{ bcatmac.selectBox(cat, category.parent) }}
+                                {{ bcatmac.selectBox(cat, category.categoryid, category.parent) }}
                             {% endfor %}
                         {% endspaceless %}
                     </select>
@@ -46,6 +46,9 @@
                 <i class="fa fa-check"></i>
                 {{  __("Save Changes") }}
             </button>
+            <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}blog/category">
+                {{ __("Cancel") }}
+            </a>
         </fieldset>
     </form>
 </div>
