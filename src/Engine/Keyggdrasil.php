@@ -521,7 +521,7 @@ class Keyggdrasil
                 'checksum' =>
                     $data['checksum'],
                 'commithash' =>
-                    $data['commit'],
+                    $data['commit'] ?? null,
                 'date_released' =>
                     $data['date_released'],
                 'treeupdateid' =>

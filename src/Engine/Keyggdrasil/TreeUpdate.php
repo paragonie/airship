@@ -171,6 +171,7 @@ class TreeUpdate
             $this->keyType = $data['type'];
             $this->newPublicKey = $data['public_key'];
         }
+        $this->supplierName = $this->supplier->getName();
     }
 
     /**
