@@ -3,9 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Admin;
 
 use \Airship\Engine\Security\Filter\{
-    BoolFilter,
     InputFilterContainer,
-    IntFilter,
     StringFilter
 };
 

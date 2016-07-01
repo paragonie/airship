@@ -17,7 +17,7 @@ class GadgetsFilter extends GeneralFilterContainer
     /**
      * Build the filter from configuration
      *
-     * @param array $gsadgets
+     * @param array $gadgets
      * @return GadgetsFilter
      */
     public static function fromConfig(

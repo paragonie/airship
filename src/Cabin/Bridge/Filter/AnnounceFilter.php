@@ -18,7 +18,6 @@ class AnnounceFilter extends InputFilterContainer
      */
     public function __construct()
     {
-        $urlFilter = (new StringFilter());
         $this
             ->addFilter('contents', new StringFilter())
             ->addFilter(
