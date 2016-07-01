@@ -1802,9 +1802,10 @@ ol.blog_comments li li {
     border: 3px solid #333;
     border-radius: 1ex;
     box-shadow: rgba(0, 0, 0, 0.5) 0 0.5ex 0.25ex;
-    position: relative;
     margin: 1ex;
+    min-height: 3em;
     padding: 0 1em;
+    position: relative;
 }
 .blog-comment-body::before {
     border-color: transparent #333;
