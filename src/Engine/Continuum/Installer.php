@@ -319,7 +319,7 @@ abstract class Installer
                     $result = $this->hail->postSignedJSON($ch . API::get('version'), $publicKey, $args);
                     // Add the channel to this data...
                     $result['channel'] = $ch;
-                    $result['minimum'] = $minVersion ?? '0.0.0';
+                    $result['minimum'] = (string) ($minVersion ?? '0.0.0');
                     return $result;
                 } catch (TransferException $ex) {
                     $this->log(

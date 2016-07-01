@@ -65,7 +65,10 @@ if (AutoPilot::isHTTPSConnection()) {
                 ->reportOnly($hpkpConfig['report-only'])
                 ->reportUri($hpkpConfig['report-uri']);
             foreach ($hpkpConfig['hashes'] as $h) {
-                $hpkp->addHash($h['hash'], $h['algo'] ?? 'sha256');
+                $hpkp->addHash(
+                    $h['hash'],
+                    (string) ($h['algo'] ?? 'sha256')
+                );
             }
             \file_put_contents(
                 $hpkpCacheFile,

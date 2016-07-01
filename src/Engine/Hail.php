@@ -226,7 +226,7 @@ class Hail
                 // Don't force HTTPS
                 unset($defaults['curl'][CURLOPT_SSLVERSION]);
             }
-        } elseif (\preg_match('#^https?://([^/]+)\.onion#', $this->client->getConfig('base_uri') ?? '')) {
+        } elseif (\preg_match('#^https?://([^/]+)\.onion#', ($this->client->getConfig('base_uri') ?? ''))) {
             // Use Tor for .onion addresses
             $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
             $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;

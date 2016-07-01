@@ -136,7 +136,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->config['expire'] ?? 43200
+                    (int) ($this->config['expire'] ?? 43200)
                 ))
                 ->format(\AIRSHIP_DATE_FORMAT)
         );
@@ -185,7 +185,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->config['expire'] ?? 43200
+                    (int) ($this->config['expire'] ?? 43200)
                 ))
                 ->format(\AIRSHIP_DATE_FORMAT)
         );
@@ -222,7 +222,7 @@ class AirBrake
             $this->getSubnet($ip),
             (new \DateTime())
                 ->sub($this->getCutoff(
-                    $this->config['expire'] ?? 43200
+                    (int) ($this->config['expire'] ?? 43200)
                 ))
                 ->format(\AIRSHIP_DATE_FORMAT)
         );
@@ -230,8 +230,8 @@ class AirBrake
             return 0;
         }
 
-        $max = $this->config['max-delay'] ?? 30;
-        $value = $this->config['first-delay'] ?? 0.250;
+        $max = (int) ($this->config['max-delay'] ?? 30);
+        $value = (float) ($this->config['first-delay'] ?? 0.250);
         if ($attempts > (8 * PHP_INT_SIZE - 1))  {
             // Don't ever overflow. Just assume the max time:s
             $value = $max;
@@ -322,12 +322,12 @@ class AirBrake
         if (\preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $ip)) {
             return $this->getIPv4Subnet(
                 $ip,
-                $this->config['ipv4-subnet'] ?? 32
+                (int) ($this->config['ipv4-subnet'] ?? 32)
             );
         }
         return $this->getIPv6Subnet(
             $ip,
-            $this->config['ipv6-subnet'] ?? 128
+            (int) ($this->config['ipv6-subnet'] ?? 128)
         );
     }
 
@@ -347,7 +347,10 @@ class AirBrake
         HiddenString $password = null
     ): bool {
         $logAfter = $this->config['log-after'] ?? null;
-        $publicKey = $this->config['log-public-key'] ?? '';
+        if (!\is_null($logAfter)) {
+            $logAfter = (int) $logAfter;
+        }
+        $publicKey = (string) ($this->config['log-public-key'] ?? '');
 
         $this->db->beginTransaction();
         $inserts = [

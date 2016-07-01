@@ -146,7 +146,11 @@ class TreeUpdate
 
             if ($this->action === self::ACTION_CORE_UPDATE) {
                 $state = State::instance();
-                $trustedSupplier = $state->universal['airship']['trusted-supplier'] ?? 'paragonie';
+                $trustedSupplier = (string) (
+                    $state->universal['airship']['trusted-supplier']
+                        ??
+                    'paragonie'
+                );
                 $this->supplier = $chan->getSupplier($trustedSupplier);
             } else {
                 $this->supplier = $chan->getSupplier($data['supplier']);

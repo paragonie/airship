@@ -131,7 +131,7 @@ use \Airship\Engine\{
             $state = State::instance();
             return $gear->lookup(
                 $key,
-                $state->lang ?? 'en-us',
+                (string) ($state->lang ?? 'en-us'),
                 ...$params
             );
         }

@@ -96,8 +96,8 @@ class Author extends LoggedInUsersOnly
      */
     public function index()
     {
-        $sort = $_GET['sort'] ?? 'name';
-        $dir = $_GET['dir'] ?? 'ASC';
+        $sort = (string) ($_GET['sort'] ?? 'name');
+        $dir = (string) ($_GET['dir'] ?? 'ASC');
         $dir = \strtoupper($dir);
         if ($dir !== 'ASC' && $dir !== 'DESC') {
             $dir = 'ASC';

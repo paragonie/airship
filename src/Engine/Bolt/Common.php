@@ -42,7 +42,7 @@ trait Common
         $state = State::instance();
         $cabins = [];
         foreach ($state->cabins as $cabin) {
-            $cabins []= $cabin['namespace'] ?? $cabin['name'];
+            $cabins []= (string) ($cabin['namespace'] ?? $cabin['name']);
         }
         return $cabins;
     }

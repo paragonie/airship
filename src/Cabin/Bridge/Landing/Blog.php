@@ -582,7 +582,7 @@ class Blog extends LoggedInUsersOnly
     protected function getOffsetAndLimit($page = null, int $per_page = 0)
     {
         if ($per_page === 0) {
-            $per_page = $this->config('blog.per_page') ?? 20;
+            $per_page = (int) ($this->config('blog.per_page') ?? 20);
         }
         $page = (int) (!empty($page) ? $page : ($_GET['page'] ?? 0));
         if ($page < 1) {

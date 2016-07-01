@@ -22,7 +22,7 @@ trait Orderable
         string $defaultIndex,
         bool $defaultDesc = false
     ): array {
-        $sort = $_GET['sort'] ?? $defaultIndex;
+        $sort = (string) ($_GET['sort'] ?? $defaultIndex);
         $dir = $_GET['dir'] ?? (
             $defaultDesc
                 ? 'DESC'

@@ -41,7 +41,7 @@ class UpdateFile
     {
         $this->path = $data['path'];
         $this->version = $data['version'];
-        $this->size = $data['size'] ?? \filesize($data['path']);
+        $this->size = (int) ($data['size'] ?? \filesize($data['path']));
         $this->hash = File::checksum($data['path']);
     }
 

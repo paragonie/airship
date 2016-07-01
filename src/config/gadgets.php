@@ -72,11 +72,13 @@ foreach ($cabinsGadgets as $i => $gadgetConfig) {
             $gadgetConfig['supplier'] . '.' . $gadgetConfig['name'] . '.phar'
         ]
     );
-    $namespace = $gadgetConfig['namespace']
-        ?? \preg_replace(
-            '/[^A-Za-z0-9\-_]/',
-            '_',
-            $gadgetConfig['supplier'] . '__' . $gadgetConfig['name']
+    $namespace = (string) (
+        $gadgetConfig['namespace']
+            ?? \preg_replace(
+                '/[^A-Za-z0-9\-_]/',
+                '_',
+                $gadgetConfig['supplier'] . '__' . $gadgetConfig['name']
+            )
         );
     $twigLoader->addPath('phar://' . $phar . '/Lens/', $namespace);
     // phar:///path/to/foo.phar/autoload.php

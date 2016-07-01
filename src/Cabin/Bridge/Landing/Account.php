@@ -876,8 +876,8 @@ class Account extends LandingGear
             $secret,
             new TOTP(
                 0,
-                $this->config('two-factor.period') ?? 30,
-                $this->config('two-factor.length') ?? 6
+                (int) ($this->config('two-factor.period') ?? 30),
+                (int) ($this->config('two-factor.length') ?? 6)
             )
         );
     }

@@ -261,8 +261,10 @@ class Cabin extends BaseInstaller
         array $metadata
     ): bool {
         // Default route
-        $defaultPath = $metadata['default_path']
-            ?? '*/' . $this->supplier->getName() . '/' . $this->package;
+        $defaultPath = ($metadata['default_path'] ?? '*/') .
+            $this->supplier->getName() .
+            '/' .
+            $this->package;
 
         $twigEnv = \Airship\configWriter(ROOT . '/config/templates');
         $cabins = \Airship\loadJSON(ROOT . '/config/cabins.json');
@@ -278,7 +280,7 @@ class Cabin extends BaseInstaller
             $newCabins[$defaultPath] = [
                 'https' => false,
                 'canon_url' => '/' . $this->supplier->getName() . '/' . $this->package,
-                'language' => $metadata['lang'] ?? 'en-us',
+                'language' => (string) ($metadata['lang'] ?? 'en-us'),
                 'name' => $nameSpace
             ];
             $newCabins['*'] = $cabins['*'];
@@ -287,7 +289,7 @@ class Cabin extends BaseInstaller
             $newCabins[$defaultPath] = [
                 'https' => false,
                 'canon_url' => '/' . $this->supplier->getName() . '/' . $this->package,
-                'language' => $metadata['lang'] ?? 'en-us',
+                'language' => (string) ($metadata['lang'] ?? 'en-us'),
                 'name' => $nameSpace
             ];
         }

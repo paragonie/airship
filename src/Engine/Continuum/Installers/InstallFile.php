@@ -56,7 +56,7 @@ class InstallFile
         $this->releaseInfo = $data['data']['releaseinfo'];
         $this->root = $data['data']['merkle_root'];
         $this->path = $data['path'];
-        $this->size = $data['size'] ?? \filesize($this->path);
+        $this->size = (int) ($data['size'] ?? \filesize($data['path']));
         $this->supplier = $supplier;
         $this->version = $data['version'];
     }
