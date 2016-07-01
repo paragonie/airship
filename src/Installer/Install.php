@@ -487,7 +487,22 @@ class Install
                 ],
                 'cookie_index' => $this->data['config']['cookie_index'],
                 'ledger' => $this->data['config']['ledger'],
+                'default-groups' => [ 2 ],
+                'guest_groups' => [ 1 ],
                 'guzzle' => [],
+                'notary' => [
+                    'channel' => 'paragonie',
+                    'enabled' => false,
+                ],
+                'rate-limiting' => [
+                    'expire' => 43200,
+                    'fast-exit' => true,
+                    'first-delay' => 0.25,
+                    'ipv4-subnet' => 32,
+                    'ipv6-subnet' => 48,
+                    'log-after' => 3,
+                    'max-delay' => 30
+                ],
                     // This can be customized later, but by default we just pass [].
                 'session_index' => $this->data['config']['session_index'],
                 'tor-only' => !empty($this->data['config']['tor-only'])
