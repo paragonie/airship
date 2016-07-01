@@ -1,3 +1,8 @@
+## Version 1.1.2 - 2016-07-01
+
+  * Fixed a stored XSS vulnerability introduced by using `sprintf()`, which
+    bypassed Twig's autoescape. [HackerOne report](https://hackerone.com/reports/148741).
+
 ## Version 1.1.1 - 2016-07-01
 
   Fixes for bugs reported by [@kelunik](https://github.com/kelunik) and
