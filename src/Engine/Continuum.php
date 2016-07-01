@@ -140,6 +140,12 @@ class Continuum
     {
         $cabins = [];
         foreach (\glob(ROOT.'/Cabin/*') as $file) {
+            if ($file === ROOT . '/Cabin/Bridge') {
+                continue;
+            }
+            if ($file === ROOT . '/Cabin/Hull') {
+                continue;
+            }
             if (\is_dir($file) && \is_readable($file.'/manifest.json')) {
                 $manifest = \Airship\loadJSON($file.'/manifest.json');
                 $dirName = \preg_replace('#^.+?/([^\/]+)$#', '$1', $file);
@@ -229,6 +235,9 @@ class Continuum
             }
             $supplier = $this->getEndPiece($supplierPath);
             foreach (\glob($supplierPath . '/*') as $motifDir) {
+                if ($motifDir === ROOT . '/Motifs/paragonie/airship-classic') {
+                    continue;
+                }
                 $motifName = $this->getEndPiece($motifDir);
                 $manifest = \Airship\loadJSON($motifDir . '/motif.json');
                 $name = $supplier . '.' . $motifName;

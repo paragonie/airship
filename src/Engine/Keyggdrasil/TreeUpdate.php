@@ -405,6 +405,11 @@ class TreeUpdate
         if ($this->isNewSupplier) {
             return;
         }
+        if ($updateData['master'] === null) {
+            throw new CouldNotUpdate(
+                'master data is NULL, but the supplier exists'
+            );
+        }
         $master = \json_decode($updateData['master'], true);
         foreach ($this->supplier->getSigningKeys() as $supKey) {
             // Yes, this is (in fact) a SignaturePublicKey:
