@@ -183,6 +183,10 @@ function clear_cache()
         'static'
     ];
     foreach ($dirs as $dir) {
+        if (!\is_dir($dir)) {
+            \mkdir($dir, 0775, true);
+            continue;
+        }
         foreach (\Airship\list_all_files(ROOT . '/tmp/cache/' . $dir) as $f) {
             if (\is_dir($f)) {
                 continue;
