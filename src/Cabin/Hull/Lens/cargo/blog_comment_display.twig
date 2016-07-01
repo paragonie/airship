@@ -6,7 +6,7 @@
             <a href="/blog/author/{{ data.authorslug|e('url') }}">{{ data.authorname }}</a>
         {% elseif data.metadata %}
             {% set name = data.metadata.name %}
-            {% if data.metadata.url %}
+            {% if data.metadata.url matches '#^https?://#' %}
                 <a href="{{ data.metadata.url|e('html_attr') }}">{{ data.metadata.name }}</a>
             {% else %}
                 {{ data.metadata.name }}

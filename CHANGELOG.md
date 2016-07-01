@@ -4,6 +4,7 @@
   * Identified a bug in the backend server that wasn't publishing commit hashes
     in CMS Airship core updates. Going forward, the commit hash should be
     included in each release.
+  * Only allow HTTP and HTTPS URLs in blog comments.
 
 ## Version 1.1.2 - 2016-07-01
 
