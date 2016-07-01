@@ -5,6 +5,7 @@
     in CMS Airship core updates. Going forward, the commit hash should be
     included in each release.
   * Only allow HTTP and HTTPS URLs in blog comments.
+  * Proactively mitigate stored XSS in other invocations of `__()`.
 
 ## Version 1.1.2 - 2016-07-01
 
