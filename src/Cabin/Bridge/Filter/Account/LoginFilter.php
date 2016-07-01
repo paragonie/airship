@@ -28,10 +28,6 @@ class LoginFilter extends InputFilterContainer
                 (new StringFilter())
                     ->addCallback([StringFilter::class, 'nonEmpty'])
             )
-            ->addFilter(
-                'two_factor',
-                (new StringFilter())
-                    ->addCallback([StringFilter::class, 'nonEmpty'])
-            );
+            ->addFilter('two_factor', new StringFilter());
     }
 }
