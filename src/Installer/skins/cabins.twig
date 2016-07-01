@@ -104,7 +104,7 @@
                 }
             %}
             {% set twig_vars = {
-                "title": "Airship Blog",
+                "title": "Airship " ~ airship_version,
                 "tagline": "Even the sky shall not limit you."
             } %}
             {% include "cabin_links/Bridge/cabin_config.twig" %}
@@ -180,7 +180,7 @@
                 }
             } %}
             {% set twig_vars = {
-                "title": "Airship 0.3",
+                "title": "Airship " ~ airship_version,
                 "tagline": "Even the sky shall not limit you!",
                 "blog": {
                     "title": "My Blog",
