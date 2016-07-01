@@ -198,7 +198,7 @@ class Install
             $db = $post['database'][0];
             Database::factory([
                 'driver' => $db['driver'],
-                'host' => $db['host'],
+                'host' => (string) ($db['host'] ?? 'localhost'),
                 'port' => $db['port'],
                 'database' => $db['dbname'],
                 'username' => $db['username'],

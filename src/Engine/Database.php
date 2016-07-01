@@ -89,7 +89,11 @@ class Database implements DBInterface
         }
         
         try {
-            $pdo = new \PDO($dsn, $username, $password, $options);
+            if (empty($username) && empty($password) && empty($options)) {
+                $pdo = new \PDO($dsn);
+            } else {
+                $pdo = new \PDO($dsn, $username, $password, $options);
+            }
         } catch (\PDOException $e) {
             // Don't leak the DB password in a stack trace:
             throw new DBAlert\DBException(
