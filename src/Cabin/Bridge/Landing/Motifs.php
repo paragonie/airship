@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Filter\MotifsFilter;
+use \Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -58,7 +59,7 @@ class Motifs extends AdminOnly
                 'cabin_name' => $cabinName,
                 'cabins' => $cabins,
                 'motifs' => $motifs,
-                'title' => \__('Motifs for %s', 'default', $cabinName)
+                'title' => \__('Motifs for %s', 'default', Util::noHTML($cabinName))
             ]
         );
     }

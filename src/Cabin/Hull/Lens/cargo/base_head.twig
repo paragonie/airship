@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ "/static/Hull/base.css"|cachebust }}" type="text/css" />
 {#      #}{% set motifs = user_motif() %}{#
         #}{% for css in motifs.config.css %}
-        <link rel="stylesheet" href="{{ ("/static/Hull/motif/" ~ motifs.config.name ~ "/" ~ css)|cachebust }}" type="text/css" />
+        <link rel="stylesheet" href="{{ ("/static/Hull/motif/" ~ motifs.config.name|e('url') ~ "/" ~ css)|cachebust }}" type="text/css" />
         {% endfor %}
 
         <link rel="icon" href="/img/airship_ico.png" type="image/png" />

@@ -5,6 +5,7 @@ namespace Airship\Cabin\Hull\Landing;
 use \Airship\Alerts\Router\EmulatePageNotFound;
 use \Airship\Cabin\Hull\Blueprint\Blog;
 use \Airship\Cabin\Hull\Filter\BlogPosts\CommentFilter;
+use \Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -365,7 +366,7 @@ class BlogPosts extends LandingGear
 
         $args = [
             'blogroll' => $blogRoll,
-            'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', $tag['name']),
+            'pageTitle' => \__('Blog Posts Tagged "%s"', 'default', Util::noHTML($tag['name'])),
             'mathjax' => $mathJAX,
             'pagination' => [
                 'base' => \Airship\LensFunctions\cabin_url() . 'blog/tag/' . $slug,
@@ -415,8 +416,8 @@ class BlogPosts extends LandingGear
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
                 'Blog Posts in %s %s (Page %d)', 'default',
-                $dt->format('F'),
-                $dt->format('Y'),
+                Util::noHTML($dt->format('F')),
+                Util::noHTML($dt->format('Y')),
                 $page
             ),
             'pagination' => [
@@ -462,7 +463,7 @@ class BlogPosts extends LandingGear
             'mathjax' => $mathJAX,
             'pageTitle' => \__(
                 'Blog Posts in the Year %s (Page %d)', 'default',
-                $dt->format('Y'),
+                Util::noHTML($dt->format('Y')),
                 $page
             ),
             'pagination' => [

@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Blueprint\Author;
 use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
+use \Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -162,7 +163,7 @@ class AuthorFiles extends FileManager
             'header',
             \__(
                 'Files for Author "%s"', 'default',
-                $this->author->getName($authorId)
+                Util::noHTML($this->author->getName($authorId))
             )
         );
         $this->root_dir = 'author/' . $this->authorSlug;

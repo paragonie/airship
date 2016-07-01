@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
 use \Airship\Cabin\Bridge\Filter\GadgetsFilter;
+use \Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -56,7 +57,7 @@ class Gadgets extends LoggedInUsersOnly
             [
                 'cabins' => $cabins,
                 'gadgets' => $gadgets,
-                'title' => \__('Gadgets for %s', 'default', $cabinName)
+                'title' => \__('Gadgets for %s', 'default', Util::noHTML($cabinName))
             ]
         );
     }
