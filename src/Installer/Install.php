@@ -10,7 +10,10 @@ use \Airship\Engine\{
 use \Airship\Engine\Security\CSRF;
 use \GuzzleHttp\Client;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\Password;
+use \ParagonIE\Halite\{
+    Halite,
+    Password
+};
 use \ParagonIE\ConstantTime\Base64;
 
 /**
@@ -54,6 +57,9 @@ class Install
      */
     public function __construct(\Twig_Environment $twig, array $data = [])
     {
+        if (!Halite::isLibsodiumSetupCorrectly(true)) {
+            exit(255);
+        }
         $this->twig = $twig;
         $this->data = $data;
         $this->data['airship_version'] = \AIRSHIP_VERSION;
