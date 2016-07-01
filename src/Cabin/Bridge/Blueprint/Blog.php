@@ -1170,6 +1170,9 @@ class Blog extends BlueprintGear
                 );
             }
         }
+        if (!\array_key_exists('category', $post)) {
+            $post['category'] = 0;
+        }
         if ($post['category'] !== $old['category']) {
             $postUpdates['category'] = (int) $post['category'];
         }
@@ -1213,6 +1216,12 @@ class Blog extends BlueprintGear
             ]
         );
 
+        if (empty($old['tags'])) {
+            $old['tags'] = [];
+        }
+        if (empty($post['tags'])) {
+            $post['tags'] = [];
+        }
         // Now let's update the tag relationships
         $tag_ins = \array_diff($post['tags'], $old['tags']);
         $tag_del = \array_diff($old['tags'], $post['tags']);
