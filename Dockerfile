@@ -5,10 +5,17 @@ RUN apt-get -y upgrade
 RUN apt-get -y install wget git composer postgresql php7.0 php7.0-cli \
                        php7.0-fpm php7.0-json php7.0-pgsql php7.0-curl \
                        php7.0-xml php7.0-dev php7.0-zip php7.0-mbstring \
-                       composer apache2 libsodium-dev php-pear libapache2-mod-php7.0
+                       composer apache2 php-pear libapache2-mod-php7.0
 
 RUN rm -f /etc/apache2/sites-enabled/000-default.conf
 RUN a2enmod rewrite
+
+RUN git clone https://github.com/jedisct1/libsodium.git /tmp/sodium
+WORKDIR /tmp/sodium
+RUN git checkout tags/1.0.10
+RUN ./autogen.sh
+RUN ./configure && make distcheck
+RUN make install
 
 RUN pecl install libsodium
 RUN echo "extension=libsodium.so" > /etc/php/7.0/mods-available/libsodium.ini
@@ -51,3 +58,4 @@ ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 
 CMD ["bash", "-c", "service postgresql start & apache2 -D FOREGROUND"]
+
