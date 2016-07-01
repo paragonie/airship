@@ -353,7 +353,7 @@ class Keyggdrasil
         $this->db->beginTransaction();
         foreach ($updates as $update) {
             // Insert the new node in the database:
-            $treeUpdateID = (int) $this->db->insert(
+            $treeUpdateID = (int) $this->db->insertGet(
                 'airship_tree_updates',
                 [
                     'channel' => $chan->getName(),
