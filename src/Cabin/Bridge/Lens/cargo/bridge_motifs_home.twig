@@ -11,7 +11,7 @@
     {% for cabin in cabins %}
         <li>
             <a href="{{ cabin_url() }}motifs/{{ cabin|e('url') }}">
-                {{ __("Motifs for <b>%s</b>", "default", cabin) }}
+                {{ __("Motifs for <b>%s</b>", "default", cabin|e('html')) }}
             </a>
         </li>
     {% endfor %}

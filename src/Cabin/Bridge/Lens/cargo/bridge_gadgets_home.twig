@@ -24,7 +24,7 @@
             {% for cabin in cabins %}
                 <li>
                     <a href="{{ cabin_url() }}gadgets/cabin/{{ cabin|e('url') }}">
-                        {{ __("Gadgets for <b>%s</b>", "default", cabin) }}
+                        {{ __("Gadgets for <b>%s</b>", "default", cabin|e('html')) }}
                     </a>
                 </li>
             {% endfor %}

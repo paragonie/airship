@@ -13,7 +13,7 @@
             {{ __("Airship") }}:
         </div>
         <div class="table-cell full-width bottom-extra-pad">
-            {{ __("Version %s", "default", airship) }}
+            {{ __("Version %s", "default", airship|e('html')) }}
         </div>
     </div>
 

@@ -1,4 +1,4 @@
-<h2 class="bottom-pad">{{ __("Motifs for %s", "default", cabin_name) }}</h2>
+<h2 class="bottom-pad">{{ __("Motifs for %s", "default", cabin_name|e('html')) }}</h2>
 
 <form method="post">{{ form_token() }}
     <ul id="motifs-for-cabin">

@@ -62,7 +62,7 @@
                 <i class="fa fa-arrow-up"></i> {{ __("Upgrade") }}
             </button>
         {% else %} {# Just show the "Up to date" message. #}
-            <em>{{ __("Up to date (%s)", "default", package['current_version']) }}</em>
+            <em>{{ __("Up to date (%s)", "default", package['current_version']|e('html')) }}</em>
         {% endif %}
         </li>
     {% else %}{# Install button: #}

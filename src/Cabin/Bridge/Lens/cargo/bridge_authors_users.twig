@@ -1,4 +1,4 @@
-<h2>{{ __('Users for Author "%s"', 'default', author.name) }}</h2>
+<h2>{{ __('Users for Author "%s"', 'default', author.name|e('html')) }}</h2>
 
 {% if form_error %}
 <p class="error">{{ form_error }}</p>

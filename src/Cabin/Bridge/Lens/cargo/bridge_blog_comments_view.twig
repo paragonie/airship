@@ -73,7 +73,7 @@
             <div class="table-cell">{{ __("Reply to") }}:</div>
             <div class="table-cell">
                 <a href="{{ cabin_url() }}blog/comments/view/{{ comment.replyto|e('html_attr') }}">{#
-                    #}{{ __("Comment #%s", "default", comment.replyto|number_format) }}</a>
+                    #}{{ __("Comment #%s", "default", comment.replyto|number_format|e('html')) }}</a>
                 {% if comment.parent.author %}{#
                     #}by <a href="{{ cabin_url() }}author/edit/{{ comment.parent.author|e('url') }}">{#
                         #}{{ comment.parent.authorname|e('html_attr') }}{#

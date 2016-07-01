@@ -1,4 +1,4 @@
-<h2 class="bottom-pad">{{ __("Custom Pages - %s", "default", cabin) }}</h2>
+<h2 class="bottom-pad">{{ __("Custom Pages - %s", "default", cabin|e('html')) }}</h2>
 <select title="{{ __("Cabin")|e('html_attr') }}" id="pages_list_cabin">{% spaceless %}
         {% for cab in cabins %}
             <option
