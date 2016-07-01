@@ -180,7 +180,7 @@ function clear_cache()
         'csp_static',
         'html_purifier',
         'markdown',
-        'static',
+        'static'
     ];
     foreach ($dirs as $dir) {
         if (!\is_dir($dir)) {
