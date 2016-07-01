@@ -34,5 +34,6 @@ try {
     exit(255);
 }
 $state->logger->info('Automatic update concluded');
+\Airship\clear_cache();
 
 exit(0);

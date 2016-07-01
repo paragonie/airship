@@ -180,7 +180,7 @@ function clear_cache()
         'csp_static',
         'html_purifier',
         'markdown',
-        'static'
+        'static',
     ];
     foreach ($dirs as $dir) {
         if (!\is_dir($dir)) {
@@ -201,7 +201,7 @@ function clear_cache()
         if (\is_dir($f)) {
             continue;
         }
-        if (\preg_match('#/([0-9a-z]+)$#', $f)) {
+        if (\preg_match('#/([0-9a-z]+).php$#', $f)) {
             \unlink($f);
         }
     }
