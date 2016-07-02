@@ -73,6 +73,9 @@ use \Airship\Engine\{
             if ($gear === null) {
                 $gear = Gears::get('Translation');
             }
+            if (!empty($params)) {
+                \array_walk($params, '\\Airship\LensFunctions\\purify');
+            }
             return \sprintf(
                 $gear->literal($text, $domain),
                 ...$params
@@ -90,6 +93,9 @@ use \Airship\Engine\{
          */
         function _e(string $text, ...$params) : string
         {
+            if (!empty($params)) {
+                \array_walk($params, '\\Airship\LensFunctions\\purify');
+            }
             echo __($text, ...$params);
         }
     }
@@ -106,6 +112,9 @@ use \Airship\Engine\{
          */
         function _n(string $text, string $pltext, int $arg, ...$params) : string
         {
+            if (!empty($params)) {
+                \array_walk($params, '\\Airship\LensFunctions\\purify');
+            }
             if (abs($arg) == 1) {
                 return __($text, ...$params);
             } else {
@@ -127,6 +136,9 @@ use \Airship\Engine\{
             static $gear = null;
             if ($gear === null) {
                 $gear = Gears::get('Translation');
+            }
+            if (!empty($params)) {
+                \array_walk($params, '\\Airship\LensFunctions\\purify');
             }
             $state = State::instance();
             return $gear->lookup(
