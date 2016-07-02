@@ -450,6 +450,60 @@ function get_avatar(int $authorId, string $which): string
 }
 
 /**
+ * Purify a string using HTMLPurifier
+ *
+ * @param $string
+ * @return string
+ */
+function get_purified(string $string = '')
+{
+    static $state = null;
+    if ($state === null) {
+        $state = State::instance();
+    }
+    $checksum = CryptoUtil::hash(
+        'HTML Purifier' . $string
+    );
+
+    $h1 = substr($checksum, 0, 2);
+    $h2 = substr($checksum, 2, 2);
+    $hash = substr($checksum, 4);
+
+    $cacheDir = \implode(
+        '/',
+        [
+            ROOT,
+            'tmp',
+            'cache',
+            'html_purifier',
+            $h1,
+            $h2
+        ]
+    );
+
+    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
+        $output = \file_get_contents(
+            $cacheDir . '/' . $hash . '.txt'
+        );
+    } else {
+        if (!\is_dir($cacheDir)) {
+            \mkdir($cacheDir, 0775, true);
+        }
+        $output = $state->HTMLPurifier->purify($string);
+        // Cache for later
+        \file_put_contents(
+            $cacheDir . '/' . $hash . '.txt',
+            $output
+        );
+        \chmod(
+            $cacheDir . '/' . $hash . '.txt',
+            0664
+        );
+    }
+    return $output;
+}
+
+/**
  * READ-ONLY access to the state global
  *
  * @param string $key
@@ -680,50 +734,7 @@ function render_rst(string $string = '', bool $return = false): string
  */
 function purify(string $string = '')
 {
-    static $state = null;
-    if ($state === null) {
-        $state = State::instance();
-    }
-    $checksum = CryptoUtil::hash(
-        'HTML Purifier' . $string
-    );
-
-    $h1 = substr($checksum, 0, 2);
-    $h2 = substr($checksum, 2, 2);
-    $hash = substr($checksum, 4);
-
-    $cacheDir = \implode(
-        '/',
-        [
-            ROOT,
-            'tmp',
-            'cache',
-            'html_purifier',
-            $h1,
-            $h2
-        ]
-    );
-
-    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
-        $output = \file_get_contents(
-            $cacheDir . '/' . $hash . '.txt'
-        );
-    } else {
-        if (!\is_dir($cacheDir)) {
-            \mkdir($cacheDir, 0775, true);
-        }
-        $output = $state->HTMLPurifier->purify($string);
-        // Cache for later
-        \file_put_contents(
-            $cacheDir . '/' . $hash . '.txt',
-            $output
-        );
-        \chmod(
-            $cacheDir . '/' . $hash . '.txt',
-            0664
-        );
-    }
-    echo $output;
+    echo get_purified($string);
 }
 
 /**
