@@ -36,6 +36,7 @@
   },
   "require": {
     "php": "^7",
+    "ext-gd": "*",
     "ext-openssl": "*",
     "ext-libsodium": "^1.0.6",
     "ext-zip": "*",
