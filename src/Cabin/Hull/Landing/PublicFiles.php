@@ -93,6 +93,7 @@ class PublicFiles extends LandingGear
 
             // Serve the file
             \header('Content-Type: ' . $fileData['type']);
+            $this->airship_lens_object->sendStandardHeaders($fileData['type']);
             \readfile($realPath);
             exit;
         } catch (FileNotFound $ex) {
