@@ -705,7 +705,7 @@ class Account extends LandingGear
             );
         } elseif (!$airBrake->getFastExit()) {
             $delay = $airBrake->getDelay(
-                $post['username'],
+                $post['forgot_passphrase_for'],
                 $_SERVER['REMOTE_ADDR'],
                 $airBrake::ACTION_RECOVER
             );
