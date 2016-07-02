@@ -66,6 +66,10 @@ class PublicFiles extends LandingGear
                 \substr($fileData['type'], 0, 5) === 'text/'
                     ||
                 \strpos($fileData['type'], 'application') !== false
+                    ||
+                \strpos($fileData['type'], 'xml') !== false
+                    ||
+                \strpos($fileData['type'], 'svg') !== false
             ) {
                 $p = \strpos($fileData['type'], ';');
                 if ($p !== false) {
