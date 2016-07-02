@@ -686,12 +686,13 @@ class Account extends LandingGear
      */
     protected function processRecoverAccount(array $post): bool
     {
+        $username = $post['forgot_passphrase_for'];
         $airBrake = Gears::get('AirBrake');
         if (IDE_HACKS) {
             $airBrake = new AirBrake();
         }
         $failFast = $airBrake->failFast(
-            $post['forgot_passphrase_for'],
+            $username,
             $_SERVER['REMOTE_ADDR'],
             $airBrake::ACTION_RECOVER
         );
@@ -705,7 +706,7 @@ class Account extends LandingGear
             );
         } elseif (!$airBrake->getFastExit()) {
             $delay = $airBrake->getDelay(
-                $post['forgot_passphrase_for'],
+                $username,
                 $_SERVER['REMOTE_ADDR'],
                 $airBrake::ACTION_RECOVER
             );
@@ -715,18 +716,18 @@ class Account extends LandingGear
         }
 
         try {
-            $recoverInfo = $this->acct->getRecoveryInfo($post['forgot_passphrase_for']);
+            $recoverInfo = $this->acct->getRecoveryInfo($username);
         } catch (UserNotFound $ex) {
             // Username not found. Is this a harvester?
             $airBrake->registerAccountRecoveryAttempt(
-                $post['forgot_passphrase_for'],
+                $username,
                 $_SERVER['REMOTE_ADDR']
             );
             $this->log(
                 'Password reset attempt for nonexistent user.',
                 LogLevel::NOTICE,
                 [
-                    'username' => $post['forgot_passphrase_for']
+                    'username' => $username
                 ]
             );
             return false;
@@ -734,7 +735,7 @@ class Account extends LandingGear
         if (!$recoverInfo['allow_reset'] || empty($recoverInfo['email'])) {
             // Opted out or no email address? Act like the user doesn't exist.
             $airBrake->registerAccountRecoveryAttempt(
-                $post['forgot_passphrase_for'],
+                $username,
                 $_SERVER['REMOTE_ADDR']
             );
             return false;
@@ -752,7 +753,7 @@ class Account extends LandingGear
         }
 
         $message = (new Message())
-            ->addTo($recoverInfo['email'], $post['forgot_passphrase_for'])
+            ->addTo($recoverInfo['email'], $username)
             ->setSubject('Password Reset')
             ->setFrom($state->universal['email']['from'] ?? 'no-reply@' . $_SERVER['HTTP_HOST'])
             ->setBody($this->recoveryMessage($token));
