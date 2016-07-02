@@ -691,7 +691,7 @@ class Account extends LandingGear
             $airBrake = new AirBrake();
         }
         $failFast = $airBrake->failFast(
-            $post['username'],
+            $post['forgot_passphrase_for'],
             $_SERVER['REMOTE_ADDR'],
             $airBrake::ACTION_RECOVER
         );
@@ -719,7 +719,7 @@ class Account extends LandingGear
         } catch (UserNotFound $ex) {
             // Username not found. Is this a harvester?
             $airBrake->registerAccountRecoveryAttempt(
-                $post['username'],
+                $post['forgot_passphrase_for'],
                 $_SERVER['REMOTE_ADDR']
             );
             $this->log(
@@ -734,7 +734,7 @@ class Account extends LandingGear
         if (!$recoverInfo['allow_reset'] || empty($recoverInfo['email'])) {
             // Opted out or no email address? Act like the user doesn't exist.
             $airBrake->registerAccountRecoveryAttempt(
-                $post['username'],
+                $post['forgot_passphrase_for'],
                 $_SERVER['REMOTE_ADDR']
             );
             return false;
@@ -752,7 +752,7 @@ class Account extends LandingGear
         }
 
         $message = (new Message())
-            ->addTo($recoverInfo['email'], $post['username'])
+            ->addTo($recoverInfo['email'], $post['forgot_passphrase_for'])
             ->setSubject('Password Reset')
             ->setFrom($state->universal['email']['from'] ?? 'no-reply@' . $_SERVER['HTTP_HOST'])
             ->setBody($this->recoveryMessage($token));
