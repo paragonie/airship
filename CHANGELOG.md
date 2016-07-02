@@ -1,3 +1,16 @@
+## Version 1.1.4
+
+  * i18n - run parameters through HTMLPurifier (with caching) to prevent future
+    XSS payloads in case someone forgets to escape these parameters. HTML is
+    still allowed, so if you're inserting in an HTML attribute, use the 
+    `|e('html_attr')` filter on your input.
+  * Use the correct POST index in account recovery.
+  * Treat SVG and XML files as plaintext, to prevent stored XSS. Reported on
+    [HackerOne](https://hackerone.com/reports/148853).
+  * Send `Content-Security-Policy` headers on file downloads as well as web 
+    pages. Just in case another file type exists in the world that executes
+    JavaScript when the file is viewed.
+
 ## Version 1.1.3
 
   * Fixed `E_NOTICE`s with the auto-updater.
