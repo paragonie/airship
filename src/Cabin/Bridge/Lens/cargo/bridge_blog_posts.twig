@@ -51,7 +51,13 @@
             {% endif %}
         </div>
         <div class="table-cell">
-            {{ post.title }}
+            {% if post.status %}
+                <a href="{{ cabin_url('Hull') }}b/{{ post.shorturl|e('html_attr') }}">
+                    {{ post.title }}
+                </a>
+            {% else %}
+                {{ post.title }}
+            {% endif %}
         </div>
         <div class="table-cell">
             {% if can_update("blog/authors") or post.author in my_author_ids %}

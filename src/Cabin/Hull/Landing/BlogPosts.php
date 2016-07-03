@@ -556,6 +556,24 @@ class BlogPosts extends LandingGear
     }
 
     /**
+     * Handle short URLs
+     *
+     * @param string $uniqueID
+     * @route b/(.*)
+     */
+    public function shortURL(string $uniqueID = '')
+    {
+        if (empty($uniqueID)) {
+            \Airship\redirect($this->airship_cabin_prefix . '/blog');
+        }
+
+        $long = $this->blog->longURL($uniqueID);
+        \Airship\redirect(
+            $this->airship_cabin_prefix . '/blog' . $long
+        );
+    }
+
+    /**
      * Gets [offset, limit] based on Blog configuration
      *
      * @param mixed $page
