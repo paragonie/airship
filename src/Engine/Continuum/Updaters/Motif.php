@@ -10,6 +10,7 @@ use \Airship\Alerts\{
 use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
+    Continuum\Log,
     Continuum\Supplier,
     Hail
 };
@@ -28,16 +29,6 @@ class Motif extends AutoUpdater implements ContinuumInterface
      * @var array
      */
     protected $cabin = [];
-
-    /**
-     * @var string
-     */
-    protected $name = '';
-
-    /**
-     * @var string
-     */
-    protected $filePath = '';
 
     /**
      * @var string
@@ -64,6 +55,9 @@ class Motif extends AutoUpdater implements ContinuumInterface
         $this->supplier = $supplier;
         $this->filePath = $filePath;
         $this->type = self::TYPE_MOTIF;
+        if (!self::$continuumLogger) {
+            self::$continuumLogger = new Log();
+        }
     }
 
     /**
@@ -126,7 +120,19 @@ class Motif extends AutoUpdater implements ContinuumInterface
                         $this->install($updateInfo, $updateFile);
                     } else {
                         $this->log('Keyggdrasil check failed for this Motif', LogLevel::ERROR, $debugArgs);
+                        self::$continuumLogger->store(
+                            LogLevel::ALERT,
+                            'Motif update failed -- checksum not registered in Keyggdrasil',
+                            $this->getLogContext($updateInfo, $updateFile)
+                        );
                     }
+                } else {
+                    $this->log('Signature check failed for this Motif', LogLevel::ALERT, $debugArgs);
+                    self::$continuumLogger->store(
+                        LogLevel::ALERT,
+                        'Motif update failed -- invalid signature',
+                        $this->getLogContext($updateInfo, $updateFile)
+                    );
                 }
             }
         } catch (NoAPIResponse $ex) {
@@ -135,6 +141,16 @@ class Motif extends AutoUpdater implements ContinuumInterface
                 'Automatic update failure: NO API Response.',
                 LogLevel::CRITICAL,
                 \Airship\throwableToArray($ex)
+            );
+            self::$continuumLogger->store(
+                LogLevel::ALERT,
+                'Motif update failed -- no API Response',
+                [
+                    'action' => 'UPDATE',
+                    'name' => $this->name,
+                    'supplier' => $this->supplier->getName(),
+                    'type' => $this->type
+                ]
             );
         }
     }
@@ -178,6 +194,11 @@ class Motif extends AutoUpdater implements ContinuumInterface
 
         // Make sure we update the version info. in the DB cache:
         $this->updateDBRecord('Motif', $info);
+        self::$continuumLogger->store(
+            LogLevel::INFO,
+            'Motif update installed',
+            $this->getLogContext($info, $file)
+        );
     }
 
     /**

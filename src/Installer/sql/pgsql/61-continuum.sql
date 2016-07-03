@@ -31,3 +31,13 @@ CREATE TABLE airship_package_versions (
 CREATE INDEX ON airship_package_versions (version);
 CREATE INDEX ON airship_package_versions (checksum);
 CREATE UNIQUE INDEX ON airship_package_versions (package, version);
+
+DROP TRIGGER IF EXISTS update_airship_package_versions_modtime ON airship_package_versions;
+CREATE TRIGGER update_airship_package_versions_modtime
+  BEFORE UPDATE ON airship_package_versions
+  FOR EACH ROW EXECUTE PROCEDURE update_modtime();
+
+DROP TRIGGER IF EXISTS update_airship_package_cache_modtime ON airship_package_cache;
+CREATE TRIGGER update_airship_package_cache_modtime
+  BEFORE UPDATE ON airship_package_cache
+  FOR EACH ROW EXECUTE PROCEDURE update_modtime();

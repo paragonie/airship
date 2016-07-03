@@ -177,6 +177,12 @@ class Motif extends BaseInstaller
             }
         }
 
+        self::$continuumLogger->store(
+            LogLevel::INFO,
+            'Motif install successful',
+            $this->getLogContext($fileInfo)
+        );
+
         // Finally, nuke the cache:
         return $this->clearCache();
     }

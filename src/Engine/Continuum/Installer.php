@@ -44,6 +44,11 @@ abstract class Installer
     private static $channels;
 
     /**
+     * @var Log
+     */
+    protected static $continuumLogger;
+
+    /**
      * @var
      */
     protected $ext = 'txt';
@@ -90,6 +95,9 @@ abstract class Installer
         }
         $this->supplier = $this->getSupplierDontCache($supplier);
         $this->package = $package;
+        if (!self::$continuumLogger) {
+            self::$continuumLogger = new Log();
+        }
     }
 
     /**
@@ -209,15 +217,30 @@ abstract class Installer
         try {
             $install = $this->download();
             if (!$this->verifySignature($install)) {
+                self::$continuumLogger->store(
+                    LogLevel::ALERT,
+                    'Install failed -- invalid signature',
+                    $this->getLogContext($install)
+                );
                 return false;
             }
             if (!$this->verifyMerkleRoot($install)) {
+                self::$continuumLogger->store(
+                    LogLevel::ALERT,
+                    'Install failed -- Merkle root mismatch',
+                    $this->getLogContext($install)
+                );
                 return false;
             }
             if (!$this->verifyChecksum($install)) {
                 return false;
             }
             if (!$this->install($install)) {
+                self::$continuumLogger->store(
+                    LogLevel::ALERT,
+                    'Install failed -- checksum not registered in Keyggdrasil',
+                    $this->getLogContext($install)
+                );
                 return false;
             }
             // Clear the cache, since we just installed something.
@@ -269,6 +292,29 @@ abstract class Installer
             \preg_replace('/[^A-Za-z0-9\_]/', '_', $cabinName),
             '_'
         );
+    }
+
+    /**
+     * Get information for logging purposes
+     *
+     * @param InstallFile $installFile
+     * @return array
+     */
+    public function getLogContext(InstallFile $installFile): array
+    {
+        return [
+            'action' => 'INSTALL',
+            'name' => $this->name,
+            'supplier' => $this->supplier->getName(),
+            'type' => $this->type,
+            'installFile' => [
+                'checksum' => $installFile->getHash(),
+                'filesize' => $installFile->getSize(),
+                'merkleRoot' => $installFile->getMerkleRoot(),
+                'signature' => $installFile->getSignature(),
+                'version' => $installFile->getVersion()
+            ]
+        ];
     }
 
     /**

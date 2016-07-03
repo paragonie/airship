@@ -146,6 +146,12 @@ class Gadget extends BaseInstaller
             Sandbox::safeRequire('phar://' . $alias . '/update_trigger.php');
         }
 
+        self::$continuumLogger->store(
+            LogLevel::INFO,
+            'Install successful',
+            $this->getLogContext($fileInfo)
+        );
+
         // Finally, clear the cache files:
         return $this->clearCache();
     }
