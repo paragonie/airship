@@ -302,9 +302,18 @@ class Account extends LandingGear
         $gauth = $this->twoFactorPreamble();
         $user = $this->acct->getUserAccount($this->getActiveUserId());
 
-        \header('Content-Type: image/png');
+        if (\extension_loaded('gd')) {
+            \header('Content-Type: image/png');
+            $writer = null;
+        } else {
+            $renderer = new \BaconQrCode\Renderer\Image\Svg();
+            $renderer->setHeight(384);
+            $renderer->setWidth(384);
+            $writer = new \BaconQrCode\Writer($renderer);
+            \header('Content-Type: image/svg+xml');
+        }
         $gauth->makeQRCode(
-            null,
+            $writer,
             'php://output',
             $user['username'] . '@' . $_SERVER['HTTP_HOST'],
             $this->config('two-factor.issuer') ?? '',
