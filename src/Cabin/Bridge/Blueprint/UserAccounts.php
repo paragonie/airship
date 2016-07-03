@@ -638,10 +638,20 @@ class UserAccounts extends BlueprintGear
             $this->zxcvbn = new Zxcvbn;
         }
         $pw = $post['passphrase'];
-        $userdata = $post;
-        unset($userdata['passphrase']);
+        $userdata = \Airship\keySlice(
+            $post,
+            [
+                'username',
+                'display_name',
+                'realname',
+                'email'
+            ]
+        );
 
-        $strength = $this->zxcvbn->passwordStrength($pw, $userdata);
+        $strength = $this->zxcvbn->passwordStrength(
+            $pw,
+            \array_values($userdata)
+        );
 
         $min = $state->universal['minimum_password_score'] ?? self::DEFAULT_MIN_SCORE;
         if ($min < 1 || $min > 4) {
