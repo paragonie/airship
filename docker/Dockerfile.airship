@@ -24,11 +24,6 @@ RUN phpenmod libsodium
 
 RUN a2enmod rewrite
 
-RUN service postgresql start && sleep 3 && \
-    su postgres -c "createuser airship" && \
-    su postgres -c "createdb -O airship airship" && \
-    su postgres -c "psql -c \"ALTER USER airship PASSWORD 'secret'\""
-
 COPY . /var/www/airship
 WORKDIR /var/www/airship
 RUN composer install --no-dev
@@ -58,5 +53,4 @@ ENV APACHE_RUN_DIR /var/run/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 
-CMD ["bash", "-c", "service postgresql start & apache2 -D FOREGROUND"]
-
+CMD ["apache2", "-D", "FOREGROUND"]

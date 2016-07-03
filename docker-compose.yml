@@ -1,0 +1,19 @@
+version: '2'
+services:
+    database:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.pgsql
+    airship:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.airship
+
+        ports:
+            - "8080:80"
+
+        depends_on:
+            - database
+
+        links:
+            - database
