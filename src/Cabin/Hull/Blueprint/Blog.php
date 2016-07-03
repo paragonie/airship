@@ -1540,6 +1540,32 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get the long URL for a given short URL
+     *
+     * @param string $shortURL
+     * @return string
+     */
+    public function longURL(string $shortURL = ''): string
+    {
+        $post = $this->db->row(
+            "SELECT * FROM view_hull_blog_list WHERE shorturl = ?",
+            $shortURL
+        );
+        if (empty($post)) {
+            return '';
+        }
+        return \implode(
+            '/',
+            [
+                '',
+                $post['blogyear'],
+                \str_pad($post['blogmonth'], 2, '0', STR_PAD_LEFT),
+                $post['slug']
+            ]
+        );
+    }
+
+    /**
      * Return an array of the most $num recent posts, including URL and title
      *
      * @param int $num

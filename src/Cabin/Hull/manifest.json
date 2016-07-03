@@ -43,6 +43,8 @@
             ["BlogPosts", "listYear"],
         "blog":
             ["BlogPosts", "index"],
+        "b/{string}":
+            ["BlogPosts", "shortURL"],
         "files/(.*)":
             ["PublicFiles", "download"],
         "":
