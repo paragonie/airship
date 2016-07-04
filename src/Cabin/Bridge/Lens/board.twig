@@ -61,7 +61,7 @@
 
 {% block page_js %}
 <script src="{{ "/static/Bridge/board.js"|cachebust }}"></script>
-<script src="{{ "/static/Bridge/zxcvbn.js"|cachebust }}"></script>
+<script src="{{ "/js/zxcvbn.js"|cachebust }}"></script>
 <script src="{{ "/static/Bridge/passwords.js"|cachebust }}"></script>
 {% if config.board.captcha %}
     <script src="{{ csp_hash("https://www.google.com/recaptcha/api.js", "script-src", "sha384") }}"></script>
