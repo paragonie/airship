@@ -256,13 +256,37 @@ nav ul.navigation > li:hover a {
 .blog-sidebar h4 {
     margin: 0;
 }
-@media (max-width: 360px) {
+@media only screen and (max-width: 360px) {
     header h1 {
         font-size: 14pt !important;
     }
+    nav a {
+        font-size: 150%;
+    }
+    footer {
+        font-size: 150%;
+    }
+    ol.blog_comment_child {
+        padding-left: 1em !important;
+    }
 }
 
-@media (max-width: 767px) {
+@media only screen and (min-width: 361px) and (max-width: 767px) {
+    nav a {
+        font-size: 150%;
+    }
+    footer {
+        font-size: 125%;
+    }
+    ol.blog_comment_child {
+        padding-left: 1.5em !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .blog-sidebar {
+        font-size: 125%;
+    }
     .metadata-label {
         max-width: 20ex;
     }
@@ -270,7 +294,8 @@ nav ul.navigation > li:hover a {
         width: 100%;
     }
 }
-@media (min-width: 768px) {
+
+@media only screen and (min-width: 768px) {
     .metadata-label {
         width: 20ex;
     }
