@@ -9,6 +9,14 @@
     >{{ form_token() }}
             
     <h1>Set Up Your Administrator Account</h1>
+    {% if password_weak %}
+        <p class="error">
+            The password you provided is too weak.
+            Please try again with a more secure password.
+            If you need help creating and remembering secure passwords,
+            get a password manager such as <a target="_blank" href="https://github.com/keepassx/keepassx/">KeePassX</a>.
+        </p>
+    {% endif %}
     
     <p>
         This account will have the keys to the kingdom. Using a password manager
@@ -26,6 +34,7 @@
             Administrator Passphrase:
         </label>
         <input class="pure-input-1" type="password" name="passphrase" id="passphrase" />
+        <div id="password_feedback"></div>
         
         <div class="continue-btn-wrapper">
             <button class='pure-button pure-button-primary'>Save and Continue &raquo;</button>
@@ -34,6 +43,7 @@
     
     </form>
 </div>
+<script src="{{ "/js/zxcvbn.js"|cachebust }}"></script>
 {% endblock %}
 
 {# Style definitions are stored in other Twig templates #}

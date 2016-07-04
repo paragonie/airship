@@ -16,6 +16,7 @@ use \ParagonIE\Halite\{
     Password
 };
 use \ParagonIE\ConstantTime\Base64;
+use ZxcvbnPhp\Zxcvbn;
 
 /**
  * Class Install
@@ -116,6 +117,7 @@ class Install
             case 1:
                 if (!empty($post)) {
                     $this->processDatabase($post);
+                    \Airship\redirect('/');
                     return null;
                 }
                 $this->data['drivers'] = $this->enumerateDrivers();
@@ -123,24 +125,23 @@ class Install
             case 2:
                 if (!empty($post)) {
                     $this->processAdminAccount($post);
+                    \Airship\redirect('/');
                     return null;
                 }
                 return $this->display('admin_account.twig');
             case 3:
                 if (!empty($post)) {
                     $this->processCabins($post);
+                    \Airship\redirect('/');
                     return null;
                 }
-                return $this->display(
-                    'cabins.twig',
-                    [
-                        'is_https' => $this->isHTTPS()
-                    ]
-                );
+                $this->twig->addGlobal('is_https', $this->isHTTPS());
+                return $this->display('cabins.twig');
             case 4:
                 $this->testForTor();
                 if (!empty($post)) {
                     $this->processConfig($post);
+                    \Airship\redirect('/');
                     return null;
                 }
                 return $this->display('config.twig');
@@ -241,6 +242,11 @@ class Install
         if (empty($post['username'])) {
             $post['username'] = 'captain';
         }
+        if ($this->isPasswordWeak($post)) {
+            $this->data['password_weak'] = true;
+            return;
+        }
+        unset($this->data['password_weak']);
         $state = State::instance();
         
         $this->data['admin'] = [
@@ -738,4 +744,32 @@ class Install
     {
         return AutoPilot::isHTTPSConnection();
     }
+
+    /**
+     * Is this password too weak?
+     *
+     * @param array $post
+     * @return bool
+     */
+    public function isPasswordWeak(array $post): bool
+    {
+        $zxcvbn = new Zxcvbn();
+        $pw = $post['passphrase'];
+        $userdata = \Airship\keySlice(
+            $post,
+            [
+                'username',
+                'display_name',
+                'realname',
+                'email'
+            ]
+        );
+
+        $strength = $zxcvbn->passwordStrength(
+            $pw,
+            \array_values($userdata)
+        );
+        return $strength['score'] < 4;
+    }
+
 }
