@@ -8,6 +8,10 @@ CREATE TABLE airship_continuum_log (
     modified TIMESTAMP DEFAULT NOW()
 );
 
+CREATE INDEX ON airship_continuum_log (component);
+CREATE INDEX ON airship_continuum_log (created);
+CREATE INDEX ON airship_continuum_log (loglevel);
+
 DROP TRIGGER IF EXISTS update_airship_continuum_log_modtime ON airship_continuum_log;
 CREATE TRIGGER update_airship_continuum_log_modtime
   BEFORE UPDATE ON airship_continuum_log
