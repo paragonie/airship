@@ -92,6 +92,16 @@ class InstallFile
     }
 
     /**
+     * Get the hex-encoded signature for this file.
+     *
+     * @return string
+     */
+    public function getSignature(): string
+    {
+        return $this->releaseInfo['signature'];
+    }
+
+    /**
      * Get the size of the file
      *
      * @return int

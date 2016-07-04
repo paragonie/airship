@@ -318,9 +318,36 @@ class Skyport extends BlueprintGear
     }
 
     /**
+     * Get the recent messages in the update log
+     *
+     * @param \DateTime $cutoffDate
+     * @return array
+     */
+    public function getLogMessages(\DateTime $cutoffDate = null): array
+    {
+        if (!$cutoffDate) {
+            // Default: the past 24 hours
+            $cutoffDate = (new \DateTime())->sub(
+                new \DateInterval('P01D')
+            );
+        }
+        $messages = $this->db->run(
+            "SELECT * FROM airship_continuum_log WHERE created > ? ORDER BY logid DESC",
+            $cutoffDate->format('Y-m-d H:i:s')
+        );
+        if (empty($messages)) {
+            return [];
+        }
+        foreach ($messages as $i => $msg) {
+            $messages[$i]['context'] = \json_decode($msg['context'], true);
+        }
+        return $messages;
+    }
+
+    /**
      * Gets all packages for which a new version is available.
      */
-    public function getOutdatedPackages()
+    public function getOutdatedPackages(): array
     {
 
         $exts = $this->db->run('

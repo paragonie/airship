@@ -2008,3 +2008,12 @@ h2#comments {
     padding-left: 1em;
     padding-right: 1em;
 }
+.log-textarea {
+    background-color: rgba(255, 255, 255, 0.25);
+    font-family: monospace;
+    font-size: 10pt;
+    height: 10rem;
+    min-width: 20em;
+    max-width: 100%;
+    width: calc(100% - 1em);
+}

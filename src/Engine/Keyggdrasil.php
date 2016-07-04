@@ -11,12 +11,13 @@ use \Airship\Alerts\Continuum\{
 use \Airship\Alerts\Hail\SignatureFailed;
 use \Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
-    Bolt\Log,
+    Bolt\Log as LogBolt,
     Contract\DBInterface
 };
 use \Airship\Engine\Continuum\{
     API,
     Channel,
+    Log,
     Supplier
 };
 use \Airship\Engine\Keyggdrasil\{
@@ -47,12 +48,17 @@ use \Psr\Log\LogLevel;
 class Keyggdrasil
 {
     use SupplierBolt;
-    use Log;
+    use LogBolt;
 
     /**
      * @var Database
      */
     protected $db;
+
+    /**
+     * @var Log
+     */
+    protected static $continuumLogger;
 
     /**
      * @var Hail
@@ -95,6 +101,10 @@ class Keyggdrasil
 
         foreach ($channels as $ch => $config) {
             $this->channelCache[$ch] = new Channel($this, $ch, $config);
+        }
+
+        if (!self::$continuumLogger) {
+            self::$continuumLogger = new Log($this->db, 'keyggdrasil');
         }
     }
 
@@ -210,6 +220,38 @@ class Keyggdrasil
             );
         }
         return [];
+    }
+
+    /**
+     * @param TreeUpdate $up
+     * @return array
+     */
+    protected function getLogData(TreeUpdate $up): array
+    {
+        return [
+            'is' => [
+                'core' =>
+                    $up->isAirshipUpdate(),
+                'package' =>
+                    $up->isPackageUpdate(),
+                'newKey' =>
+                    $up->isCreateKey(),
+                'revoke' =>
+                    $up->isRevokeKey()
+            ],
+            'merkleRoot' =>
+                $up->getRoot(),
+            'type' =>
+                $up->isPackageUpdate() || $up->isAirshipUpdate()
+                    ? $up->getPackageType()
+                    : $up->getKeyType(),
+            'supplier' =>
+                $up->getSupplierName(),
+            'name' =>
+                $up->getPackageName(),
+            'data' =>
+                $up->getNodeData()
+        ];
     }
 
     /**
@@ -367,10 +409,42 @@ class Keyggdrasil
             // Update the JSON files separately:
             if ($update->isCreateKey()) {
                 $this->insertKey($chan, $update);
+                self::$continuumLogger->store(
+                    LogLevel::INFO,
+                    'New public key',
+                    [
+                        'action' => 'KEYGGDRASIL',
+                        'supplier' => $update->getSupplierName(),
+                        'publicKey' => $update->getPublicKeyString(),
+                        'merkleRoot' => $update->getRoot(),
+                        'data' => $this->getLogData($update)
+                    ]
+                );
             } elseif ($update->isRevokeKey()) {
                 $this->revokeKey($chan, $update);
+                self::$continuumLogger->store(
+                    LogLevel::INFO,
+                    'Public key revoked',
+                    [
+                        'action' => 'KEYGGDRASIL',
+                        'supplier' => $update->getSupplierName(),
+                        'publicKey' => $update->getPublicKeyString(),
+                        'merkleRoot' => $update->getRoot(),
+                        'data' => $this->getLogData($update)
+                    ]
+                );
             } else {
                 $this->updatePackageQueue($update, $treeUpdateID);
+                self::$continuumLogger->store(
+                    LogLevel::INFO,
+                    'New package metadata',
+                    [
+                        'action' => 'KEYGGDRASIL',
+                        'supplier' => $update->getSupplierName(),
+                        'merkleRoot' => $update->getRoot(),
+                        'data' => $this->getLogData($update)
+                    ]
+                );
             }
         }
         return $this->db->commit();
@@ -449,6 +523,21 @@ class Keyggdrasil
                             LogLevel::ALERT,
                             \Airship\throwableToArray($ex)
                         );
+                        $subsequent = [];
+                        foreach ($updates as $up) {
+                            if ($up instanceof TreeUpdate) {
+                                $subsequent[] = $this->getLogData($up);
+                            }
+                        }
+                        self::$continuumLogger->store(
+                            LogLevel::ALERT,
+                            $ex->getMessage(),
+                            [
+                                'action' => 'KEYGGDRASIL',
+                                'baseRoot' => $originalRoot,
+                                'subsequent' => $subsequent
+                            ]
+                        );
                     }
                     // If verification fails, pop off the last update and try again
                     \array_pop($updates);
@@ -460,6 +549,13 @@ class Keyggdrasil
                     'Invalid Channel Signature for ' . $chan->getName(),
                     LogLevel::ALERT,
                     \Airship\throwableToArray($ex)
+                );
+                self::$continuumLogger->store(
+                    LogLevel::ALERT,
+                    'Invalid Channel Signature for ' . $chan->getName(),
+                    [
+                        'action' => 'KEYGGDRASIL'
+                    ]
                 );
             } catch (TransferException $ex) {
                 $this->log(

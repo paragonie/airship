@@ -473,6 +473,23 @@ class Skyport extends AdminOnly
     }
 
     /**
+     * View the update log
+     *
+     * @route admin/skyport/log
+     */
+    public function viewLog()
+    {
+        /** @todo allow a more granular window of logged events to be viewed */
+        $this->lens(
+            'skyport/log',
+            [
+                'logged' =>
+                    $this->skyport->getLogMessages()
+            ]
+        );
+    }
+
+    /**
      * Get the page number and offset
      *
      * @param int $sizeOfList

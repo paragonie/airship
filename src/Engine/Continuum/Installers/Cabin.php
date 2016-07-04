@@ -5,6 +5,7 @@ namespace Airship\Engine\Continuum\Installers;
 use \Airship\Engine\Bolt\Common;
 use \Airship\Engine\Continuum\Installer as BaseInstaller;
 use \ParagonIE\ConstantTime\Base64UrlSafe;
+use \Psr\Log\LogLevel;
 
 /**
  * Class Cabin
@@ -246,6 +247,12 @@ class Cabin extends BaseInstaller
         $updater->setAlias($garbageAlias);
         unset($updater);
 
+        self::$continuumLogger->store(
+            LogLevel::INFO,
+            'Install successful',
+            $this->getLogContext($fileInfo)
+        );
+
         return $this->configure($ns, $metadata);
     }
 
@@ -293,6 +300,7 @@ class Cabin extends BaseInstaller
                 'name' => $nameSpace
             ];
         }
+
         return \file_put_contents(
             ROOT . '/config/cabins.json',
             $twigEnv->render('cabins.twig', ['cabins' => $newCabins])

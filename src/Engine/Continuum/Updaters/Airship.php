@@ -9,6 +9,7 @@ use \Airship\Alerts\{
 use \Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
+    Continuum\Log,
     Continuum\Supplier,
     Hail,
     State
@@ -51,6 +52,10 @@ class Airship extends AutoUpdater implements ContinuumInterface
         $this->supplier = $sup;
         $this->hail = $hail;
         $this->type = self::TYPE_ENGINE;
+
+        if (!self::$continuumLogger) {
+            self::$continuumLogger = new Log();
+        }
     }
     
     /**
@@ -108,9 +113,19 @@ class Airship extends AutoUpdater implements ContinuumInterface
                         $this->install($updateInfo, $updateFile);
                     } else {
                         $this->log('Keyggdrasil failed for Airship core update', LogLevel::ALERT);
+                        self::$continuumLogger->store(
+                            LogLevel::ALERT,
+                            'CMS Airship core update failed -- checksum not registered in Keyggdrasil',
+                            $this->getLogContext($updateInfo, $updateFile)
+                        );
                     }
                 } else {
                     $this->log('Invalid signature for this Airship core update', LogLevel::ALERT);
+                    self::$continuumLogger->store(
+                        LogLevel::ALERT,
+                        'CMS Airship core update failed -- invalid signature',
+                        $this->getLogContext($updateInfo, $updateFile)
+                    );
                 }
             }
         } catch (NoAPIResponse $ex) {
@@ -119,6 +134,16 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 'Automatic update failure: NO API Response.',
                 LogLevel::ERROR,
                 \Airship\throwableToArray($ex)
+            );
+            self::$continuumLogger->store(
+                LogLevel::ALERT,
+                'CMS Airship core update failed -- no API Response',
+                [
+                    'action' => 'UPDATE',
+                    'name' => $this->name,
+                    'supplier' => $this->supplier->getName(),
+                    'type' => $this->type
+                ]
             );
         }
     }
@@ -167,6 +192,11 @@ class Airship extends AutoUpdater implements ContinuumInterface
 
         // Now bring it back up.
         $this->bringSiteBackUp();
+        self::$continuumLogger->store(
+            LogLevel::INFO,
+            'CMS Airship core update installed',
+            $this->getLogContext($info, $file)
+        );
     }
 
     /**

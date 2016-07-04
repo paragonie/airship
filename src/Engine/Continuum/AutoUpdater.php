@@ -12,7 +12,7 @@ use \Airship\Engine\{
     Continuum\Updaters\Cabin,
     Continuum\Updaters\UpdateFile,
     Continuum\Updaters\UpdateInfo,
-    Bolt\Log,
+    Bolt\Log as LogBolt,
     Hail,
     State
 };
@@ -33,7 +33,7 @@ use \Psr\Log\LogLevel;
  */
 abstract class AutoUpdater
 {
-    use Log;
+    use LogBolt;
 
     const TYPE_ENGINE = 'engine';
     const TYPE_CABIN = 'cabin';
@@ -51,9 +51,19 @@ abstract class AutoUpdater
     protected static $channels = [];
 
     /**
+     * @var Log
+     */
+    protected static $continuumLogger;
+
+    /**
      * @var string
      */
     protected $ext = 'txt';
+
+    /**
+     * @var string
+     */
+    protected $filePath = '';
 
     /**
      * @var Hail
@@ -73,7 +83,7 @@ abstract class AutoUpdater
     /**
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * @var string
@@ -331,6 +341,37 @@ abstract class AutoUpdater
         throw new NoAPIResponse(
             \trk('errors.hail.no_channel_configured')
         );
+    }
+
+    /**
+     * Get information for logging purposes
+     *
+     * @param UpdateInfo $updateInfo
+     * @param UpdateFile $updateFile
+     * @return array
+     */
+    protected function getLogContext(
+        UpdateInfo $updateInfo,
+        UpdateFile $updateFile
+    ): array {
+        return [
+            'action' => 'UPDATE',
+            'name' => $this->name,
+            'supplier' => $this->supplier->getName(),
+            'type' => $this->type,
+            'updateFile' => [
+                'checksum' => $updateFile->getHash(),
+                'filesize' => $updateFile->getSize(),
+                'version' => $updateFile->getVersion()
+            ],
+            'updateInfo' => [
+                'name' => $updateInfo->getPackageName(),
+                'supplier' => $updateInfo->getSupplierName(),
+                'merkleRoot' => $updateInfo->getMerkleRoot(),
+                'signature' => $updateInfo->getSignature(true),
+                'version' => $updateInfo->getVersion()
+            ]
+        ];
     }
 
     /**
