@@ -380,7 +380,6 @@ function get_database(string $id = 'default'): Database
         }
         return $_cache[$id];
     }
-    \var_dump($state->database_connections);
     throw new DBException(
         \trk('errors.database.not_found', $id)
     );
