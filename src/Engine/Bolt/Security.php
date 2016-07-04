@@ -146,13 +146,13 @@ trait Security
                 return $this->verifySessionCanary($_SESSION['userid']);
             }
             return true;
-        } elseif (isset($_COOKIE['auth_token'])) {
+        } elseif (isset($_COOKIE['airship_token'])) {
             // We're not logged in, but we have a long-term
             // authentication token, so we should do an automatic
             // login and, if successful, respond affirmatively.
-            $token = $this->airship_cookie->fetch('auth_token');
+            $token = $this->airship_cookie->fetch('airship_token');
             if (!empty($token)) {
-                return $this->doAutoLogin($token, 'userid', 'auth_token');
+                return $this->doAutoLogin($token, 'userid', 'airship_token');
             }
         }
         return false;
@@ -242,9 +242,8 @@ trait Security
             $this->tightenSecurityBolt();
         }
         $state = State::instance();
-        $token_idx = $state->universal['cookie_index']['auth_token'];
         $_SESSION = [];
-        $this->airship_cookie->store($token_idx, null);
+        $this->airship_cookie->store('airship_token', null);
         return \session_regenerate_id(true);
     }
 

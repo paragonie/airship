@@ -11,9 +11,6 @@
         "patch": true,
         "test":  false
     },
-    "cookie_index": {
-        "auth_token": "airship_token"
-    },
     "debug": true,
     "email": {
         "from": "noreply@travis-ci.org"

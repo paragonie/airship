@@ -485,7 +485,6 @@ class Install
                     'patch' => !empty($this->data['config']['auto-update']['patch']),
                     'test' => false // Unsure if we'll ever allow this
                 ],
-                'cookie_index' => $this->data['config']['cookie_index'],
                 'ledger' => $this->data['config']['ledger'],
                 'default-groups' => [ 2 ],
                 'guest_groups' => [ 1 ],

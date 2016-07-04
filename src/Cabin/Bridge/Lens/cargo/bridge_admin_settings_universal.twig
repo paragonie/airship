@@ -97,22 +97,6 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
-            <label for="cookie_auth_token">
-                {{ __("Persistent Login Cookie") }}:
-            </label>
-        </div>
-        <div class="table-cell">
-            <input
-                id="cookie_auth_token"
-                type="text"
-                name="universal[cookie_index][auth_token]"
-                value="{{ universal['cookie_index']['auth_token']|e('html_attr') }}"
-            />
-        </div>
-    </div>
-
-    <div class="table-row">
-        <div class="table-min-width table-pad-right text-right table-cell">
             <label for="session_domain">
                 {{ __("Session Domain") }}:
             </label>

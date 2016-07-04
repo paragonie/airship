@@ -639,7 +639,7 @@ class Account extends LandingGear
                 $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
                 
                 $this->airship_cookie->store(
-                    $state->universal['cookie_index']['auth_token'],
+                    'airship_token',
                     $this->airship_auth->createAuthToken($userID),
                     \time() + (
                         $state->universal['long-term-auth-expire']

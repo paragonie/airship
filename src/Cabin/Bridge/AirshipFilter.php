@@ -34,9 +34,6 @@ class AirshipFilter extends InputFilterContainer
             ->addFilter('universal.auto-update.patch', new BoolFilter())
             ->addFilter('universal.auto-update.test', new BoolFilter())
 
-            ->addFilter('universal.cookie_index.auth_token', (new StringFilter())
-                ->setDefault('airship_token')
-            )
             ->addFilter('universal.debug', new BoolFilter())
 
             ->addFilter('universal.email.from', new StringFilter())

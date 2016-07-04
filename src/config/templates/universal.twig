@@ -11,9 +11,6 @@
         "patch": {{ universal["auto-update"]["patch"] ? 'true' : 'false'}},
         "test":  {{ universal["auto-update"]["test"] ? 'true' : 'false'}}
     },
-    "cookie_index": {
-        "auth_token": {{ universal["cookie_index"]["auth_token"]|je }}
-    },
     "default-groups": {{ universal["default-groups"]|default([2])|je(1) }},
     "debug": {{ universal.debug ? 'true' : 'false' }},
     "email": {

@@ -186,7 +186,6 @@ class IndexPage extends LandingGear
                 $keys = [
                     'airship',
                     'auto-update',
-                    'cookie_index',
                     'debug',
                     'guzzle',
                     'notary',
