@@ -1,4 +1,4 @@
-## Version 1.2.0
+## Unreleased 
 
   * [#67](https://github.com/paragonie/airship/issues/67):
     Blog posts are now linked from the Bridge.
