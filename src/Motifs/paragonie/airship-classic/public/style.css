@@ -284,6 +284,7 @@ nav ul.navigation > li:hover a {
 }
 
 @media only screen and (max-width: 767px) {
+    .readmore,
     .blog-sidebar {
         font-size: 125%;
     }
