@@ -41,7 +41,14 @@
             <input id="bridge_url" class="pure-input-1" type="text" name="cabin[Bridge][canon_url]" value="http://{{ SERVER.HTTP_HOST|e('html_attr') }}/bridge" />
             
             <div>
-                <input id="bridge_https" class="inblock" type="checkbox" name="cabin[Bridge][https]" value="1" checked="checked" />
+                <input
+                    id="bridge_https"
+                    class="inblock"
+                    type="checkbox"
+                    name="cabin[Bridge][https]"
+                    value="1"
+                    {% if is_https %} checked{% endif %}
+                />
                 <label for="bridge_https" class="inblock">
                     Only allow HTTPS connections? (Recommended)
                 </label>
@@ -134,7 +141,14 @@
             />
 
             <div>
-                <input id="hull_https" class="inblock" type="checkbox" name="cabin[Hull][https]" value="1" checked="checked" />
+                <input
+                    id="hull_https"
+                    class="inblock"
+                    type="checkbox"
+                    name="cabin[Hull][https]"
+                    value="1"
+                    {% if is_https %} checked{% endif %}
+                />
                 <label for="hull_https" class="inblock">
                     Only allow HTTPS connections? (Recommended)
                 </label>
