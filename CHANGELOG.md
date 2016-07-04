@@ -1,4 +1,14 @@
-## Version 1.1.4
+## Version 1.2.0
+
+  * [#67](https://github.com/paragonie/airship/issues/67):
+    Blog posts are now linked from the Bridge.
+  * [#69](https://github.com/paragonie/airship/issues/69):
+    Added a dedicated log for the auto-updater.
+  * [#80](https://github.com/paragonie/airship/issues/80):
+    If the GD extension isn't loaded, render QR codes for two-factor
+    authentication as SVG instead. 
+
+## Version 1.1.4 - 2016-07-02
 
   * i18n - run parameters through HTMLPurifier (with caching) to prevent future
     XSS payloads in case someone forgets to escape these parameters. HTML is
@@ -11,7 +21,7 @@
     pages. Just in case another file type exists in the world that executes
     JavaScript when the file is viewed.
 
-## Version 1.1.3
+## Version 1.1.3 - 2016-07-01
 
   * Fixed `E_NOTICE`s with the auto-updater.
   * Identified a bug in the backend server that wasn't publishing commit hashes
