@@ -11,9 +11,6 @@
         "patch": {{ universal["auto-update"]["patch"] ? 'true' : 'false'}},
         "test":  {{ universal["auto-update"]["test"] ? 'true' : 'false'}}
     },
-    "cookie_index": {
-        "auth_token": {{ universal["cookie_index"]["auth_token"]|je }}
-    },
     "default-groups": {{ universal["default-groups"]|default([2])|je(1) }},
     "debug": {{ universal.debug ? 'true' : 'false' }},
     "email": {
@@ -45,11 +42,7 @@
         "log-public-key": {{ universal["rate-limiting"]["log-public-key"]|je }},
         "max-delay": {{ universal["rate-limiting"]["max-delay"]|default(30)|je }}
     },
-    "session_config": {{ universal["session_config"]|je }},
-    "session_index": {
-        "user_id": {{ universal["session_index"]["user_id"]|je }},
-        "logout_token": {{ universal["session_index"]["logout_token"]|je }}
-    },
+    "session_config": {{ universal["session_config"]|je(1) }},
     "tor-only": {{ universal["tor-only"] ? 'true' : 'false' }},
     "twig-cache":  {{ universal["twig-cache"] ? 'true' : 'false'}}
 }

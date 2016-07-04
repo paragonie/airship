@@ -158,22 +158,6 @@
             {% endif %}
         </label>
         <input class="pure-input-1" id="ledger_details" type="text" name="config[ledger][path]" value="{{ config.ledger.path|e('html_attr') }}" />
-        <hr />
-
-        <label for="cookie_auth_token">
-            Long-Term Authentication Cookie Name:
-        </label>
-        <input class="pure-input-1" id="cookie_auth_token" type="text" name="config[cookie_index][auth_token]" value="{{ config.cookie_index.auth_token|e('html_attr') }}" />
-
-        <label for="session_userid">
-            Session Index for User ID:
-        </label>
-        <input class="pure-input-1" id="session_userid" type="text" name="config[session_index][user_id]" value="{{ config.session_index.user_id|e('html_attr') }}" />
-
-        <label for="session_userid">
-            Session Index for Logout Tokens:
-        </label>
-        <input class="pure-input-1" id="session_userid" type="text" name="config[session_index][logout_token]" value="{{ config.session_index.logout_token|default('logout_token')|e('html_attr') }}" />
 
     </div>
 </fieldset>

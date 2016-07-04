@@ -485,7 +485,6 @@ class Install
                     'patch' => !empty($this->data['config']['auto-update']['patch']),
                     'test' => false // Unsure if we'll ever allow this
                 ],
-                'cookie_index' => $this->data['config']['cookie_index'],
                 'ledger' => $this->data['config']['ledger'],
                 'default-groups' => [ 2 ],
                 'guest_groups' => [ 1 ],
@@ -503,8 +502,6 @@ class Install
                     'log-after' => 3,
                     'max-delay' => 30
                 ],
-                    // This can be customized later, but by default we just pass [].
-                'session_index' => $this->data['config']['session_index'],
                 'tor-only' => !empty($this->data['config']['tor-only'])
             ]
         ]);

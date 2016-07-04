@@ -584,12 +584,10 @@ function je($data, int $indents = 0)
  */
 function logout_token(): string
 {
-    $state = State::instance();
-    $idx = $state->universal['session_index']['logout_token'];
-    if (\array_key_exists($idx, $_SESSION)) {
-        return $_SESSION[$idx];
+    if (\array_key_exists('logout_token', $_SESSION)) {
+        return $_SESSION['logout_token'];
     }
-    $_SESSION[$idx] = \Sodium\bin2hex(
+    $_SESSION['logout_token'] = \Sodium\bin2hex(
         \random_bytes(16)
     );
     return $_SESSION[$idx];
@@ -787,9 +785,8 @@ function render_purified_rest(string $string = '', bool $return = false)
 function userid(): int
 {
     $state = State::instance();
-    $idx = $state->universal['session_index']['user_id'];
-    return \array_key_exists($idx, $_SESSION)
-        ? (int) $_SESSION[$idx]
+    return \array_key_exists('userid', $_SESSION)
+        ? (int) $_SESSION['userid']
         : 0;
 }
 

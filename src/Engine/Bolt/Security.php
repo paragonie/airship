@@ -102,14 +102,12 @@ trait Security
      */
     public function getActiveUserId(): int
     {
-        $state = State::instance();
-        $uid_idx = $state->universal['session_index']['user_id'];
-        if (empty($_SESSION[$uid_idx])) {
+        if (empty($_SESSION['userid'])) {
             throw new UserNotLoggedIn(
                 \trk('errors.security.not_authenticated')
             );
         }
-        return (int) $_SESSION[$uid_idx];
+        return (int) $_SESSION['userid'];
     }
 
 
@@ -142,23 +140,19 @@ trait Security
         if (!($this->airship_cookie instanceof Cookie)) {
             $this->tightenSecurityBolt();
         }
-        $state = State::instance();
-        
-        $uid_idx = $state->universal['session_index']['user_id'];
-        $token_idx = $state->universal['cookie_index']['auth_token'];
-        if (!empty($_SESSION[$uid_idx])) {
+        if (!empty($_SESSION['userid'])) {
             // We're logged in!
             if ($this instanceof Landing && $this->config('password-reset.logout')) {
-                return $this->verifySessionCanary($_SESSION[$uid_idx]);
+                return $this->verifySessionCanary($_SESSION['userid']);
             }
             return true;
-        } elseif (isset($_COOKIE[$token_idx])) {
+        } elseif (isset($_COOKIE['airship_token'])) {
             // We're not logged in, but we have a long-term
             // authentication token, so we should do an automatic
             // login and, if successful, respond affirmatively.
-            $token = $this->airship_cookie->fetch($token_idx);
+            $token = $this->airship_cookie->fetch('airship_token');
             if (!empty($token)) {
-                return $this->doAutoLogin($token, $uid_idx, $token_idx);
+                return $this->doAutoLogin($token, 'userid', 'airship_token');
             }
         }
         return false;
@@ -248,9 +242,8 @@ trait Security
             $this->tightenSecurityBolt();
         }
         $state = State::instance();
-        $token_idx = $state->universal['cookie_index']['auth_token'];
         $_SESSION = [];
-        $this->airship_cookie->store($token_idx, null);
+        $this->airship_cookie->store('airship_token', null);
         return \session_regenerate_id(true);
     }
 
