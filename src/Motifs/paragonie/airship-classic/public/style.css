@@ -1913,6 +1913,21 @@ h2#comments {
 .pure-button-danger:hover .fa {
     color: #ff9933 !important;
 }
+.database-inline {
+    display: block;
+    padding: 0;
+}
+.database-inline li {
+    background-color: rgba(127, 127, 127, 0.1);
+    border: 1px solid #555;
+    display: inline-block;
+    margin-right: 1em;
+    padding: 1ex;
+}
+.database-inline li:nth-child(2n) {
+    background-color: rgba(192, 192, 192, 0.1);
+    border-color: #333;
+}
 
 #gadgets_list {
     background-color: rgba(0, 0, 0, 0.2);
