@@ -43,10 +43,6 @@
     "session_config": {
         "cookie_domain": ""
     },
-    "session_index": {
-        "user_id": "userid",
-        "logout_token": "logout_token"
-    },
     "tor-only": false,
     "twig-cache":  false
 }

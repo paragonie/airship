@@ -503,8 +503,6 @@ class Install
                     'log-after' => 3,
                     'max-delay' => 30
                 ],
-                    // This can be customized later, but by default we just pass [].
-                'session_index' => $this->data['config']['session_index'],
                 'tor-only' => !empty($this->data['config']['tor-only'])
             ]
         ]);

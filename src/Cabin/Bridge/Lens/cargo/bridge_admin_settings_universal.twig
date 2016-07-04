@@ -113,22 +113,6 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
-            <label for="session_userid">
-                {{ __("Session Index for User ID") }}:
-            </label>
-        </div>
-        <div class="table-cell">
-            <input
-                id="session_userid"
-                type="text"
-                name="universal[session_index][user_id]"
-                value="{{ universal['session_index']['user_id']|e('html_attr') }}"
-            />
-        </div>
-    </div>
-
-    <div class="table-row">
-        <div class="table-min-width table-pad-right text-right table-cell">
             <label for="session_domain">
                 {{ __("Session Domain") }}:
             </label>
@@ -141,22 +125,6 @@
                 value="{{ universal['session_config']['cookie_domain']|e('html_attr') }}"
             />
             ({{ __("Blank defaults to current host") }})
-        </div>
-    </div>
-
-    <div class="table-row">
-        <div class="table-min-width table-pad-right text-right table-cell">
-            <label for="session_userid">
-                {{  __("Session Index for Logout Tokens") }}:
-            </label>
-        </div>
-        <div class="table-cell">
-            <input
-                id="cookie_auth_token"
-                type="text"
-                name="universal[session_index][logout_token]"
-                value="{{ universal['session_index']['logout_token']|e('html_attr') }}"
-            />
         </div>
     </div>
 

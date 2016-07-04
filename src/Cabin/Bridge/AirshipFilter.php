@@ -104,13 +104,6 @@ class AirshipFilter extends InputFilterContainer
             ->addFilter('universal.rate-limiting.max-delay', (new IntFilter())->setDefault(30))
 
             ->addFilter('universal.session_config.cookie_domain', new StringFilter())
-
-            ->addFilter('universal.session_index.user_id', (new StringFilter())
-                ->setDefault('userid')
-            )
-            ->addFilter('universal.session_index.logout_token', (new StringFilter())
-                ->setDefault('logout_token')
-            )
             ->addFilter('universal.tor-only', new BoolFilter())
             ->addFilter('universal.twig-cache', new BoolFilter())
         ;

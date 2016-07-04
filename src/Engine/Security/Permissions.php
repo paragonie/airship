@@ -58,11 +58,8 @@ class Permissions
         // If you don't specify the user ID to check, it will use the current
         // user ID instead, by default.
         if (empty($user_id)) {
-            $idx = isset($state->config['session_index']['user_id'])
-                ? $state->config['session_index']['user_id']
-                : 'userid';
-            if (!empty($_SESSION[$idx])) {
-                $user_id = $_SESSION[$idx] + 0;
+            if (!empty($_SESSION['userid'])) {
+                $user_id = (int) $_SESSION['userid'];
             }
         }
 

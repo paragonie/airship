@@ -147,11 +147,8 @@ class Account extends LandingGear
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-
-        $state = State::instance();
-        $idx = $state->universal['session_index']['logout_token'];
-        if (\array_key_exists($idx, $_SESSION)) {
-            if (\hash_equals($token, $_SESSION[$idx])) {
+        if (\array_key_exists('logout_token', $_SESSION)) {
+            if (\hash_equals($token, $_SESSION['logout_token'])) {
                 $this->completeLogOut();
             }
         }
@@ -399,9 +396,6 @@ class Account extends LandingGear
         array $account = [],
         string $gpg_public_key = ''
     ) {
-        $state = State::instance();
-        $idx = $state->universal['session_index']['user_id'];
-
         if (!empty($post['passphrase'])) {
             // Lazy hack
             $post['username'] = $account['username'];
@@ -424,12 +418,17 @@ class Account extends LandingGear
                 'Changing password for user, ' . $account['username'],
                 LogLevel::WARNING
             );
-            $this->acct->setPassphrase(new HiddenString($post['passphrase']), $_SESSION[$idx]);
+            $this->acct->setPassphrase(
+                new HiddenString($post['passphrase']),
+                $_SESSION['userid']
+            );
             if ($this->config('password-reset.logout')) {
-                $this->acct->invalidateLongTermAuthTokens($_SESSION[$idx]);
+                $this->acct->invalidateLongTermAuthTokens($_SESSION['userid']);
 
                 // We're not logging ourselves out!
-                $_SESSION['session_canary'] = $this->acct->createSessionCanary($_SESSION[$idx]);
+                $_SESSION['session_canary'] = $this->acct->createSessionCanary(
+                    $_SESSION['userid']
+                );
             }
             unset($post['username'], $post['passphrase']);
         }
@@ -470,8 +469,6 @@ class Account extends LandingGear
      */
     protected function processBoard(array $post = [])
     {
-        $state = State::instance();
-
         if (empty($post['username']) || empty($post['passphrase'])) {
             $this->lens(
                 'board',
@@ -509,8 +506,7 @@ class Account extends LandingGear
         }
 
         $userID = $this->acct->createUser($post);
-        $idx = $state->universal['session_index']['user_id'];
-        $_SESSION[$idx] = (int) $userID;
+        $_SESSION['userid'] = (int) $userID;
 
         \Airship\redirect($this->airship_cabin_prefix);
     }
@@ -630,12 +626,10 @@ class Account extends LandingGear
                 $_SESSION['session_canary'] = $this->acct->createSessionCanary($userID);
             }
 
-            $idx = $state->universal['session_index']['user_id'];
-
             // Regenerate session ID:
             \session_regenerate_id(true);
 
-            $_SESSION[$idx] = (int) $userID;
+            $_SESSION['userid'] = (int) $userID;
 
             if (!empty($post['remember'])) {
                 $autoPilot = Gears::getName('AutoPilot');
@@ -807,9 +801,7 @@ class Account extends LandingGear
             CryptoUtil::raw_hash('' . $recoveryInfo['userid'])
         );
         if (\hash_equals($recoveryInfo['hashedtoken'], $calc)) {
-            $state = State::instance();
-            $idx = $state->universal['session_index']['user_id'];
-            $_SESSION[$idx] = (int) $recoveryInfo['userid'];
+            $_SESSION['userid'] = (int) $recoveryInfo['userid'];
             \Airship\redirect($this->airship_cabin_prefix . '/my/account');
         }
         \Airship\redirect($this->airship_cabin_prefix . '/login');
