@@ -16,6 +16,8 @@
             ["Admin", "manageSettings"],
         "admin/skyport/install":
             ["Skyport", "installPackage"],
+        "admin/skyport/log":
+            ["Skyport", "viewLog"],
         "admin/skyport/remove":
             ["Skyport", "removePackage"],
         "admin/skyport/update":
