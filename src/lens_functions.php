@@ -590,7 +590,7 @@ function logout_token(): string
     $_SESSION['logout_token'] = \Sodium\bin2hex(
         \random_bytes(16)
     );
-    return $_SESSION[$idx];
+    return $_SESSION['logout_token'];
 }
 
 
