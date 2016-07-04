@@ -4,6 +4,7 @@ namespace Airship\Installer;
 
 use \Airship\Alerts\Database\DBException;
 use \Airship\Engine\{
+    AutoPilot,
     Database,
     State
 };
@@ -130,7 +131,12 @@ class Install
                     $this->processCabins($post);
                     return null;
                 }
-                return $this->display('cabins.twig');
+                return $this->display(
+                    'cabins.twig',
+                    [
+                        'is_https' => $this->isHTTPS()
+                    ]
+                );
             case 4:
                 $this->testForTor();
                 if (!empty($post)) {
@@ -723,5 +729,13 @@ class Install
             \unlink($f);
         }
         \Airship\redirect('/');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isHTTPS(): bool
+    {
+        return AutoPilot::isHTTPSConnection();
     }
 }
