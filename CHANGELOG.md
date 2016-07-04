@@ -7,6 +7,12 @@
   * [#80](https://github.com/paragonie/airship/issues/80):
     If the GD extension isn't loaded, render QR codes for two-factor
     authentication as SVG instead. 
+  * [#88](https://github.com/paragonie/airship/issues/88):
+    The installer now uses Zxcvbn to enforce a minimum password strength for
+    administrator accounts. Administrator passwords require a Zxcvbn score of
+    4 on the 0-4 scale. If this proves difficult, we prompt users to adopt a
+    password manager instead of petitioning us to weaken our minimum password
+    requirements.
 
 ## Version 1.1.4 - 2016-07-02
 
