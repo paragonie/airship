@@ -319,13 +319,23 @@ class Admin extends AdminOnly
         $filter = new DatabaseFilter();
         foreach ($post['db_keys'] as $index => $key) {
             foreach (\array_keys($post['database'][$index]) as $i) {
+                if (empty($post['database'][$index][$i]['driver'])) {
+                    unset($post['database'][$index][$i]);
+                    continue;
+                }
                 $post['database'][$index][$i]['options'] = \json_decode(
                     $post['database'][$index][$i]['options'],
                     true
                 );
             }
-            $databases[$key] = $post['database'][$index];
-            $filter->addDatabaseFilters($key, (int) $index, \count($post['database'][$index]));
+            if (!empty($post['database'][$index])) {
+                $databases[$key] = $post['database'][$index];
+            }
+            $filter->addDatabaseFilters(
+                $key,
+                (int) $index,
+                \count($post['database'][$index])
+            );
         }
         $databases = $filter($databases);
 

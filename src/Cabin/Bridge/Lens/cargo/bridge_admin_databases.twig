@@ -19,7 +19,7 @@
             />
         </legend>
 
-        <ol class="database-inline" id="db-{{ key|e('html_attr') }}-connections">
+        <ol class="database-inline" id="db-{{ counter|e('html_attr') }}-connections">
         {% for id, dbconf in db_array %}
             <li>{% include cargo("bridge_admin_databases_db") with {
                 "counter": counter,
@@ -29,10 +29,11 @@
         {% endfor %}
         </ol>
         <button
-            class="pure-button pure-button-secondary"
+            class="pure-button pure-button-secondary database-add-connection"
             type="button"
             id="db-{{ key|e('html_attr') }}-add-connection"
-            data-key="{{ key|e('html_attr') }}"
+            data-counter="{{ counter|e('html_attr') }}"
+            data-next="{{ db_array|length }}"
         >
             {{ __("Add Connection") }}
         </button>
@@ -45,3 +46,20 @@
         {{ __("Save Database Configuration") }}
     </button>
 </form>
+<textarea title="" id="database-template" class="hidden">{#
+    #}{% filter escape('html') %}{#
+        #}{% include cargo("bridge_admin_databases_db") with {
+            "counter": '{counter}'|raw,
+            "dbconf": {
+                "driver": "",
+                "host": "",
+                "port": "",
+                "database": "",
+                "username": "",
+                "password": "",
+                "options": []
+            },
+            "id": '{id}'|raw
+        } %}{#
+    #}{% endfilter %}{#
+#}</textarea>
