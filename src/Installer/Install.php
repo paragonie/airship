@@ -125,6 +125,12 @@ class Install
             case 2:
                 if (!empty($post)) {
                     $this->processAdminAccount($post);
+                    if (!empty($post['fast_config'])) {
+                        $this->data['step'] = 5;
+                        $this->finalize(
+                            $this->fastFinish($post)
+                        );
+                    }
                     \Airship\redirect('/');
                     return null;
                 }
@@ -257,7 +263,6 @@ class Install
             )
         ];
         $this->data['step'] = 3;
-        \Airship\redirect('/');
     }
     
     /**
@@ -306,6 +311,139 @@ class Install
             return $_POST;
         }
         return false;
+    }
+
+    /**
+     * @param array $post
+     * @return array
+     */
+    protected function fastFinish(array $post): array
+    {
+        $scheme = AutoPilot::isHTTPSConnection()
+            ? 'https'
+            : 'http';
+
+        $this->data['cabins'] = [
+            'Bridge' => [
+                'path' => '*/bridge',
+                'canon_url' => $scheme . '://' . $_SERVER['HTTP_HOST'] . '/bridge/',
+                'lange' => 'en-us'
+            ],
+            'Hull' => [
+                'path' => '*',
+                'canon_url' => $scheme . '://' . $_SERVER['HTTP_HOST'] . '/',
+                'lange' => 'en-us'
+            ]
+        ];
+
+        $this->data['config_extra'] = [
+            'Bridge' => [
+                'editor' => [
+                    'default-format' => 'Rich Text'
+                ],
+                'board' => [
+                    'enabled' => false,
+                    'captcha' => false
+                ],
+                'file' => [
+                    'cache' => 3600
+                ],
+                'recaptcha' => [
+                    'site-key' => '',
+                    'secret-key' => ''
+                ],
+                'password-reset' => [
+                    'enabled' => false,
+                    'logout' => true,
+                    'ttl' => 3600
+                ],
+                'two-factor' => [
+                    'label' => '',
+                    'issuer' => '',
+                    'length' => 6,
+                    'period' => 30
+                ]
+            ],
+            'Hull' => [
+                'blog' => [
+                    'per_page' => 20,
+                    'comments' => [
+                        'depth_max' => 5,
+                        'enabled' => true,
+                        'guests' => false,
+                        'recaptcha' => false
+                    ]
+                ],
+                'file' => [
+                    'cache' => 3600
+                ],
+                'homepage' => [
+                    'blog-posts' => 3
+                ],
+                'recaptcha' => [
+                    'site-key' => '',
+                    'secret-key' => ''
+                ]
+            ]
+        ];
+
+        $this->data['twig_vars'] = [
+            'Bridge' => [
+                'active-motif' => 'airship-classic',
+                'title' => 'Airship ' . \AIRSHIP_VERSION,
+                'tagline' => 'Even the sky shall not limit you.'
+            ],
+            'Hull' => [
+                'active-motif' => 'airship-classic',
+                'blog' => [
+                    'title' => 'My Blog',
+                    'tagline' => 'Something classy goes here'
+                ],
+                'navbar' => [
+                    [
+                        'url' => '~/',
+                        'label' => 'Home'
+                    ],
+                    [
+                        'url' => '~/about',
+                        'label' => 'About'
+                    ],
+                    [
+                        'url' => '~/contact',
+                        'label' => 'Contact'
+                    ],
+                    [
+                        'url' => '~/blog',
+                        'label' => 'Blog'
+                    ]
+                ],
+                'title' => 'Airship ' . \AIRSHIP_VERSION,
+                'tagline' => 'Even the sky shall not limit you.'
+            ]
+        ];
+
+        $this->data['config'] = [
+            'auto-update' => [
+                'check' => 3600,
+                'major' => false,
+                'minor' => true,
+                'patch' => true
+            ],
+            'guest-groups' => [1],
+            'ledger' => [
+                'driver' => 'file',
+                'path' => '~/tmp/logs'
+            ]
+        ];
+
+        return [
+            'database' => $this->data['database'],
+            'username' => $post['username'],
+            'cabins' => $this->data['cabins'],
+            'config' => $this->data['config'],
+            'config_extra' => $this->data['config_extra'],
+            'twig_vars' => $this->data['twig-vars']
+        ];
     }
     
     /**
@@ -769,7 +907,7 @@ class Install
             $pw,
             \array_values($userdata)
         );
-        return $strength['score'] < 4;
+        return $strength['score'] < 3;
     }
 
 }
