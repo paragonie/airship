@@ -40,6 +40,7 @@ CREATE TABLE hull_blog_post_versions (
     post BIGINT,
     body TEXT,
     format TEXT,
+    metadata JSONB,
     live BOOLEAN DEFAULT FALSE,
     published_by INTEGER,
     modified TIMESTAMP DEFAULT NOW(),

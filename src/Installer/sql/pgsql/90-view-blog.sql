@@ -21,6 +21,7 @@ CREATE OR REPLACE VIEW view_hull_blog_post AS
             p.shorturl,
             p.title,
             v.body,
+            v.metadata,
             v.published AS latest,
             COALESCE(v.format, p.format) AS format,
             p.status,
@@ -43,7 +44,7 @@ CREATE OR REPLACE VIEW view_hull_blog_post AS
         LEFT JOIN
             (
                 SELECT
-                    iv.post, iv.body, iv.published, iv.live, iv.format
+                    iv.post, iv.body, iv.published, iv.live, iv.format, iv.metadata
                 FROM
                     hull_blog_post_versions iv
                 WHERE
