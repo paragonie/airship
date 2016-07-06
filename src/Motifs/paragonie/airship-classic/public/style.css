@@ -329,7 +329,8 @@ nav ul.navigation > li:hover a {
 }
 .blog-post-snippet,
 .blog-post-body {
-    border: 1px solid rgba(37, 48, 73, 0.66);
+    /*No need of border if using shadow*/
+    /*border: 1px solid rgba(37, 48, 73, 0.66);*/
     box-shadow: rgba(37, 48, 73, 0.83) 0 0 3px;
     margin: 1ex;
     background-color: rgba(255, 255, 255, 0.66);
