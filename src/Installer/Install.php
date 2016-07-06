@@ -541,7 +541,7 @@ class Install
             } catch (\PDOException $e) {
                 var_dump($e->getMessage());
                 var_dump($query); 
-                exit;
+                exit(1);
             }
         }
         switch ($driver) {

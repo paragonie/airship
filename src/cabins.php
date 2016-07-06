@@ -124,7 +124,7 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
         echo \file_get_contents(
             __DIR__ . '/error_pages/no-cabin.html'
         );
-        exit;
+        exit(1);
     }
     if (empty($active_cabin)) {
         $k = \array_keys($cabins);
