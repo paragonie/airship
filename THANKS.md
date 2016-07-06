@@ -5,7 +5,7 @@ much of its excellence to the community. In particular, we thank the following
 people who have reported bugs and patches.
 
 * [@alexdenvir](https://alexdenvir)
-* [@c060ca](https://github.com/co60ca)
+* [@co60ca](https://github.com/co60ca)
 * [@jedisct1](https://github.com/jedisct1)
 * [@kelunik](https://github.com/kelunik)
 * [@kmark](https://github.com/kmark)
