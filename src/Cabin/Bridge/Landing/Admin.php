@@ -308,6 +308,8 @@ class Admin extends AdminOnly
     }
 
     /**
+     * Write the updated JSON configuration file.
+     *
      * @param array $post
      * @return bool
      */
@@ -364,7 +366,6 @@ class Admin extends AdminOnly
             $post = $filter($post);
         }
 
-        $ds = DIRECTORY_SEPARATOR;
         $twigEnv = \Airship\configWriter(ROOT. '/config/templates');
         $csp = [];
         foreach ($post['content_security_policy'] as $dir => $rules) {
@@ -415,7 +416,12 @@ class Admin extends AdminOnly
         // Save universal config
         \file_put_contents(
             ROOT . '/config/universal.json',
-            $twigEnv->render('universal.twig', ['universal' => $post['universal']])
+            $twigEnv->render(
+                'universal.twig',
+                [
+                    'universal' => $post['universal']
+                ]
+            )
         );
         return true;
     }
