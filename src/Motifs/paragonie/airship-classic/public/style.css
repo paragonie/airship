@@ -1957,6 +1957,9 @@ h2#comments {
     max-width: 100%;
     width: calc(100% - 1em);
 }
+#database-form fieldset + fieldset {
+    margin-top: 1em;
+}
 .vertical-top {
     vertical-align: top;
 }

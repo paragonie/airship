@@ -13,15 +13,61 @@ var database = {
             .append("<li>" + rendered + "</li>");
     },
 
+    "addEvents": function() {
+        $("#add-db-group").on('click', function() {
+            var next = $(this).data('next');
+            database.addGroup(next);
+            $(this).data('next', next + 1);
+        });
+
+        $(".database-add-connection").on('click', function() {
+            var next = $(this).data('next');
+            database.addConnection($(this).data('counter'), next);
+            $(this).data('next', next + 1);
+        });
+    },
+
+    "addGroup": function(index) {
+        var rendered = database.groupTemplate
+            .split('{counter}').join(index);
+
+        $("#database-form").append(rendered);
+
+        database.addConnection(index, 0);
+
+        database.addEvents();
+    },
+
+    "groupTemplate": "",
+
     "template": ""
 };
 
 $(document).ready(function() {
     database["template"] = $("#database-template").val();
 
-    $(".database-add-connection").on('click', function() {
-        var next = $(this).data('next');
-        database.addConnection($(this).data('counter'), next);
-        $(this).data('next', next + 1);
-    });
+    database["groupTemplate"] = "<fieldset id=\"db-{counter}\">" + "\n" +
+    "        <legend>" + "\n" +
+    "        <input" + "\n" +
+    "            type=\"text\"" + "\n" +
+        "            name=\"db_keys[{counter}]\"" + "\n" +
+        "            placeholder=\"" + $("#database-group-placeholder").val() + "\"" + "\n" +
+    "            required=\"required\"" + "\n" +
+    "        />" + "\n" +
+    "        </legend>" + "\n" +
+    "\n" +
+    "        <ol class=\"database-inline\" id=\"db-{counter}-connections\">" + "\n" +
+    "        </ol>" + "\n" +
+    "       <button" + "\n" +
+    "           class=\"pure-button pure-button-secondary database-add-connection\"" + "\n" +
+    "           type=\"button\"" + "\n" +
+    "           id=\"db-{counter}-add-connection\"" + "\n" +
+    "           data-counter=\"{counter}\"" + "\n" +
+    "           data-next=\"1\"" + "\n" +
+    "   >" + "\n" +
+    "        " + $("#database-add-connection-text").val() + "\n" +
+    "       </button>" + "\n" +
+    "</fieldset>";
+
+    database.addEvents();
 });
