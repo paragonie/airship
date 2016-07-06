@@ -49,18 +49,18 @@ foreach ($databases as $label => $dbs) {
                 $conf[2] = '';
                 $conf[3] = $dbConf['options'];
             }
-            
-            try {
-                // Let's store them in the database
-                $dbPool[$label][] = $dbgear::factory(...$conf);
-            } catch (DBException $e) {
-                echo 'Could not connect to database: ', $label, '<br />', "\n";
-                echo $e->getMessage();
-                exit;
-            }
+            $dbPool[$label][] = $conf;
         }
     }
 }
 
 // Cache this array for universal usage
 $state->database_connections = $dbPool;
+
+try {
+    \Airship\get_database();
+} catch (DBException $e) {
+    echo 'Could not connect to database. ', '<br />', "\n";
+    echo $e->getMessage();
+    exit;
+}
