@@ -58,13 +58,3 @@ foreach ($databases as $label => $dbs) {
 
 // Cache this array for universal usage
 $state->database_connections = $dbPool;
-
-try {
-    if ($dbCount > 0) {
-        \Airship\get_database();
-    }
-} catch (DBException $e) {
-    echo 'Could not connect to database. ', '<br />', "\n";
-    echo $e->getMessage();
-    exit(1);
-}
