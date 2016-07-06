@@ -6,5 +6,15 @@
         Each database supports an array of possible connection points
         (for horizontal scaling).
     */
-            "default": []
+        "default": [
+                {
+                    "driver": "pgsql",
+                    "host": "localhost",
+                    "port": 5432,
+                    "database": "phpunit",
+                    "username": "phpunit",
+                    "password": "",
+                    "options": []
+                }
+        ]
 }

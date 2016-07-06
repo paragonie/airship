@@ -11,6 +11,10 @@ class PostgresqlTest extends PHPUnit_Framework_TestCase
 {
     const DRIVER = 'pgsql';
 
+    /**
+     * @param bool $asString
+     * @return array
+     */
     public function getConfig(bool $asString = false)
     {
         if ($asString) {
