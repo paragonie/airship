@@ -1,5 +1,12 @@
 ## Unreleased 
 
+  * [#57](https://github.com/paragonie/airship/issues/57):
+    Our `Database` class can now connect to UNIX sockets. Set the hostname to
+    `unix:/path/to/socket`.
+  * [#65](https://github.com/paragonie/airship/issues/67):
+    You can now add database connections to the local database connection pool.
+    You can also add database connection pools for app-specific purposes.
+    In the future, we'll support more than just PostgreSQL.
   * [#67](https://github.com/paragonie/airship/issues/67):
     Blog posts are now linked from the Bridge.
   * [#69](https://github.com/paragonie/airship/issues/69):
