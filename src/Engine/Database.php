@@ -4,6 +4,7 @@ namespace Airship\Engine;
 
 use \Airship\Alerts\Database as DBAlert;
 use \Airship\Engine\Contract\DBInterface;
+use \Airship\Engine\Security\Util;
 
 /**
  * Class Database
@@ -129,7 +130,9 @@ class Database implements DBInterface
         switch ($dbConf['driver']) {
             case 'mysql':
                 $dsn = $dbConf['driver'].':';
-                if (isset($dbConf['host'])) {
+                if (Util::subString($dbConf['host'], 0, 5) === 'unix:') {
+                    $dsn .= 'unix_socket=' . Util::subString($dbConf['host'], 5) . ';';
+                } else {
                     $dsn .= 'host=' . $dbConf['host'] . ';';
                 }
                 if (!empty($dbConf['port'])) {
@@ -146,7 +149,11 @@ class Database implements DBInterface
             case 'pgsql':
                 $dsn = $dbConf['driver'].':';
                 if (isset($dbConf['host'])) {
-                    $dsn .= 'host=' . $dbConf['host'] . ';';
+                    if (Util::subString($dbConf['host'], 0, 5) === 'unix:') {
+                        $dsn .= 'unix_socket=' . Util::subString($dbConf['host'], 5) . ';';
+                    } else {
+                        $dsn .= 'host=' . $dbConf['host'] . ';';
+                    }
                 }
                 if (!empty($dbConf['port'])) {
                     $dsn .= 'port=' . $dbConf['port'] . ';';

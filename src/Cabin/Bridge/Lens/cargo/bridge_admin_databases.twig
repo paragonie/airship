@@ -1,0 +1,76 @@
+<h2>{{ __("Databases") }}</h2>
+<p>
+    {{ __("Be very careful; changing these parameters can break your Airship.") }}
+</p>
+<button
+    type="button"
+    id="add-db-group"
+    class="pure-button pure-button-secondary"
+    data-next="{{ databases|length }}"
+>
+    {{ __("Add Database Group") }}
+</button>
+<hr />
+<form method="post">{{ form_token() }}
+{% set counter = 0 %}
+    <div id="database-form">
+{% for key, db_array in databases %}
+    <fieldset id="db-{{ counter|e('html_attr') }}">
+        <legend>
+            <input
+                title="{{ key|e('html_attr') }}"
+                type="text"
+                name="db_keys[{{ counter }}]"
+                placeholder="{{ __("Group Identifier")|e('html_attr') }}"
+                required="required"
+                value="{{ key|e('html_attr') }}"
+            />
+        </legend>
+
+        <ol class="database-inline" id="db-{{ counter|e('html_attr') }}-connections">
+        {% for id, dbconf in db_array %}
+            <li>{% include cargo("bridge_admin_databases_db") with {
+                "counter": counter,
+                "dbconf": dbconf,
+                "id": id
+            } %}</li>
+        {% endfor %}
+        </ol>
+        <button
+            class="pure-button pure-button-secondary database-add-connection"
+            type="button"
+            id="db-{{ counter|e('html_attr') }}-add-connection"
+            data-counter="{{ counter|e('html_attr') }}"
+            data-next="{{ db_array|length }}"
+        >
+            {{ __("Add Connection") }}
+        </button>
+
+    </fieldset>
+    {% set counter = counter + 1 %}
+{% endfor %}
+    </div>
+    <hr />
+    <button type="submit" class="pure-button pure-button-primary">
+        {{ __("Save Database Configuration") }}
+    </button>
+</form>
+<textarea title="" id="database-template" class="hidden">{#
+    #}{% filter escape('html') %}{#
+        #}{% include cargo("bridge_admin_databases_db") with {
+            "counter": '{counter}'|raw,
+            "dbconf": {
+                "driver": "",
+                "host": "",
+                "port": "",
+                "database": "",
+                "username": "",
+                "password": "",
+                "options": []
+            },
+            "id": '{id}'|raw
+        } %}{#
+    #}{% endfilter %}{#
+#}</textarea>
+<input type="hidden" id="database-add-connection-text" value="{{ __("Add Connection")|e('html_attr') }}" />
+<input type="hidden" id="database-group-placeholder" value="{{ __("Group Identifier")|e('html_attr') }}" />

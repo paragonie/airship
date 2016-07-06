@@ -19,6 +19,7 @@ $databases = \Airship\loadJSON(
     ROOT . '/config/databases.json'
 );
 $dbPool = [];
+$dbCount = 0;
 
 // Needed for IDE code completion:
 if (IDE_HACKS) {
@@ -49,18 +50,21 @@ foreach ($databases as $label => $dbs) {
                 $conf[2] = '';
                 $conf[3] = $dbConf['options'];
             }
-            
-            try {
-                // Let's store them in the database
-                $dbPool[$label][] = $dbgear::factory(...$conf);
-            } catch (DBException $e) {
-                echo 'Could not connect to database: ', $label, '<br />', "\n";
-                echo $e->getMessage();
-                exit;
-            }
+            $dbPool[$label][] = $conf;
+            ++$dbCount;
         }
     }
 }
 
 // Cache this array for universal usage
 $state->database_connections = $dbPool;
+
+try {
+    if ($dbCount > 0) {
+        \Airship\get_database();
+    }
+} catch (DBException $e) {
+    echo 'Could not connect to database. ', '<br />', "\n";
+    echo $e->getMessage();
+    exit(1);
+}

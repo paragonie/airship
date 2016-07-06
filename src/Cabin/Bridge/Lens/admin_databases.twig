@@ -1,5 +1,9 @@
 {% extends base_template() %}
 
 {% block main %}
-    {{ __("Databases") }}
+    {% include cargo("bridge_admin_databases") %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/admin_databases.js"|cachebust }}"></script>
 {% endblock %}

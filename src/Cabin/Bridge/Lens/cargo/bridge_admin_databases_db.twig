@@ -1,0 +1,120 @@
+{% set prefix = ("db-" ~ counter ~ "-" ~ id)|e('html_attr') %}
+<div class="table">
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-driver">
+                {{ __("Driver") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <select
+                id="{{ prefix }}-driver"
+                name="database[{{ counter }}][{{ id }}][driver]"
+            >
+                <option value="">-- {{ __("Leave Blank to Delete") }} --</option>
+                {#
+                <option
+                    value="MariaDB"
+                    {% if dbconf.driver == "mysql" %} selected{% endif %}
+                >{{ __("MySQL") }}</option>
+                #}
+                <option
+                    value="pgsql"
+                    {% if dbconf.driver == "pgsql" %} selected{% endif %}
+                >{{ __("PostgreSQL") }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-host">
+                {{ __("Host") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="{{ prefix }}-host"
+                name="database[{{ counter }}][{{ id }}][host]"
+                value="{{ dbconf.host|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-port">
+                {{ __("Port") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="{{ prefix }}-port"
+                name="database[{{ counter }}][{{ id }}][port]"
+                value="{{ dbconf.port|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-username">
+                {{ __("Username") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="{{ prefix }}-username"
+                name="database[{{ counter }}][{{ id }}][username]"
+                value="{{ dbconf.username|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-password">
+                {{ __("Password") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="{{ prefix }}-password"
+                name="database[{{ counter }}][{{ id }}][password]"
+                value="{{ dbconf.password|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right">
+            <label for="{{ prefix }}-database">
+                {{ __("Database") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <input
+                id="{{ prefix }}-database"
+                name="database[{{ counter }}][{{ id }}][database]"
+                value="{{ dbconf.database|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-cell table-min-width table-pad-right text-right vertical-top">
+            <label for="{{ prefix }}-options">
+                {{ __("Options") }}:
+            </label>
+        </div>
+        <div class="table-cell">
+            <textarea
+                class="monospace"
+                id="{{ prefix }}-options"
+                name="database[{{ counter }}][{{ id }}][options]"
+            >{{ dbconf.options|json_encode(constant("JSON_PRETTY_PRINT")) }}</textarea>
+        </div>
+    </div>
+
+</div>

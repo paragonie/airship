@@ -5,13 +5,12 @@ namespace Airship\Cabin\Bridge\Landing;
 use \Airship\Alerts\FileSystem\FileNotFound;
 use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use \Airship\Cabin\Bridge\Filter\Admin\{
+    DatabaseFilter,
     NotaryFilter,
     SettingsFilter
 };
-use \Airship\Engine\{
-    Hail,
-    Security\Util,
-    State
+use Airship\Engine\{
+    Database, Hail, Security\Util, State
 };
 use \GuzzleHttp\Client;
 
@@ -36,6 +35,19 @@ class Admin extends AdminOnly
     {
         parent::airshipLand();
         $this->acct = $this->blueprint('UserAccounts');
+        if (!empty($_GET['msg'])) {
+            if ($_GET['msg'] === 'saved') {
+                $this->storeLensVar(
+                    'post_response',
+                    [
+                        'status' => 'OK',
+                        'message' => \__(
+                            'Your changes have been made successfully.'
+                        )
+                    ]
+                );
+            }
+        }
     }
 
     /**
@@ -121,11 +133,30 @@ class Admin extends AdminOnly
     }
 
     /**
-     * @route admin/databases
+     * @route admin/database
      */
     public function manageDatabase()
     {
-        $this->lens('admin_databases');
+        $databases = \Airship\loadJSON(
+            ROOT . '/config/databases.json'
+        );
+        $post = $this->post();
+        if ($post) {
+            if ($this->saveDatabase($post)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/admin/database',
+                    [
+                        'msg' => 'saved'
+                    ]
+                );
+            }
+        }
+        $this->lens(
+            'admin_databases',
+            [
+                'databases' => $databases
+            ]
+        );
     }
 
     /**
@@ -183,12 +214,12 @@ class Admin extends AdminOnly
         $post = $this->post(new SettingsFilter());
         if (!empty($post)) {
             if ($this->saveSettings($post)) {
-                $this->storeLensVar('post_response', [
-                    'status' => 'OK',
-                    'message' => \__(
-                        'Your changes have been made successfully.'
-                    )
-                ]);
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/admin/settings',
+                    [
+                        'msg' => 'saved'
+                    ]
+                );
             }
         }
 
@@ -277,6 +308,51 @@ class Admin extends AdminOnly
     }
 
     /**
+     * Write the updated JSON configuration file.
+     *
+     * @param array $post
+     * @return bool
+     */
+    protected function saveDatabase(array $post = []): bool
+    {
+        $twigEnv = \Airship\configWriter(ROOT. '/config/templates');
+
+        $databases = [];
+        $filter = new DatabaseFilter();
+        foreach ($post['db_keys'] as $index => $key) {
+            foreach (\array_keys($post['database'][$index]) as $i) {
+                if (empty($post['database'][$index][$i]['driver'])) {
+                    unset($post['database'][$index][$i]);
+                    continue;
+                }
+                $post['database'][$index][$i]['options'] = \json_decode(
+                    $post['database'][$index][$i]['options'],
+                    true
+                );
+            }
+            if (!empty($post['database'][$index])) {
+                $databases[$key] = $post['database'][$index];
+            }
+            $filter->addDatabaseFilters(
+                $key,
+                (int) $index,
+                \count($post['database'][$index])
+            );
+        }
+        $databases = $filter($databases);
+
+        return \file_put_contents(
+            ROOT . '/config/databases.json',
+            $twigEnv->render(
+                'databases.twig',
+                [
+                    'databases' => $databases
+                ]
+            )
+        ) !== false;
+    }
+
+    /**
      * Save universal settings
      *
      * @param array $post
@@ -290,8 +366,7 @@ class Admin extends AdminOnly
             $post = $filter($post);
         }
 
-        $ds = DIRECTORY_SEPARATOR;
-        $twigEnv = \Airship\configWriter(ROOT . $ds . 'config' . $ds . 'templates');
+        $twigEnv = \Airship\configWriter(ROOT. '/config/templates');
         $csp = [];
         foreach ($post['content_security_policy'] as $dir => $rules) {
             if ($dir === 'upgrade-insecure-requests') {
@@ -327,7 +402,7 @@ class Admin extends AdminOnly
 
         // Save CSP
         \Airship\saveJSON(
-            ROOT . $ds . 'config' . $ds . 'content_security_policy.json',
+            ROOT . '/config/content_security_policy.json',
             $csp
         );
         if (empty($post['universal']['guest_groups'])) {
@@ -340,8 +415,13 @@ class Admin extends AdminOnly
 
         // Save universal config
         \file_put_contents(
-            ROOT . $ds . 'config' . $ds . 'universal.json',
-            $twigEnv->render('universal.twig', ['universal' => $post['universal']])
+            ROOT . '/config/universal.json',
+            $twigEnv->render(
+                'universal.twig',
+                [
+                    'universal' => $post['universal']
+                ]
+            )
         );
         return true;
     }

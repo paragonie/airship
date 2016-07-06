@@ -369,15 +369,18 @@ function get_database(string $id = 'default'): Database
     if (isset($state->database_connections[$id])) {
         if (\count($state->database_connections[$id]) === 1) {
             $k = \array_keys($state->database_connections[$id])[0];
-            $_cache[$id] = $state->database_connections[$id][$k];
-        } else {
+        } elseif (\count($state->database_connections[$id]) > 0) {
             $r = \random_int(
                 0,
                 \count($state->database_connections[$id]) - 1
             );
-            $k = \array_keys($state->database_connections[$id])[$r];;
-            $_cache[$id] = $state->database_connections[$id][$k];
+            $k = \array_keys($state->database_connections[$id])[$r];
+        } else {
+            throw new DBException(
+                \trk('errors.database.not_found', $id)
+            );
         }
+        $_cache[$id] = Database::factory(...$state->database_connections[$id][$k]);
         return $_cache[$id];
     }
     throw new DBException(

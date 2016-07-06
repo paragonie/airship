@@ -17,9 +17,10 @@
                     "username": {{ db.username|je }},
                     "password": {{ db.password|je }},
                     "options": {{ db.options|default([])|je }}
-                }{% if i < dbs.length %},{% endif %}
+                }{% if not loop.last %},{% endif %}
 
 {% endfor %}
-            ]
-    {% endfor %}
+            ]{% if not loop.last %},
+{% endif %}
+{% endfor %}
 }
