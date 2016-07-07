@@ -614,7 +614,7 @@ class Install
             }
         }
         return $twig->render('databases.twig', [
-            'database' => $databases
+            'databases' => $databases
         ]);
     }
     
