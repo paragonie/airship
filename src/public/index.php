@@ -9,6 +9,7 @@ use Airship\Engine\{
     Cache\SharedMemory as MemoryCache,
     State
 };
+use Psr\Log\LogLevel;
 
 /**
  * @global array $active
@@ -154,6 +155,11 @@ if (!empty($state->universal['debug'])) {
         if (!\headers_sent()) {
             header('Content-Type: text/plain;charset=UTF-8');
         }
+        $state->logger->log(
+            LogLevel::ERROR,
+            $ex->getMessage(),
+            \Airship\throwableToArray($ex)
+        );
         echo "DEBUG ERROR: ", \get_class($e), "\n\n",
             $e->getMessage(), "\n\n",
             $e->getCode(), "\n\n",
@@ -178,5 +184,19 @@ if (!empty($state->universal['debug'])) {
     // This is just for benchmarking purposes:
     echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';
 } else {
-    $autoPilot->route();
+    try {
+        $autoPilot->route();
+    } catch (\Throwable $ex) {
+        $state->logger->log(
+            LogLevel::ERROR,
+            $ex->getMessage(),
+            \Airship\throwableToArray($ex)
+        );
+
+        \header('HTTP/1.1 500 Internal Server Error');
+        echo \file_get_contents(
+            __DIR__ . '/error_pages/uncaught-exception.html'
+        );
+        exit(1);
+    }
 }
