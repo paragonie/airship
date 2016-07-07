@@ -71,6 +71,7 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
                     'tagline' => '',
                     'title' => 'Test!'
                 ],
+                'sandwich_content' => false,
                 'tagline' => 'test!',
                 'title' => ''
             ]

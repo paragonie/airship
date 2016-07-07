@@ -67,6 +67,7 @@ class ConfigFilterTest extends \PHPUnit_Framework_TestCase
             ],
             'twig_vars' => [
                 'active-motif' => 'test-motif',
+                'sandwich_content' => false,
                 'tagline' => 'test!',
                 'title' => ''
             ]
