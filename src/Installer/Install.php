@@ -437,7 +437,7 @@ class Install
         ];
 
         return [
-            'database' => $this->data['database'],
+            'databases' => $this->data['databases'],
             'username' => $post['username'],
             'cabins' => $this->data['cabins'],
             'config' => $this->data['config'],
