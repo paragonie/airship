@@ -1571,6 +1571,20 @@ fieldset.preferences > legend {
     margin-top: 1.33rem !important;
     padding: 1ex;
 }
+#blog-post-body p + h1,
+#blog-post-body p + h2,
+#blog-post-body p + h3,
+#blog-post-body p + h4,
+#blog-post-body p + h5,
+#blog-post-body p + h6,
+#custom-page p + h1,
+#custom-page p + h2,
+#custom-page p + h3,
+#custom-page p + h4,
+#custom-page p + h5,
+#custom-page p + h6 {
+    margin-top: 1em;
+}
 .ui-icon,
 .ui-widget-header .ui-icon {
     background-image: url("/css/images/ui-icons_F8F8E0_256x240.png") !important;
