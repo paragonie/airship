@@ -27,6 +27,8 @@
   * [#88](https://github.com/paragonie/airship/issues/88):
     The installer now uses Zxcvbn to enforce a minimum password strength for
     administrator accounts.
+  * Added more input filters for one-dimensional arrays consisting of a static
+    type (e.g. `int[]` will return a one-dimensional array of integers).
 
 ## Version 1.1.4 - 2016-07-02
 
