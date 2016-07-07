@@ -98,12 +98,14 @@ class Account extends LandingGear
                     if ($resp->isSuccess()) {
                         $this->processBoard($post);
                         return;
-                    } else {
-                        $this->lens('board', [
-                            'config' => $this->config(),
-                            'title' => 'All Aboard!'
-                        ]);
                     }
+                    $this->storeLensVar(
+                        'post_response',
+                        [
+                            'status' => 'ERROR',
+                            'message' => 'Invalid CAPTCHA response'
+                        ]
+                    );
                 }
             } else {
                 $this->processBoard($post);
@@ -219,7 +221,9 @@ class Account extends LandingGear
         $post = $this->post(PreferencesFilter::fromConfig($cabins, $motifs));
         if (!empty($post)) {
             if ($this->savePreferences($post['prefs'], $cabins, $motifs)) {
-                $prefs = $post['prefs'];
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/my/preferences'
+                );
             }
         }
 
@@ -271,14 +275,17 @@ class Account extends LandingGear
         }
         $post = $this->post(new RecoveryFilter());
         if ($post) {
-            if ($this->processRecoverAccount($post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/login');
-            } else {
-                $this->storeLensVar(
-                    'form_message',
-                    \__("User doesn't exist or opted out of account recovery.")
-                );
-            }
+            $this->processRecoverAccount($post);
+            $this->storeLensVar(
+                'form_message',
+                \__(
+                    "Please check the email associated with this username. " .
+                    "If this username is valid (and opted into account " .
+                    "recovery), then you should receive an email. If we " .
+                    "have your GnuPG public key on file, the email will be " .
+                    "encrypted."
+                )
+            );
         }
         if (!empty($token)) {
             $this->processRecoveryToken($token);
@@ -330,7 +337,11 @@ class Account extends LandingGear
         $userID = $this->getActiveUserId();
         $post = $this->post(new TwoFactorFilter());
         if ($post) {
-            $this->acct->toggleTwoFactor($userID, $post);
+            if ($this->acct->toggleTwoFactor($userID, $post)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/my/account/2-factor'
+                );
+            }
         }
         $user = $this->acct->getUserAccount($userID);
         

@@ -50,7 +50,11 @@ class Permissions extends AdminOnly
         }
         $post = $this->post(new CabinSubmenuFilter());
         if (!empty($post)) {
-            $this->processCabinSubmenu($cabin, $post);
+            if ($this->processCabinSubmenu($cabin, $post)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/permissions/' . $cabin
+                );
+            }
         }
         $this->lens(
             'perms/cabin_submenu',

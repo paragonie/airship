@@ -39,7 +39,9 @@ class IndexPage extends LandingGear
         $post = $this->post(new AnnounceFilter());
         if ($post) {
             if ($announce_bp->createAnnouncement($post)) {
-                \Airship\redirect($this->airship_cabin_prefix);
+                \Airship\redirect(
+                    $this->airship_cabin_prefix
+                );
             }
         }
         $this->lens('announce');

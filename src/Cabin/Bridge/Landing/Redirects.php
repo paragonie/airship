@@ -81,12 +81,16 @@ class Redirects extends LoggedInUsersOnly
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins) && !$this->can('update')) {
-            \Airship\redirect($this->airship_cabin_prefix . '/redirects');
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/redirects'
+            );
         }
         $post = $this->post(new RedirectFilter());
         $redirect = $this->pg->getRedirect($cabin, (int) $redirectId);
         if (empty($redirect)) {
-            \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/redirects/' . $cabin
+            );
         }
         if ($post) {
             if (\Airship\all_keys_exist(['old_url', 'new_url'], $post)) {
@@ -176,7 +180,9 @@ class Redirects extends LoggedInUsersOnly
                 }
 
                 if ($result) {
-                    \Airship\redirect($this->airship_cabin_prefix . '/redirects/' . $cabin);
+                    \Airship\redirect(
+                        $this->airship_cabin_prefix . '/redirects/' . $cabin
+                    );
                 }
             }
         }

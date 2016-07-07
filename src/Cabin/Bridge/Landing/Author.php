@@ -50,7 +50,9 @@ class Author extends LoggedInUsersOnly
         $post = $this->post(new AuthorFilter());
         if (!empty($post['name'])) {
             if ($this->author->createAuthor($post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/author/');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
             }
         }
 
@@ -73,14 +75,18 @@ class Author extends LoggedInUsersOnly
             );
             // Check
             if (!\in_array($authorId, $authorsForUser)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/author/');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
             }
         }
 
         $post = $this->post(new AuthorFilter());
         if (!empty($post['name'])) {
             if ($this->author->updateAuthor($authorId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/author/');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
             }
         }
 
@@ -216,7 +222,9 @@ class Author extends LoggedInUsersOnly
             $post = $this->post(new UsersFilter());
             if ($post) {
                 if ($this->manageAuthorUsers($authorId, $post)) {
-                    \Airship\redirect($this->airship_cabin_prefix . '/author/users/' . $authorId);
+                    \Airship\redirect(
+                        $this->airship_cabin_prefix . '/author/users/' . $authorId
+                    );
                 }
             }
         }

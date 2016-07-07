@@ -80,7 +80,9 @@ class Crew extends AdminOnly
         $post = $this->post(new EditGroupFilter());
         if (!empty($post)) {
             if ($this->account->editGroup($groupId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/crew/groups');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/groups'
+                );
             }
         }
 
@@ -108,7 +110,9 @@ class Crew extends AdminOnly
         $post = $this->post(new EditUserFilter());
         if ($post) {
             if ($this->account->editUser($userId, $post)) {
-                \Airship\redirect($this->airship_cabin_prefix . '/crew/users');
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/users'
+                );
             }
         }
 

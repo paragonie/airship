@@ -190,11 +190,9 @@ class Admin extends AdminOnly
             } elseif (!empty($post['delete_notary'])) {
                 $this->deleteNotary($channels, $post);
             }
-            foreach ($channels as $chanName => $chanConfig) {
-                $channels[$chanName]['notaries'] = \Airship\loadJSON(
-                    ROOT . '/config/channel_peers/' . $chanName . '.json'
-                );
-            }
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/admin/notaries'
+            );
         }
         $this->lens('admin_notaries', [
             'channels' => $channels

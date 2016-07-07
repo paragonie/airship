@@ -289,17 +289,26 @@ class FileManager extends LoggedInUsersOnly
         if (!empty($post['submit_btn'])) {
             switch ($post['submit_btn']) {
                 case 'new_dir':
-                    $this->storeLensVar('form_status', $this->createDir($root, $cabin, $post));
+                    $status = $this->createDir($root, $cabin, $post);
                     break;
                 case 'upload':
-                    $this->storeLensVar('form_status', $this->uploadFiles($root, $cabin));
+                    $status = $this->uploadFiles($root, $cabin);
                     break;
                 default:
-                    $this->storeLensVar('form_status', [
+                    $status = [
                         'status' => 'ERROR',
                         'message' => \__('Unknown operation')
-                    ]);
+                    ];
             }
+            if ($status['status'] === 'SUCCESS') {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/' . $this->path_middle . '/' . $cabin,
+                    [
+                        'dir' => $path
+                    ]
+                );
+            }
+            $this->storeLensVar('form_status', $status);
         }
 
         $this->lens('files/index', [
