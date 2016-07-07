@@ -537,6 +537,7 @@ class BlogPosts extends LandingGear
         );
 
         $args = [
+            'meta' => \json_decode($blogPost['metadata'], true),
             'pageTitle' => $blogPost['title'],
             'blogpost' => $blogPost,
             'author' => $this->blog->getAuthor($blogPost['author']),

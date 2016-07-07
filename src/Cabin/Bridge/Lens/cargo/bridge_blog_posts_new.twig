@@ -6,8 +6,9 @@
             <label class="table-cell" for="blog_post_title">{#
                 #}{{ __("Post Title") }}:{#
             #}</label>
-            <div class="table-cell">
+            <div class="table-cell bottom-pad">
                 <input
+                    class="full-width"
                     id="blog_post_title"
                     name="title"
                     type="text"
@@ -20,7 +21,7 @@
             <label class="table-cell" for="blog_post_category">{#
                 #}{{ __("Category") }}:{#
             #}</label>
-            <div class="table-cell">
+            <div class="table-cell bottom-pad">
                 <select name="category" id="blog_post_category" class="treeselect">
                     <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
@@ -37,7 +38,7 @@
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
-            <div class="table-cell">
+            <div class="table-cell bottom-pad">
                 <select name="author" id="blog_post_author" required="required">
                     <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
                     {% for auth in authors %}
@@ -66,7 +67,7 @@
         </div>
 
         <div class="table-row">
-            <label class="table-cell" for="format">{{ __("Post Format") }}:</label>
+            <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {
                     "format": _POST.format|default(
@@ -86,7 +87,7 @@
 
         <div class="table-row">
             <label class="table-cell" for="format">{{ __("Tags") }}:</label>
-            <div class="table-cell bridge_blog_post_tags">
+            <div class="table-cell bridge_blog_post_tags bottom-pad">
                 {% include cargo("bridge_blog_post_tags") with {
                     "tags": tags,
                     "checked": _POST.tags|default(
@@ -98,11 +99,12 @@
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_description">{{ __("Description") }}:</label>
-            <div class="table-cell">
+            <div class="table-cell full-width bottom-pad">
                 <input
                     type="text"
+                    class="full-width"
                     name="description"
-                    placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
+                    placeholder="{{ __("RSS Feed Description (Summary)")|e('html_attr') }}"
                     value="{{ _POST.description|e('html_attr') }}"
                 />
             </div>
@@ -117,6 +119,18 @@
             "placeholder": ""
         } %}
     </div>
+
+    <fieldset class="form-metadata-wrapper">
+        <legend>
+            <input type="checkbox" id="show_metadata" />
+            <label for="show_metadata">{{ __("Show Metadata Fields?") }}</label>
+        </legend>
+        <div class="form-table" id="blog_posts_metadata">
+            {% include cargo("bridge_blog_posts_metadata") with {
+                "metadata": []
+            } %}
+        </div>
+    </fieldset>
 
     <fieldset class="form-button-group">
         {% if can('publish') %}

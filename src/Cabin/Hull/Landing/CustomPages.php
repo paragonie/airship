@@ -144,6 +144,13 @@ class CustomPages extends LandingGear
             return false;
         }
         $vars = $latest['metadata'];
+        $vars['meta'] = [];
+        if (!empty($vars['keywords'])) {
+            $vars['meta']['keywords'] = $vars['keywords'];
+        }
+        if (!empty($vars['description'])) {
+            $vars['meta']['description'] = $vars['description'];
+        }
         $vars['rendered_content'] = $this->render($latest);
 
         if ($page['cache']) {

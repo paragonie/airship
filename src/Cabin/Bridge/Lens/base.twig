@@ -2,6 +2,7 @@
 <html>
     <head>{% block head %}
         {% include cargo("base_head") %}
+            {% include cargo("base_meta") %}
         {% block page_css %}{% endblock %}
     {% endblock %}</head>
     <body data-cabin="Bridge">{% block body %}
