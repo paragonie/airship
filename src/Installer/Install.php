@@ -439,7 +439,7 @@ class Install
         return [
             'database' => $this->data['database'],
             'username' => $post['username'],
-            'cabins' => $this->data['cabins'],
+            'cabin' => $this->data['cabins'],
             'config' => $this->data['config'],
             'config_extra' => $this->data['config_extra'],
             'twig_vars' => $this->data['twig_vars']
@@ -462,7 +462,7 @@ class Install
                 $state->keyring['auth.password_key']
             );
         }
-        $this->data['cabins'] = $post['cabins'];
+        $this->data['cabins'] = $post['cabin'];
         $this->data['config'] = $post['config'];
         $this->data['database'] = $post['database'];
         
