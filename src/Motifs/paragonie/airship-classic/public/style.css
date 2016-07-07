@@ -197,33 +197,6 @@ nav ul.navigation > li:hover a {
     font-family: 'Bitter', serif;
     margin: 0;
 }
-#blog-wrapper {
-    background-image: -webkit-linear-gradient(
-            top,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.05) 100%
-    );
-    background-image: -moz-linear-gradient(
-            top,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.05) 100%
-    );
-    background-image: -ms-linear-gradient(
-            top,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.05) 100%
-    );
-    background-image: -o-linear-gradient(
-            top,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.05) 100%
-    );
-    background-image: linear-gradient(
-            top,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.05) 100%
-    );
-}
 .blog-post-title,
 #blog_wrapper h1,
 #blog_wrapper h2,
