@@ -123,6 +123,8 @@ class Blog extends BlueprintGear
                     $post['blog_post_body'],
                 'format' =>
                     $post['format'],
+                'metadata' =>
+                    \json_encode($post['metadata'] ?? []),
                 'live' =>
                     $publish,
                 'published_by' =>
@@ -438,6 +440,9 @@ class Blog extends BlueprintGear
         );
         if (empty($post)) {
             return [];
+        }
+        if (!empty($post['metadata'])) {
+            $post['metadata'] = \json_decode($post['metadata'], true);
         }
         return $post;
     }
@@ -1209,6 +1214,8 @@ class Blog extends BlueprintGear
                     $post['format'],
                 'live' =>
                     $publish,
+                'metadata' =>
+                    \json_encode($post['metadata'] ?? []),
                 'published_by' =>
                     $publish
                         ? $this->getActiveUserId()

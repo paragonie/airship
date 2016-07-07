@@ -1,0 +1,28 @@
+<div class="table-row">
+    <label class="table-cell metadata-label">
+        {{ __("Keywords") }}:
+    </label>
+    <div class="table-cell bridge_page_metadata_value">
+        <input
+            class="metadata-input"
+            name="metadata[keywords]"
+            placeholder="{{ __("Keywords for the document's meta tags.")|e('html_attr') }}"
+            type="text"
+            value="{{ metadata.keywords|e('html_attr') }}"
+        />
+    </div>
+</div>
+<div class="table-row">
+    <label class="table-cell metadata-label">
+        {{ __("Description") }}:
+    </label>
+    <div class="table-cell bridge_page_metadata_value">
+        <input
+            class="metadata-input"
+            name="metadata[description]"
+            placeholder="{{ __("Description for search engines.")|e('html_attr') }}"
+            type="text"
+            value="{{ metadata.description|e('html_attr') }}"
+        />
+    </div>
+</div>

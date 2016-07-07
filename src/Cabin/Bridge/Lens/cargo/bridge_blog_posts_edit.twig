@@ -119,7 +119,7 @@
                     class="full-width"
                     type="text"
                     name="description"
-                    placeholder="{{ __("RSS / Meta Description")|e('html_attr') }}"
+                    placeholder="{{ __("RSS Feed Description (Summary)")|e('html_attr') }}"
                     value="{{ (
                         _POST.description|default(
                             blogpost.description
@@ -140,6 +140,20 @@
             )
         } %}
     </div>
+
+    <fieldset class="form-metadata-wrapper">
+        <legend>
+            <input type="checkbox" id="show_metadata" />
+            <label for="show_metadata">{{ __("Show Metadata Fields?") }}</label>
+        </legend>
+        <div class="form-table" id="blog_posts_metadata">
+            {% include cargo("bridge_blog_posts_metadata") with {
+                "metadata": _POST.metadata|default(
+                    latest.metadata
+                )
+            } %}
+        </div>
+    </fieldset>
 
     <fieldset class="form-button-group">
         {% if can('publish') %}
