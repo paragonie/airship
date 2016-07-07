@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use \Airship\Alerts\CabinNotFound;
-use \Airship\Engine\{
+use Airship\Alerts\CabinNotFound;
+use Airship\Engine\{
     AutoPilot,
     State
 };

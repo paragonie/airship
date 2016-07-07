@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-use \Airship\Engine\Security\HiddenString;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
+use Airship\Engine\Security\HiddenString;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * @backupGlobals disabled

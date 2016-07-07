@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Landing\Proto\FileManager;
+use Airship\Cabin\Bridge\Landing\Proto\FileManager;
 
 require_once __DIR__.'/init_gear.php';
 

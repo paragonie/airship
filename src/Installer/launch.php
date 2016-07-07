@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
+use Airship\Alerts\FileSystem\FileNotFound;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 \error_reporting(E_ALL);
 if (PHP_MAJOR_VERSION < 7) {

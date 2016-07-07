@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\ChannelUpdates;
-use \Airship\Engine\State;
-use \ParagonIE\ConstantTime\{
+use Airship\Cabin\Bridge\Blueprint\ChannelUpdates;
+use Airship\Engine\State;
+use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
 };
-use \ParagonIE\Halite\Asymmetric\{
+use ParagonIE\Halite\Asymmetric\{
     SignaturePublicKey,
     SignatureSecretKey
 };

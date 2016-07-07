@@ -2,21 +2,21 @@
 declare(strict_types=1);
 namespace Airship\LensFunctions;
 
-use \Airship\Engine\{
+use Airship\Engine\{
     Gadgets,
     Gears,
     Security\Util,
     State
 };
-use \Airship\Engine\Security\Permissions;
-use \Gregwar\RST\Parser as RSTParser;
-use \League\CommonMark\CommonMarkConverter;
-use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\ConstantTime\{
+use Airship\Engine\Security\Permissions;
+use Gregwar\RST\Parser as RSTParser;
+use League\CommonMark\CommonMarkConverter;
+use ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\ConstantTime\{
     Base64,
     Base64UrlSafe
 };
-use \ParagonIE\Halite\{
+use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     Asymmetric\SignatureSecretKey,
     File,

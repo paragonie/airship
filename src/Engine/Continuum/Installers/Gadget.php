@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Installers;
 
-use \Airship\Engine\Continuum\{
+use Airship\Engine\Continuum\{
     Installer as BaseInstaller,
     Sandbox
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \Psr\Log\LogLevel;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Log\LogLevel;
 
 /**
  * Class Gadget

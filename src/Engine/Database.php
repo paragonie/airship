@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\Database as DBAlert;
-use \Airship\Engine\Contract\DBInterface;
-use \Airship\Engine\Security\Util;
+use Airship\Alerts\Database as DBAlert;
+use Airship\Engine\Contract\DBInterface;
+use Airship\Engine\Security\Util;
 
 /**
  * Class Database

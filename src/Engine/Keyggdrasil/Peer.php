@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine\Keyggdrasil;
 
-use \Airship\Engine\State;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use Airship\Engine\State;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
  * Class Peer

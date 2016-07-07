@@ -2,19 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Updaters;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     Continuum\CouldNotUpdate,
     Continuum\MotifZipFailed,
     Hail\NoAPIResponse
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Contract\ContinuumInterface,
     Continuum\AutoUpdater,
     Continuum\Log,
     Continuum\Supplier,
     Hail
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 /**
  * Class Motif

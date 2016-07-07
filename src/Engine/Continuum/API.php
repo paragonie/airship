@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Continuum\InvalidConfig;
+use Airship\Alerts\Continuum\InvalidConfig;
 
 /**
  * Class API

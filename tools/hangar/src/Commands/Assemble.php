@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use \Airship\Hangar\SessionCommand;
-use \ParagonIE\ConstantTime\{
+use Airship\Hangar\SessionCommand;
+use ParagonIE\ConstantTime\{
     Base64,
     Base64UrlSafe
 };
-use \ParagonIE\Halite\Util;
+use ParagonIE\Halite\Util;
 
 class Assemble extends SessionCommand
 {

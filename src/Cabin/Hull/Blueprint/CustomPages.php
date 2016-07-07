@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Blueprint;
 
-use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
+use Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
 
 require_once __DIR__.'/init_gear.php';
 

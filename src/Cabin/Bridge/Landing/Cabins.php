@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Alerts\FileSystem\FileNotFound;
+use Airship\Alerts\FileSystem\FileNotFound;
 
-use \Airship\Engine\Security\Filter\{
+use Airship\Engine\Security\Filter\{
     ArrayFilter,
     GeneralFilterContainer
 };

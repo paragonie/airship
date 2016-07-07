@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Engine\Bolt\Log as LogBolt;
-use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\HPKPBuilder\HPKPBuilder;
+use Airship\Engine\Bolt\Log as LogBolt;
+use ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
 
 /**
  * Class Lens

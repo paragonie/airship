@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Continuum\NoSupplier;
-use \Airship\Engine\{
+use Airship\Alerts\Continuum\NoSupplier;
+use Airship\Engine\{
     Continuum,
     Keyggdrasil,
     Keyggdrasil\Peer,
     State
 };
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
  * Class Channel

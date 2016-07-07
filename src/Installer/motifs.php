@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
+use Airship\Engine\State;
 
 /**
  * @global array $active

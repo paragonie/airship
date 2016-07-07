@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\{
+use Airship\Engine\{
     AutoPilot,
     State
 };
-use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\HPKPBuilder\HPKPBuilder;
+use ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
 
 /**
  * Security enhancements (i.e. CSP, HPKP) are defined here.

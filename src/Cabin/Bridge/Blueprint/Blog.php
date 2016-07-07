@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\CabinNotFound;
-use \Airship\Alerts\Database\DBException;
-use \Airship\Engine\Bolt\{
+use Airship\Alerts\CabinNotFound;
+use Airship\Alerts\Database\DBException;
+use Airship\Engine\Bolt\{
     Common,
     Orderable,
     Slug
 };
-use \Airship\Engine\Bolt\Cache;
+use Airship\Engine\Bolt\Cache;
 
 require_once __DIR__.'/init_gear.php';
 

@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Alerts\CabinNotFound;
-use \Airship\Cabin\Bridge\Blueprint\{
+use Airship\Alerts\CabinNotFound;
+use Airship\Cabin\Bridge\Blueprint\{
     Announcements,
     Author,
     Blog,

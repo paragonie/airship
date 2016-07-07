@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\LedgerStorage;
 
-use \Airship\Engine\Contract\{
+use Airship\Engine\Contract\{
     DBInterface,
     LedgerStorageInterface
 };

@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Cabin\Hull\Blueprint as BP;
-use \Airship\Alerts\{
+use Airship\Cabin\Hull\Blueprint as BP;
+use Airship\Alerts\{
     FileSystem\FileNotFound,
     Router\EmulatePageNotFound
 };

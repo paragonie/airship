@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Filter\GadgetsFilter;
-use \Airship\Engine\Security\Util;
+use Airship\Cabin\Bridge\Filter\GadgetsFilter;
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 

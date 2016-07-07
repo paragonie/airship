@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     Continuum\CouldNotCreateSupplier,
     Continuum\NoSupplier,
     FileSystem\AccessDenied,
     FileSystem\FileNotFound
 };
-use \Airship\Engine\Continuum\Supplier as SupplierObject;
+use Airship\Engine\Continuum\Supplier as SupplierObject;
 
 /**
  * Trait Supplier

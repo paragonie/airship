@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
-use \Airship\Cabin\Bridge\Filter\Crew\{
+use Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use Airship\Cabin\Bridge\Filter\Crew\{
     EditGroupFilter,
     EditUserFilter,
     NewGroupFilter
 };
-use \Airship\Engine\Bolt\Get;
+use Airship\Engine\Bolt\Get;
 
 require_once __DIR__.'/init_gear.php';
 

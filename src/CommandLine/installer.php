@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Continuum\Installers\{
+use Airship\Engine\Continuum\Installers\{
     Cabin,
     Gadget,
     Motif
 };
-use \Airship\Engine\State;
+use Airship\Engine\State;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 

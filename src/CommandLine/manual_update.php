@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Continuum\Updaters\{
+use Airship\Engine\Continuum\Updaters\{
     Airship,
     Cabin,
     Gadget,
     Motif
 };
-use \Airship\Engine\State;
+use Airship\Engine\State;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 

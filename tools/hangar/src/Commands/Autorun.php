@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use \Airship\Hangar\SessionCommand;
-use \ParagonIE\ConstantTime\Base64;
+use Airship\Hangar\SessionCommand;
+use ParagonIE\ConstantTime\Base64;
 
 class autoRun extends SessionCommand
 {

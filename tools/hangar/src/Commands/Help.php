@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use \Airship\Hangar\Command;
+use Airship\Hangar\Command;
 
 class Help extends Command
 {

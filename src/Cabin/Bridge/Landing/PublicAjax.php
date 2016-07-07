@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use Airship\Cabin\Bridge\Blueprint\UserAccounts;
 
 require_once __DIR__.'/init_gear.php';
 

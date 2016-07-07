@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Alerts\Database\DBException;
-use \Airship\Engine\{
+use Airship\Alerts\Database\DBException;
+use Airship\Engine\{
     Database,
     Gears,
     State

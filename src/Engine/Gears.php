@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     GearNotFound,
     GearWrongType
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\Util as CryptoUtil;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\Util as CryptoUtil;
 
 /**
  * Class Gears

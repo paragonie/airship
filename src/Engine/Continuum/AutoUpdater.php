@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\Continuum\CouldNotUpdate;
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Alerts\Hail\{
+use Airship\Alerts\Continuum\CouldNotUpdate;
+use Airship\Alerts\FileSystem\FileNotFound;
+use Airship\Alerts\Hail\{
     NoAPIResponse,
     SignatureFailed
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Continuum\Updaters\Cabin,
     Continuum\Updaters\UpdateFile,
     Continuum\Updaters\UpdateInfo,
@@ -16,13 +16,13 @@ use \Airship\Engine\{
     Hail,
     State
 };
-use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\ConstantTime\Base64;
-use \ParagonIE\Halite\{
+use GuzzleHttp\Exception\TransferException;
+use ParagonIE\ConstantTime\Base64;
+use ParagonIE\Halite\{
     File,
     Util
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 /**
  * Class AutoUpdater

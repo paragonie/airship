@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use \Airship\Engine\Cache\{
+use Airship\Engine\Cache\{
     File,
     SharedMemory
 };

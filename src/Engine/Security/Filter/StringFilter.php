@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security\Filter;
 
-use \Airship\Engine\Security\Util;
+use Airship\Engine\Security\Util;
 
 /**
  * Class StringFilter

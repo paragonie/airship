@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
-use \ParagonIE\GPGMailer\GPGMailer;
+use Airship\Engine\State;
+use ParagonIE\GPGMailer\GPGMailer;
 
 /**
  * Set up our email configuration

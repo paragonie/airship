@@ -1,9 +1,9 @@
 <?php
-use \Airship\Engine\LedgerStorage\{
+use Airship\Engine\LedgerStorage\{
     DBStore,
     FileStore
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Gears,
     State
 };

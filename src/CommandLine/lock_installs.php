@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use \ParagonIE\Halite\Password;
-use \Airship\Engine\State;
+use ParagonIE\Halite\Password;
+use Airship\Engine\State;
 
 /**
  * This script saves a password hash to the

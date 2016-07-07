@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Alerts\FileSystem\FileNotFound;
-use \Airship\Cabin\Bridge\Blueprint\UserAccounts;
-use \Airship\Cabin\Bridge\Filter\Admin\{
+use Airship\Alerts\FileSystem\FileNotFound;
+use Airship\Cabin\Bridge\Blueprint\UserAccounts;
+use Airship\Cabin\Bridge\Filter\Admin\{
     DatabaseFilter,
     NotaryFilter,
     SettingsFilter
@@ -12,7 +12,7 @@ use \Airship\Cabin\Bridge\Filter\Admin\{
 use Airship\Engine\{
     Database, Hail, Security\Util, State
 };
-use \GuzzleHttp\Client;
+use GuzzleHttp\Client;
 
 require_once __DIR__.'/init_gear.php';
 

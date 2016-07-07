@@ -2,16 +2,16 @@
 declare(strict_types=1);
 namespace Airship\Engine\Keyggdrasil;
 
-use \Airship\Alerts\Continuum\{
+use Airship\Alerts\Continuum\{
     CouldNotUpdate,
     NoSupplier
 };
-use \Airship\Engine\Continuum\{
+use Airship\Engine\Continuum\{
     Channel,
     Supplier
 };
-use \Airship\Engine\State;
-use \ParagonIE\Halite\Asymmetric\{
+use Airship\Engine\State;
+use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
 };

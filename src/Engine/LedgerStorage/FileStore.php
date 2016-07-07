@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\LedgerStorage;
 
-use \Airship\Alerts\FileSystem\AccessDenied as FileAccessDenied;
-use \Airship\Engine\Contract\LedgerStorageInterface;
+use Airship\Alerts\FileSystem\AccessDenied as FileAccessDenied;
+use Airship\Engine\Contract\LedgerStorageInterface;
 
 /**
  * Class FileStore

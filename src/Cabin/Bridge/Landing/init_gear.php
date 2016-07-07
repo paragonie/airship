@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Engine\{
+use Airship\Engine\{
     Gears,
     Landing,
     State

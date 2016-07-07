@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Filter\BlogPosts;
 
-use \Airship\Engine\Security\Filter\{
+use Airship\Engine\Security\Filter\{
     InputFilterContainer,
     IntFilter,
     StringFilter

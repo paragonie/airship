@@ -1,6 +1,6 @@
 <?php
-use \Airship\Engine\State;
-use \ParagonIE\Halite\Password;
+use Airship\Engine\State;
+use ParagonIE\Halite\Password;
 require_once \dirname(__DIR__).'/src/bootstrap.php';
 
 $state = State::instance();

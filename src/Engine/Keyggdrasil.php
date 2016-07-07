@@ -3,35 +3,35 @@ declare(strict_types=1);
 
 namespace Airship\Engine;
 
-use \Airship\Alerts\Continuum\{
+use Airship\Alerts\Continuum\{
     ChannelSignatureFailed,
     CouldNotUpdate,
     PeerSignatureFailed
 };
-use \Airship\Alerts\Hail\SignatureFailed;
-use \Airship\Engine\{
+use Airship\Alerts\Hail\SignatureFailed;
+use Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
     Bolt\Log as LogBolt,
     Contract\DBInterface
 };
-use \Airship\Engine\Continuum\{
+use Airship\Engine\Continuum\{
     API,
     Channel,
     Log,
     Supplier
 };
-use \Airship\Engine\Keyggdrasil\{
+use Airship\Engine\Keyggdrasil\{
     Peer,
     TreeUpdate
 };
-use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\{
+use GuzzleHttp\Exception\TransferException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\{
     Asymmetric\Crypto as AsymmetricCrypto,
     Structure\MerkleTree,
     Structure\Node
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 /**
  * Class Keygdrassil

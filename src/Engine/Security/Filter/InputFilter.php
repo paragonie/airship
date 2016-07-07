@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security\Filter;
 
-use \Airship\Engine\Contract\Security\FilterInterface;
+use Airship\Engine\Contract\Security\FilterInterface;
 
 /**
  * Class InputFilter

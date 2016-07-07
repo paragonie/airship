@@ -2,16 +2,16 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\FileSystem\{
+use Airship\Alerts\FileSystem\{
     FileNotFound,
     UploadError
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Database,
     Security\Util,
     State
 };
-use \ParagonIE\Halite\File as HaliteFile;
+use ParagonIE\Halite\File as HaliteFile;
 
 require_once __DIR__.'/init_gear.php';
 

@@ -2,17 +2,17 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Engine\Continuum\Supplier;
-use \Airship\Engine\Continuum\Updaters\{
+use Airship\Engine\Continuum\Supplier;
+use Airship\Engine\Continuum\Updaters\{
     Airship as AirshipUpdater,
     Cabin as CabinUpdater,
     Gadget as GadgetUpdater,
     Motif as MotifUpdater
 };
-use \Airship\Engine\Bolt\Log as LogBolt;
-use \Airship\Engine\Bolt\Supplier as SupplierBolt;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \Psr\Log\LogLevel;
+use Airship\Engine\Bolt\Log as LogBolt;
+use Airship\Engine\Bolt\Supplier as SupplierBolt;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Log\LogLevel;
 
 /**
  * Class Continuum

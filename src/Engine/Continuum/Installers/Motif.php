@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Installers;
 
-use \Airship\Engine\Continuum\Installer as BaseInstaller;
-use \Psr\Log\LogLevel;
+use Airship\Engine\Continuum\Installer as BaseInstaller;
+use Psr\Log\LogLevel;
 
 /**
  * Class Motif

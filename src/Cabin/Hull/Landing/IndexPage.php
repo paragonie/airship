@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Cabin\Hull\Blueprint\Blog;
+use Airship\Cabin\Hull\Blueprint\Blog;
 
 require_once __DIR__.'/init_gear.php';
 

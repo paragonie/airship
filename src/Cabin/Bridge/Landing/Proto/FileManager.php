@@ -2,19 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing\Proto;
 
-use \Airship\Alerts\FileSystem\{
+use Airship\Alerts\FileSystem\{
     FileNotFound,
     UploadError
 };
-use \Airship\Cabin\Bridge\Blueprint\Files;
-use \Airship\Cabin\Bridge\Filter\FileManager\{
+use Airship\Cabin\Bridge\Blueprint\Files;
+use Airship\Cabin\Bridge\Filter\FileManager\{
     MoveDirFilter,
     MoveFileFilter,
     NewDirFilter
 };
-use \Airship\Engine\Bolt\Get;
-use \Airship\Cabin\Bridge\Landing\LoggedInUsersOnly;
-use \Psr\Log\LogLevel;
+use Airship\Engine\Bolt\Get;
+use Airship\Cabin\Bridge\Landing\LoggedInUsersOnly;
+use Psr\Log\LogLevel;
 
 /**
  * Implements <most> of the file manager. Several Landings will exist that are

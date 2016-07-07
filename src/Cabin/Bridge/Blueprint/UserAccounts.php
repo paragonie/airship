@@ -2,19 +2,19 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\Database\QueryError;
-use \Airship\Alerts\Security\UserNotFound;
-use \Airship\Engine\{
+use Airship\Alerts\Database\QueryError;
+use Airship\Alerts\Security\UserNotFound;
+use Airship\Engine\{
     Bolt\Security as SecurityBolt,
     Security\HiddenString,
     Security\Util,
     State
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\Symmetric\Crypto as Symmetric;
-use \ParagonIE\Halite\Util as CryptoUtil;
-use \Psr\Log\LogLevel;
-use \ZxcvbnPhp\Zxcvbn;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
+use ParagonIE\Halite\Util as CryptoUtil;
+use Psr\Log\LogLevel;
+use ZxcvbnPhp\Zxcvbn;
 
 require_once __DIR__.'/init_gear.php';
 

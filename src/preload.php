@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\State;
-use \ParagonIE\Halite\Halite;
+use Airship\Engine\State;
+use ParagonIE\Halite\Halite;
 
 /**
  * This is loaded before everything else in the bootstrapping process.

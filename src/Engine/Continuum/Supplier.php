@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
  * Class Supplier

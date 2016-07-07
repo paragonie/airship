@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Database;
+use Airship\Engine\Database;
 
 /**
  * Class MockDatabase

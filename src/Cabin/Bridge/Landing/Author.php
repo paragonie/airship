@@ -2,15 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\{
+use Airship\Cabin\Bridge\{
     Blueprint as BP,
     Exceptions\UserFeedbackException
 };
-use \Airship\Cabin\Bridge\Filter\Author\{
+use Airship\Cabin\Bridge\Filter\Author\{
     AuthorFilter,
     UsersFilter
 };
-use \Airship\Engine\Bolt\Orderable as OrderableBolt;
+use Airship\Engine\Bolt\Orderable as OrderableBolt;
 
 require_once __DIR__.'/init_gear.php';
 

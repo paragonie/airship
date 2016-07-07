@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use \Airship\Alerts\Security\LongTermAuthAlert;
-use \Airship\Engine\Contract\DBInterface;
-use \ParagonIE\ConstantTime\{
+use Airship\Alerts\Security\LongTermAuthAlert;
+use Airship\Engine\Contract\DBInterface;
+use ParagonIE\ConstantTime\{
     Base64,
     Binary
 };
-use \ParagonIE\Halite\{
+use ParagonIE\Halite\{
     Password,
     Symmetric\EncryptionKey,
     Util as CryptoUtil

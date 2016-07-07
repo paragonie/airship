@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Installers;
 
-use \Airship\Engine\Continuum\Supplier;
-use \ParagonIE\Halite\File;
+use Airship\Engine\Continuum\Supplier;
+use ParagonIE\Halite\File;
 
 /**
  * Class InstallFile

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Engine\Database;
+use Airship\Engine\Database;
 
 /**
  * Class Log

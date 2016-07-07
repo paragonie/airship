@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine\Cache;
 
-use \Airship\Alerts\InvalidType;
-use \Airship\Engine\{
+use Airship\Alerts\InvalidType;
+use Airship\Engine\{
     Contract\CacheInterface,
     Security\Util,
     State
 };
-use \ParagonIE\Halite\Key;
+use ParagonIE\Halite\Key;
 
 /**
  * Class File

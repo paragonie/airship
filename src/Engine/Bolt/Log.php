@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
-use \Airship\Engine\State;
-use \Psr\Log\LogLevel;
+use Airship\Engine\State;
+use Psr\Log\LogLevel;
 
 /**
  * Trait Log

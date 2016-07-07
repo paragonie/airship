@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \ParagonIE\Halite\KeyFactory;
+use ParagonIE\Halite\KeyFactory;
 
 /**
  * This sets up the contents of our keyring.

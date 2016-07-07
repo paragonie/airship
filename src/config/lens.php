@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\Lens;
+use Airship\Engine\Lens;
 
 /**
  * GLOBAL LENS MODIFICATIONS GO HERE

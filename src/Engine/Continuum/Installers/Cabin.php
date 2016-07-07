@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Installers;
 
-use \Airship\Engine\Bolt\Common;
-use \Airship\Engine\Continuum\Installer as BaseInstaller;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \Psr\Log\LogLevel;
+use Airship\Engine\Bolt\Common;
+use Airship\Engine\Continuum\Installer as BaseInstaller;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Log\LogLevel;
 
 /**
  * Class Cabin

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Hangar\Command;
-use \Airship\Hangar\Commands\Help;
-use \ParagonIE\Halite\Halite;
+use Airship\Hangar\Command;
+use Airship\Hangar\Commands\Help;
+use ParagonIE\Halite\Halite;
 /**
  * This script is the entry point for all Hangar commands.
  */

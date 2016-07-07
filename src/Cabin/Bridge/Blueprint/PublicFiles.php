@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Cabin\Hull\Blueprint\PublicFiles as HullPublicFiles;
+use Airship\Cabin\Hull\Blueprint\PublicFiles as HullPublicFiles;
 
 /**
  * Class PublicFiles

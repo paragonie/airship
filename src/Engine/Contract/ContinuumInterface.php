@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Contract;
 
-use \Airship\Engine\Continuum\Updaters\{
+use Airship\Engine\Continuum\Updaters\{
     UpdateFile,
     UpdateInfo
 };

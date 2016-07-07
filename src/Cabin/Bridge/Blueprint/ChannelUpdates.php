@@ -2,33 +2,33 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     Continuum\CouldNotUpdate,
     InvalidType
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Continuum\API,
     Database,
     Hail,
     State
 };
-use \GuzzleHttp\{
+use GuzzleHttp\{
     Client,
     Exception\TransferException
 };
-use \ParagonIE\ConstantTime\{
+use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
 };
-use \ParagonIE\Halite\{
+use ParagonIE\Halite\{
     Asymmetric\Crypto as AsymmetricCrypto,
     Asymmetric\SignaturePublicKey,
     Asymmetric\SignatureSecretKey,
     Structure\MerkleTree,
     Structure\Node
 };
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Log\LogLevel;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 

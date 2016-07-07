@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
-use \Airship\Engine\Bolt\{
+use Airship\Cabin\Bridge\Exceptions\UserFeedbackException;
+use Airship\Engine\Bolt\{
     Common,
     Orderable,
     Slug

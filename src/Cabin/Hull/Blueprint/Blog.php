@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Blueprint;
 
-use \Airship\Alerts\Router\EmulatePageNotFound;
-use \Airship\Engine\{
+use Airship\Alerts\Router\EmulatePageNotFound;
+use Airship\Engine\{
     Cache\File as FileCache,
     Cache\SharedMemory as MemoryCache,
     Contract\CacheInterface

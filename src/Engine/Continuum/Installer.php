@@ -2,24 +2,24 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     FileSystem\FileNotFound,
     Hail\NoAPIResponse,
     Hail\SignatureFailed
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Bolt\Log as LogBolt,
     Bolt\Supplier as SupplierBolt,
     Continuum\Installers\InstallFile,
     Hail,
     State
 };
-use \GuzzleHttp\Exception\TransferException;
-use \ParagonIE\Halite\{
+use GuzzleHttp\Exception\TransferException;
+use ParagonIE\Halite\{
     File,
     Util
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 /**
  * Class Installer

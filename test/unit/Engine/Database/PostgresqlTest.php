@@ -1,8 +1,8 @@
 <?php
 
-use \Airship\Engine\Database;
-use \Airship\Alerts\Database\DBException;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
+use Airship\Engine\Database;
+use Airship\Alerts\Database\DBException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * @backupGlobals disabled

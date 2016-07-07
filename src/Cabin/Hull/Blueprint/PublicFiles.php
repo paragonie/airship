@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Blueprint;
 
-use \Airship\Alerts\FileSystem\FileNotFound;
+use Airship\Alerts\FileSystem\FileNotFound;
 
 require_once __DIR__.'/init_gear.php';
 

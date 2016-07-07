@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Engine\AutoPilot;
+use Airship\Engine\AutoPilot;
 
 require_once __DIR__.'/init_gear.php';
 

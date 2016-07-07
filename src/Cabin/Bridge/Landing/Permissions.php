@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint as BP;
-use \Airship\Cabin\Bridge\Filter\Permissions\{
+use Airship\Cabin\Bridge\Blueprint as BP;
+use Airship\Cabin\Bridge\Filter\Permissions\{
     CabinSubmenuFilter,
     SaveActionFilter,
     SaveContextFilter

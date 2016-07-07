@@ -2,15 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Cabin\Hull\Exceptions\{
+use Airship\Cabin\Hull\Exceptions\{
     CustomPageNotFoundException,
     RedirectException
 };
-use \Airship\Cabin\Hull\Blueprint\CustomPages as PagesBlueprint;
-use \Airship\Engine\State;
-use \Gregwar\RST\Parser as RSTParser;
-use \League\CommonMark\CommonMarkConverter;
-use \Psr\Log\LogLevel;
+use Airship\Cabin\Hull\Blueprint\CustomPages as PagesBlueprint;
+use Airship\Engine\State;
+use Gregwar\RST\Parser as RSTParser;
+use League\CommonMark\CommonMarkConverter;
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 

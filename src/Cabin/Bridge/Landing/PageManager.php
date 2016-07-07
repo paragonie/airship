@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\CustomPages;
-use \Airship\Cabin\Bridge\Filter\PageManager\{
+use Airship\Cabin\Bridge\Blueprint\CustomPages;
+use Airship\Cabin\Bridge\Filter\PageManager\{
     DeleteDirFilter,
     DeletePageFilter,
     EditPageFilter,
@@ -11,15 +11,15 @@ use \Airship\Cabin\Bridge\Filter\PageManager\{
     PageFilter,
     RenameFilter
 };
-use \Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
-use \Airship\Engine\{
+use Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
+use Airship\Engine\{
     AutoPilot,
     Bolt\Get,
     Gears,
     Security\Util,
     State
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 

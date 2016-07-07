@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\{
+use Airship\Alerts\Hail\NoAPIResponse;
+use Airship\Engine\{
     Database,
     Hail,
     State
 };
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 

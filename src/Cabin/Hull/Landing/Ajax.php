@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Cabin\Hull\Blueprint\Blog;
-use \Airship\Cabin\Hull\Filter\Ajax\CommentForm;
-use \Airship\Engine\Contract\CacheInterface;
+use Airship\Cabin\Hull\Blueprint\Blog;
+use Airship\Cabin\Hull\Filter\Ajax\CommentForm;
+use Airship\Engine\Contract\CacheInterface;
 
 require_once __DIR__.'/init_gear.php';
 

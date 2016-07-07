@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use \Airship\Alerts\Security\SecurityAlert;
-use \Airship\Engine\{
+use Airship\Alerts\Security\SecurityAlert;
+use Airship\Engine\{
     Database,
     State
 };
-use \ParagonIE\Halite\Asymmetric\{
+use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     EncryptionPublicKey
 };

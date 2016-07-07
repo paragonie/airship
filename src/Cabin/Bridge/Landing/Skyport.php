@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
-use \Airship\Cabin\Bridge\Filter\SkyportFilter;
-use \Airship\Engine\Security\{
+use Airship\Cabin\Bridge\Blueprint\Skyport as SkyportBP;
+use Airship\Cabin\Bridge\Filter\SkyportFilter;
+use Airship\Engine\Security\{
     HiddenString,
     Util
 };
-use \Psr\Log\LogLevel;
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 

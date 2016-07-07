@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use \Airship\Hangar\SessionCommand;
+use Airship\Hangar\SessionCommand;
 
 class Add extends SessionCommand
 {

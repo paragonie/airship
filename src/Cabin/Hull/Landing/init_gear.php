@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
-use \Airship\Engine\{
+use Airship\Engine\{
     Landing,
     Gears
 };

@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\Database\QueryError;
-use \Airship\Cabin\Hull\Blueprint\CustomPages as HullCustomPages;
-use \Airship\Cabin\Hull\Exceptions\{
+use Airship\Alerts\Database\QueryError;
+use Airship\Cabin\Hull\Blueprint\CustomPages as HullCustomPages;
+use Airship\Cabin\Hull\Exceptions\{
     CustomPageCollisionException,
     CustomPageNotFoundException
 };
-use \Airship\Engine\Bolt\Cache;
-use \Psr\Log\LogLevel;
+use Airship\Engine\Bolt\Cache;
+use Psr\Log\LogLevel;
 
 /**
  * Class CustomPages

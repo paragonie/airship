@@ -2,20 +2,20 @@
 declare(strict_types=1);
 namespace Airship\Installer;
 
-use \Airship\Alerts\Database\DBException;
-use \Airship\Engine\{
+use Airship\Alerts\Database\DBException;
+use Airship\Engine\{
     AutoPilot,
     Database,
     State
 };
-use \Airship\Engine\Security\CSRF;
-use \GuzzleHttp\Client;
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\{
+use Airship\Engine\Security\CSRF;
+use GuzzleHttp\Client;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\{
     Halite,
     Password
 };
-use \ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base64;
 use ZxcvbnPhp\Zxcvbn;
 
 /**

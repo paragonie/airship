@@ -2,30 +2,30 @@
 declare(strict_types=1);
 namespace Airship;
 
-use \Airship\Alerts\FileSystem\{
+use Airship\Alerts\FileSystem\{
     AccessDenied,
     FileNotFound
 };
-use \Airship\Alerts\Database\{
+use Airship\Alerts\Database\{
     DBException,
     NotImplementedException
 };
-use \Airship\Engine\{
+use Airship\Engine\{
     Database,
     State
 };
-use \ParagonIE\ConstantTime\{
+use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
 };
-use \ParagonIE\Halite\{
+use ParagonIE\Halite\{
     Asymmetric\Crypto,
     Asymmetric\SignatureSecretKey,
     SignatureKeyPair,
     Util
 };
-use \ReCaptcha\ReCaptcha;
-use \ReCaptcha\RequestMethod\CurlPost;
+use ReCaptcha\ReCaptcha;
+use ReCaptcha\RequestMethod\CurlPost;
 
 \define('AIRSHIP_VERSION', '1.1.3');
 \define(

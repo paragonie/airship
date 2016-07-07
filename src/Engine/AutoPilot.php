@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\GearNotFound;
-use \Airship\Alerts\Router\{
+use Airship\Alerts\GearNotFound;
+use Airship\Alerts\Router\{
     EmulatePageNotFound,
     FallbackLoop
 };
-use \Airship\Engine\Contract\RouterInterface;
-use \ParagonIE\CSPBuilder\CSPBuilder;
+use Airship\Engine\Contract\RouterInterface;
+use ParagonIE\CSPBuilder\CSPBuilder;
 
 /**
  * Class AutoPilot

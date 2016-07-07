@@ -2,28 +2,28 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\{
+use Airship\Alerts\{
     GearNotFound,
     Security\SecurityAlert
 };
-use \Airship\Engine\Bolt\{
+use Airship\Engine\Bolt\{
     Common as CommonBolt,
     Cache as CacheBolt,
     Log as LogBolt,
     Security as SecurityBolt
 };
-use \Airship\Engine\Contract\DBInterface;
-use \Airship\Engine\Security\{
+use Airship\Engine\Contract\DBInterface;
+use Airship\Engine\Security\{
     CSRF,
     Filter\InputFilterContainer
 };
-use \ParagonIE\CSPBuilder\CSPBuilder;
-use \ParagonIE\Halite\{
+use ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\Halite\{
     Alerts\InvalidType,
     Util
 };
-use \ParagonIE\HPKPBuilder\HPKPBuilder;
-use \Psr\Log\LogLevel;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
+use Psr\Log\LogLevel;
 
 /**
  * Class Landing

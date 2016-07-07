@@ -2,16 +2,16 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use \Airship\Alerts\Hail\NoAPIResponse;
-use \Airship\Engine\{
+use Airship\Alerts\Hail\NoAPIResponse;
+use Airship\Engine\{
     Bolt\Common,
     Continuum\Version,
     Hail,
     Security\HiddenString,
     State
 };
-use \GuzzleHttp\Client;
-use \ParagonIE\Halite\{
+use GuzzleHttp\Client;
+use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     Password
 };

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\{
+use Airship\Engine\{
     Gears,
     State
 };
-use \GuzzleHttp\Client as HTTPClient;
+use GuzzleHttp\Client as HTTPClient;
 
 if (!\defined('ROOT')) {
     require_once __DIR__.'/preload.php';

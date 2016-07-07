@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\PageManager;
 
-use \Airship\Engine\Security\Filter\{
+use Airship\Engine\Security\Filter\{
     BoolFilter,
     IntFilter,
     InputFilterContainer

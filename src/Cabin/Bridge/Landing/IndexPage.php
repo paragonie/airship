@@ -2,15 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Landing;
 
-use \Airship\Cabin\Bridge\Blueprint\{
+use Airship\Cabin\Bridge\Blueprint\{
     Announcements,
     Author,
     Blog,
     CustomPages
 };
-use \Airship\Cabin\Bridge\Filter\AnnounceFilter;
-use \Airship\Engine\State;
-use \ParagonIE\Halite\Halite;
+use Airship\Cabin\Bridge\Filter\AnnounceFilter;
+use Airship\Engine\State;
+use ParagonIE\Halite\Halite;
 
 require_once __DIR__.'/init_gear.php';
 

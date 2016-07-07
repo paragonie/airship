@@ -2,23 +2,23 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
-use \Airship\Alerts\Hail\SignatureFailed;
-use \Airship\Engine\Continuum\Supplier;
-use \GuzzleHttp\{
+use Airship\Alerts\Hail\SignatureFailed;
+use Airship\Engine\Continuum\Supplier;
+use GuzzleHttp\{
     Client,
     ClientInterface,
     Exception\TransferException,
     Psr7\Response
 };
-use \ParagonIE\ConstantTime\{
+use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
 };
-use \ParagonIE\Halite\Asymmetric\{
+use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
 };
-use \Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Hail

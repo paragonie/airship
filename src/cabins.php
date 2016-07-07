@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use \Airship\Engine\{
+use Airship\Engine\{
     AutoPilot,
     Gears,
     State

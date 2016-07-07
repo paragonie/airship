@@ -2,14 +2,14 @@
 declare(strict_types=1);
 
 
-use \Airship\Alerts\Security\DataCorrupted;
-use \Airship\Engine\{
+use Airship\Alerts\Security\DataCorrupted;
+use Airship\Engine\{
     Cache\SharedMemory,
     Contract\CacheInterface,
     Security\Util
 };
-use \ParagonIE\ConstantTime\Base64UrlSafe;
-use \ParagonIE\Halite\{
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\{
     Key,
     Symmetric\Crypto as Symmetric,
     Symmetric\AuthenticationKey
