@@ -54,7 +54,7 @@ To create and/or manage these extensions, check out
 
 ### Screenshot
 
-[![Screenshot](https://i.imgur.com/4c2vCzP.png)](https://cspr.ng)
+[![Screenshot](https://i.imgur.com/ytoswyp.png)](https://cspr.ng)
 
 Airship is fully mobile responsive thanks to the [Pure CSS framework](http://purecss.io/).
 See it in action at [CSPR.NG](https://cspr.ng).
