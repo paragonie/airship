@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Security\Filter;
 
 use Airship\Engine\Contract\Security\FilterInterface;
+use Airship\Engine\Security\Util;
 
 /**
  * Class InputFilter
@@ -71,8 +72,13 @@ class InputFilter implements FilterInterface
     public function process($data = null)
     {
         if ($this->type === 'string') {
+            if (\is_array($data)) {
+                throw new \TypeError('Unexpected array for string filter.');
+            }
             if (\is_string($data)) {
             } elseif (\is_object($data) && \method_exists($data, '__toString')) {
+                $data = (string) $data;
+            } elseif (\is_numeric($data)) {
                 $data = (string) $data;
             } elseif (\is_null($data)) {
                 $data = null;
@@ -82,11 +88,14 @@ class InputFilter implements FilterInterface
         }
 
         if ($this->type === 'int') {
-            if (\is_numeric($data)) {
+            if (\is_array($data)) {
+                throw new \TypeError('Unexpected array for integer filter.');
+            }
+            if (\is_int($data) || \is_float($data)) {
                 $data = (int) $data;
             } elseif (\is_null($data) || $data === '') {
                 $data = null;
-            } elseif (\is_string($data) && \ctype_digit($data)) {
+            } elseif (\is_string($data) && \preg_match('#^\-?[0-9]+$#', $data)) {
                 $data = (int) $data;
             } else {
                 throw new \TypeError('Expected an integer.');
@@ -94,16 +103,21 @@ class InputFilter implements FilterInterface
         }
 
         if ($this->type === 'float') {
-            if (\is_numeric($data)) {
+            if (\is_array($data)) {
+                throw new \TypeError('Unexpected array for float filter.');
+            }
+            if (\is_int($data) || \is_float($data)) {
                 $data = (float) $data;
             } elseif (\is_null($data) || $data === '') {
                 $data = null;
+            } elseif (\is_string($data) && \is_numeric($data)) {
+                $data = (float) $data;
             } else {
                 throw new \TypeError('Expected an integer or floating point number.');
             }
         }
 
-        if ($this->type === 'array') {
+        if ($this->type === 'array' || Util::subString($this->type, -2) === '[]') {
             if (\is_array($data)) {
                 $data = (array) $data;
             } elseif (\is_null($data)) {
@@ -114,6 +128,9 @@ class InputFilter implements FilterInterface
         }
 
         if ($this->type === 'bool') {
+            if (\is_array($data)) {
+                throw new \TypeError('Unexpected array for boolean filter.');
+            }
             $data = !empty($data);
         }
 
