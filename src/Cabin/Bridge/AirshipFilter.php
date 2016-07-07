@@ -8,6 +8,7 @@ use Airship\Engine\Security\Filter\{
     BoolFilter,
     FloatFilter,
     InputFilterContainer,
+    IntArrayFilter,
     IntFilter,
     StringFilter
 };
@@ -38,7 +39,7 @@ class AirshipFilter extends InputFilterContainer
 
             ->addFilter('universal.email.from', new StringFilter())
 
-            ->addFilter('universal.guest_groups', new ArrayFilter())
+            ->addFilter('universal.guest_groups', new IntArrayFilter())
 
             ->addFilter('universal.guzzle', new ArrayFilter())
 
