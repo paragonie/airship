@@ -10,14 +10,16 @@
             <header>{% block header %}
                 {% include cargo("header") %}
             {% endblock %}</header>
-            {% if showmenu %}
-                <div id="main-wrapper">
+            {% if showmenu %}{#
+                #}<div id="main-wrapper">
                     <div id="leftmenu">{% block leftmenu %}
                         
                     {% endblock %}</div>
                     <div id="rightside">
             {% endif %}
-                        <div id="content">{% block content %}<div id="bridge_content">
+                        <div id="content">{#
+                        #}{% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}{#
+                            #}{% block content %}<div id="bridge_content">
                             <div id="bridge_table">
                                 {% if announcement %}<div id="announcement">{{ announcement }}</div>{% endif %}
                                 <div id="bridge_left">
@@ -25,7 +27,9 @@
                                 </div>
                                 <div id="bridge_main">{% block main %}{% endblock %}</div>
                             </div>
-                        </div>{% endblock %}</div>
+                        </div>{% endblock %}</div>{#
+                    #}{% if SETTINGS['sandwich_content'] %}</div>{% endif %}{#
+                #}
             {% if showmenu %}
                     </div>
                 </div>

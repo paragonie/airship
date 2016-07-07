@@ -44,6 +44,11 @@ body {
     margin-bottom: calc(14px + 1rem);
     margin-bottom: 2px;
 }
+.content-sandwich {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
 header, footer {
     min-width: 100%;
 }

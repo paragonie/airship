@@ -13,8 +13,11 @@
             <header>{% block header %}
                 {% include cargo("header") %}
             {% endblock %}</header>
-            <div id="content">{% block content %}
-            {% endblock %}</div>
+            <div id="content">{#
+                #}{% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}{#
+                    #}{% block content %}{% endblock %}{#
+                #}{% if SETTINGS['sandwich_content'] %}</div>{% endif %}{#
+            #}</div>
         </div>{#
         #}<footer>{% block footer %}
             {% include cargo("footer") %}
