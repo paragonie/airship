@@ -39,4 +39,11 @@ interface FilterInterface
      * @return mixed
      */
     public function process($data);
+
+
+    /**
+     * @param string $index
+     * @return FilterInterface
+     */
+    public function setIndex(string $index): FilterInterface;
 }

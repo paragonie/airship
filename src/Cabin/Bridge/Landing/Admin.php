@@ -414,7 +414,7 @@ class Admin extends AdminOnly
         }
 
         // Save universal config
-        \file_put_contents(
+        return \file_put_contents(
             ROOT . '/config/universal.json',
             $twigEnv->render(
                 'universal.twig',
@@ -422,7 +422,6 @@ class Admin extends AdminOnly
                     'universal' => $post['universal']
                 ]
             )
-        );
-        return true;
+        ) !== false;
     }
 }

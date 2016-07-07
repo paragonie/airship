@@ -27,10 +27,10 @@ class BoolArrayFilter extends ArrayFilter
             if (\is_null($data)) {
                 $data = [];
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of booleans.');
+                throw new \TypeError('Expected an array of booleans (%s).', $this->index);
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array.');
+                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
             }
             foreach ($data as $key => $val) {
                 if (\is_null($data) || $data === '') {

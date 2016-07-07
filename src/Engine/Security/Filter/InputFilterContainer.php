@@ -41,7 +41,7 @@ abstract class InputFilterContainer implements FilterContainerInterface
         if (!isset($this->filterMap[$path])) {
             $this->filterMap[$path] = [];
         }
-        $this->filterMap[$path][] = $filter;
+        $this->filterMap[$path][] = $filter->setIndex($path);
         return $this;
     }
 

@@ -27,10 +27,10 @@ class StringArrayFilter extends ArrayFilter
             if (\is_null($data)) {
                 $data = [];
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of string.');
+                throw new \TypeError('Expected an array of string (%s).', $this->index);
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array.');
+                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
             }
             foreach ($data as $key => $val) {
                 if (\is_null($val)) {
@@ -39,7 +39,7 @@ class StringArrayFilter extends ArrayFilter
                     $data[$key] = (string) $val;
                 } elseif (!\is_string($val)) {
                     throw new \TypeError(
-                        \sprintf('Expected a string at index %s.', $key)
+                        \sprintf('Expected a string at index %s (%s).', $key, $this->index)
                     );
                 }
             }

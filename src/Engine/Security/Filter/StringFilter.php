@@ -68,7 +68,7 @@ class StringFilter extends InputFilter
         if ($offset === 0) {
             if (!empty($this->pattern)) {
                 if (!\preg_match($this->pattern, $data)) {
-                    throw new \TypeError();
+                    throw new \TypeError('Pattern match failed (%s).', $this->index);
                 }
             }
             return parent::applyCallbacks($data, 0);

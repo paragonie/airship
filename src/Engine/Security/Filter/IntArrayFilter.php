@@ -32,10 +32,10 @@ class IntArrayFilter extends ArrayFilter
             if (\is_null($data)) {
                 $data = [];
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of integers.');
+                throw new \TypeError('Expected an array of integers (%s).', $this->index);
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array.');
+                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
             }
             foreach ($data as $key => $val) {
                 if (\is_int($val) || \is_float($val)) {
@@ -46,7 +46,7 @@ class IntArrayFilter extends ArrayFilter
                     $data[$key] = (int) $data;
                 } else {
                     throw new \TypeError(
-                        \sprintf('Expected an integer at index %s.', $key)
+                        \sprintf('Expected an integer at index %s (%s).', $key, $this->index)
                     );
                 }
             }
