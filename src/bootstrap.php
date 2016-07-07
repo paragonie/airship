@@ -28,6 +28,13 @@ require_once ROOT . '/cabins.php';
  * 2. Let's bootstrap the routes and other configuration
  *    for the current cabin (set in cabins.php)
  */
+if (!$state->active_cabin) {
+    \header('HTTP/1.1 404 Not Found');
+    echo \file_get_contents(
+        __DIR__ . '/error_pages/no-cabin.html'
+    );
+    exit(1);
+}
 $active = $state->cabins[$state->active_cabin];
 $state->lang = isset($active['lang']) 
     ? $active['lang']
