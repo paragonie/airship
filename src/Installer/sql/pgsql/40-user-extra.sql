@@ -1,4 +1,4 @@
-CREATE TABLE airship_user_preferences (
+CREATE TABLE IF NOT EXISTS airship_user_preferences (
     preferenceid BIGSERIAL PRIMARY KEY,
     userid BIGINT REFERENCES airship_users (userid),
     preferences JSONB NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE airship_tree_updates (
+CREATE TABLE IF NOT EXISTS airship_tree_updates (
   treeupdateid BIGSERIAL PRIMARY KEY,
   channel TEXT,
   channelupdateid BIGINT,
@@ -7,10 +7,10 @@ CREATE TABLE airship_tree_updates (
   created TIMESTAMP DEFAULT NOW(),
   modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX ON airship_tree_updates (channel);
-CREATE INDEX ON airship_tree_updates (channelupdateid);
-CREATE UNIQUE INDEX ON airship_tree_updates (channel, channelupdateid);
-CREATE INDEX ON airship_tree_updates (merkleroot);
+CREATE INDEX  IF NOT EXISTSON airship_tree_updates (channel);
+CREATE INDEX  IF NOT EXISTSON airship_tree_updates (channelupdateid);
+CREATE UNIQUE INDEX  IF NOT EXISTSON airship_tree_updates (channel, channelupdateid);
+CREATE INDEX  IF NOT EXISTSON airship_tree_updates (merkleroot);
 
 DROP TRIGGER IF EXISTS update_airship_tree_updates_modtime ON airship_tree_updates;
 CREATE TRIGGER update_airship_tree_updates_modtime

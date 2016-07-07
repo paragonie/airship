@@ -1,4 +1,4 @@
-CREATE TABLE airship_perm_actions (
+CREATE TABLE IF NOT EXISTS airship_perm_actions (
     actionid BIGSERIAL PRIMARY KEY,
     cabin TEXT NOT NULL,
     label TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE airship_perm_actions (
     UNIQUE(cabin, label)
 );
 
-CREATE TABLE airship_perm_contexts (
+CREATE TABLE IF NOT EXISTS airship_perm_contexts (
     contextid BIGSERIAL PRIMARY KEY,
     cabin TEXT NOT NULL,
     locator TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE airship_perm_contexts (
     UNIQUE(cabin, locator)
 );
 
-CREATE TABLE airship_perm_rules (
+CREATE TABLE IF NOT EXISTS airship_perm_rules (
     ruleid BIGSERIAL PRIMARY KEY,
     context INTEGER NOT NULL,
     action INTEGER NOT NULL,
@@ -27,7 +27,8 @@ CREATE TABLE airship_perm_rules (
     FOREIGN KEY(action) REFERENCES airship_perm_actions (actionid)
 );
 
-CREATE INDEX airship_perm_actions_label_idx ON airship_perm_actions (label);
+CREATE INDEX IF NOT EXISTS airship_perm_actions_label_idx ON airship_perm_actions (label);
+
 DROP TRIGGER IF EXISTS update_airship_perm_actions_modtime ON airship_perm_actions;
 CREATE TRIGGER update_airship_perm_actions_modtime
     BEFORE UPDATE ON airship_perm_actions

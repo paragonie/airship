@@ -1,4 +1,4 @@
-CREATE TABLE airship_auth_tokens (
+CREATE TABLE IF NOT EXISTS airship_auth_tokens (
     tokenid BIGSERIAL PRIMARY KEY,
     userid INTEGER,
     selector TEXT,
@@ -7,7 +7,7 @@ CREATE TABLE airship_auth_tokens (
     modified TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (userid) REFERENCES airship_users (userid)
 );
-CREATE UNIQUE INDEX ON airship_auth_tokens (selector);
+CREATE UNIQUE INDEX IF NOT EXISTS ON airship_auth_tokens (selector);
 
 DROP TRIGGER IF EXISTS update_airship_auth_tokens_modtime ON airship_auth_tokens;
 CREATE TRIGGER update_airship_auth_tokens_modtime

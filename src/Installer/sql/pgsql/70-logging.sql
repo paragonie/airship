@@ -1,4 +1,4 @@
-CREATE TABLE airship_continuum_log (
+CREATE TABLE IF NOT EXISTS airship_continuum_log (
     logid BIGSERIAL PRIMARY KEY,
     loglevel TEXT,
     component TEXT,
@@ -8,9 +8,9 @@ CREATE TABLE airship_continuum_log (
     modified TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX ON airship_continuum_log (component);
-CREATE INDEX ON airship_continuum_log (created);
-CREATE INDEX ON airship_continuum_log (loglevel);
+CREATE INDEX IF NOT EXISTS ON airship_continuum_log (component);
+CREATE INDEX IF NOT EXISTS ON airship_continuum_log (created);
+CREATE INDEX IF NOT EXISTS ON airship_continuum_log (loglevel);
 
 DROP TRIGGER IF EXISTS update_airship_continuum_log_modtime ON airship_continuum_log;
 CREATE TRIGGER update_airship_continuum_log_modtime

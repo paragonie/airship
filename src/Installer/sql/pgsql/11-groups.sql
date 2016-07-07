@@ -1,4 +1,4 @@
-CREATE TABLE airship_groups (
+CREATE TABLE IF NOT EXISTS airship_groups (
     groupid BIGSERIAL PRIMARY KEY,
     name TEXT,
     superuser BOOLEAN DEFAULT FALSE,
@@ -11,7 +11,7 @@ CREATE TRIGGER update_airship_groups_modtime
     BEFORE UPDATE ON airship_groups
     FOR EACH ROW EXECUTE PROCEDURE update_modtime();
 
-CREATE TABLE airship_users_groups (
+CREATE TABLE IF NOT EXISTS airship_users_groups (
     userid INTEGER NOT NULL,
     groupid INTEGER NOT NULL,
     created TIMESTAMP DEFAULT NOW(),

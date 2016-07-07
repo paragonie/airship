@@ -1,4 +1,4 @@
-CREATE TABLE hull_blog_series (
+CREATE TABLE IF NOT EXISTS hull_blog_series (
     seriesid BIGSERIAL PRIMARY KEY,
     name TEXT,
     slug TEXT,
@@ -10,7 +10,7 @@ CREATE TABLE hull_blog_series (
     UNIQUE(slug)
 );
 
-CREATE TABLE hull_blog_series_items (
+CREATE TABLE IF NOT EXISTS hull_blog_series_items (
     itemid BIGSERIAL PRIMARY KEY,
     listorder INTEGER,
     parent INTEGER NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE airship_dirs (
+CREATE TABLE IF NOT EXISTS airship_dirs (
   directoryid BIGSERIAL PRIMARY KEY,
   parent BIGINT NULL REFERENCES airship_dirs (directoryid),
   cabin TEXT,
@@ -9,7 +9,7 @@ CREATE TABLE airship_dirs (
   UNIQUE(cabin, parent, name)
 );
 
-CREATE TABLE airship_files (
+CREATE TABLE IF NOT EXISTS airship_files (
   fileid BIGSERIAL PRIMARY KEY,
   filename TEXT,
   type TEXT,

@@ -1,4 +1,4 @@
-CREATE TABLE hull_blog_comments (
+CREATE TABLE IF NOT EXISTS hull_blog_comments (
   commentid BIGSERIAL PRIMARY KEY,
   blogpost BIGINT REFERENCES hull_blog_posts(postid),
   replyto BIGINT NULL,
@@ -8,9 +8,9 @@ CREATE TABLE hull_blog_comments (
   created TIMESTAMP DEFAULT NOW(),
   modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX ON hull_blog_comments (replyto);
+CREATE INDEX IF NOT EXISTS ON hull_blog_comments (replyto);
 
-CREATE TABLE hull_blog_comment_versions (
+CREATE TABLE IF NOT EXISTS hull_blog_comment_versions (
   versionid BIGSERIAL PRIMARY KEY,
   comment BIGINT REFERENCES hull_blog_comments(commentid),
   approved BOOLEAN DEFAULT FALSE,

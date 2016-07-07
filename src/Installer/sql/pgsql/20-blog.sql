@@ -1,4 +1,4 @@
-CREATE TABLE hull_blog_categories (
+CREATE TABLE IF NOT EXISTS hull_blog_categories (
     categoryid BIGSERIAL PRIMARY KEY,
     parent INTEGER NULL,
     name TEXT,
@@ -9,7 +9,7 @@ CREATE TABLE hull_blog_categories (
     UNIQUE(slug)
 );
 
-CREATE TABLE hull_blog_tags (
+CREATE TABLE IF NOT EXISTS hull_blog_tags (
     tagid serial PRIMARY KEY,
     name TEXT,
     slug TEXT,
@@ -18,7 +18,7 @@ CREATE TABLE hull_blog_tags (
     UNIQUE(slug)
 );
 
-CREATE TABLE hull_blog_posts (
+CREATE TABLE IF NOT EXISTS hull_blog_posts (
     postid BIGSERIAL PRIMARY KEY,
     title TEXT,
     slug TEXT,
@@ -35,7 +35,7 @@ CREATE TABLE hull_blog_posts (
     UNIQUE(slug)
 );
 
-CREATE TABLE hull_blog_post_versions (
+CREATE TABLE IF NOT EXISTS hull_blog_post_versions (
     versionid BIGSERIAL PRIMARY KEY,
     post BIGINT,
     body TEXT,
@@ -47,7 +47,7 @@ CREATE TABLE hull_blog_post_versions (
     published TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE hull_blog_post_tags (
+CREATE TABLE IF NOT EXISTS hull_blog_post_tags (
     postid integer,
     tagid integer,
     created TIMESTAMP DEFAULT NOW(),
