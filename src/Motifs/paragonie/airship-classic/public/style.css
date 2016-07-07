@@ -256,6 +256,49 @@ nav ul.navigation > li:hover a {
 .blog-sidebar h4 {
     margin: 0;
 }
+@media (max-device-width: 100mm) {
+    nav a {
+        font-size: 150%;
+    }
+    footer {
+        font-size: 150%;
+    }
+    .readmore,
+    .blog-sidebar {
+        font-size: 22pt;
+    }
+    #content h1 {
+        font-size: 42pt;
+    }
+    #content h2 {
+        font-size: 36pt;
+    }
+    #content h3 {
+        font-size: 32pt;
+    }
+    #content h4 {
+        font-size: 30pt;
+    }
+    .pages li {
+        font-size: 20pt;
+    }
+    a,
+    input,
+    label,
+    .blog-comment-body p,
+    .blogpost_tags li,
+    textarea,
+    #blog-post-body p,
+    #content p {
+        font-size: 18pt !important;
+    }
+    .blog-post-snippet p {
+        font-size: 10pt !important;
+    }
+    .blog-sidebar * h4 {
+        font-size: 20pt !important;
+    }
+}
 @media only screen and (max-width: 360px) {
     header h1 {
         font-size: 14pt !important;
