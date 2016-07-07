@@ -437,7 +437,7 @@ class Install
         ];
 
         return [
-            'databases' => $this->data['databases'],
+            'database' => $this->data['database'],
             'username' => $post['username'],
             'cabins' => $this->data['cabins'],
             'config' => $this->data['config'],
@@ -591,10 +591,10 @@ class Install
             ]
         ];
         
-        $n = \count($this->data['databases']);
+        $n = \count($this->data['database']);
         if ($n > 1) {
             for ($i = 1; $i < $n; ++$i) {
-                $row = $this->data['databases'][$i];
+                $row = $this->data['database'][$i];
                 
                 // By default, we treat these as redundancy databases:
                 $g = $row['group'] ?? 'default';
@@ -614,7 +614,7 @@ class Install
             }
         }
         return $twig->render('databases.twig', [
-            'databases' => $databases
+            'database' => $databases
         ]);
     }
     
