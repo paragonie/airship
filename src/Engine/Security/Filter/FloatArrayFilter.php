@@ -30,14 +30,23 @@ class FloatArrayFilter extends ArrayFilter
     {
         if ($offset === 0) {
             if (\is_null($data)) {
-                $data = [];
+                return parent::applyCallbacks($data, 0);
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of floats (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an array of floats (%s).', $this->index)
+                );
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected a 1-dimensional array (%s).', $this->index)
+                );
             }
             foreach ($data as $key => $val) {
+                if (\is_array($val)) {
+                    throw new \TypeError(
+                        \sprintf('Expected a float at index %s (%s).', $key, $this->index)
+                    );
+                }
                 if (\is_int($val) || \is_float($val)) {
                     $data[$key] = (float) $val;
                 } elseif (\is_null($val) || $val === '') {

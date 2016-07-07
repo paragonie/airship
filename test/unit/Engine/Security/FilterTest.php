@@ -94,7 +94,9 @@ class FilterTest extends PHPUnit_Framework_TestCase
         );
 
         try {
-            $typeError = [[]];
+            $typeError = [
+                'test' => [[]]
+            ];
             $filter($typeError);
             $this->fail('Expected a TypeError');
         } catch (\TypeError $ex) {
@@ -178,7 +180,10 @@ class FilterTest extends PHPUnit_Framework_TestCase
         );
 
         try {
-            $typeError = [[]];
+            $typeError = [
+                'test' => [2, 3, []],
+                'test2' => [[1.5]]
+            ];
             $filter($typeError);
             $this->fail('Expected a TypeError');
         } catch (\TypeError $ex) {
@@ -246,7 +251,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
     public function testIntArrayFilter()
     {
         $filter = (new GeneralFilterContainer())
-            ->addFilter('test', new IntArrayFilter());
+            ->addFilter('test', new IntArrayFilter())
+            ->addFilter('test2', new IntArrayFilter());
 
         if (!($filter instanceof GeneralFilterContainer)) {
             $this->fail('Type error');
@@ -258,7 +264,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
                 '',
                 0,
                 33
-            ]
+            ],
+            'test2' => ['1']
         ];
         $after = $filter($before);
 
@@ -269,13 +276,19 @@ class FilterTest extends PHPUnit_Framework_TestCase
                     0,
                     0,
                     33
+                ],
+                'test2' => [
+                    1
                 ]
             ],
             $after
         );
 
         try {
-            $typeError = [[]];
+            $typeError = [
+                'test' => ['1', []],
+                'test2' => [[1]]
+            ];
             $filter($typeError);
             $this->fail('Expected a TypeError');
         } catch (\TypeError $ex) {
@@ -361,7 +374,9 @@ class FilterTest extends PHPUnit_Framework_TestCase
         );
 
         try {
-            $typeError = [[]];
+            $typeError = [
+                'test' => ['a', []]
+            ];
             $filter($typeError);
             $this->fail('Expected a TypeError');
         } catch (\TypeError $ex) {

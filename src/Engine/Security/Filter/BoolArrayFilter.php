@@ -25,14 +25,23 @@ class BoolArrayFilter extends ArrayFilter
     {
         if ($offset === 0) {
             if (\is_null($data)) {
-                $data = [];
+                return parent::applyCallbacks($data, 0);
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of booleans (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an array of booleans (%s).', $this->index)
+                );
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected a 1-dimensional array (%s).', $this->index)
+                );
             }
             foreach ($data as $key => $val) {
+                if (\is_array($val)) {
+                    throw new \TypeError(
+                        \sprintf('Unexpected array at index %s (%s).', $key, $this->index)
+                    );
+                }
                 if (\is_null($data) || $data === '') {
                     $data[$key] = null;
                 } else {

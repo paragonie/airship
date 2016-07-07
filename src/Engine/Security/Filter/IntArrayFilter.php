@@ -30,20 +30,29 @@ class IntArrayFilter extends ArrayFilter
     {
         if ($offset === 0) {
             if (\is_null($data)) {
-                $data = [];
+                return parent::applyCallbacks($data, 0);
             } elseif (!\is_array($data)) {
-                throw new \TypeError('Expected an array of integers (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an array of integers (%s).', $this->index)
+                );
             }
             if (!\is1DArray($data)) {
-                throw new \TypeError('Expected a 1-dimensional array (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected a 1-dimensional array (%s).', $this->index)
+                );
             }
             foreach ($data as $key => $val) {
+                if (\is_array($val)) {
+                    throw new \TypeError(
+                        \sprintf('Expected an integer at index %s (%s).', $key, $this->index)
+                    );
+                }
                 if (\is_int($val) || \is_float($val)) {
                     $data[$key] = (int) $val;
                 } elseif (\is_null($val) || $val === '') {
                     $data[$key] = $this->default;
-                } elseif (\is_string($data) && \preg_match('#^\-?[0-9]+$#', $data)) {
-                    $data[$key] = (int) $data;
+                } elseif (\is_string($val) && \preg_match('#^\-?[0-9]+$#', $val)) {
+                    $data[$key] = (int) $val;
                 } else {
                     throw new \TypeError(
                         \sprintf('Expected an integer at index %s (%s).', $key, $this->index)

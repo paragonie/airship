@@ -78,7 +78,9 @@ class InputFilter implements FilterInterface
     {
         if ($this->type === 'string') {
             if (\is_array($data)) {
-                throw new \TypeError('Unexpected array for string filter (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Unexpected array for string filter (%s).', $this->index)
+                );
             }
             if (\is_string($data)) {
             } elseif (\is_object($data) && \method_exists($data, '__toString')) {
@@ -88,13 +90,17 @@ class InputFilter implements FilterInterface
             } elseif (\is_null($data)) {
                 $data = null;
             } else {
-                throw new \TypeError('Expected a string (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected a string (%s).', $this->index)
+                );
             }
         }
 
         if ($this->type === 'int') {
             if (\is_array($data)) {
-                throw new \TypeError('Unexpected array for integer filter (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Unexpected array for integer filter (%s).', $this->index)
+                );
             }
             if (\is_int($data) || \is_float($data)) {
                 $data = (int) $data;
@@ -103,13 +109,17 @@ class InputFilter implements FilterInterface
             } elseif (\is_string($data) && \preg_match('#^\-?[0-9]+$#', $data)) {
                 $data = (int) $data;
             } else {
-                throw new \TypeError('Expected an integer (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an integer (%s).', $this->index)
+                );
             }
         }
 
         if ($this->type === 'float') {
             if (\is_array($data)) {
-                throw new \TypeError('Unexpected array for float filter (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Unexpected array for float filter (%s).', $this->index)
+                );
             }
             if (\is_int($data) || \is_float($data)) {
                 $data = (float) $data;
@@ -118,7 +128,9 @@ class InputFilter implements FilterInterface
             } elseif (\is_string($data) && \is_numeric($data)) {
                 $data = (float) $data;
             } else {
-                throw new \TypeError('Expected an integer or floating point number (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an integer or floating point number (%s).', $this->index)
+                );
             }
         }
 
@@ -126,15 +138,19 @@ class InputFilter implements FilterInterface
             if (\is_array($data)) {
                 $data = (array) $data;
             } elseif (\is_null($data)) {
-                $data = null;
+                $data = [];
             } else {
-                throw new \TypeError('Expected an array (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Expected an array (%s).', $this->index)
+                );
             }
         }
 
         if ($this->type === 'bool') {
             if (\is_array($data)) {
-                throw new \TypeError('Unexpected array for boolean filter (%s).', $this->index);
+                throw new \TypeError(
+                    \sprintf('Unexpected array for boolean filter (%s).', $this->index)
+                );
             }
             $data = !empty($data);
         }
