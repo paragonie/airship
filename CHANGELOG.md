@@ -1,5 +1,7 @@
 ## Unreleased 
 
+  * [#46](https://github.com/paragonie/airship/issues/46):
+    You can now specify meta tags for blog posts.
   * [#57](https://github.com/paragonie/airship/issues/57):
     Our `Database` class can now connect to UNIX sockets. Set the hostname to
     `unix:/path/to/socket`.
@@ -7,19 +9,24 @@
     You can now add database connections to the local database connection pool.
     You can also add database connection pools for app-specific purposes.
     In the future, we'll support more than just PostgreSQL.
+  * Database connections are now lazy instead of eager, which should result in
+    less overhead on HTTP requests that don't use additional databases. (In our
+    cabins, this affects nothing.)
   * [#67](https://github.com/paragonie/airship/issues/67):
     Blog posts are now linked from the Bridge.
   * [#69](https://github.com/paragonie/airship/issues/69):
     Added a dedicated log for the auto-updater.
+  * [#70](https://github.com/paragonie/airship/issues/70):
+    Added a faster install option for deploying an Airship in a hurry, with the
+    sane defaults we provide.
+  * [#77](https://github.com/paragonie/airship/issues/77):
+    Fixed responsive UI/UX warts (i.e. small links and buttons). 
   * [#80](https://github.com/paragonie/airship/issues/80):
     If the GD extension isn't loaded, render QR codes for two-factor
     authentication as SVG instead. 
   * [#88](https://github.com/paragonie/airship/issues/88):
     The installer now uses Zxcvbn to enforce a minimum password strength for
-    administrator accounts. Administrator passwords require a Zxcvbn score of
-    4 on the 0-4 scale. If this proves difficult, we prompt users to adopt a
-    password manager instead of petitioning us to weaken our minimum password
-    requirements.
+    administrator accounts.
 
 ## Version 1.1.4 - 2016-07-02
 
