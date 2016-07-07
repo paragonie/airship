@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS hull_blog_authors (
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ON hull_blog_authors (slug);
+CREATE UNIQUE INDEX ON hull_blog_authors (slug);
 
 CREATE TABLE IF NOT EXISTS hull_blog_author_owners (
     userid BIGINT,
@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS hull_blog_author_owners (
     in_charge BOOLEAN DEFAULT FALSE,
     created TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS ON hull_blog_author_owners (userid);
-CREATE INDEX IF NOT EXISTS ON hull_blog_author_owners (authorid);
+CREATE INDEX ON hull_blog_author_owners (userid);
+CREATE INDEX ON hull_blog_author_owners (authorid);
 CREATE UNIQUE INDEX ON hull_blog_author_owners (userid, authorid);
 
 ALTER TABLE airship_files ADD
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS hull_blog_photo_contexts (
     label TEXT,
     display_name TEXT
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ON hull_blog_photo_contexts (label);
+CREATE UNIQUE INDEX ON hull_blog_photo_contexts (label);
 
 CREATE TABLE IF NOT EXISTS hull_blog_author_photos (
     photoid BIGSERIAL PRIMARY KEY,
@@ -45,4 +45,4 @@ CREATE TABLE IF NOT EXISTS hull_blog_author_photos (
     modified TIMESTAMP DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS ON hull_blog_author_photos (author, context);
+CREATE UNIQUE INDEX ON hull_blog_author_photos (author, context);

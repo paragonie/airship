@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS hull_blog_comments (
   created TIMESTAMP DEFAULT NOW(),
   modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS ON hull_blog_comments (replyto);
+CREATE INDEX ON hull_blog_comments (replyto);
 
 CREATE TABLE IF NOT EXISTS hull_blog_comment_versions (
   versionid BIGSERIAL PRIMARY KEY,

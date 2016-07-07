@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS airship_user_recovery (
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS ON airship_user_recovery (selector);
+CREATE INDEX ON airship_user_recovery (selector);
 
 DROP TRIGGER IF EXISTS update_airship_user_recovery_modtime ON airship_user_recovery;
 CREATE TRIGGER update_airship_user_recovery_modtime

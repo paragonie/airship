@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS airship_custom_dir (
   modified TIMESTAMP DEFAULT NOW(),
   UNIQUE(cabin, parent, url)
 );
-CREATE INDEX IF NOT EXISTS ON airship_custom_dir (cabin);
-CREATE INDEX IF NOT EXISTS ON airship_custom_dir (parent);
-CREATE INDEX IF NOT EXISTS ON airship_custom_dir (url);
+CREATE INDEX ON airship_custom_dir (cabin);
+CREATE INDEX ON airship_custom_dir (parent);
+CREATE INDEX ON airship_custom_dir (url);
 
 CREATE TABLE IF NOT EXISTS airship_custom_page (
   pageid BIGSERIAL PRIMARY KEY,
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS airship_custom_page (
   created TIMESTAMP DEFAULT NOW(),
   modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS ON airship_custom_page (cabin);
-CREATE INDEX IF NOT EXISTS ON airship_custom_page (directory);
-CREATE INDEX IF NOT EXISTS ON airship_custom_page (url);
+CREATE INDEX ON airship_custom_page (cabin);
+CREATE INDEX ON airship_custom_page (directory);
+CREATE INDEX ON airship_custom_page (url);
 
 CREATE TABLE IF NOT EXISTS airship_custom_page_version (
   versionid BIGSERIAL PRIMARY KEY,
@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS airship_custom_redirect (
   created TIMESTAMP DEFAULT NOW(),
   modified TIMESTAMP DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS ON airship_custom_redirect(cabin);
-CREATE INDEX IF NOT EXISTS ON airship_custom_redirect(oldpath);
-CREATE UNIQUE INDEX IF NOT EXISTS ON airship_custom_redirect(cabin, oldpath, newpath);
+CREATE INDEX ON airship_custom_redirect(cabin);
+CREATE INDEX ON airship_custom_redirect(oldpath);
+CREATE UNIQUE INDEX ON airship_custom_redirect(cabin, oldpath, newpath);
 
 DROP TRIGGER IF EXISTS update_airship_custom_dir_modtime ON airship_custom_dir;
 CREATE TRIGGER update_airship_custom_dir_modtime

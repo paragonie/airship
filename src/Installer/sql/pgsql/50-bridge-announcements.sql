@@ -8,11 +8,11 @@ CREATE TABLE IF NOT EXISTS bridge_announcements (
   from_trusted_supplier BOOLEAN DEFAULT FALSE,
   created TIMESTAMP DEFAULT NOW()
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ON bridge_announcements (uniqueid);
+CREATE UNIQUE INDEX ON bridge_announcements (uniqueid);
 
 CREATE TABLE IF NOT EXISTS bridge_announcements_dismiss (
   announcementid BIGINT REFERENCES bridge_announcements(announcementid),
   userid BIGINT REFERENCES airship_users(userid),
   created TIMESTAMP DEFAULT NOW()
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ON bridge_announcements_dismiss (announcementid, userid);
+CREATE UNIQUE INDEX ON bridge_announcements_dismiss (announcementid, userid);
