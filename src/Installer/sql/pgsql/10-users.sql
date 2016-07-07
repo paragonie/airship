@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS airship_users (
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW()
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ON airship_users (username);
-CREATE UNIQUE INDEX IF NOT EXISTS ON airship_users (uniqueid);
+CREATE UNIQUE INDEX ON airship_users (username);
+CREATE UNIQUE INDEX ON airship_users (uniqueid);
 
 DROP TRIGGER IF EXISTS update_airship_users_modtime ON airship_users;
 CREATE TRIGGER update_airship_users_modtime
