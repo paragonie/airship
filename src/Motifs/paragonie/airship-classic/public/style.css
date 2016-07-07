@@ -107,11 +107,12 @@ header h2 {
 .footer-hull a,
 .footer-bridge a {
     color: #ffea8f;
+    font-weight: bold;
     text-decoration: none;
 }
 .footer-hull a:hover,
 .footer-bridge a:hover {
-    color: #EFE5C8;
+    color: #FFFFFF;
     text-decoration: none;
 }
 nav {
