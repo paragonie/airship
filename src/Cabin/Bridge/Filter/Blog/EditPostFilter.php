@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Blog;
 
 use \Airship\Engine\Security\Filter\{
+    ArrayFilter,
     BoolFilter,
     IntFilter,
     InputFilterContainer,
@@ -30,6 +31,7 @@ class EditPostFilter extends InputFilterContainer
                 (new StringFilter())
                     ->setDefault('Rich Text')
             )
+            ->addFilter('metadata', new ArrayFilter())
             ->addFilter(
                 'title',
                 (new StringFilter())
