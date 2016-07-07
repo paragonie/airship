@@ -89,7 +89,7 @@ require_once ROOT . '/session.php';
 
 // This loads templates for the template engine
 $twigLoader = new \Twig_Loader_Filesystem(
-    ROOT.'/Cabin/'.$active['name'].'/Lens'
+    ROOT . '/Cabin/' . $active['name'] . '/Lens'
 );
 
 $lensLoad = [];

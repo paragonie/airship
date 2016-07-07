@@ -527,6 +527,10 @@ class Install
             ROOT . '/config/universal.json',
             $this->finalConfigUniversal($twigEnv)
         );
+        \chmod(ROOT . '/config/cabins.json', 0664);
+        \chmod(ROOT . '/config/databases.json', 0664);
+        \chmod(ROOT . '/config/gadgets.json', 0664);
+        \chmod(ROOT . '/config/universal.json', 0664);
     }
     
     /**
