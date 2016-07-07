@@ -206,6 +206,21 @@
 
                 <div class="table-row">
                     <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="rate-limiting-max-delay">{{ __("Maximum Delay") }}:</label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                                id="rate-limiting-max-delay"
+                                type="text"
+                                placeholder="0.25"
+                                name="universal[rate-limiting][max-delay]"
+                                value="{{ universal['rate-limiting']['max-delay']|e('html_attr') }}"
+                        /> ({{ __("seconds") }})
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
                         <label for="rate-limiting-ipv4-subnet">{{ __("IPv4 Subnet") }}:</label>
                     </div>
                     <div class="table-cell full-width">
