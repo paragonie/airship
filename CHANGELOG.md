@@ -1,4 +1,4 @@
-## Unreleased 
+## Version 1.2.0 - 2016-07-07
 
   * [#46](https://github.com/paragonie/airship/issues/46):
     You can now specify meta tags for blog posts.
@@ -29,6 +29,8 @@
     administrator accounts.
   * Added more input filters for one-dimensional arrays consisting of a static
     type (e.g. `int[]` will return a one-dimensional array of integers).
+  * Unhandled exceptions now display a static page outside of debug mode, which
+    is a little better for UX than a white page.
 
 ## Version 1.1.4 - 2016-07-02
 
