@@ -1815,6 +1815,7 @@ fieldset.preferences > legend {
     width: 100%;
     vertical-align: top;
 }
+#author_byline,
 .author_extra h4 {
     padding-left: 1ex;
 }
