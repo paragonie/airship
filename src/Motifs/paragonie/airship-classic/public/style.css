@@ -1571,6 +1571,12 @@ fieldset.preferences > legend {
     margin-top: 1.33rem !important;
     padding: 1ex;
 }
+#after-fold + h1,
+#after-fold + h2,
+#after-fold + h3,
+#after-fold + h4,
+#after-fold + h5,
+#after-fold + h6,
 #blog-post-body p + h1,
 #blog-post-body p + h2,
 #blog-post-body p + h3,
