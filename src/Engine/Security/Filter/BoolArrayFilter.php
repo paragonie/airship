@@ -24,7 +24,9 @@ class BoolArrayFilter extends ArrayFilter
     public function applyCallbacks($data = null, int $offset = 0)
     {
         if ($offset === 0) {
-            if (!\is_array($data)) {
+            if (\is_null($data)) {
+                $data = [];
+            } elseif (!\is_array($data)) {
                 throw new \TypeError('Expected an array of booleans.');
             }
             if (!\is1DArray($data)) {
