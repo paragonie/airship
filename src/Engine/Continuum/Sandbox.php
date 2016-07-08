@@ -15,8 +15,11 @@ abstract class Sandbox
      * @param array $previous_metadata
      * @return bool
      */
-    public static function safeRequire(string $file, array $previous_metadata = []): bool
-    {
+    public static function safeRequire(
+        string $file,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $previous_metadata = []
+    ): bool {
         return (require $file) === 1;
     }
 
@@ -27,8 +30,11 @@ abstract class Sandbox
      * @param array $previous_metadata
      * @return bool
      */
-    public static function safeInclude(string $file, array $previous_metadata = []): bool
-    {
+    public static function safeInclude(
+        string $file,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $previous_metadata = []
+    ): bool {
         return (include $file) === 1;
     }
 

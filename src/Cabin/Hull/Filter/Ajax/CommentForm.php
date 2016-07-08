@@ -4,7 +4,6 @@ namespace Airship\Cabin\Hull\Filter\Ajax;
 
 use Airship\Engine\Security\Filter\{
     InputFilterContainer,
-    IntFilter,
     StringFilter
 };
 

@@ -241,7 +241,6 @@ trait Security
         if (!($this->airship_cookie instanceof Cookie)) {
             $this->tightenSecurityBolt();
         }
-        $state = State::instance();
         $_SESSION = [];
         $this->airship_cookie->store('airship_token', null);
         return \session_regenerate_id(true);

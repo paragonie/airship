@@ -1045,25 +1045,4 @@ class PageManager extends LoggedInUsersOnly
         }
         return \preg_match('#^(static|js|img|fonts|css)/#', $uri) === 0;
     }
-
-    /**
-     * @return InputFilterContainer
-     */
-    protected function getPageFilter(): InputFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter('url', new StringFilter())
-            ->addFilter('format', new StringFilter())
-            ->addFilter('page_body', new StringFilter());
-    }
-
-    /**
-     * @return InputFilterContainer
-     */
-    protected function getRenameFilter(): InputFilterContainer
-    {
-        return (new GeneralFilterContainer())
-            ->addFilter('create_redirect', new BoolFilter())
-            ->addFilter('url', new StringFilter());
-    }
 }

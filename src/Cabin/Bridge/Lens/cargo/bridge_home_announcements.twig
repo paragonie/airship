@@ -14,7 +14,7 @@
                 <a class="announce-dismiss" data-id="{{ announce['uniqueid']|e('html_attr') }}">
                     <i class="fa fa-close"></i>{{ __("Dismiss") }}
                 </a>
-            </h4>
+            </h3>
             <div class="announce-body">
                 {% if announce.format == 'Markdown' %}
                     {{ announce.contents|CleanMarkdown }}

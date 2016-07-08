@@ -19,11 +19,10 @@ class DatabaseFilter extends GeneralFilterContainer
      * Adds filter rules dynamically.
      *
      * @param string $key
-     * @param int $index
      * @param int $numEntries
      * @return DatabaseFilter
      */
-    public function addDatabaseFilters(string $key, int $index, int $numEntries): self
+    public function addDatabaseFilters(string $key, int $numEntries): self
     {
         for ($i = 0; $i < $numEntries; ++$i) {
             $prefix = $key . '.' . $i . '.';
