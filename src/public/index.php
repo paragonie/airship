@@ -157,8 +157,8 @@ if (!empty($state->universal['debug'])) {
         }
         $state->logger->log(
             LogLevel::ERROR,
-            $ex->getMessage(),
-            \Airship\throwableToArray($ex)
+            $e->getMessage(),
+            \Airship\throwableToArray($e)
         );
         echo "DEBUG ERROR: ", \get_class($e), "\n\n",
             $e->getMessage(), "\n\n",
@@ -186,11 +186,11 @@ if (!empty($state->universal['debug'])) {
 } else {
     try {
         $autoPilot->route();
-    } catch (\Throwable $ex) {
+    } catch (\Throwable $e) {
         $state->logger->log(
             LogLevel::ERROR,
             $ex->getMessage(),
-            \Airship\throwableToArray($ex)
+            \Airship\throwableToArray($e)
         );
 
         \header('HTTP/1.1 500 Internal Server Error');
