@@ -784,7 +784,6 @@ function render_purified_rest(string $string = '', bool $return = false)
  */
 function userid(): int
 {
-    $state = State::instance();
     return \array_key_exists('userid', $_SESSION)
         ? (int) $_SESSION['userid']
         : 0;

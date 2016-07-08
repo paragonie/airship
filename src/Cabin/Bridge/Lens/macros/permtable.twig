@@ -29,6 +29,7 @@
             #}data-label="{{ label|e('html_attr') }}"{#
             #}><!--
          --><input
+                id="group_{{ groupdata.groupid }}_{{ label|e('html_attr') }}_cbox"
                 class="perms_checkbox"
                 type="checkbox"
                 name="group_perms[{{ groupdata.groupid|e('html_attr') }}][{{ label|e('html_attr') }}]"

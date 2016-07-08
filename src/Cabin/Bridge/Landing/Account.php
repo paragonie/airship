@@ -38,6 +38,10 @@ use Zend\Mail\{
     Message,
     Transport\Sendmail
 };
+use BaconQrCode\{
+    Renderer\Image\Svg,
+    Writer as QRCodeWriter
+};
 
 require_once __DIR__.'/init_gear.php';
 
@@ -310,10 +314,10 @@ class Account extends LandingGear
             \header('Content-Type: image/png');
             $writer = null;
         } else {
-            $renderer = new \BaconQrCode\Renderer\Image\Svg();
+            $renderer = new Svg();
             $renderer->setHeight(384);
             $renderer->setWidth(384);
-            $writer = new \BaconQrCode\Writer($renderer);
+            $writer = new QRCodeWriter($renderer);
             \header('Content-Type: image/svg+xml');
         }
         $gauth->makeQRCode(

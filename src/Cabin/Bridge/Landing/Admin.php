@@ -10,7 +10,9 @@ use Airship\Cabin\Bridge\Filter\Admin\{
     SettingsFilter
 };
 use Airship\Engine\{
-    Database, Hail, Security\Util, State
+    Hail,
+    Security\Util,
+    State
 };
 use GuzzleHttp\Client;
 
@@ -333,7 +335,6 @@ class Admin extends AdminOnly
             }
             $filter->addDatabaseFilters(
                 $key,
-                (int) $index,
                 \count($post['database'][$index])
             );
         }

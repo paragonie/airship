@@ -63,10 +63,9 @@ class Gadgets extends LoggedInUsersOnly
     }
 
     /**
-     * @param string $cabinName
      * @route gadgets/universal
      */
-    public function manageUniversal(string $cabinName = '')
+    public function manageUniversal()
     {
         $cabins = $this->getCabinNamespaces();
         $gadgets = \Airship\loadJSON(ROOT . '/config/gadgets.json');
