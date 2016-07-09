@@ -57,10 +57,10 @@ class Airship extends AutoUpdater implements ContinuumInterface
             self::$continuumLogger = new Log();
         }
     }
-    
+
     /**
      * Process automatic updates:
-     * 
+     *
      * 1. Check if a new update is available.
      * 2. Download the upload file, store in a temporary file.
      * 3. Verify the signature (via Halite).
@@ -112,7 +112,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
                     if ($this->checkKeyggdrasil($updateInfo, $updateFile)) {
                         $this->install($updateInfo, $updateFile);
                     } else {
-                        $this->log('Keyggdrasil failed for Airship core update', LogLevel::ALERT);
+                        $this->log('Keyggdrasil check failed for Airship core update', LogLevel::ALERT);
                         self::$continuumLogger->store(
                             LogLevel::ALERT,
                             'CMS Airship core update failed -- checksum not registered in Keyggdrasil',
@@ -214,11 +214,11 @@ class Airship extends AutoUpdater implements ContinuumInterface
         // Make backup copies of the old file, just in case someone
         // decided to edit the core files against medical advice.
         \rename(
-            ROOT . DIRECTORY_SEPARATOR . $filename,
-            ROOT . DIRECTORY_SEPARATOR . $filename . '.backup'
+            \dirname(ROOT) . DIRECTORY_SEPARATOR . $filename,
+            \dirname(ROOT) . DIRECTORY_SEPARATOR . $filename . '.backup'
         );
         return \file_put_contents(
-            ROOT . DIRECTORY_SEPARATOR . $filename,
+            \dirname(ROOT) . DIRECTORY_SEPARATOR . $filename,
             \file_get_contents('phar://' . $this->pharAlias . '/'.$filename)
         ) !== false;
     }

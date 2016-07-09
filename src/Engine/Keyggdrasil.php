@@ -135,6 +135,10 @@ class Keyggdrasil
                     true
                 );
                 if (!$isValid) {
+                    $this->log(
+                        'Invalid digital signature (i.e. it was signed with an incorrect key).',
+                        LogLevel::EMERGENCY
+                    );
                     throw new PeerSignatureFailed(
                         'Invalid digital signature (i.e. it was signed with an incorrect key).'
                     );
@@ -143,6 +147,10 @@ class Keyggdrasil
                 // Make sure our challenge was signed.
                 $decoded = \json_decode($message, true);
                 if (!\hash_equals($challenge, $decoded['challenge'])) {
+                    $this->log(
+                        'Challenge-response authentication failed.',
+                        LogLevel::EMERGENCY
+                    );
                     throw new CouldNotUpdate(
                         'Challenge-response authentication failed.'
                     );
@@ -165,6 +173,13 @@ class Keyggdrasil
                     $decoded['root']
                 );
             } else {
+                $this->log(
+                    'Upstream error.',
+                    LogLevel::EMERGENCY,
+                    [
+                        'response' => $response
+                    ]
+                );
                 return false;
             }
             // If we're still here, Guzzle failed.
@@ -338,11 +353,15 @@ class Keyggdrasil
             }
             $datetime = new \DateTime($response['no_updates']);
 
-            // One hour ago:
+            // One day ago:
             $stale = (new \DateTime('now'))
-                ->sub(new \DateInterval('PT01H'));
+                ->sub(new \DateInterval('P01D'));
 
             if ($datetime < $stale) {
+                \var_dump(
+                    $datetime->format(DATE_ISO8601),
+                    $stale->format(DATE_ISO8601)
+                );
                 throw new CouldNotUpdate('Stale response.');
             }
 
@@ -651,6 +670,14 @@ class Keyggdrasil
         $expectedRoot = $updates[$maxUpdateIndex]->getRoot();
         if (!\hash_equals($tree->getRoot(), $expectedRoot)) {
             // Calculated root did not match.
+            self::$continuumLogger->store(
+                LogLevel::EMERGENCY,
+                'Calculated Merkle root did not match the update.',
+                [
+                    $tree->getRoot(),
+                    $expectedRoot
+                ]
+            );
             throw new CouldNotUpdate(
                 'Calculated Merkle root did not match the update.'
             );
@@ -692,6 +719,11 @@ class Keyggdrasil
                 }
                 ++$success;
             } catch (TransferException $ex) {
+                self::$continuumLogger->store(
+                    LogLevel::EMERGENCY,
+                    'A transfer exception occurred',
+                    \Airship\throwableToArray($ex)
+                );
                 ++$networkError;
             }
 
@@ -703,6 +735,15 @@ class Keyggdrasil
                 return false;
             }
         }
+        self::$continuumLogger->store(
+            LogLevel::EMERGENCY,
+            'We ran out of peers.',
+            [
+                $numPeers,
+                $minSuccess,
+                $maxFailure
+            ]
+        );
         // Fail closed:
         return false;
     }

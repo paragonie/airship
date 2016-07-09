@@ -27,7 +27,7 @@ use ParagonIE\Halite\{
 use ReCaptcha\ReCaptcha;
 use ReCaptcha\RequestMethod\CurlPost;
 
-\define('AIRSHIP_VERSION', '1.2.0');
+\define('AIRSHIP_VERSION', '1.2.1');
 \define(
     'AIRSHIP_BLAKE2B_PERSONALIZATION',
     'ParagonInitiativeEnterprises:Airship-PoweredByHalite:Keyggdrasil'
