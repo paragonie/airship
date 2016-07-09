@@ -189,7 +189,7 @@ if (!empty($state->universal['debug'])) {
     } catch (\Throwable $e) {
         $state->logger->log(
             LogLevel::ERROR,
-            $ex->getMessage(),
+            $e->getMessage(),
             \Airship\throwableToArray($e)
         );
 
