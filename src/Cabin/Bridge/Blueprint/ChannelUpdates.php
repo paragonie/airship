@@ -352,7 +352,7 @@ class ChannelUpdates extends BlueprintGear
             if (!AsymmetricCrypto::verify($data['no_updates'], $this->channelPublicKey, $sig, true)) {
                 throw new CouldNotUpdate('Invalid signature from channel');
             }
-            $time = (new \DateTime($data['no_updates']))->add(new \DateInterval('PT01D'));
+            $time = (new \DateTime($data['no_updates']))->add(new \DateInterval('P01D'));
             if ($time < $originated) {
                 throw new CouldNotUpdate('Channel is reporting a stale "no update" status');
             }
