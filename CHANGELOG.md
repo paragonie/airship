@@ -1,3 +1,9 @@
+## Version 1.2.1 - 2016-07-09
+
+  * [#111](https://github.com/paragonie/airship/issues/111):
+    Fixed bugs with the notary API that was breaking the auto-updater.
+  * Corrected the variable names used to handle uncaught exceptions.
+
 ## Version 1.2.0 - 2016-07-07
 
   * [#46](https://github.com/paragonie/airship/issues/46):
