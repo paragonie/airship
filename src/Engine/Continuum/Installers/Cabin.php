@@ -89,15 +89,47 @@ class Cabin extends BaseInstaller
         array $metadata = []
     ): bool {
         if (!$this->defaultCabinConfig($nameSpace)) {
+            self::$continuumLogger->store(
+                LogLevel::ERROR,
+                'Could not create default configuration.',
+                [
+                    'namespace' => $nameSpace,
+                    'metadata' => $metadata
+                ]
+            );
             return false;
         }
         if (!$this->createEmptyFiles($nameSpace)) {
+            self::$continuumLogger->store(
+                LogLevel::ERROR,
+                'Could not create empty files.',
+                [
+                    'namespace' => $nameSpace,
+                    'metadata' => $metadata
+                ]
+            );
             return false;
         }
         if (!$this->updateCabinsRegistry($nameSpace, $metadata)) {
+            self::$continuumLogger->store(
+                LogLevel::ERROR,
+                'Could not update the cabins registry.',
+                [
+                    'namespace' => $nameSpace,
+                    'metadata' => $metadata
+                ]
+            );
             return false;
         }
         if (!$this->createSymlinks($nameSpace)) {
+            self::$continuumLogger->store(
+                LogLevel::ERROR,
+                'Could not create symlinks for new cabin.',
+                [
+                    'namespace' => $nameSpace,
+                    'metadata' => $metadata
+                ]
+            );
             return false;
         }
         return true;
@@ -249,7 +281,7 @@ class Cabin extends BaseInstaller
 
         self::$continuumLogger->store(
             LogLevel::INFO,
-            'Install successful',
+            'Cabin install successful',
             $this->getLogContext($fileInfo)
         );
 

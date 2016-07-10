@@ -103,6 +103,11 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 if ($this->bypassSecurityAndJustInstall) {
                     // I'm sorry, Dave. I'm afraid I can't do that.
                     $this->log('Core update verification cannot be bypassed', LogLevel::ERROR);
+                    self::$continuumLogger->store(
+                        LogLevel::ALERT,
+                        'CMS Airship core update - security bypass ignored.',
+                        $this->getLogContext($updateInfo, $updateFile)
+                    );
                 }
 
                 /**

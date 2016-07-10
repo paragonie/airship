@@ -111,6 +111,10 @@ abstract class Installer
     {
         if ($set) {
             $this->log('Disabling the security verification', LogLevel::WARNING);
+            self::$continuumLogger->store(
+                LogLevel::INFO,
+                'Security bypassed'
+            );
         }
         $this->bypassSecurityAndJustInstall = $set;
         return $this;
@@ -161,6 +165,24 @@ abstract class Installer
     public function download(array $update = []): InstallFile
     {
         if ($this->localInstallFile instanceof InstallFile) {
+            self::$continuumLogger->store(
+                LogLevel::DEBUG,
+                'Local install file used instead of downloading.',
+                [
+                    'installFile' => [
+                        'hash' =>
+                            $this->localInstallFile->getHash(),
+                        'path' =>
+                            $this->localInstallFile->getPath(),
+                        'signature' =>
+                            $this->localInstallFile->getSignature(),
+                        'size' =>
+                            $this->localInstallFile->getSize(),
+                        'version' =>
+                            $this->localInstallFile->getVersion()
+                    ]
+                ]
+            );
             return $this->localInstallFile;
         }
         // If this was not supplied, we need to get it.
@@ -194,6 +216,7 @@ abstract class Installer
         $hash = Util::hash($body);
         $body = null;
         \clearstatcache();
+
         return new InstallFile(
             $this->supplier,
             [
@@ -456,6 +479,11 @@ abstract class Installer
                 'supplier' => $this->supplier->getName(),
                 'name' => $this->package
             ]
+        );
+        self::$continuumLogger->store(
+            LogLevel::DEBUG,
+            'Package marked as installed',
+            $this->getLogContext($install)
         );
         return $db->commit();
     }
