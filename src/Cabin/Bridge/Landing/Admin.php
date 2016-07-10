@@ -15,6 +15,7 @@ use Airship\Engine\{
     State
 };
 use GuzzleHttp\Client;
+use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -214,11 +215,17 @@ class Admin extends AdminOnly
         $post = $this->post(new SettingsFilter());
         if (!empty($post)) {
             if ($this->saveSettings($post)) {
+                \Airship\clear_cache();
                 \Airship\redirect(
                     $this->airship_cabin_prefix . '/admin/settings',
                     [
                         'msg' => 'saved'
                     ]
+                );
+            } else {
+                $this->log(
+                    'Could not save new settings',
+                    LogLevel::ALERT
                 );
             }
         }
