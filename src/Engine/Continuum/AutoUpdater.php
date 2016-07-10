@@ -246,6 +246,25 @@ abstract class AutoUpdater
         }
 
         $data = \Airship\parseJSON($merkle['data'], true);
+        if ($data['action'] !== 'CORE') {
+            if (!\hash_equals($this->type, $data['pkg_type'])) {
+                $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
+                // Wrong package type
+                return false;
+            }
+            if (!\hash_equals($info->getSupplierName(), $data['supplier'])) {
+                $this->log('Wrong supplier', LogLevel::DEBUG, $debugArgs);
+                // Wrong supplier
+                return false;
+            }
+            if (!\hash_equals($info->getPackageName(), $data['name'])) {
+                $this->log('Wrong package', LogLevel::DEBUG, $debugArgs);
+                // Wrong package
+                return false;
+            }
+        }
+
+        $data = \Airship\parseJSON($merkle['data'], true);
         // Finally, we verify that the checksum matches the entry in our Merkle tree:
         return \hash_equals($file->getHash(), $data['checksum']);
     }
