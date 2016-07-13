@@ -195,7 +195,7 @@ if (!empty($state->universal['debug'])) {
 
         \header('HTTP/1.1 500 Internal Server Error');
         echo \file_get_contents(
-            __DIR__ . '/error_pages/uncaught-exception.html'
+            __DIR__ . '/../error_pages/uncaught-exception.html'
         );
         exit(1);
     }
