@@ -1,3 +1,9 @@
+## Version 1.2.2 - 2016-07-13
+
+  * Improved Continuum/Keyggdrasil logging.
+  * Created a tool for automating step one of the installer from the command 
+    line.
+
 ## Version 1.2.1 - 2016-07-09
 
   * [#111](https://github.com/paragonie/airship/issues/111):
