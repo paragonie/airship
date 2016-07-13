@@ -1,3 +1,8 @@
+## Version 1.2.3 - 2016-07-13
+
+  * The tool created in `1.2.2` for automated deployments was not
+    functional before Airship was first installed.
+
 ## Version 1.2.2 - 2016-07-13
 
   * Improved Continuum/Keyggdrasil logging.
