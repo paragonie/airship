@@ -74,6 +74,8 @@ class Install
         // half-finished configuration settings (e.g. database passwords):
         if (empty($this->data['step'])) {
             $this->data['step'] = 1;
+        }
+        if (empty($this->data['token'])) {
             $this->data['token'] = Base64::encode(
                 \random_bytes(33)
             );
