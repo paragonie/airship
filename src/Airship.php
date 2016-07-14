@@ -449,6 +449,10 @@ function json_response($result, $signingKey = null)
 {
     if (!\headers_sent()) {
         \header("Content-Type: application/json");
+        \header('X-Content-Type-Options: nosniff');
+        \header('X-Download-Options: noopen');
+        \header('X-Frame-Options: SAMEORIGIN');
+        \header('X-XSS-Protection: 1; mode=block');
     }
     if ($signingKey instanceof SignatureSecretKey || $signingKey instanceof SignatureKeyPair) {
         if ($signingKey instanceof SignatureKeyPair) {

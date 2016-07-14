@@ -336,6 +336,7 @@ class Lens
         $state = State::instance();
         \header('Content-Type: ' . $mimeType);
         \header('Content-Language: ' . $state->lang);
+        \header('X-Content-Type-Options: nosniff');
         \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
         \header('X-XSS-Protection: 1; mode=block');
         if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {

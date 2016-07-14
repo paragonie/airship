@@ -65,8 +65,9 @@ if (empty($_POST)) {
         if (!\headers_sent()) {
             \header('Content-Type: text/html;charset=UTF-8');
             \header('Content-Language: ' . $state->lang);
-            \header('X-XSS-Protection: 1; mode=block');
+            \header('X-Content-Type-Options: nosniff');
             \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
+            \header('X-XSS-Protection: 1; mode=block');
         }
         $csp =  $cspCache->get($lookup);
         if (!empty($csp)) {
@@ -154,6 +155,7 @@ if (!empty($state->universal['debug'])) {
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
             header('Content-Type: text/plain;charset=UTF-8');
+            header('X-Content-Type-Options: nosniff');
         }
         $state->logger->log(
             LogLevel::ERROR,

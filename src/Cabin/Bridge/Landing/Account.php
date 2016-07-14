@@ -318,7 +318,7 @@ class Account extends LandingGear
             $renderer->setHeight(384);
             $renderer->setWidth(384);
             $writer = new QRCodeWriter($renderer);
-            \header('Content-Type: image/svg+xml');
+            $this->airship_lens_object->sendStandardHeaders('image/svg+xml');
         }
         $gauth->makeQRCode(
             $writer,

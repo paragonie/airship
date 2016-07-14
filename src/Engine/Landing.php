@@ -396,6 +396,7 @@ class Landing
         if (!\headers_sent()) {
             \header('Content-Type: text/html;charset=UTF-8');
             \header('Content-Language: ' . $state->lang);
+            \header('X-Content-Type-Options: nosniff');
             \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
             \header('X-XSS-Protection: 1; mode=block');
             $hpkp = $state->HPKP;
