@@ -93,6 +93,18 @@ class PublicFiles extends LandingGear
 
             // Serve the file
             \header('Content-Type: ' . $fileData['type']);
+
+            /**
+             * The following headers are necessary because Microsoft Internet
+             * Explorer has a documented design flaw that, left unhandled, can
+             * introduce a stored XSS vulnerability. The recommended solution
+             * would be "never use Internet Explorer", but some people don't have
+             * a choice in that matter.
+             */
+            \header('Content-Disposition: attachment; filename="' . urlencode($fileData['filename']) . '"');
+            \header('X-Content-Type-Options: nosniff');
+            \header('X-Download-Options: noopen');
+
             $this->airship_lens_object->sendStandardHeaders($fileData['type']);
             \readfile($realPath);
             exit;
