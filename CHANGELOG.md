@@ -1,3 +1,8 @@
+## Version 1.2.4 - 2016-07-13
+
+  * Add several headers to static file downloads to prevent stored XSS
+    vulnerabilities in Internet Explorer and Flash. [HackerOne Report](https://hackerone.com/reports/151231).
+
 ## Version 1.2.3 - 2016-07-13
 
   * The tool created in `1.2.2` for automated deployments was not
