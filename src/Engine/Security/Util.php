@@ -37,12 +37,16 @@ abstract class Util
         "\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f" .
         "\x70\x71\x72\x73\x74\x75\x76\x77" .
         "\x78\x79\x7a\x7b\x7c\x7d\x7e";
-    const ALPHANUMERIC = '0123456789' .
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
-        'abcdefghijklmnopqrstuvwxyz';
-    const NUMERIC = '0123456789';
     const UPPER_ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const LOWER_ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+    const NUMERIC = '0123456789';
+    const ALPHANUMERIC = self::NUMERIC .
+        self::UPPER_ALPHA .
+        self::LOWER_ALPHA;
+    const DEFAULT_MIME_BLOCK = ['text/', 'application', 'xml', 'svg'];
+
+    const BASE64_URLSAFE = self::ALPHANUMERIC . '-_';
+    const MIME_CHARS = self::BASE64_URLSAFE . '/=';
 
     /**
      * Only allow characters present in the whitelist string to pass through
@@ -64,6 +68,59 @@ abstract class Util
             }
         }
         return $output;
+    }
+
+    /**
+     * @param string $mimeType
+     * @param string $default
+     * @param array $badSubstrings
+     * @return string
+     */
+    public static function downloadFileType(
+        string $mimeType,
+        string $default = 'text/plain',
+        array $badSubstrings = self::DEFAULT_MIME_BLOCK
+    ): string {
+        $block = false;
+        foreach ($badSubstrings as $str) {
+            $block = $block || \strpos($mimeType, $str) !== false;
+        }
+
+        if ($block) {
+            $p = \strpos($mimeType, ';');
+            if ($p !== false) {
+                return self::charWhitelist(
+                        $default,
+                        self::MIME_CHARS
+                    ) .
+                    '; ' .
+                    self::charWhitelist(
+                        \substr($mimeType, $p),
+                        self::MIME_CHARS
+                    );
+            }
+            return $default;
+        }
+
+        // Not a blocked MIME type, but we should still filter it
+        // to prevent CRLF injections, etc. A character whitelist
+        // is better than a blacklist.
+        $p = \strpos($mimeType, ';');
+        if ($p !== false) {
+            return self::charWhitelist(
+                self::subString($mimeType, 0, $p - 1),
+                self::MIME_CHARS
+            ) .
+            '; ' .
+            self::charWhitelist(
+                self::subString($mimeType, $p),
+                self::MIME_CHARS
+            );
+        }
+        return self::charWhitelist(
+            $mimeType,
+            self::MIME_CHARS
+        );
     }
     
     /**

@@ -7,6 +7,7 @@ use Airship\Engine\{
     Gears,
     Cache\File as FileCache,
     Cache\SharedMemory as MemoryCache,
+    Lens,
     State
 };
 use Psr\Log\LogLevel;
@@ -15,6 +16,7 @@ use Psr\Log\LogLevel;
  * @global array $active
  * @global Database[] $dbPool
  * @global State $state
+ * @global Lens $lens
  */
 
 // Are we still installing?

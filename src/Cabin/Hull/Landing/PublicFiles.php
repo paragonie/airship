@@ -7,6 +7,7 @@ use Airship\Alerts\{
     FileSystem\FileNotFound,
     Router\EmulatePageNotFound
 };
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -43,7 +44,7 @@ class PublicFiles extends LandingGear
      * @route files/(.*)
      * @throws EmulatePageNotFound
      */
-    public function download(string $path)
+    public function download(string $path, string $default = 'text/plain')
     {
         if (!$this->can('read')) {
             throw new EmulatePageNotFound;
@@ -62,27 +63,7 @@ class PublicFiles extends LandingGear
                 throw new FileNotFound();
             }
             // All text/whatever needs to be text/plain; no HTML or JS payloads allowed
-            if (
-                \substr($fileData['type'], 0, 5) === 'text/'
-                    ||
-                \strpos($fileData['type'], 'application') !== false
-                    ||
-                \strpos($fileData['type'], 'xml') !== false
-                    ||
-                \strpos($fileData['type'], 'svg') !== false
-            ) {
-                $p = \strpos($fileData['type'], ';');
-                if ($p !== false) {
-                    $fileData['type'] = 'text/plain; ' .
-                        \preg_replace(
-                            '#[^A-Za-z0-9/=]#',
-                            '',
-                            \substr($fileData['type'], $p)
-                        );
-                } else {
-                    $fileData['type'] = 'text/plain';
-                }
-            }
+            $fileData['type'] = Util::downloadFileType($fileData['type'], 'text/plain');
 
             $c = $this->config('file.cache');
             if ($c > 0) {
@@ -101,7 +82,7 @@ class PublicFiles extends LandingGear
              * would be "never use Internet Explorer", but some people don't have
              * a choice in that matter.
              */
-            \header('Content-Disposition: attachment; filename="' . urlencode($fileData['filename']) . '"');
+            \header('Content-Disposition: attachment; filename="' . \urlencode($fileData['filename']) . '"');
             \header('X-Content-Type-Options: nosniff');
             \header('X-Download-Options: noopen');
 

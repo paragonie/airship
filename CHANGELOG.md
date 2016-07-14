@@ -1,3 +1,7 @@
+## Unreleased
+
+  * Separate MIME type output filter into its own method.
+
 ## Version 1.2.4 - 2016-07-13
 
   * Add several headers to static file downloads to prevent stored XSS
