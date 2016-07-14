@@ -39,7 +39,7 @@ class Blog extends BlueprintGear
                 (int) $post['reply_to'],
                 $blogPostId
             )
-            : null;
+            : 0;
 
         // Enforce maximum comment reply depth.
         if ($replyTo) {

@@ -317,7 +317,7 @@ class ChannelUpdates extends BlueprintGear
         }
         foreach ($resp as $r) {
             $r->then(function (ResponseInterface $response) {
-                $body = $response->getBody();
+                $body = (string) $response->getBody();
                 $context = \json_decode(Binary::safeSubstr($body, 89));
                 $this->log(
                     'Peer notified of channel update',

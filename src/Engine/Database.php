@@ -571,7 +571,7 @@ class Database implements DBInterface
     public function insertMany(string $table, array $maps): bool
     {
         if (empty($maps)) {
-            return null;
+            return false;
         }
         $first = $maps[0];
         foreach ($maps as $map) {
