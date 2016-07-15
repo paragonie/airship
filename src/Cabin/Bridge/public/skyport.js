@@ -239,4 +239,13 @@ $(document).ready(function() {
     skyport.init();
     skyport.loadAjaxPage("installed");
     setTimeout(skyport.refreshLeftMenu, skyport.timeout);
+
+    $(".js-update-log-toggle").on("click", function() {
+        var toggleText = $(this).attr("data-toggle-text");
+        $(this).attr("data-toggle-text", $(this).text());
+        $(this).text(toggleText);
+
+        // Toggle next row in table that contains the extended info
+        $(this).parent().parent().next().toggleClass("update-log-hidden");
+    });
 });

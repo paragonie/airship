@@ -627,3 +627,31 @@ label.required-form::after {
 #three-way-split ul li a {
     cursor: pointer;
 }
+.update-log {
+    width: 100%;
+}
+.update-log th, .update-log td {
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+.update-log th:first-child, .update-log td:first-child {
+    padding-left: 0;
+}
+.update-log th:last-child, .update-log td:last-child {
+    padding-right: 0;
+}
+.update-log th {
+    font-weight: bold;
+}
+.update-log-entry-actions {
+    text-align: right !important;
+}
+.update-log-textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 4px;
+}
+.update-log-hidden {
+    display: none;
+}
