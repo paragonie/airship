@@ -171,6 +171,7 @@ function chunk(string $str, string $token = '/'): array
  */
 function clear_cache()
 {
+    \clearstatcache();
     if (\extension_loaded('apcu')) {
         \apcu_clear_cache();
     }
