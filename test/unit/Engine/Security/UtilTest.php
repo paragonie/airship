@@ -19,6 +19,9 @@ class UtilTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($sample[0], $sample[1]);
     }
 
+    /**
+     * @covers Util::downloadFileType()
+     */
     public function testDownloadFileType()
     {
         $vectors = [

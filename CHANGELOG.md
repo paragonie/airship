@@ -1,6 +1,10 @@
-## Unreleased
+## Version 1.2.5 - 2016-07-17
 
-  * Separate MIME type output filter into its own method.
+  * Separate MIME type output filter into its own method, so it can be covered
+    by unit tests.
+  * [#115](https://github.com/paragonie/airship/issues/115):
+    More readable extension log.
+  * Disable MIME sniffing everywhere.
 
 ## Version 1.2.4 - 2016-07-13
 
