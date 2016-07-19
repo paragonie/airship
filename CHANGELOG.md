@@ -1,3 +1,8 @@
+## Version 1.2.7 - 2016-07-18
+
+  * Added logic to the Airship updater to attempt to run `composer install`
+    (if we can) if an update includes a `composer.lock` file.
+
 ## Version 1.2.6 - 2016-07-18
 
   * Update Guzzle [for upstream fix to CVE-2016-5385](https://github.com/guzzle/guzzle/commit/9d521b23146cb6cedd772770a2617fd6cbdb1596).
