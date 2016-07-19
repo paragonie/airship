@@ -190,6 +190,35 @@ class Airship extends AutoUpdater implements ContinuumInterface
             }
         }
 
+        // If we included composer.lock, we need to install the dependencies.
+        if (\in_array('composer.lock', $metadata['files'])) {
+            $composers = [
+                '/usr/bin/composer',
+                '/usr/bin/composer.phar',
+                \dirname(ROOT) . '/composer',
+                \dirname(ROOT) . '/composer.phar'
+            ];
+            $composerUpdated = false;
+            foreach ($composers as $composer) {
+                if (\file_exists($composer)) {
+                    $dir = \getcwd();
+                    \chdir(\dirname(ROOT));
+                    \shell_exec("{$composer} install");
+                    \chdir($dir);
+                    $composerUpdated = true;
+                    break;
+                }
+            }
+
+            if (!$composerUpdated) {
+                self::$continuumLogger->store(
+                    LogLevel::INFO,
+                    'Could not update dependencies. Please run Composer manually.',
+                    $this->getLogContext($info, $file)
+                );
+            }
+        }
+
         // Free up the updater alias
         $garbageAlias = Base64UrlSafe::encode(\random_bytes(63)) . '.phar';
         $updater->setAlias($garbageAlias);
@@ -212,8 +241,10 @@ class Airship extends AutoUpdater implements ContinuumInterface
      */
     protected function replaceFile(string $filename): bool
     {
-        if (\file_exists(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup')) {
-            \unlink(ROOT . DIRECTORY_SEPARATOR . $filename . '.backup');
+        if (\file_exists(\dirname(ROOT) . DIRECTORY_SEPARATOR . $filename . '.backup')) {
+            \unlink(
+                \dirname(ROOT) . DIRECTORY_SEPARATOR . $filename . '.backup'
+            );
         }
 
         // Make backup copies of the old file, just in case someone
