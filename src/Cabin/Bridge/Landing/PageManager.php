@@ -469,7 +469,7 @@ class PageManager extends LoggedInUsersOnly
     {
         $page = [];
         $path = $this->determinePath($cabin);
-        if (\count($_GET) !== \count($_GET, \COUNT_RECURSIVE)) {
+        if (!\is1DArray($_GET)) {
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNamespaces();
