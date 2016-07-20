@@ -506,6 +506,9 @@ function keySlice(array $source, array $keys = []): array
  */
 function list_all_files(string $folder, string $extension = '*'): array
 {
+    if (!\is_dir($folder)) {
+        return [];
+    }
     $dir = new \RecursiveDirectoryIterator($folder);
     $ite = new \RecursiveIteratorIterator($dir);
     if ($extension === '*') {
