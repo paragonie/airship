@@ -157,7 +157,11 @@ class PageManager extends LoggedInUsersOnly
         }
 
         try {
-            $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
+            $page = $this->pg->getPageInfo(
+                $cabin,
+                $path,
+                (string) ($_GET['page'] ?? '')
+            );
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
@@ -222,7 +226,11 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         try {
-            $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
+            $page = $this->pg->getPageInfo(
+                $cabin,
+                $path,
+                (string) ($_GET['page'] ?? '')
+            );
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
@@ -476,7 +484,7 @@ class PageManager extends LoggedInUsersOnly
             $page = $this->pg->getPageInfo(
                 $cabin,
                 $path,
-                $_GET['page']
+                (string) ($_GET['page'] ?? '')
             );
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
@@ -534,7 +542,11 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         try {
-            $page = $this->pg->getPageInfo($cabin, $path, $_GET['page']);
+            $page = $this->pg->getPageInfo(
+                $cabin,
+                $path,
+                (string) ($_GET['page'] ?? '')
+            );
             $history = $this->pg->getHistory((int) $page['pageid']);
         } catch (CustomPageNotFoundException $ex) {
             \Airship\redirect(
