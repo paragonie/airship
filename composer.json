@@ -55,6 +55,7 @@
     "paragonie/recaptcha": "^2",
     "psr/http-message": "^1",
     "psr/log": "^1",
+    "roave/security-advisories": "dev-master",
     "twig/twig": "^1"
   },
   "suggest": {
