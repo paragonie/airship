@@ -1,3 +1,9 @@
+## Version 1.2.8 - Unreleased
+
+  * In addition to expiring after a set period of time, account recovery
+    URLs can only be used once. This fixes this feature by making it in
+    line with the expected behavior.
+
 ## Version 1.2.7 - 2016-07-18
 
   * Added logic to the Airship updater to attempt to run `composer install`

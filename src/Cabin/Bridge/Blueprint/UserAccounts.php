@@ -198,6 +198,22 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * @param string $selector
+     * @return bool
+     */
+    public function deleteRecoveryToken(string $selector): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'airship_user_recovery',
+            [
+                'selector' => $selector
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Edit a group.
      *
      * @param int $groupId

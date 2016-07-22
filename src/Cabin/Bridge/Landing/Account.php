@@ -817,6 +817,7 @@ class Account extends LandingGear
         );
         if (\hash_equals($recoveryInfo['hashedtoken'], $calc)) {
             $_SESSION['userid'] = (int) $recoveryInfo['userid'];
+            $this->acct->deleteRecoveryToken($selector);
             \Airship\redirect($this->airship_cabin_prefix . '/my/account');
         }
         \Airship\redirect($this->airship_cabin_prefix . '/login');
