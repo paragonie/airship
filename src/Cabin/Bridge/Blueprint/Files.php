@@ -25,26 +25,6 @@ require_once __DIR__.'/init_gear.php';
 class Files extends BlueprintGear
 {
     /**
-     * We rename these to .txt internally just to avoid stupid errors down the road.
-     * This affects the real file name, not the virtual one the user sees.
-     *
-     * @var array
-     */
-    protected $badFileExtensions = [
-        'php',
-        'php3',
-        'php4',
-        'php5',
-        'php7', // Stranger things have happened!
-        'phtml',
-        'html',
-        'js',
-        'pl',
-        'py',
-        'sh'
-    ];
-
-    /**
      * @var \finfo
      */
     protected $finfo;
@@ -808,7 +788,7 @@ class Files extends BlueprintGear
         }
 
         // Actually upload the file.
-        $destination = $this->moveUploadedFile($file['tmp_name'], $ext);
+        $destination = $this->moveUploadedFile($file['tmp_name']);
         $fullpath = AIRSHIP_UPLOADS . $destination;
 
         // Get the MIME type and checksum
@@ -824,7 +804,12 @@ class Files extends BlueprintGear
         $this->db->beginTransaction();
 
         // Get a unique file name
-        $filename = $this->getUniqueFileName($name, $ext, $directoryId, $cabin);
+        $filename = $this->getUniqueFileName(
+            $name,
+            $ext,
+            $directoryId,
+            $cabin
+        );
 
         // Insert the new record
         $store = [
@@ -837,7 +822,7 @@ class Files extends BlueprintGear
             'checksum' =>
                 $checksum,
             'uploaded_by' =>
-                $attribution['uploaded_by'] ?? $this->getActiveUserId(),
+                (int) ($attribution['uploaded_by'] ?? $this->getActiveUserId()),
         ];
         if ($directoryId) {
             $store['directory'] = (int) $directoryId;
@@ -945,17 +930,11 @@ class Files extends BlueprintGear
      * trusted methods (which handle validation). Don't change it.
      *
      * @param string $tmp_name
-     * @param string $ext
-     * @return string "HH/HH/HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH.ext"
+     * @return string "HH/HH/HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
      * @throws UploadError
      */
-    private function moveUploadedFile(string $tmp_name, string $ext): string
+    private function moveUploadedFile(string $tmp_name): string
     {
-        if (\in_array(\strtolower($ext), $this->badFileExtensions)) {
-            // Just to be extra cautious. The internal filename isn't that
-            // important anyway.
-            $ext = 'txt';
-        }
         $dir1 = \Sodium\bin2hex(\random_bytes(1));
         $dir2 = \Sodium\bin2hex(\random_bytes(1));
         $base = AIRSHIP_UPLOADS . $dir1 . DIRECTORY_SEPARATOR . $dir2;
@@ -963,9 +942,7 @@ class Files extends BlueprintGear
             \mkdir($base, 0775, true);
         }
         do {
-            $filename = \Sodium\bin2hex(\random_bytes(22)) .
-                '.' .
-                \strtolower($ext);
+            $filename = \Sodium\bin2hex(\random_bytes(22));
         } while (\file_exists($base . DIRECTORY_SEPARATOR . $filename));
 
         if (!\move_uploaded_file($tmp_name, $base . DIRECTORY_SEPARATOR . $filename)) {
