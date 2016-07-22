@@ -134,13 +134,27 @@ class Files extends BlueprintGear
     ): bool {
         if (empty($parent)) {
             return $this->db->exists(
-                'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND name = ? AND cabin = ?',
+                'SELECT
+                     count(*)
+                 FROM
+                     airship_dirs
+                 WHERE
+                         parent IS NULL
+                     AND name = ?
+                     AND cabin = ?',
                 $dirName,
                 $cabin
             );
         }
         return $this->db->exists(
-            'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND cabin = ?',
+            'SELECT
+                 count(*)
+             FROM
+                 airship_dirs
+             WHERE
+                     parent = ?
+                 AND name = ?
+                 AND cabin = ?',
             $parent,
             $dirName,
             $cabin
@@ -168,13 +182,27 @@ class Files extends BlueprintGear
             }
             if (empty($parent)) {
                 $dir = $this->db->row(
-                    'SELECT * FROM airship_dirs WHERE parent IS NULL AND name = ? AND cabin = ?',
+                    'SELECT
+                         *
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent IS NULL
+                         AND name = ?
+                         AND cabin = ?',
                     $piece,
                     $cabin
                 );
             } else {
                 $dir = $this->db->row(
-                    'SELECT * FROM airship_dirs WHERE parent = ? AND name = ? AND cabin = ?',
+                    'SELECT
+                         *
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent = ?
+                         AND name = ?
+                         AND cabin = ?',
                     $parent,
                     $piece,
                     $cabin
@@ -210,12 +238,26 @@ class Files extends BlueprintGear
     ): array {
         if (empty($directoryId)) {
             $children = $this->db->run(
-                'SELECT * FROM airship_dirs WHERE parent IS NULL AND cabin = ? ORDER BY name ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_dirs
+                 WHERE
+                         parent IS NULL
+                     AND cabin = ?
+                 ORDER BY name ASC',
                 $cabin
             );
         } else {
             $children = $this->db->run(
-                'SELECT * FROM airship_dirs WHERE parent = ? AND cabin = ? ORDER BY name ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_dirs
+                 WHERE
+                         parent = ?
+                     AND cabin = ?
+                 ORDER BY name ASC',
                 $directoryId,
                 $cabin
             );
@@ -311,7 +353,14 @@ class Files extends BlueprintGear
     {
         $part = \array_shift($parts);
         $parent = $this->db->cell(
-            'SELECT directoryid FROM airship_dirs WHERE parent IS NULL AND name = ? AND cabin = ?',
+            'SELECT
+                 directoryid
+             FROM
+                 airship_dirs
+             WHERE
+                     parent IS NULL
+                 AND name = ?
+                 AND cabin = ?',
             $part,
             $cabin
         );
@@ -321,7 +370,14 @@ class Files extends BlueprintGear
 
         foreach ($parts as $part) {
             $parent = $this->db->cell(
-                'SELECT * FROM airship_dirs WHERE name = ? AND parent = ? AND cabin = ?',
+                'SELECT
+                     *
+                 FROM
+                     airship_dirs
+                 WHERE
+                         name = ?
+                     AND parent = ?
+                     AND cabin = ?',
                 $part,
                 $parent,
                 $cabin
@@ -350,12 +406,26 @@ class Files extends BlueprintGear
     ): array {
         if (empty($rootDir)) {
             $children = $this->db->run(
-                'SELECT * FROM airship_dirs WHERE parent IS NULL AND cabin = ? ORDER BY name ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_dirs
+                 WHERE
+                         parent IS NULL
+                     AND cabin = ?
+                 ORDER BY name ASC',
                 $cabin
             );
         } else {
             $children = $this->db->run(
-                'SELECT * FROM airship_dirs WHERE parent = ? AND cabin = ? ORDER BY name ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_dirs
+                 WHERE
+                         parent = ?
+                     AND cabin = ?                     
+                 ORDER BY name ASC',
                 $this->getDirectoryId(\Airship\chunk($rootDir), $cabin),
                 $cabin
             );
@@ -399,12 +469,26 @@ class Files extends BlueprintGear
     ): array {
         if (empty($directoryId)) {
             $children = $this->db->run(
-                'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? ORDER BY filename ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory IS NULL
+                     AND cabin = ?
+                 ORDER BY filename ASC',
                 $cabin
             );
         } else {
             $children = $this->db->run(
-                'SELECT * FROM airship_files WHERE directory = ? AND cabin IS NULL ORDER BY filename ASC',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory = ?
+                     AND cabin IS NULL
+                 ORDER BY filename ASC',
                 $directoryId
             );
         }
@@ -458,24 +542,37 @@ class Files extends BlueprintGear
     ): array {
         if (empty($path)) {
             $fileInfo = $this->db->row(
-                'SELECT * FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ?',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory IS NULL
+                     AND cabin = ?
+                     AND filename = ?',
                 $cabin,
                 $filename
             );
         } else {
             $fileInfo = $this->db->row(
-                'SELECT * FROM airship_files WHERE directory = ? AND filename = ?',
+                'SELECT
+                     *
+                 FROM
+                     airship_files
+                 WHERE
+                         directory = ?
+                     AND filename = ?',
                 $path,
                 $filename
             );
+        }
+        if (empty($fileInfo)) {
+            throw new FileNotFound();
         }
         if (\file_exists(AIRSHIP_UPLOADS . $fileInfo['realname'])) {
             $fileInfo['size'] = \filesize(AIRSHIP_UPLOADS . $fileInfo['realname']);
         } else {
             $fileInfo['size'] = 0;
-        }
-        if (empty($fileInfo)) {
-            throw new FileNotFound();
         }
         return $fileInfo;
     }
@@ -583,7 +680,14 @@ class Files extends BlueprintGear
             // Detect collisions then update if there are none
             if ($newDir) {
                 $exists = $this->db->exists(
-                    'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND directoryid != ?',
+                    'SELECT
+                         count(*)
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent = ?
+                         AND name = ?
+                         AND directoryid != ?',
                     $newDir,
                     $post['new_name'],
                     $dirId
@@ -606,7 +710,15 @@ class Files extends BlueprintGear
                 );
             } else {
                 $exists = $this->db->exists(
-                    'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND cabin = ? AND name = ? AND directoryid != ?',
+                    'SELECT
+                         count(*)
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent IS NULL
+                         AND cabin = ?
+                         AND name = ?
+                         AND directoryid != ?',
                     $cabin,
                     $post['new_name'],
                     $dirId
@@ -632,14 +744,29 @@ class Files extends BlueprintGear
             // Detect name collisions
             if ($newDir) {
                 $exists = $this->db->exists(
-                    'SELECT count(*) FROM airship_dirs WHERE parent = ? AND name = ? AND directoryid != ?',
+                    'SELECT
+                         count(*)
+                     FROM
+                         airship_dirs
+                     WHERE
+                             parent = ?
+                         AND name = ?
+                         AND directoryid != ?',
                     $newDir,
                     $post['new_name'],
                     $dirId
                 );
             } else {
                 $exists = $this->db->exists(
-                    'SELECT count(*) FROM airship_dirs WHERE parent IS NULL AND cabin = ? AND name = ? AND directoryid != ?',
+                    'SELECT
+                         count(*)
+                     FROM
+                         airship_dirs
+                     WHERE 
+                             parent IS NULL
+                         AND cabin = ?
+                         AND name = ?
+                         AND directoryid != ?',
                     $cabin,
                     $post['new_name'],
                     $dirId
@@ -697,7 +824,11 @@ class Files extends BlueprintGear
             return false;
         }
 
-        if ($newDir === $fileInfo['directory'] && $post['new_name'] === $fileInfo['filename']) {
+        if (
+            $newDir === $fileInfo['directory']
+                &&
+            $post['new_name'] === $fileInfo['filename']
+        ) {
             // NOP
             $this->db->rollBack();
             return false;
@@ -705,7 +836,15 @@ class Files extends BlueprintGear
 
         if ($newDir === null) {
             $exists = $this->db->exists(
-                'SELECT count(*) FROM airship_files WHERE directory IS NULL AND cabin = ? AND filename = ? AND fileid != ?',
+                'SELECT 
+                     count(*) 
+                 FROM
+                     airship_files
+                 WHERE
+                         directory IS NULL
+                     AND cabin = ?
+                     AND filename = ?
+                     AND fileid != ?',
                 $cabin,
                 $post['new_name'],
                 $fileInfo['fileid']
@@ -717,7 +856,14 @@ class Files extends BlueprintGear
             ];
         } else {
             $exists = $this->db->exists(
-                'SELECT count(*) FROM airship_files WHERE directory = ? AND filename = ? AND fileid != ?',
+                'SELECT
+                     count(*)
+                 FROM
+                     airship_files
+                 WHERE
+                         directory = ?
+                     AND filename = ?
+                     AND fileid != ?',
                 $newDir,
                 $post['new_name'],
                 $fileInfo['fileid']
@@ -970,7 +1116,10 @@ class Files extends BlueprintGear
         $this->db->beginTransaction();
 
         foreach ($this->getChildrenOf($directory, $cabin) as $dir) {
-            $this->recursiveDelete((int) $dir['directoryid'], $cabin);
+            $this->recursiveDelete(
+                (int) $dir['directoryid'],
+                $cabin
+            );
         }
         $this->db->delete(
             'airship_dirs',
