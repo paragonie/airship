@@ -3,6 +3,8 @@
   * In addition to expiring after a set period of time, account recovery
     URLs can only be used once. This fixes this feature by making it in
     line with the expected behavior.
+  * Bootstrap (JS/CSS framework) was removed, as we don't use it.
+  * Dependency update (e.g. HTMLPurifier 4.8.0).
 
 ## Version 1.2.7 - 2016-07-18
 
