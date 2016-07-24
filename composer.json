@@ -39,6 +39,7 @@
     "ext-gd": "*",
     "ext-openssl": "*",
     "ext-libsodium": "^1.0.6",
+    "ext-mbstring": "*",
     "ext-zip": "*",
 
     "bjeavons/zxcvbn-php": "*",
