@@ -1,4 +1,4 @@
-## Version 1.2.8 - Unreleased
+## Version 1.2.8 - 2016-07-26
 
   * In addition to expiring after a set period of time, account recovery
     URLs can only be used once. This fixes this feature by making it in
