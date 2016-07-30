@@ -615,16 +615,16 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v2.1.2",
+            "version": "v2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "a30b348464d8b68b43353d54b22fa513a09b9657"
+                "reference": "f8eeb096558541b67514efbd2819eff2a579f86d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/a30b348464d8b68b43353d54b22fa513a09b9657",
-                "reference": "a30b348464d8b68b43353d54b22fa513a09b9657",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/f8eeb096558541b67514efbd2819eff2a579f86d",
+                "reference": "f8eeb096558541b67514efbd2819eff2a579f86d",
                 "shasum": ""
             },
             "require": {
@@ -648,7 +648,7 @@
                 }
             ],
             "description": "High-level cryptography interface powered by libsodium",
-            "time": "2016-07-11 19:05:54"
+            "time": "2016-07-29 16:31:24"
         },
         {
             "name": "paragonie/hpkp-builder",
@@ -1069,12 +1069,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "38b6e8f7f15fcff90e5d53aa2bd2defee3151ac2"
+                "reference": "d954a95c1be04118dbbda88f3524424695dd886f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/38b6e8f7f15fcff90e5d53aa2bd2defee3151ac2",
-                "reference": "38b6e8f7f15fcff90e5d53aa2bd2defee3151ac2",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d954a95c1be04118dbbda88f3524424695dd886f",
+                "reference": "d954a95c1be04118dbbda88f3524424695dd886f",
                 "shasum": ""
             },
             "conflict": {
@@ -1096,6 +1096,7 @@
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
+                "drupal/core": ">=8,<8.1|>=8.1,<8.1.7",
                 "drupal/drupal": ">=8,<8.1|>=8.1,<8.1.7",
                 "firebase/php-jwt": "<2",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
@@ -1186,7 +1187,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2016-07-20 17:24:02"
+            "time": "2016-07-29 12:29:36"
         },
         {
             "name": "twig/twig",
@@ -2720,16 +2721,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "2884c26ce4c1d61aebf423a8b912950fe7c764de"
+                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/2884c26ce4c1d61aebf423a8b912950fe7c764de",
-                "reference": "2884c26ce4c1d61aebf423a8b912950fe7c764de",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/1819adf2066880c7967df7180f4f662b6f0567ac",
+                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac",
                 "shasum": ""
             },
             "require": {
@@ -2765,7 +2766,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:41:56"
+            "time": "2016-07-17 14:02:08"
         },
         {
             "name": "webmozart/assert",
