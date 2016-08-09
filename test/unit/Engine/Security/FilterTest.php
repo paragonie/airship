@@ -9,7 +9,8 @@ use Airship\Engine\Security\Filter\{
     IntFilter,
     IntArrayFilter,
     StringFilter,
-    StringArrayFilter
+    StringArrayFilter,
+    WhiteList
 };
 
 /**
@@ -381,5 +382,49 @@ class FilterTest extends PHPUnit_Framework_TestCase
             $this->fail('Expected a TypeError');
         } catch (\TypeError $ex) {
         }
+    }
+
+    /**
+     * @covers WhiteList
+     */
+    public function testWhiteList()
+    {
+        $filter = (new GeneralFilterContainer())
+            ->addFilter(
+                'test1',
+                (new WhiteList(
+                    'abc',
+                    'def',
+                    'ghi'
+                ))->setDefault('jkl')
+            );
+
+        if (!($filter instanceof GeneralFilterContainer)) {
+            $this->fail('Type error');
+        }
+
+        $before = [
+            'test1' => 'abc'
+        ];
+        $after = $filter($before);
+
+        $this->assertSame(
+            [
+                'test1' => 'abc'
+            ],
+            $after
+        );
+
+        $before = [
+            'test1' => 0.123
+        ];
+        $after = $filter($before);
+
+        $this->assertSame(
+            [
+                'test1' => 'jkl'
+            ],
+            $after
+        );
     }
 }
