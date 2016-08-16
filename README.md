@@ -13,6 +13,8 @@ development framework written for PHP 7.
 CMS Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
 
+> [CMS Airship is available on the AWS Marketplace](https://aws.amazon.com/marketplace/seller-profile?ref=cns_srchrow&id=139a5240-4d65-457b-81cf-6f13833a6ecd)
+
 [Commercial license are available for purchase](https://paragonie.com/contact)
 if your company requires one.
 
