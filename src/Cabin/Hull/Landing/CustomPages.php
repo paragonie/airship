@@ -183,10 +183,10 @@ class CustomPages extends LandingGear
                 $rst = new RSTParser;
                 if (empty($latest['raw'])) {
                     $state->HTMLPurifier->purify(
-                        $rst->parse($latest['body'])
+                        (string) $rst->parse($latest['body'])
                     );
                 }
-                return $rst->parse($latest['body']);
+                return (string) $rst->parse($latest['body']);
             case 'HTML':
             case 'Rich Text':
             default:

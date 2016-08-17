@@ -703,9 +703,7 @@ function render_rst(string $string = '', bool $return = false): string
         if (!\is_dir($cacheDir)) {
             \mkdir($cacheDir, 0775, true);
         }
-        // This actually expects a string. The docblock in gregwar/rst is wrong
-        /** @noinspection PhpParamsInspection */
-        $output = $rst->parse($string);
+        $output = (string) $rst->parse($string);
 
         // Cache for later
         \file_put_contents(
