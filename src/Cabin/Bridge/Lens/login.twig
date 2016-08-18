@@ -17,6 +17,7 @@
                     method="post"
                 >{{ form_token(get_path_url(cabin_url()) ~ "login") }}
                     {% include cargo("form_before_login") ignore missing %}
+                    <h3>{{ __("Please Log In") }}</h3>
                     <label for="username">{{ __("Username") }}:</label>
                     <input
                         type="text"
