@@ -43,6 +43,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         if (empty($_GET['file'])) {
             $this->commonConfirmDeleteDir($dir, $cabin);
             return;
@@ -60,6 +61,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         if (empty($_GET['file'])) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/' . $this->path_middle . '/' . \urlencode($cabin),
@@ -68,6 +70,7 @@ class Files extends FileManager
                 ]
             );
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
     }
 
@@ -81,6 +84,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $this->commonIndex($dir, $cabin);
     }
 
@@ -94,6 +98,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         if (empty($_GET['file'])) {
             $this->commonMoveDir($dir, $cabin);
             return;

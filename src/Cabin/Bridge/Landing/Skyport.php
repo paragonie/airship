@@ -46,6 +46,7 @@ class Skyport extends AdminOnly
         if (!($this->skyport instanceof SkyportBP)) {
             throw new \TypeError('Skyport Blueprint');
         }
+        $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
     }
 
     /**

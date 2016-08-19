@@ -36,6 +36,7 @@ class Permissions extends AdminOnly
         parent::airshipLand();
         $this->perms = $this->blueprint('Permissions');
         $this->users = $this->blueprint('UserAccounts');
+        $this->storeLensVar('active_submenu', ['Admin', 'Crew']);
     }
 
     /**

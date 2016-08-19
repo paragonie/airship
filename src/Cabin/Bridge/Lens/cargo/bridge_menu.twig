@@ -41,8 +41,8 @@
     {% endif %}
     {% if "Hull" in state.cabin_names %}
         <li>
-            <a href="{{ cabin_url() }}blog">
-                <i class="fa fa-book bridge-icon"></i>Blog
+            <a class="bridge-collapse" data-section="Blog" href="{{ cabin_url() }}blog">
+                <i class="fa fa-book bridge-icon"></i>{{ __("Blog") }}
             </a>
             <ul>
                 {% if can_read("blog/category") %}
@@ -85,13 +85,13 @@
     {% endif %}
     {% if can_read("cabins") or can_read("pages") %}
         <li>
-            <a href="{{ cabin_url() }}cabins">
+            <a class="bridge-collapse" data-section="Cabins" href="{{ cabin_url() }}cabins">
                 <i class="fa fa-map-signs bridge-icon"></i>{{ __("Cabins") }}
             </a>
             <ul>
             {% for cabin in state.cabins %}
                 <li>
-                    <a href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}">
+                    <a class="bridge-collapse" data-section="Cabin__{{ cabin.name|e('html_attr') }}" href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}">
                         <i class="fa fa-home bridge-icon"></i>{{ cabin.name }}
                     </a>
                     <ul>
@@ -130,7 +130,7 @@
     {% endif %}
     {% if is_admin() %}
         <li>
-            <a href="{{ cabin_url() }}admin">
+            <a class="bridge-collapse" data-section="Admin" href="{{ cabin_url() }}admin">
                 <i class="fa fa-key bridge-icon"></i>{{ __("Administrative") }}
             </a>
             <ul>
@@ -140,7 +140,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ cabin_url() }}crew">
+                    <a class="bridge-collapse" data-section="Crew" href="{{ cabin_url() }}crew">
                         <i class="fa fa-group bridge-icon"></i>{{ __("Crew") }}
                     </a>
                     <ul>
@@ -167,7 +167,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ cabin_url() }}admin/extensions">
+                    <a class="bridge-collapse" data-section="Extensions" href="{{ cabin_url() }}admin/extensions">
                         <i class="fa fa-plug bridge-icon"></i>{{ __("Extensions") }}
                     </a>
                     <ul>

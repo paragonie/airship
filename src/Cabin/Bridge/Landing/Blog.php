@@ -46,6 +46,7 @@ class Blog extends LoggedInUsersOnly
         parent::airshipLand();
         $this->blog = $this->blueprint('Blog');
         $this->author = $this->blueprint('Author');
+        $this->storeLensVar('active_submenu', 'Blog');
     }
 
     /**

@@ -5,7 +5,12 @@
             {% include cargo("base_meta") %}
         {% block page_css %}{% endblock %}
     {% endblock %}</head>
-    <body data-cabin="Bridge">{% block body %}
+    <body {#
+        #}data-cabin="Bridge" {#
+        #}data-activesubmenu="{% if active_submenu %}{#
+            #}{{ active_submenu|json_encode|e('html_attr') }}{#
+        #}{% endif %}{#
+    #}">{% block body %}
         <div id="site-wrapper">
             <header>{% block header %}
                 {% include cargo("header") %}
@@ -43,6 +48,7 @@
         <script src="{{ "/js/jquery.min.js"|cachebust }}"></script>
         <script src="{{ "/js/jquery-ui.min.js"|cachebust }}"></script>
         <script src="{{ "/js/jquery.browser.min.js"|cachebust }}"></script>
+        <script src="{{ "/static/Bridge/bridge.js"|cachebust }}"></script>
     {% endblock %}
     {% block page_js %}{% endblock %}
     </body>

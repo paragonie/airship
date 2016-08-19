@@ -45,6 +45,7 @@ class Redirects extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/redirects'
             );
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $post = $this->post(/* No data is passed */);
         $redirectId = (int) $redirectId;
         $redirect = $this->pg->getRedirect($cabin, $redirectId);
@@ -85,6 +86,7 @@ class Redirects extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/redirects'
             );
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $post = $this->post(new RedirectFilter());
         $redirect = $this->pg->getRedirect($cabin, (int) $redirectId);
         if (empty($redirect)) {
@@ -125,6 +127,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $this->lens(
             'redirect/for_cabin',
             [
@@ -161,6 +164,7 @@ class Redirects extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins) && !$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
+        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
         $post = $this->post(new RedirectFilter());
         if ($post) {
             if (\Airship\all_keys_exist(['old_url', 'new_url'], $post)) {

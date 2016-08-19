@@ -34,6 +34,7 @@ class Crew extends AdminOnly
         parent::airshipLand();
 
         $this->account = $this->blueprint('UserAccounts');
+        $this->storeLensVar('active_submenu', ['Admin', 'Crew']);
     }
 
     /**

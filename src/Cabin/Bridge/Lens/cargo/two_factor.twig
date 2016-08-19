@@ -6,7 +6,7 @@
     <img src="{{ cabin_url() }}my/account/2-factor/qr-code" alt="QR code" />
 </p>
 <form method="post">{{ form_token() }}
-    <fieldset>
+    <fieldset id="two-factor-options">
         <input
             id="enable_two_factor"
             type="checkbox"

@@ -75,15 +75,11 @@ a:visited {
 a:active, a:hover {
     color: #533a85;
 }
-header {
-    color: #081022;
-    background-color: #EFE5C8;
-}
 .header_wrap {
     border: 0;
     background-color: #181818;
     padding: 3px;
-    color: #F8F8E4;
+    color: #E4E4F8;
 }
 header h1 {
     font-style: italic;
@@ -108,7 +104,7 @@ header h2 {
 }
 .footer-hull a,
 .footer-bridge a {
-    color: #A8D5EF;
+    color: #A8B5EF;
     font-weight: bold;
     text-decoration: none;
 }
@@ -436,13 +432,13 @@ a.pure-button-primary,
 a.pure-button-primary:visited,
 .pure-button-primary {
     background-color: #222222;
-    color: #EFE5C8;
+    color: #A8B5EF;
 }
 a.pure-button-secondary,
 a.pure-button-secondary:visited,
 .pure-button-secondary {
     background-color: #444444;
-    color: #EFE5C8;
+    color: #A8B5EF;
 }
 a.pure-button-tertiary,
 a.pure-button-tertiary:visited,
@@ -495,7 +491,7 @@ a.pure-button-tertiary:hover,
 }
 #bridge_left {
     background-color: #181818;
-    line-height: 1.4;
+    line-height: 1.6;
     padding-right: 1em;
 }
 .bridge-icon {
@@ -529,12 +525,21 @@ a:hover .bridge-icon {
     text-decoration: none;
     transition: color 0.2s;
 }
+#bridge_left a.bridge-collapse {
+    font-weight: bold;
+}
+#bridge_left a.collapse-active {
+    color: #E0E0FF;
+}
+#bridge_left a.collapse-active .bridge-icon {
+    color: #A8B5EF;
+}
 #bridge_left a:hover,
 #bridge_left a:active {
     color: #A8B5EF;
 }
 #bridge_main {
-    background-color: #f8f8f8;
+    background-color: #eff4f7;
     padding-bottom: 1rem;
     border-radius: 2rem 0 0 0;
 }
@@ -586,28 +591,28 @@ a:hover .bridge-icon {
 .bridge_page_list_contents .header_row {
     background-image: -webkit-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -o-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
 }
 .bridge_file_list_header,
@@ -722,7 +727,7 @@ input[type=checkbox].large_checkbox,
     transition: background-color 0.25s;
 }
 .rich_text_show_one {
-    background-color: #FFF5D8 !important;
+    background-color: #E8E8EF !important;
     border: 1px solid rgba(0, 0, 0, 0.25);
     padding: 1rem 0.5rem;
     box-shadow: inset rgba(26, 31, 90, 0.25) 0 0 1ex;
@@ -747,7 +752,6 @@ label.table-cell {
     text-align: right;
 }
 .form-metadata-wrapper {
-    background-color: #E7ECC5;
     border: 1px solid rgba(0, 0, 0, 0.5);
     margin: 1em 0;
     padding: 1em;
@@ -755,39 +759,40 @@ label.table-cell {
 .form-metadata-wrapper > .form-table {
     background-image: -webkit-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -o-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     border-spacing: 2px;
-    box-shadow: rgba(40, 40, 9, 0.5) 0 0.5ex 1ex;
+    box-shadow: rgba(9, 9, 40, 0.5) 0 0.5ex 1ex;
 }
 .form-metadata-wrapper .table-cell {
     background-color: rgba(251, 251, 251, 0.83);
 }
 .form-metadata-wrapper legend {
-    background-color: #D7DCA5;
+    background-color: #C5E7EC;
     border: 1px solid rgba(0, 0, 0, 0.5);
-    padding: 0 0.5ex;
+    line-height: 1.7;
+    padding: 0 0.5ex 0.25ex 0.5ex;
 }
 .bridge_file_metadata_value,
 .bridge_page_metadata_value {
@@ -2081,4 +2086,7 @@ h2#comments {
 #bridge_greeting_right {
     padding: 16px 0.66rem 0 0;
     float: right;
+}
+#two-factor-options {
+    margin-bottom: 0.5rem;
 }

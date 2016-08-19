@@ -51,6 +51,7 @@ class Admin extends AdminOnly
                 );
             }
         }
+        $this->storeLensVar('active_submenu', 'Admin');
     }
 
     /**
@@ -179,6 +180,7 @@ class Admin extends AdminOnly
      */
     public function manageNotaries()
     {
+        $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
         $channels = \Airship\loadJSON(ROOT . '/config/channels.json');
         foreach ($channels as $chanName => $chanConfig) {
             $channels[$chanName]['notaries'] = \Airship\loadJSON(

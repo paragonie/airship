@@ -14,6 +14,16 @@ require_once __DIR__.'/init_gear.php';
 class Motifs extends AdminOnly
 {
     /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
+    public function airshipLand()
+    {
+        parent::airshipLand();
+        $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
+    }
+
+    /**
      * @route motifs
      */
     public function index()
