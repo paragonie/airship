@@ -42,7 +42,6 @@ class ConfigFilter extends InputFilterContainer
 
         /* twig_vars */
             ->addFilter('twig_vars.active-motif', new StringFilter())
-            ->addFilter('twig_vars.sandwich_content', new BoolFilter())
             ->addFilter('twig_vars.title', new StringFilter())
             ->addFilter('twig_vars.tagline', new StringFilter())
             ->addFilter('twig_vars.blog.title', new StringFilter())

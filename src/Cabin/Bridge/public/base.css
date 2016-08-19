@@ -394,8 +394,10 @@ label.required-form::after {
     white-space: nowrap;
     width: 1px;
 }
-#bridge_left ul {
+#bridge_left > ul {
     padding-right: 10px;
+}
+#bridge_left ul {
     margin-top: 0;
 }
 #bridge_left > ul {

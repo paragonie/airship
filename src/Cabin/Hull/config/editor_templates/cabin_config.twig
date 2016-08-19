@@ -59,24 +59,6 @@
         </div>
     </div>
 
-
-    <div class="table-row">
-        <div class="table-min-width table-pad-right text-right table-cell align-top">
-            <label>
-                {{ __("Template Options:")|e('html') }}:
-            </label>
-        </div>
-        <div class="table-cell full-width">
-            <input
-                    {% if twig_vars['sandwich_content'] %}checked="checked"{% endif %}
-                    id="hull_sandwich"
-                    type="checkbox"
-                    class="large_checkbox"
-                    name="{{ form_key_twig }}[sandwich_content]"
-            /> <label for="hull_sandwich">{{ __("Restrict layout to 1200px wide?") }}</label>
-        </div>
-    </div>
-
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top bottom-extra-pad">
             <label for="twigvars_tagline">

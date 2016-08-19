@@ -73,7 +73,7 @@ a:visited {
     color: #33205e;
 }
 a:active, a:hover {
-    color: #533a85;
+    color: #735ab5;
 }
 .header_wrap {
     border: 0;
@@ -463,7 +463,7 @@ a.pure-button-secondary:active,
 a.pure-button-secondary:hover,
 .pure-button-secondary a:active,
 .pure-button-secondary a:hover {
-    color: #FFFFFF;
+    color: #A8B5EF;
 }
 a.pure-button-tertiary:active,
 a.pure-button-tertiary:hover,
@@ -491,7 +491,7 @@ a.pure-button-tertiary:hover,
 }
 #bridge_left {
     background-color: #181818;
-    line-height: 1.6;
+    line-height: 1.5;
     padding-right: 1em;
 }
 .bridge-icon {
@@ -521,7 +521,10 @@ a:hover .bridge-icon {
 }
 #bridge_left a,
 #bridge_left a:visited {
+    display: block;
     color: #ebefef;
+    margin-top: 1px;
+    padding: 2px;
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -529,14 +532,21 @@ a:hover .bridge-icon {
     font-weight: bold;
 }
 #bridge_left a.collapse-active {
-    color: #E0E0FF;
+    background-color: #eff4f7;
+    color: #202020;
+    border-radius: 0.5ex;
 }
 #bridge_left a.collapse-active .bridge-icon {
-    color: #A8B5EF;
+    color: #202030;
+    text-shadow: none !important;
 }
 #bridge_left a:hover,
 #bridge_left a:active {
     color: #A8B5EF;
+}
+#bridge_left a.collapse-active:hover {
+    background-color: #dfe6eb;
+    color: #303050;
 }
 #bridge_main {
     background-color: #eff4f7;
@@ -944,11 +954,11 @@ select .depth3 {
     margin-top: 1em;
 }
 #bridge_files_upload_form a {
-    color: #EFE5C8;
+    color: #A8B5EF;
     cursor: pointer;
 }
 #bridge_files_upload_form a:hover {
-    color: #E4D29D;
+    color: #EFEFEF;
 }
 #bridge_files_list_forms fieldset {
     background-color: rgba(7, 9, 40, 0.2);
@@ -957,28 +967,28 @@ select .depth3 {
 #bridge_files_list_forms fieldset legend {
     background-image: -webkit-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -moz-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -ms-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: -o-linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     background-image: linear-gradient(
             top,
-            #572B00 0%,
-            #342400 100%
+            #002B57 0%,
+            #002434 100%
     );
     border: 1px solid #070928;
     color: #FFFFFF;

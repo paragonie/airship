@@ -26,6 +26,23 @@
 
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell align-top">
+            <label for="twigvars_title">
+                {{ __("Page Title")|e('html') }}:
+            </label>
+        </div>
+        <div class="table-cell full-width">
+            <input
+                class="full-width"
+                id="twigvars_title"
+                type="text"
+                name="{{ form_key_twig }}[title]"
+                value="{{ twig_vars['title']|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <div class="table-min-width table-pad-right text-right table-cell align-top">
             <label for="editor_default">
                 {{ __("Default Format")|e('html') }}:
             </label>

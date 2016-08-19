@@ -1,18 +1,20 @@
-<div class="header_wrap">{% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}
-    <a href="{{ cabin_url() }}">{#
-    #}<img
-        alt="{{ __("CMS Airship")|e('html_attr') }}"
-        class="float-left"
-        src="/img/paragon_initiative_enterprises.png"
-        title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
-    /></a>
-    <h1>{{ SETTINGS.title }}</h1>
-    <h2>{{ SETTINGS.tagline }}</h2>
-{% if SETTINGS['sandwich_content'] %}</div>{% endif %}</div>
+<div class="header_wrap">{#
+    #}<div class="content-sandwich">{#
+        #}<a href="{{ cabin_url() }}">{#
+        #}<img
+            alt="{{ __("CMS Airship")|e('html_attr') }}"
+            class="float-left"
+            src="/img/paragon_initiative_enterprises.png"
+            title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
+        /></a>
+        <h1>{{ SETTINGS.title }}</h1>
+        <h2>{{ SETTINGS.tagline }}</h2>{#
+    #}</div>{#
+#}</div>
 <nav>
-    {% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}
-    <ul class="navigation">
-        {% include cargo("base_nav") %}
-    </ul>
-    {% if SETTINGS['sandwich_content'] %}</div>{% endif %}
+    <div class="content-sandwich">
+        <ul class="navigation">
+            {% include cargo("base_nav") %}
+        </ul>
+    </div>
 </nav>

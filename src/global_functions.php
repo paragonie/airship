@@ -76,7 +76,7 @@ use Airship\Engine\{
             if (!empty($params)) {
                 \array_walk($params, '\\Airship\LensFunctions\\get_purified');
             }
-            return \sprintf(
+            return @\sprintf(
                 $gear->literal($text, $domain),
                 ...$params
             );
