@@ -37,6 +37,7 @@ body {
     margin-bottom: -37px;
 }
 #content {
+    height: 100%;
     padding-left: 0;
     padding-right: 0;
     padding-bottom: calc(1rem - 1px);
@@ -54,7 +55,6 @@ header, footer {
 }
 footer {
     height: 30px;
-    color: #111;
     padding: 0;
 }
 footer p {
@@ -66,14 +66,14 @@ footer p {
     text-align: center;
 }
 a {
-    color: #5e3320;
+    color: #33205e;
     transition: color 0.25s;
 }
 a:visited {
-    color: #5e3320;
+    color: #33205e;
 }
 a:active, a:hover {
-    color: #85533a;
+    color: #533a85;
 }
 header {
     color: #081022;
@@ -81,7 +81,7 @@ header {
 }
 .header_wrap {
     border: 0;
-    background-color: #202020;
+    background-color: #181818;
     padding: 3px;
     color: #F8F8E4;
 }
@@ -104,11 +104,11 @@ header h2 {
     border: 0 !important;
     padding: 0.5em;
     color: #fff;
-    background-color: #111 !important;
+    background-color: #181818 !important;
 }
 .footer-hull a,
 .footer-bridge a {
-    color: #ffea8f;
+    color: #A8D5EF;
     font-weight: bold;
     text-decoration: none;
 }
@@ -150,7 +150,7 @@ nav {
 }
 nav a,
 nav a:visited {
-    color: #ffea8f;
+    color: #A8B5EF;
     font-weight: bold;
     text-decoration: none;
 }
@@ -213,19 +213,19 @@ nav ul.navigation > li:hover a {
     text-shadow: rgba(255, 255, 255, 0.2) 1px 1px 1px;
 }
 .blog-sidebar {
-    background-color: #202020;
+    background-color: #181818;
     color: #eee;
     vertical-align: top;
 }
 .blog-sidebar a,
 .blog-sidebar a:visited {
-    color: gold;
+    color: #A8B5EF;
     text-decoration: none;
     text-shadow: #222 1px 0 0;
 }
 .blog-sidebar a:hover,
 .blog-sidebar a:active {
-    color: #EFE5C8;
+    color: #EFEFEF;
 }
 .blog-sidebar h4 {
     font-family: 'Open Sans', sans-serif !important;
@@ -447,7 +447,7 @@ a.pure-button-secondary:visited,
 a.pure-button-tertiary,
 a.pure-button-tertiary:visited,
 .pure-button-tertiary {
-    background-color: #EFE5C8;
+    background-color: #A8B5EF;
     color: #081022;
 }
 .pure-button-secondary .fa {
@@ -494,7 +494,8 @@ a.pure-button-tertiary:hover,
     background-color: #ddd;
 }
 #bridge_left {
-    background-color: #111;
+    background-color: #181818;
+    line-height: 1.4;
     padding-right: 1em;
 }
 .bridge-icon {
@@ -517,27 +518,25 @@ a:hover .bridge-icon {
 .passwordGood {
     color: #090;
 }
-#bridge_content {
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
 #bridge_table {
+    background-color: #181818;
     margin-bottom: 0;
-    border: 2px solid #010308;
-    box-shadow: rgba(0, 0, 0, 0.5) 0 0.66ex 1.66ex;
+    height: 100%;
 }
 #bridge_left a,
 #bridge_left a:visited {
-    color: #ffe04c;
+    color: #ebefef;
     text-decoration: none;
     transition: color 0.2s;
 }
 #bridge_left a:hover,
 #bridge_left a:active {
-    color: #EFE5C8;
+    color: #A8B5EF;
 }
 #bridge_main {
-    background-color: rgba(255, 255, 255, 0.43);
+    background-color: #f8f8f8;
+    padding-bottom: 1rem;
+    border-radius: 2rem 0 0 0;
 }
 .bridge-main-link a {
     color: #ddd !important;
@@ -1419,7 +1418,6 @@ fieldset.preferences > legend {
 #cabin_accordion h3 + div,
 #admin_settings_accordion h3 + div {
     border: 1px solid rgba(0, 0, 0, 0.5);
-    background-color: #F4F2EB;
     padding: 1ex;
 }
 #cabin_accordion h3.ui-state-active,
@@ -2079,4 +2077,8 @@ h2#comments {
     min-width: 20em;
     max-width: 100%;
     width: calc(100% - 1em);
+}
+#bridge_greeting_right {
+    padding: 16px 0.66rem 0 0;
+    float: right;
 }
