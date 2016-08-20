@@ -65,7 +65,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -154,7 +154,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -225,7 +225,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('update')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -294,7 +294,7 @@ class PageManager extends LoggedInUsersOnly
         } catch (CustomPageNotFoundException $ex) {
             $pages = [];
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         $this->lens('pages_list', [
             'cabins' => $cabins,
             'dirs' => $dirs,
@@ -332,7 +332,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -368,7 +368,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -411,7 +411,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('delete')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -485,7 +485,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         // If you can't publish, you can't make a permanent change like this.
         if (!$this->can('publish')) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -548,7 +548,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('read')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -602,7 +602,7 @@ class PageManager extends LoggedInUsersOnly
             );
             return;
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         $this->lens('pages/page_history_diff', [
             'left' => $left,
             'right' => $right
@@ -630,7 +630,7 @@ class PageManager extends LoggedInUsersOnly
         if (!\in_array($cabin, $cabins)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (!$this->can('read')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -1069,5 +1069,25 @@ class PageManager extends LoggedInUsersOnly
             }
         }
         return \preg_match('#^(static|js|img|fonts|css)/#', $uri) === 0;
+    }
+
+    /**
+     * Set the cabin links
+     *
+     * @param string $cabin
+     */
+    protected function setTemplateExtraData(string $cabin)
+    {
+        $this->storeLensVar(
+            'active_submenu',
+            [
+                'Cabins',
+                'Cabin__' . $cabin
+            ]
+        );
+        $this->storeLensVar(
+            'active_link',
+            'bridge-link-cabin-' . $cabin . '-pages'
+        );
     }
 }

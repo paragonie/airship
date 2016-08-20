@@ -44,6 +44,7 @@ class MyFiles extends FileManager
             'uploaded_by' => $userId
         ];
         $this->storeLensVar('path_middle', $this->path_middle);
+        $this->storeLensVar('active_link', 'bridge-link-my-files');
         $this->storeLensVar('header', 'My Files');
     }
 

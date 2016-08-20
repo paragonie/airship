@@ -108,6 +108,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/posts_delete',
             [
+                'active_link' => 'bridge-link-blog-posts',
                 'blogpost' => $blogPost,
                 'latest' => $latestVersion
             ]
@@ -136,6 +137,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/category_edit',
             [
+                'active_link' => 'bridge-link-blog-category',
                 'category' => $category,
                 'categories' => $this->blog->getCategoryTree()
             ]
@@ -189,6 +191,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/posts_edit',
             [
+                'active_link' => 'bridge-link-blog-posts',
                 'blogpost' => $blogPost,
                 'latest' => $latestVersion,
                 'authors' => $authors,
@@ -256,6 +259,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/series_edit',
             [
+                'active_link' => 'bridge-link-blog-series',
                 'series' => $series,
                 'series_items' => $series_items,
                 'authors' => $authors,
@@ -289,6 +293,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/tags_edit',
             [
+                'active_link' => 'bridge-link-blog-tags',
                 'tag' => $tag,
             ]
         );
@@ -304,6 +309,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/category',
             [
+                'active_link' => 'bridge-link-blog-category',
                 'categories' => $this->blog->getCategoryTree()
             ]
         );
@@ -323,6 +329,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/comments',
             [
+                'active_link' => 'bridge-link-blog-comments',
                 'comments' => $this->blog->listComments($offset, $limit),
                 'pagination' => [
                     'base' => $this->airship_cabin_prefix . '/blog/post',
@@ -348,6 +355,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/posts',
             [
+                'active_link' => 'bridge-link-blog-posts',
                 'blog_posts' => $this->blog->listPosts(
                     $this->isSuperUser(),
                     $offset,
@@ -396,6 +404,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/series',
             [
+                'active_link' => 'bridge-link-blog-series',
                 'series' => $series,
                 'pagination' => [
                     'base' => $this->airship_cabin_prefix . '/blog/series',
@@ -430,6 +439,7 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/tags',
             [
+                'active_link' => 'bridge-link-blog-tags',
                 'tags' => $this->blog->listTags(
                     $offset,
                     $limit,
@@ -470,6 +480,7 @@ class Blog extends LoggedInUsersOnly
         }
 
         $this->lens('blog/category_new', [
+            'active_link' => 'bridge-link-blog-category',
             'categories' => $this->blog->getCategoryTree()
         ]);
     }
@@ -509,6 +520,7 @@ class Blog extends LoggedInUsersOnly
         }
         $this->lens(
             'blog/posts_new', [
+                'active_link' => 'bridge-link-blog-posts',
                 'authors' => $authors,
                 'categories' => $categories,
                 'tags' => $tags,
@@ -549,6 +561,7 @@ class Blog extends LoggedInUsersOnly
         }
         $this->lens(
             'blog/series_new', [
+                'active_link' => 'bridge-link-blog-series',
                 'authors' => $authors
             ]
         );
@@ -588,6 +601,7 @@ class Blog extends LoggedInUsersOnly
 
         $this->lens(
             'blog/comments_view', [
+                'active_link' => 'bridge-link-blog-comments',
                 'comment' => $this->blog->getCommentById((int) $commentId)
             ]
         );

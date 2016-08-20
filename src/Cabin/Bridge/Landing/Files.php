@@ -43,7 +43,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (empty($_GET['file'])) {
             $this->commonConfirmDeleteDir($dir, $cabin);
             return;
@@ -61,7 +61,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (empty($_GET['file'])) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/' . $this->path_middle . '/' . \urlencode($cabin),
@@ -84,7 +84,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         $this->commonIndex($dir, $cabin);
     }
 
@@ -98,7 +98,7 @@ class Files extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabin]);
+        $this->setTemplateExtraData($cabin);
         if (empty($_GET['file'])) {
             $this->commonMoveDir($dir, $cabin);
             return;
@@ -124,5 +124,25 @@ class Files extends FileManager
     protected function permCheck(): bool
     {
         return $this->isSuperUser(); // You're an admin!
+    }
+
+    /**
+     * Set the cabin links
+     *
+     * @param string $cabin
+     */
+    protected function setTemplateExtraData(string $cabin)
+    {
+        $this->storeLensVar(
+            'active_submenu',
+            [
+                'Cabins',
+                'Cabin__' . $cabin
+            ]
+        );
+        $this->storeLensVar(
+            'active_link',
+            'bridge-link-cabin-' . $cabin . '-files'
+        );
     }
 }

@@ -44,7 +44,13 @@ class IndexPage extends LandingGear
                 );
             }
         }
-        $this->lens('announce');
+        $this->lens(
+            'announce',
+            [
+                'active_link' =>
+                    'bridge-link-announce'
+            ]
+        );
     }
 
     /**
@@ -222,6 +228,7 @@ class IndexPage extends LandingGear
             $this->lens(
                 'help',
                 [
+                    'active_link' => 'bridge-link-help',
                     'airship' => \AIRSHIP_VERSION,
                     'helpInfo' => $helpInfo
                 ]

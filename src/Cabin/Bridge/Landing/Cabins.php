@@ -26,7 +26,7 @@ class Cabins extends LoggedInUsersOnly
         if (!$this->isLoggedIn()) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabinName]);
+        $this->setTemplateExtraData($cabinName);
         if (!$this->can('read')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -85,7 +85,7 @@ class Cabins extends LoggedInUsersOnly
             // Invalid cabin name
             \Airship\redirect($this->airship_cabin_prefix . '/cabins');
         }
-        $this->storeLensVar('active_submenu', ['Cabins', 'Cabin__' . $cabinName]);
+        $this->setTemplateExtraData($cabinName);
         if (!$this->ensureCabinLinkExists($cabinName)) {
             \Airship\json_response([
                 'error' => 'Could not create symlink'
@@ -353,5 +353,26 @@ class Cabins extends LoggedInUsersOnly
             ];
         }
         return $motifs;
+    }
+
+
+    /**
+     * Set the cabin links
+     *
+     * @param string $cabin
+     */
+    protected function setTemplateExtraData(string $cabin)
+    {
+        $this->storeLensVar(
+            'active_submenu',
+            [
+                'Cabins',
+                'Cabin__' . $cabin
+            ]
+        );
+        $this->storeLensVar(
+            'active_link',
+            'bridge-link-cabin-' . $cabin . '-manage'
+        );
     }
 }

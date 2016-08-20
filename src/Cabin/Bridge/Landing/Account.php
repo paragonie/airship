@@ -182,6 +182,7 @@ class Account extends LandingGear
         $this->lens(
             'my_account',
             [
+                'active_link' => 'bridge-link-my-account',
                 'account' => $account,
                 'gpg_public_key' => $gpg_public_key
             ]
@@ -352,6 +353,7 @@ class Account extends LandingGear
         $this->lens(
             'two_factor',
             [
+                'active_link' => 'bridge-link-two-factor',
                 'enabled' => $user['enable_2factor'] ?? false
             ]
         );

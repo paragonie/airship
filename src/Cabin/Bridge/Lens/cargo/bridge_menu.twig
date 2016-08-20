@@ -2,18 +2,22 @@
     <li class="bridge-main-link"><a href="{{ cabin_url() }}">The Bridge</a></li>
     {% if can_create("announce") %}
         <li>
-            <a href="{{ cabin_url() }}announce" title="{{ __("Announce something to your Crew.")|e('html_attr') }}">
+            <a
+                href="{{ cabin_url() }}announce"
+                id="bridge-link-announce"
+                title="{{ __("Announce something to your Crew.")|e('html_attr') }}"
+            >
                 <i class="fa fa-bullhorn bridge-icon"></i>{{ __("Announce") }}
             </a>
         </li>
     {% endif %}
     <li>
-        <a href="{{ cabin_url() }}my/account">
+        <a href="{{ cabin_url() }}my/account" id="bridge-link-my-account">
             <i class="fa fa-gear bridge-icon"></i>{{  __("My Account") }}
         </a>
         <ul>
             <li>
-                <a href="{{ cabin_url() }}my/account/2-factor">
+                <a href="{{ cabin_url() }}my/account/2-factor" id="bridge-link-two-factor">
                     <i class="fa fa-qrcode bridge-icon"></i>{{  __("Two-Factor Auth.") }}
                 </a>
             </li>
@@ -22,6 +26,7 @@
     {% if can_read("author") %}
     <li>
         <a
+            id="bridge-link-authors"
             href="{{ cabin_url() }}author"
             title="{{ __(
                     "Author profiles are like pen names"
@@ -34,7 +39,7 @@
     {% endif %}
     {% if can_read("my/files") %}
     <li>
-        <a href="{{ cabin_url() }}my/files/Hull">
+        <a href="{{ cabin_url() }}my/files/Hull" id="bridge-link-my-files">
             <i class="fa fa-cloud-upload bridge-icon"></i>{{ __("My Uploaded Files") }}
         </a>
     </li>
@@ -47,35 +52,35 @@
             <ul>
                 {% if can_read("blog/category") %}
                     <li>
-                        <a href="{{ cabin_url() }}blog/category">
+                        <a href="{{ cabin_url() }}blog/category" id="bridge-link-blog-category">
                             <i class="fa fa-folder-open-o bridge-icon"></i>{{ __("Categories") }}
                         </a>
                     </li>
                 {% endif %}
                 {% if can_read("blog/post") %}
                     <li>
-                        <a href="{{ cabin_url() }}blog/post">
+                        <a href="{{ cabin_url() }}blog/post" id="bridge-link-blog-posts">
                             <i class="fa fa-file-text-o bridge-icon"></i>{{ __("Posts") }}
                         </a>
                     </li>
                 {% endif %}
                 {% if can_read("blog/series") %}
                     <li>
-                        <a href="{{ cabin_url() }}blog/series">
+                        <a href="{{ cabin_url() }}blog/series" id="bridge-link-blog-series">
                             <i class="fa fa-list-alt bridge-icon"></i>{{ __("Series") }}
                         </a>
                     </li>
                 {% endif %}
                 {% if can_read("blog/tag") %}
                     <li>
-                        <a href="{{ cabin_url() }}blog/tag">
+                        <a href="{{ cabin_url() }}blog/tag" id="bridge-link-blog-tags">
                             <i class="fa fa-tags bridge-icon"></i>{{ __("Tags") }}
                         </a>
                     </li>
                 {% endif %}
                 {% if can("publish", "blog/comments") %}
                     <li>
-                        <a href="{{ cabin_url() }}blog/comments">
+                        <a href="{{ cabin_url() }}blog/comments" id="bridge-link-blog-comments">
                             <i class="fa fa-commenting-o bridge-icon"></i>{{ __("Comments") }}
                         </a>
                     </li>
@@ -91,34 +96,50 @@
             <ul>
             {% for cabin in state.cabins %}
                 <li>
-                    <a class="bridge-collapse" data-section="Cabin__{{ cabin.name|e('html_attr') }}" href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}">
+                    <a
+                        class="bridge-collapse"
+                        data-section="Cabin__{{ cabin.name|e('html_attr') }}"
+                        href="{{ cabin_url() }}cabin/{{ cabin.name|e('url') }}"
+                    >
                         <i class="fa fa-home bridge-icon"></i>{{ cabin.name }}
                     </a>
                     <ul>
                         {% if can_read("cabins/manage/ ~ cabin.name") %}
                             <li>
-                                <a href="{{ cabin_url() }}cabins/manage/{{ cabin.name|e('url') }}">
+                                <a
+                                    href="{{ cabin_url() }}cabins/manage/{{ cabin.name|e('url') }}"
+                                    id="bridge-link-cabin-{{ cabin.name|e('html_attr') }}-manage"
+                                >
                                     <i class="fa fa-edit bridge-icon"></i>{{ __("Manage") }}
                                 </a>
                             </li>
                         {% endif %}
                         {% if can_read("pages/" ~ cabin.name) %}
                             <li>
-                                <a href="{{ cabin_url() }}pages/{{ cabin.name|e('url') }}">
+                                <a
+                                    href="{{ cabin_url() }}pages/{{ cabin.name|e('url') }}"
+                                    id="bridge-link-cabin-{{ cabin.name|e('html_attr') }}-pages"
+                                >
                                     <i class="fa fa-file-code-o bridge-icon"></i>{{ __("Web Pages") }}
                                 </a>
                             </li>
                         {% endif %}
                         {% if can_read("redirects/" ~ cabin.name) %}
                             <li>
-                                <a href="{{ cabin_url() }}redirects/{{ cabin.name|e('url') }}">
+                                <a
+                                    href="{{ cabin_url() }}redirects/{{ cabin.name|e('url') }}"
+                                    id="bridge-link-cabin-{{ cabin.name|e('html_attr') }}-redirects"
+                                >
                                     <i class="fa fa-arrows-alt bridge-icon"></i>{{ __("Redirects") }}
                                 </a>
                             </li>
                         {% endif %}
                         {% if is_admin() %}
                             <li>
-                                <a href="{{ cabin_url() }}file_manager/{{ cabin.name|e('url') }}">
+                                <a
+                                    href="{{ cabin_url() }}file_manager/{{ cabin.name|e('url') }}"
+                                    id="bridge-link-cabin-{{ cabin.name|e('html_attr') }}-files"
+                                >
                                     <i class="fa fa-upload bridge-icon"></i>{{ __("Files") }}
                                 </a>
                             </li>
@@ -135,7 +156,7 @@
             </a>
             <ul>
                 <li>
-                    <a href="{{ cabin_url() }}admin/settings">
+                    <a href="{{ cabin_url() }}admin/settings" id="bridge-link-admin-settings">
                         <i class="fa fa-wrench bridge-icon"></i>{{ __("Airship Settings") }}
                     </a>
                 </li>
@@ -145,24 +166,24 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="{{ cabin_url() }}crew/groups">
+                            <a href="{{ cabin_url() }}crew/groups" id="bridge-link-admin-crew-groups">
                                 <i class="fa fa-object-group bridge-icon"></i>{{ __("Groups") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}crew/permissions">
+                            <a href="{{ cabin_url() }}crew/permissions" id="bridge-link-admin-crew-perms">
                                 <i class="fa fa-gavel bridge-icon"></i>{{ __("Permissions") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}crew/users">
+                            <a href="{{ cabin_url() }}crew/users" id="bridge-link-admin-crew-users">
                                 <i class="fa fa-user bridge-icon"></i>{{ __("Users") }}
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ cabin_url() }}admin/database">
+                    <a href="{{ cabin_url() }}admin/database" id="bridge-link-admin-databases">
                         <i class="fa fa-database bridge-icon"></i>{{ __("Databases") }}
                     </a>
                 </li>
@@ -172,27 +193,27 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="{{ cabin_url() }}gadgets">
+                            <a href="{{ cabin_url() }}gadgets" id="bridge-link-admin-ext-gadgets">
                                 <i class="fa fa-gears bridge-icon"></i>{{ __("Gadgets") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}motifs">
+                            <a href="{{ cabin_url() }}motifs" id="bridge-link-admin-ext-motifs">
                                 <i class="fa fa-paint-brush bridge-icon"></i>{{ __("Motifs") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}admin/notaries">
+                            <a href="{{ cabin_url() }}admin/notaries" id="bridge-link-admin-ext-notaries">
                                 <i class="fa fa-sitemap bridge-icon"></i>{{ __("Notaries") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}admin/skyport/log">
+                            <a href="{{ cabin_url() }}admin/skyport/log" id="bridge-link-admin-ext-log">
                                 <i class="fa fa-file-text-o bridge-icon"></i>{{ __("View Log") }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ cabin_url() }}admin/skyport">
+                            <a href="{{ cabin_url() }}admin/skyport" id="bridge-link-skyport">
                                 <i class="fa fa-cloud bridge-icon"></i>{{ __("Get Extensions") }}
                             </a>
                         </li>
@@ -203,7 +224,7 @@
         </li>
     {% endif %}
     <li>
-        <a href="{{ cabin_url() }}help">
+        <a href="{{ cabin_url() }}help" id="bridge-link-help">
             <i class="fa fa-question-circle bridge-icon"></i>{{  __("Help / Support") }}
         </a>
         <ul>
@@ -220,13 +241,13 @@
         </ul>
     </li>
     <li>
-        <a href="{{ cabin_url() }}users">
+        <a href="{{ cabin_url() }}users" id="bridge-link-user-directory">
             <i class="fa fa-street-view bridge-icon"></i>{{  __("User Directory") }}
         </a>
     </li>
     {% if can_read("my/preferences") %}
         <li>
-            <a href="{{ cabin_url() }}my/preferences">
+            <a href="{{ cabin_url() }}my/preferences" id="bridge-link-preferences">
                 <i class="fa fa-adjust bridge-icon"></i>{{ __("Preferences") }}
             </a>
         </li>

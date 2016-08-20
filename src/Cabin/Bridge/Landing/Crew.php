@@ -64,6 +64,8 @@ class Crew extends AdminOnly
         }
 
         $this->lens('crew/group_new', [
+            'active_link' =>
+                'bridge-link-admin-crew-groups',
             'groups' =>
                 $this->account->getGroupTree()
         ]);
@@ -90,6 +92,8 @@ class Crew extends AdminOnly
         $this->lens(
             'crew/group_edit',
             [
+                'active_link' =>
+                    'bridge-link-admin-crew-groups',
                 'group' =>
                     $this->account->getGroup($groupId),
                 'allowed_parents' =>
@@ -118,6 +122,8 @@ class Crew extends AdminOnly
         }
 
         $this->lens('crew/user_edit', [
+            'active_link' =>
+                'bridge-link-admin-crew-users',
             'user' =>
                 $user,
             'groups' =>
@@ -135,6 +141,8 @@ class Crew extends AdminOnly
         $this->lens(
             'crew/group_list',
             [
+                'active_link' =>
+                    'bridge-link-admin-crew-groups',
                 'groups' =>
                     $this->account->getGroupTree()
             ]
@@ -177,6 +185,8 @@ class Crew extends AdminOnly
         }
 
         $this->lens('crew/user_list', [
+            'active_link' =>
+                'bridge-link-admin-crew-users',
             'users' => $users,
             'pagination' => [
                 'base' => $this->airship_cabin_prefix . '/crew/users',

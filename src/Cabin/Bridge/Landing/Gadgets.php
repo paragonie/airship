@@ -21,6 +21,7 @@ class Gadgets extends LoggedInUsersOnly
     {
         parent::airshipLand();
         $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
+        $this->storeLensVar('active_link', 'bridge-link-admin-ext-gadgets');
     }
 
     /**

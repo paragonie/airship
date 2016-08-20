@@ -47,6 +47,7 @@ class Skyport extends AdminOnly
             throw new \TypeError('Skyport Blueprint');
         }
         $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
+        $this->storeLensVar('active_link', 'bridge-link-skyport');
     }
 
     /**
@@ -484,6 +485,8 @@ class Skyport extends AdminOnly
         $this->lens(
             'skyport/log',
             [
+                'active_link' =>
+                    'bridge-link-admin-ext-log',
                 'logged' =>
                     $this->skyport->getLogMessages()
             ]

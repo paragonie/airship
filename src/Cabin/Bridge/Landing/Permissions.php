@@ -37,6 +37,7 @@ class Permissions extends AdminOnly
         $this->perms = $this->blueprint('Permissions');
         $this->users = $this->blueprint('UserAccounts');
         $this->storeLensVar('active_submenu', ['Admin', 'Crew']);
+        $this->storeLensVar('active_link', 'bridge-link-admin-crew-perms');
     }
 
     /**

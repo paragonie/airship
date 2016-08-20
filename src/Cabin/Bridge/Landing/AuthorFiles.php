@@ -37,6 +37,7 @@ class AuthorFiles extends FileManager
     {
         parent::airshipLand();
         $this->author = $this->blueprint('Author');
+        $this->storeLensVar('active_link', 'bridge-link-authors');
     }
 
     /**

@@ -2100,3 +2100,15 @@ h2#comments {
 #two-factor-options {
     margin-bottom: 0.5rem;
 }
+a.bridge-left-active {
+    color: #A8B5EF !important;
+}
+a.bridge-left-active .bridge-icon {
+    color: #CCD1E1 !important;
+}
+a.bridge-left-active:hover {
+    color: #7989f0 !important;
+}
+a.bridge-left-active:hover .bridge-icon {
+    color: #fff !important;
+}

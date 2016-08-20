@@ -158,6 +158,7 @@ class Admin extends AdminOnly
         $this->lens(
             'admin_databases',
             [
+                'active_link' => 'bridge-link-admin-databases',
                 'databases' => $databases
             ]
         );
@@ -200,6 +201,7 @@ class Admin extends AdminOnly
             );
         }
         $this->lens('admin_notaries', [
+            'active_link' => 'bridge-link-admin-ext-notaries',
             'channels' => $channels
         ]);
     }
@@ -248,6 +250,7 @@ class Admin extends AdminOnly
         $this->lens(
             'admin_settings',
             [
+                'active_link' => 'bridge-link-admin-settings',
                 'config' => $settings,
                 'groups' => $this->acct->getGroupTree()
             ]
