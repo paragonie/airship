@@ -35,7 +35,7 @@
             <div class="table-cell table-label">
                 <label for="format">{{ __("Format") }}</label>:
             </div>
-            <div class="table-cell">>
+            <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {
                     "format": _POST.format|default(
                         cabin_config('editor.default-format')|default('Rich Text')

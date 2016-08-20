@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<script nonce="{{ csp_nonce() }}">
+<script nonce={{ csp_nonce() }}>
 function deferUntilExists(func, poll, delay, counter) {
     var counter = counter || 0;
     if (counter > 1000) {

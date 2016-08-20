@@ -883,8 +883,8 @@ select .depth3 {
 #bridge_blog_series_list .table-header .table-cell,
 #bridge_tag_list .table-header .table-cell {
     border: none;
-    background-color: #342400;
-    color: #FFF7E1;
+    background-color: #002434;
+    color: #EFEFEF;
     padding: 3px;
 }
 .icons-1, .icons-2, .icons-3 {

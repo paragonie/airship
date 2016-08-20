@@ -221,7 +221,14 @@ class Skyport extends BlueprintGear
             return [];
         }
         foreach ($exts as $i => $ext) {
-            $exts[$i]['skyport_metadata'] = \json_decode($ext['skyport_metadata'], true);
+            if (empty($exts[$i]['skyport_metadata'])) {
+                $exts[$i]['skyport_metadata'] = [];
+            } else {
+                $exts[$i]['skyport_metadata'] = \json_decode(
+                    $ext['skyport_metadata'],
+                    true
+                );
+            }
         }
         return $exts;
     }
@@ -256,10 +263,14 @@ class Skyport extends BlueprintGear
         if (empty($package)) {
             return [];
         }
-        $package['skyport_metadata'] = \json_decode(
-            $package['skyport_metadata'],
-            true
-        );
+        if (empty($package['skyport_metadata'])) {
+            $package['skyport_metadata'] = [];
+        } else {
+            $package['skyport_metadata'] = \json_decode(
+                $package['skyport_metadata'],
+                true
+            );
+        }
         $package['versions'] = $this->getNewVersions($package);
         return $package;
     }
