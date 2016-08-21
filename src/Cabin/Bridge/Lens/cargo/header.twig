@@ -7,6 +7,6 @@
         title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
     /></a>
     <div id="bridge_greeting_right">
-        Hello, {{ user_display_name()|e('html') }}
+        {{ __("Hello, %s.", "default", user_display_name()) }}
     </div>
 </div>

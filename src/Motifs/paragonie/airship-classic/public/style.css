@@ -1908,12 +1908,14 @@ h2#comments {
     padding-left: 0.5ex;
 }
 #skyport {
-    border: 1px solid #000;
+    border-radius: 1ex;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0.5ex 1ex;
     display: table;
     width: 100%;
 }
 #skyport-left {
     background-color: #333;
+    border-radius: 1ex 0 0 1ex;
     color: #fff;
     display: table-cell;
     padding: 1ex;
@@ -1922,18 +1924,18 @@ h2#comments {
 }
 #skyport-main {
     background-color: #fff;
+    border-radius: 0 1ex 1ex 0;
     display: table-cell;
     padding: 1em;
     vertical-align: top;
 }
 #skyport-left-menu a {
-    color: gold;
+    color: #A8B5EF;
     cursor: pointer;
-    text-decoration: underline;
     transition: color 0.25s;
 }
 #skyport-left-menu a:hover {
-    color: #EFE5C8;
+    color: #fff;
 }
 #skyport-left-menu {
     list-style: none;

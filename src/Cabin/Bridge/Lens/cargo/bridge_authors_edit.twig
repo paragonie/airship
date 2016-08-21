@@ -22,7 +22,16 @@
                 <label for="byline">{{ __("Byline") }}</label>:
             </div>
             <div class="table-cell">
-                <input id="byline" type="text" name="byline" value="{{ author.byline|e('html_attr') }}" />
+                <input
+                    class="full-width"
+                    id="byline"
+                    type="text"
+                    placeholder="{{
+                        __("e.g. Chief Operations Officer")|e('html_attr')
+                    }}"
+                    name="byline"
+                    value="{{ author.byline|e('html_attr') }}"
+                />
             </div>
         </div>
 

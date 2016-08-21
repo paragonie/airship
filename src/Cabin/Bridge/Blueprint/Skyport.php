@@ -534,12 +534,15 @@ class Skyport extends BlueprintGear
             $package['packageid'],
             $package['current_version']
         );
+        if (!$current) {
+            $current = 0;
+        }
         $available = $this->db->run(
             'SELECT * FROM airship_package_versions WHERE package = ? AND versionid > ?',
             $package['packageid'],
             $current
         );
-        $version = new Version($package['current_version']);
+        $version = new Version($package['current_version'] ?? '0.0.0');
         $results = [];
         foreach ($available as $ver) {
             if ($version->isUpgrade($ver['version'])) {
