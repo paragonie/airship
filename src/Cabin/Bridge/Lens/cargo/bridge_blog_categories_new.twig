@@ -37,12 +37,12 @@
             } %}
         </div>
 
-        <fieldset class="form-button-group">
-            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-secondary">
+        <fieldset class="form-button-group no-border text-right">
+            <a href="{{ cabin_url() }}blog/category" class="pure-button pure-button-tertiary">{{ __("Cancel") }}</a>
+            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-primary">
                 <i class="fa fa-check"></i>
                 {{  __("Create New Category") }}
             </button>
-            <a href="{{ cabin_url() }}blog/category" class="pure-button pure-button-tertiary">Cancel</a>
         </fieldset>
     </form>
 </div>

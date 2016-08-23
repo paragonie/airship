@@ -63,19 +63,14 @@
 
         <div class="table-row">
             <div class="table-cell tabel-label"></div>
-            <div class="table-cell">
-                <button type="submit" name="save_btn" value="save" class="pure-button pure-button-secondary">
+            <div class="table-cell text-right">
+                <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}author">{{ __("Cancel") }}</a>
+
+                <button type="submit" name="save_btn" value="save" class="pure-button pure-button-primary">
                     <i class="fa fa-save"></i>
                     {{  __("Save Author") }}
                 </button>
-
-                <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}author">{{ __("Cancel") }}</a>
             </div>
         </div>
     </div>
 </form>
-
-<hr />
-<p>
-
-</p>

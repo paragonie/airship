@@ -1,7 +1,7 @@
 <h2 class="bottom-pad">{{ __("New Announcement") }}</h2>
 <form method="post">{{ form_token() }}
     <div class="table full-width">
-        <div class="table-row">
+        <div class="table-row lineheight-medium">
             <div class="table-min-width table-cell table-pad-right text-right">
                 <label for="announce-title">{#
                     #}{{ __("Title") }}{#
@@ -47,9 +47,7 @@
         } %}
     </div>
 
-    <hr />
-
-    <div>
+    <div class="text-right form-button-group no-border">
         <button type="submit" class="pure-button pure-button-primary">
             <i class="fa fa-bullhorn"></i>
             {{ __("Post Announcement") }}

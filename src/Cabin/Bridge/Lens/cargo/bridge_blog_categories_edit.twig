@@ -1,8 +1,8 @@
 <div id="bridge_blog_category_add">
     <form method="post">{{ form_token() }}
-        <div class="table full-width">
+        <div class="table full-width table-pad-1">
             <div class="table-row">
-                <div class="table-cell text-right">
+                <div class="table-cell table-min-width text-right table-pad-right">
                     <label for="name">{{ __("Category Name") }}:</label>
                 </div>
                 <div class="table-cell">
@@ -26,7 +26,9 @@
             </div>
 
             <div class="table-row">
-                <div class="table-cell">{{ __("Preamble (Markdown)") }}:</div>
+                <div class="table-cell table-min-width text-right table-pad-right">
+                    {{ __("Preamble (Markdown)") }}:
+                </div>
                 <div class="table-cell">
                     <input type="hidden" id="format" value="Markdown" />
                 </div>
@@ -41,14 +43,15 @@
             } %}
         </div>
 
-        <fieldset class="form-button-group">
-            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-secondary">
-                <i class="fa fa-check"></i>
-                {{  __("Save Changes") }}
-            </button>
+        <fieldset class="form-button-group no-border text-right">
             <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}blog/category">
                 {{ __("Cancel") }}
             </a>
+
+            <button type="submit" name="save_btn" value="create" class="pure-button pure-button-primary">
+                <i class="fa fa-check"></i>
+                {{  __("Save Changes") }}
+            </button>
         </fieldset>
     </form>
 </div>

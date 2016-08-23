@@ -1,5 +1,5 @@
 <h2>{{ __("My Account") }}</h2>
-<form method="post" id="my_account_form">{{ form_token() }}
+<form method="post" id="my_account_form" class="lineheight-medium">{{ form_token() }}
     {%  if post_response %}
         <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
     {% endif %}
@@ -78,9 +78,11 @@
         <legend>{{ __("Custom Profile Fields") }}</legend>
         {% include cargo("bridge_account_custom_fields") ignore missing %}
     </fieldset>
-    <hr class="bridge-hr" />
+
+    <div class="text-right form-button-group no-border">
     <button type="submit" class="pure-button pure-button-primary">
         <i class="fa fa-save"></i>
         {{ __("Update Account Information") }}
     </button>
+    </div>
 </form>

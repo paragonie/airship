@@ -17,18 +17,22 @@
         {{ __("Cabin-Specific Option") }}:
     </div>
     <div class="table-cell">
-        <input
-            id="csp_inherit_box"
-            type="checkbox"
-            name="content_security_policy[inherit]"
-            value="1"
-            {% if csp['inherit'] %}
-                checked="checked"
-            {% endif %}
-        />
-        <label for="csp_inherit_box">
-            {{ __("Include, and extend, the Universal CSP Rules?") }}
-        </label>
+        <div class="multiline_checkbox_container">
+            <div class="multiline_checkbox">
+                <input
+                    id="csp_inherit_box"
+                    type="checkbox"
+                    name="content_security_policy[inherit]"
+                    value="1"
+                    {% if csp['inherit'] %}
+                        checked="checked"
+                    {% endif %}
+                />
+                <label for="csp_inherit_box">
+                    {{ __("Include, and extend, the Universal CSP Rules?") }}
+                </label>
+            </div>
+        </div>
     </div>
 {% endif %}
 {% for key, label in form_labels %}

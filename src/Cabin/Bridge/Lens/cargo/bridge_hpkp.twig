@@ -19,36 +19,42 @@
             {{ __("Options") }}:
         </div>
         <div class="table-cell full-width">
-            <input
-                id="cabin_hpkp_enabled"
-                type="checkbox"
-                name="config[hpkp][enabled]"
-                value="1"
-                {% if hpkp['enabled'] %} checked="checked"{% endif %}
-            />
-            <label for="cabin_hpkp_enabled">{{ __(
-                "Enable HTTP Public-Key-Pinning? If you uncheck this box, no headers will be sent."
-            ) }}</label>
-            <br />
-            <input
-                id="cabin_hpkp_report_only"
-                type="checkbox"
-                name="config[hpkp][report-only]"
-                value="1"
-                {% if hpkp['report-only'] %} checked="checked"{% endif %}
-            />
-            <label for="cabin_hpkp_report_only">{{ __("Enable Report-Only mode?") }}</label>
-            <br />
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        id="cabin_hpkp_enabled"
+                        type="checkbox"
+                        name="config[hpkp][enabled]"
+                        value="1"
+                        {% if hpkp['enabled'] %} checked="checked"{% endif %}
+                    />
+                    <label for="cabin_hpkp_enabled">{{ __(
+                        "Enable HTTP Public-Key-Pinning? If you uncheck this box, no headers will be sent."
+                    ) }}</label>
+                </div>
 
-            <input
-                id="cabin_hpkp_include_subdomains"
-                type="checkbox"
-                name="config[hpkp][include-subdomains]"
-                value="1"
-                {% if hpkp['include-subdomains'] %} checked="checked"{% endif %}
-            />
-            <label for="cabin_hpkp_include_subdomains">{{ __("Enable include-subdomains mode?") }}</label>
-            
+                <div class="multiline_checkbox">
+                    <input
+                        id="cabin_hpkp_report_only"
+                        type="checkbox"
+                        name="config[hpkp][report-only]"
+                        value="1"
+                        {% if hpkp['report-only'] %} checked="checked"{% endif %}
+                    />
+                    <label for="cabin_hpkp_report_only">{{ __("Enable Report-Only mode?") }}</label>
+                </div>
+
+                <div class="multiline_checkbox">
+                    <input
+                        id="cabin_hpkp_include_subdomains"
+                        type="checkbox"
+                        name="config[hpkp][include-subdomains]"
+                        value="1"
+                        {% if hpkp['include-subdomains'] %} checked="checked"{% endif %}
+                    />
+                    <label for="cabin_hpkp_include_subdomains">{{ __("Enable include-subdomains mode?") }}</label>
+                </div>
+            </div>
         </div>
     </div>
 

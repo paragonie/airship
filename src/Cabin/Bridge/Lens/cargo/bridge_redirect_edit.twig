@@ -32,10 +32,12 @@
             </div>
         </div>
     </div>
-    <button class="pure-button pure-button-primary">
-        <i class="fa fa-save"></i> {{ __("Update Redirect") }}
-    </button>
-    <a href="{{ cabin_url() }}redirects/{{ cabin|e('html_attr') }}" class="pure-button pure-button-tertiary">
-        {{ __("Cancel") }}
-    </a>
+    <div class="form-button-group no-border text-right">
+        <a href="{{ cabin_url() }}redirects/{{ cabin|e('html_attr') }}" class="pure-button pure-button-tertiary">
+            {{ __("Cancel") }}
+        </a>
+        <button class="pure-button pure-button-primary">
+            <i class="fa fa-save"></i> {{ __("Update Redirect") }}
+        </button>
+    </div>
 </form>

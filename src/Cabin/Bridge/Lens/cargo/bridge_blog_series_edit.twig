@@ -84,9 +84,10 @@
             []
         )
     } %}
+    <fieldset class="form-button-group no-border text-right">
+        <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}blog/series">{{ __("Cancel") }}</a>
 
-    <fieldset class="form-button-group">
-        <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-secondary">
+        <button type="submit" name="save_btn" value="draft" class="pure-button pure-button-primary">
             <i class="fa fa-save"></i>
             {{  __("Update Series") }}
         </button>

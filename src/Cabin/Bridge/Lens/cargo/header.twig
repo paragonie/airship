@@ -7,6 +7,10 @@
         title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
     /></a>
     <div id="bridge_greeting_right">
+    {% if userid() %}
         {{ __("Hello, %s.", "default", user_display_name()) }}
+    {% else %}
+        {{ __("Please log in.") }}
+    {% endif %}
     </div>
 </div>

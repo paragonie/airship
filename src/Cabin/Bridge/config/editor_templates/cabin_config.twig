@@ -87,27 +87,28 @@
             {{ __("Registration:")|e('html') }}
         </div>
         <div class="table-cell full-width">
-            <input
-                {% if config_extra['board']['enabled'] %}checked="checked"{% endif %}
-                id="board_enabled"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[board][enabled]"
-            />
-            <label for="board_enabled">{{ __("Enable registration?") }}</label>
-
-            <br />
-
-            <input
-                {% if config_extra['board']['captcha'] %}checked="checked"{% endif %}
-                id="board_captcha"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[board][captcha]"
-            />
-            <label for="board_captcha">{{ __("Require a CAPTCHA to register?") }}</label>
-
-            <br />
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['board']['enabled'] %}checked="checked"{% endif %}
+                        id="board_enabled"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[board][enabled]"
+                    />
+                    <label for="board_enabled">{{ __("Enable registration?") }}</label>
+                </div>
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['board']['captcha'] %}checked="checked"{% endif %}
+                        id="board_captcha"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[board][captcha]"
+                    />
+                    <label for="board_captcha">{{ __("Require a CAPTCHA to register?") }}</label>
+                </div>
+            </div>
 
             <fieldset>
                 <legend>{{ __("ReCAPTCHA Settings") }}</legend>
@@ -139,17 +140,18 @@
             {{ __("Account Recovery:")|e('html') }}
         </div>
         <div class="table-cell full-width">
-            <input
-                {% if config_extra['password-reset']['enabled'] %}checked="checked"{% endif %}
-                id="reset_enabled"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[password-reset][enabled]"
-            />
-            <label for="reset_enabled">{{ __("Enable password reset emails?") }}</label>
-
-            <br />
-
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['password-reset']['enabled'] %}checked="checked"{% endif %}
+                        id="reset_enabled"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[password-reset][enabled]"
+                    />
+                    <label for="reset_enabled">{{ __("Enable password reset emails?") }}</label>
+                </div>
+            </div>
             <label for="reset_token_ttl">{{ __("Token Lifetime") }}:</label>
             <input
                 id="reset_token_ttl"
@@ -159,16 +161,18 @@
                 value="{{ config_extra['password-reset']['ttl']|e('html_attr') }}"
             /> (seconds)
 
-            <br />
-
-            <input
-                {% if config_extra['password-reset']['logout'] %}checked="checked"{% endif %}
-                id="reset_logout"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[password-reset][logout]"
-            />
-            <label for="reset_logout">{{ __("Logout all other sessions when password is reset?") }}</label>
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['password-reset']['logout'] %}checked="checked"{% endif %}
+                        id="reset_logout"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[password-reset][logout]"
+                    />
+                    <label for="reset_logout">{{ __("Logout all other sessions when password is reset?") }}</label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="table-row">

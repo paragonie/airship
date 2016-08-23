@@ -52,14 +52,38 @@
             <fieldset class="updates_auto">
                 <legend>{{ __("Automatically apply changes to") }}:</legend>
 
-                <input {% if universal["auto-update"].major %} checked="checked"{% endif %} id="update_major" type="checkbox" name="universal[auto-update][major]" value="1" />
-                <label for="update_major">{{ __("Major version changes") }} (<code>1.5.2 -> 2.0.0</code>)</label><br />
-
-                <input {% if universal["auto-update"].minor %} checked="checked"{% endif %} id="update_minor" type="checkbox" name="universal[auto-update][minor]" value="1" />
-                <label for="update_minor">{{ __("Minor version changes") }} (<code>1.5.2 -> 1.6.0</code>)</label><br />
-
-                <input {% if universal["auto-update"].patch %} checked="checked"{% endif %} id="update_patch" type="checkbox" name="universal[auto-update][patch]" value="1" checked="checked" />
-                <label for="update_patch">{{ __("Patch version changes") }} (<code>1.5.2 -> 1.5.3</code>)</label><br />
+                <div class="multiline_checkbox_container">
+                    <div class="multiline_checkbox">
+                        <input
+                            {% if universal["auto-update"].major %} checked="checked"{% endif %}
+                            id="update_major"
+                            name="universal[auto-update][major]"
+                            type="checkbox"
+                            value="1"
+                        />
+                        <label for="update_major">{{ __("Major version changes") }} (<code>1.5.2 -> 2.0.0</code>)</label>
+                    </div>
+                    <div class="multiline_checkbox">
+                        <input
+                            {% if universal["auto-update"].minor %} checked="checked"{% endif %}
+                            id="update_minor"
+                            name="universal[auto-update][minor]"
+                            type="checkbox"
+                            value="1"
+                        />
+                        <label for="update_minor">{{ __("Minor version changes") }} (<code>1.5.2 -> 1.6.0</code>)</label>
+                    </div>
+                    <div class="multiline_checkbox">
+                        <input
+                            {% if universal["auto-update"].patch %} checked="checked"{% endif %}
+                            id="update_patch"
+                            name="universal[auto-update][patch]"
+                            type="checkbox"
+                            value="1"
+                        />
+                        <label for="update_patch">{{ __("Patch version changes") }} (<code>1.5.2 -> 1.6.0</code>)</label>
+                    </div>
+                </div>
             </fieldset>
         </div>
     </div>
@@ -159,18 +183,22 @@
                         {{ __("Options") }}:
                     </div>
                     <div class="table-cell full-width">
-                        <input
-                            id="rate-limiting-expire"
-                            type="checkbox"
-                            name="universal[rate-limiting][expire]"
-                            value="1"
-                            {% if universal['rate-limiting']['expire'] %}
-                                checked="checked"
-                            {% endif %}
-                        />
-                        <label for="rate-limiting-expire">
-                            {{ __("Fast Exit? This is better for security, but worse for usability.") }}
-                        </label>
+                        <div class="multiline_checkbox_container">
+                            <div class="multiline_checkbox">
+                                <input
+                                    id="rate-limiting-expire"
+                                    type="checkbox"
+                                    name="universal[rate-limiting][expire]"
+                                    value="1"
+                                    {% if universal['rate-limiting']['expire'] %}
+                                        checked="checked"
+                                    {% endif %}
+                                />
+                                <label for="rate-limiting-expire">
+                                    {{ __("Fast Exit? This is better for security, but worse for usability.") }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -310,31 +338,62 @@
             </label>
         </div>
         <div class="table-cell">
-            <input {% if universal["tor-only"] %} checked="checked"{% endif %} id="network-tor" type="checkbox" name="universal[tor-only]" value="1" />
-            <label for="network-tor">
-                {{ __("Proxy all requests over %s?", "default" , "<a href=\"https://www.torproject.org/about/overview\">Tor</a>") }}
-            </label>
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if universal["tor-only"] %} checked="checked"{% endif %}
+                        id="network-tor"
+                        name="universal[tor-only]"
+                        type="checkbox"
+                        value="1"
+                    />
+                    <label for="network-tor">
+                        {{ __(
+                            "Proxy all requests over %s?", "default" ,
+                            "<a href=\"https://www.torproject.org/about/overview\">Tor</a>"
+                        ) }}
+                    </label>
+                </div>
 
-            <br />
+                <div class="multiline_checkbox">
+                    <input
+                        {% if universal["twig-cache"] %} checked="checked"{% endif %}
+                        id="twig-cache"
+                        name="universal[twig-cache]"
+                        type="checkbox"
+                        value="1"
+                    />
+                    <label for="twig-cache">
+                        {{ __("Cache templates?") }}
+                    </label>
+                </div>
 
-            <input {% if universal["twig-cache"] %} checked="checked"{% endif %} id="twig-cache" type="checkbox" name="universal[twig-cache]" value="1" />
-            <label for="twig-cache">
-                {{ __("Cache templates?") }}
-            </label>
+                <div class="multiline_checkbox">
+                    <input
+                        {% if universal["debug"] %} checked="checked"{% endif %}
+                        id="debug-mode"
+                        name="universal[debug]"
+                        type="checkbox"
+                        value="1"
+                    />
+                    <label for="debug-mode">
+                        {{ __("Debug Mode (not recommended in production environments)") }}
+                    </label>
+                </div>
 
-            <br />
-
-            <input {% if universal["debug"] %} checked="checked"{% endif %} id="debug-mode" type="checkbox" name="universal[debug]" value="1" />
-            <label for="debug-mode">
-                {{ __("Debug Mode (not recommended in production environments)") }}
-            </label>
-
-            <br />
-
-            <input {% if universal["notary"]["enabled"] %} checked="checked"{% endif %} id="notary-enabled" type="checkbox" name="universal[notary][enabled]" value="1" />
-            <label for="notary-enabled">
-                {{ __("Notarize Updates for other Airships?") }}
-            </label>
+                <div class="multiline_checkbox">
+                    <input
+                        {% if universal["notary"]["enabled"] %} checked="checked"{% endif %}
+                        id="notary-enabled"
+                        name="universal[notary][enabled]"
+                        type="checkbox"
+                        value="1"
+                    />
+                    <label for="notary-enabled">
+                        {{ __("Notarize Updates for other Airships?") }}
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -205,6 +205,12 @@ nav ul.navigation > li:hover a {
 #content h5 + h6 {
     margin-top: 1em;
 }
+#content h2:first-child {
+    margin-bottom: 1ex;
+}
+.no-border {
+    border: none !important;
+}
 .blog-post-title {
     text-shadow: rgba(255, 255, 255, 0.2) 1px 1px 1px;
 }
@@ -1424,7 +1430,7 @@ fieldset.preferences > legend {
     border: 1px solid #000;
     color: #fff;
     margin: 0 !important;
-    padding: 0.2rem 0;
+    padding: 0.4rem 0.2rem;
 }
 #admin_settings_accordion h3,
 #cabin_accordion h3:focus {
@@ -1433,7 +1439,9 @@ fieldset.preferences > legend {
 #cabin_accordion h3 + div,
 #admin_settings_accordion h3 + div {
     border: 1px solid rgba(0, 0, 0, 0.5);
-    padding: 1ex;
+    font-family: 'Open Sans', Sans-serif;
+    padding: 1em 1ex;
+    line-height: 1.7;
 }
 #cabin_accordion h3.ui-state-active,
 #admin_settings_accordion h3.ui-state-active {
@@ -1444,6 +1452,11 @@ fieldset.preferences > legend {
 #cabin_accordion h3.ui-state-active + div,
 #admin_settings_accordion h3.ui-state-active + div {
     color: #000;
+}
+
+#cabin_accordion h3 + div p,
+#admin_settings_accordion h3 + div p {
+    line-height: 1.5;
 }
 .table-min-width {
     width: 1px;
@@ -2017,6 +2030,9 @@ h2#comments {
     max-width: 100%;
     width: calc(100% - 1em);
 }
+#database-form fieldset .table {
+    line-height: 2;
+}
 #database-form fieldset + fieldset {
     margin-top: 1em;
 }
@@ -2113,4 +2129,29 @@ a.bridge-left-active:hover {
 }
 a.bridge-left-active:hover .bridge-icon {
     color: #fff !important;
+}
+.multiline_checkbox_container {
+    margin: 0;
+    border: none;
+    border-spacing: 0;
+    padding: 0;
+}
+.multiline_checkbox {
+    display: table-row;
+}
+.multiline_checkbox input[type=checkbox] {
+    display: table-cell;
+}
+.multiline_checkbox input[type=checkbox] + label {
+    display: table-cell;
+    padding-left: 1ex;
+}
+.lineheight-medium,
+.lineheight-medium fieldset,
+.lineheight-medium .table-cell {
+    line-height: 2.1 !important;
+}
+.lineheight-medium fieldset > legend {
+    padding-left: 1ex;
+    padding-right: 1ex;
 }

@@ -162,38 +162,40 @@
             {{ __("Comments:") }}
         </div>
         <div class="table-cell full-width">
-            <input
-                {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
-                id="blog_comments_enabled"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[blog][comments][enabled]"
-            />
-            <label for="blog_comments_enabled">{{ __("Allow Comments?") }}</label>
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['blog']['comments']['enabled'] %}checked="checked"{% endif %}
+                        id="blog_comments_enabled"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[blog][comments][enabled]"
+                    />
+                    <label for="blog_comments_enabled">{{ __("Allow Comments?") }}</label>
+                </div>
 
-            <br />
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
+                        id="blog_comments_guests"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[blog][comments][guests]"
+                    />
+                    <label for="blog_comments_guests">{{ __("Allow Guests to Comment?") }}</label>
+                </div>
 
-            <input
-                {% if config_extra['blog']['comments']['guests'] %}checked="checked"{% endif %}
-                id="blog_comments_guests"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[blog][comments][guests]"
-            />
-            <label for="blog_comments_guests">{{ __("Allow Guests to Comment?") }}</label>
-
-            <br />
-
-            <input
-                {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
-                id="blog_recaptcha_enabled"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[blog][comments][recaptcha]"
-            />
-            <label for="blog_recaptcha_enabled">{{ __("Require ReCAPTCHA?") }}</label>
-
-            <br />
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['blog']['comments']['recaptcha'] %}checked="checked"{% endif %}
+                        id="blog_recaptcha_enabled"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[blog][comments][recaptcha]"
+                    />
+                    <label for="blog_recaptcha_enabled">{{ __("Require ReCAPTCHA?") }}</label>
+                </div>
+            </div>
 
             <fieldset>
                 <legend>{{ __("ReCAPTCHA Settings") }}</legend>
@@ -255,14 +257,18 @@
             {{ __("Blog Listings") }}:
         </div>
         <div class="table-cell full-width">
-            <input
-                {% if config_extra['blog']['cachelists'] %}checked="checked"{% endif %}
-                id="list_cache"
-                type="checkbox"
-                class="large_checkbox"
-                name="{{ form_key_config }}[blog][cachelists]"
-            />
-            <label for="list_cache">{{ __("Cache the blog list pages as static HTML?") }}</label>
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        {% if config_extra['blog']['cachelists'] %}checked="checked"{% endif %}
+                        id="list_cache"
+                        type="checkbox"
+                        class="large_checkbox"
+                        name="{{ form_key_config }}[blog][cachelists]"
+                    />
+                    <label for="list_cache">{{ __("Cache the blog list pages as static HTML?") }}</label>
+                </div>
+            </div>
         </div>
     </div>
 </div>
