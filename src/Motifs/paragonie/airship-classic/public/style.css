@@ -711,6 +711,7 @@ a:hover .bridge-icon {
 .bridge_page_options fieldset {
     padding-bottom: 0.5ex;
 }
+.airship-form input[type=checkbox],
 .bridge_blog_post_tags input[type=checkbox],
 .bridge_file_options input[type=checkbox],
 .bridge_page_options input[type=checkbox],
@@ -729,6 +730,7 @@ input[type=checkbox].large_checkbox,
     -o-transform-origin: 0 0;
     -moz-transform-origin: 0 0;
     margin-right: 2px;
+    vertical-align: -0.16ex;
 }
 #bridge_file_list_footer,
 #bridge_page_list_footer {
