@@ -736,10 +736,12 @@ input[type=checkbox].large_checkbox,
     margin-top: 0.75ex;
 }
 .rich_text_tab_row a {
-    color: #081023;
     border-color: rgba(0, 0, 0, 0.125);
     border-style: solid;
     border-width: 0 1px 1px 1px;
+    color: #081023;
+    padding-left: 1ex;
+    padding-right: 1ex;
     transition: background-color 0.25s;
 }
 .rich_text_show_one {
@@ -1430,7 +1432,7 @@ fieldset.preferences > legend {
     border: 1px solid #000;
     color: #fff;
     margin: 0 !important;
-    padding: 0.4rem 0.2rem;
+    padding: 0.4rem;
 }
 #admin_settings_accordion h3,
 #cabin_accordion h3:focus {
@@ -1440,7 +1442,7 @@ fieldset.preferences > legend {
 #admin_settings_accordion h3 + div {
     border: 1px solid rgba(0, 0, 0, 0.5);
     font-family: 'Open Sans', Sans-serif;
-    padding: 1em 1ex;
+    padding: 1.5em 1em 1em 1em;
     line-height: 1.7;
 }
 #cabin_accordion h3.ui-state-active,
@@ -2154,4 +2156,16 @@ a.bridge-left-active:hover .bridge-icon {
 .lineheight-medium fieldset > legend {
     padding-left: 1ex;
     padding-right: 1ex;
+}
+.ui-accordion-header-icon {
+    margin-right: 0.5ex;
+}
+.airship-form input[type=text],
+.airship-form input[type=password],
+.airship-form select {
+    padding: 0.7ex;
+}
+.airship-form textarea {
+    line-height: 1.1;
+    padding: 1ex;
 }

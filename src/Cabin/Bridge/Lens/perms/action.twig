@@ -1,7 +1,7 @@
 {% extends base_template() %}
 
 {% block main %}
-    <form method="post">{{ form_token() }}
+    <form method="post" class="airship-form">{{ form_token() }}
         <label for="label">{{ __("Action Name") }}</label>:
         <input id="label" type="text" name="label" value="{{ action.label|e('html_attr') }}" />
         <button type="submit" class="pure-button pure-button-secondary">
