@@ -1,6 +1,13 @@
 ## Version 1.3.0 (Not released yet)
 
-
+  * Significant UI/UX improvements.
+    * Redesigned the Bridge UI to be more suitable for a control panel.
+    * The left menu in the Bridge is now collapsable, but automatically
+      opens the sections which indicate your current location in the 
+      cabin.
+  * Update [Halite](https://github.com/paragonie/halite) to 2.2.0.
+  * Added a `WhiteList` filter, which is a strict typed alternative to
+    switch-case whitelisting.
 
 ## Version 1.2.8 - 2016-07-26
 
