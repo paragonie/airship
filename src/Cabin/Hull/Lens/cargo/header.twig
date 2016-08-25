@@ -1,10 +1,11 @@
 <div class="header_wrap">{#
     #}<div class="content-sandwich">{#
-        #}<a href="{{ cabin_url() }}">{#
+        #}<a href="{{ cabin_url() }}" id="hull-header-image-link">{#
         #}<img
             alt="{{ __("CMS Airship")|e('html_attr') }}"
             class="float-left"
-            src="/img/paragon_initiative_enterprises.png"
+            id="hull-header-icon"
+            src="/img/airship-icon.svg"
             title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
         /></a>
         <h1>{{ SETTINGS.title }}</h1>

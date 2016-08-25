@@ -36,6 +36,12 @@ body {
     min-height: 100%;
     margin-bottom: -37px;
 }
+#hull-header-icon {
+    height: 64px;
+}
+#bridge-header-icon {
+    height: 38px;
+}
 #content {
     height: 100%;
     padding-left: 0;
@@ -80,6 +86,14 @@ a:active, a:hover {
     background-color: #181818;
     padding: 3px;
     color: #E4E4F8;
+}
+#hull-header-icon,
+#hull-header-image-link {
+    border-radius: 32px;
+}
+#bridge-header-icon,
+#bridge-header-image-link {
+    border-radius: 19px;
 }
 header h1 {
     font-style: italic;
