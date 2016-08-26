@@ -28,6 +28,7 @@ class IndexPage extends LandingGear
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('showmenu', true);
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -59,6 +60,7 @@ class IndexPage extends LandingGear
     public function index()
     {
         if ($this->isLoggedIn())  {
+            $this->storeLensVar('showmenu', true);
             $author_bp = $this->blueprint('Author');
             $announce_bp = $this->blueprint('Announcements');
             $blog_bp = $this->blueprint('Blog');
@@ -88,6 +90,7 @@ class IndexPage extends LandingGear
                     )
             ]);
         } else {
+            $this->storeLensVar('showmenu', false);
             $this->lens('login');
         }
     }
@@ -124,6 +127,7 @@ class IndexPage extends LandingGear
     public function helpPage()
     {
         if ($this->isLoggedIn())  {
+            $this->storeLensVar('showmenu', true);
             //
             $cabins = $this->getCabinNamespaces();
 

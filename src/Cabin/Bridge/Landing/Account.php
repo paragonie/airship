@@ -68,6 +68,7 @@ class Account extends LandingGear
     public function airshipLand()
     {
         parent::airshipLand();
+        $this->storeLensVar('showmenu', true);
         $this->acct = $this->blueprint('UserAccounts');
     }
 
@@ -133,6 +134,7 @@ class Account extends LandingGear
             // You're already logged in!
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('showmenu', false);
         $post = $this->post(new LoginFilter());
         if (!empty($post)) {
             $this->processLogin($post);
@@ -274,6 +276,7 @@ class Account extends LandingGear
         if ($this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar('showmenu', false);
         $enabled = $this->config('password-reset.enabled');
         if (empty($enabled)) {
             \Airship\redirect($this->airship_cabin_prefix);

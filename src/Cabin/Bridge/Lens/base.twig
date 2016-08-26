@@ -14,34 +14,22 @@
             #}{{ active_link|json_encode|e('html_attr') }}{#
         #}{% endif %}"{#
     #}>{% block body %}
-        <div id="site-wrapper">
+        <div id="site-wrapper" class="bridge-body-site-wrapper{% if not showmenu %} bridge-no-menu{% endif %}">
             <header>{% block header %}
                 {% include cargo("header") %}
             {% endblock %}</header>
-            {% if showmenu %}{#
-                #}<div id="main-wrapper">
-                    <div id="leftmenu">{% block leftmenu %}
-                        
-                    {% endblock %}</div>
-                    <div id="rightside">
-            {% endif %}
-                        <div id="content">{#
-                        #}{% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}{#
-                            #}{% block content %}<div id="bridge_content">
-                            <div id="bridge_table">
-                                {% if announcement %}<div id="announcement">{{ announcement }}</div>{% endif %}
-                                <div id="bridge_left">
-                                    {% include cargo("bridge_menu") %}
-                                </div>
-                                <div id="bridge_main">{% block main %}{% endblock %}</div>
-                            </div>
-                        </div>{% endblock %}</div>{#
-                    #}{% if SETTINGS['sandwich_content'] %}</div>{% endif %}{#
-                #}
-            {% if showmenu %}
+            <div id="content">{#
+            #}{% if SETTINGS['sandwich_content'] %}<div class="content-sandwich">{% endif %}{#
+                #}{% block content %}<div id="bridge_content">
+                <div id="bridge_table">
+                    {% if announcement %}<div id="announcement">{{ announcement }}</div>{% endif %}
+                    <div id="bridge_left">
+                        {% include cargo("bridge_menu") %}
                     </div>
+                    <div id="bridge_main">{% block main %}{% endblock %}</div>
                 </div>
-            {% endif %}
+            </div>{% endblock %}</div>{#
+        #}{% if SETTINGS['sandwich_content'] %}</div>{% endif %}
         </div>
         <footer id="bridge_footer">{% block footer %}
             {% include cargo("footer") %}

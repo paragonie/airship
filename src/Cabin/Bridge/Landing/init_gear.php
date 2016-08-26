@@ -68,6 +68,7 @@ if (!\class_exists('LoggedInUsersOnly')) {
         public function airshipLand()
         {
             parent::airshipLand();
+            $this->storeLensVar('showmenu', true);
 
             if (!$this->isLoggedIn()) {
                 // You need to log in first!
