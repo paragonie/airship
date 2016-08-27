@@ -162,12 +162,12 @@ $state->HTMLPurifier = $htmlpurifier;
 /**
  * Load up all of the keys used by the application:
  */
-require_once ROOT.'/keys.php';
+require_once ROOT . '/keys.php';
 
 /**
  * Set up the logger
  */
-require_once ROOT."/config/logger.php";
+require_once ROOT . '/config/logger.php';
 
 /**
  * Automatic security updates

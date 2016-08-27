@@ -7,7 +7,7 @@ use Airship\Engine\Lens;
  * GLOBAL LENS MODIFICATIONS GO HERE
  * 
  * We can add filters, functions, etc. to the current lens if we want
- * 
+ *
  * @global Lens $lens
  */
 
@@ -110,6 +110,7 @@ $lens->func('get_path_url');
 $lens->func('global_config');
 $lens->func('is_admin');
 $lens->func('logout_token');
+$lens->func('next_cargo');
 $lens->func('userid');
 $lens->func('user_authors');
 $lens->func('user_author_ids');

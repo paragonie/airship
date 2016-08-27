@@ -52,7 +52,7 @@ if (\file_exists(ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json')) {
     );
 } else {
     $cabinsGadgets = [];
-    \file_get_contents(
+    \file_put_contents(
         ROOT . '/Cabin/' . $active['name'] . '/config/gadgets.json',
         '[]'
     );

@@ -7,6 +7,7 @@ use Airship\Engine\{
     Gears,
     Cache\File as FileCache,
     Cache\SharedMemory as MemoryCache,
+    Hail,
     Lens,
     State
 };
@@ -94,6 +95,8 @@ require_once ROOT . '/bootstrap.php';
  *
  * Normally you would just want a cron job to run continuum.php every hour or so,
  * but this forces it to be run.
+ *
+ * @global Hail $hail
  */
 $autoUpdater = Gears::get('AutoUpdater', $hail);
 if ($autoUpdater->needsUpdate()) {
