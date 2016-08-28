@@ -25,12 +25,12 @@ if (\defined('CABIN_DIR')) {
         if (!\is_dir(CABIN_DIR . '/Lens/motif')) {
             \mkdir(CABIN_DIR . '/Lens/motif', 0775);
         } else {
-            \chmod(CABIN_DIR . '/Lens/motif', 0775);
+            @\chmod(CABIN_DIR . '/Lens/motif', 0775);
         }
         if (!\is_dir(CABIN_DIR . '/public/motif')) {
             \mkdir(CABIN_DIR . '/public/motif', 0775);
         } else {
-            \chmod(CABIN_DIR . '/public/motif', 0775);
+            @\chmod(CABIN_DIR . '/public/motif', 0775);
         }
 
         // Parse the Cabin's Motifs configuration file:
