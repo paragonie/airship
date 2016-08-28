@@ -12,6 +12,6 @@ use Airship\Engine\Security\Filter\{
 $motifInputFilter = (new GeneralFilterContainer())
     ->addFilter(
         'bridge.gradient',
-        (new BoolFilter())->setDefault(true)
+        new BoolFilter()
     )
 ;

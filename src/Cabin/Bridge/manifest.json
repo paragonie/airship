@@ -190,6 +190,8 @@
 
         "motifs/{string}":
             ["Motifs", "manage"],
+        "motif_config/{string}":
+            ["Motifs", "configure"],
         "motifs":
             ["Motifs"],
 
