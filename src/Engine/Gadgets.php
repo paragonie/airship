@@ -79,8 +79,8 @@ abstract class Gadgets
         $iterate = $state->cargoIterator;
 
         if (isset($iterate[$name])) {
-            ++$iterate[$name];
             $cargo = self::unloadCargo($name, $iterate[$name]);
+            ++$iterate[$name];
             $state->cargoIterator = $iterate;
             return $cargo;
         }

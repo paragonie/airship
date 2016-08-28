@@ -286,15 +286,20 @@ class Lens
         $state = State::instance();
         if (
             isset($state->motifs[$name])
-            &&
+                &&
             isset($state->motifs[$name]['config']['cargo'])
         ) {
+            $cargoIterator = isset($state->cargoIterator)
+                ? $state->cargoIterator
+                : [];
             foreach ($state->motifs[$name]['config']['cargo'] as $key => $subPath) {
+                $cargoIterator[$key] = 0;
                 Gadgets::loadCargo(
                     $key,
                     'motif/' . $name . '/cargo/' . $subPath
                 );
             }
+            $state->cargoIterator = $cargoIterator;
         }
         return $this;
     }
