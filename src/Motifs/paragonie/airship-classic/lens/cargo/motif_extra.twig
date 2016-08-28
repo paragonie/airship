@@ -69,13 +69,43 @@
     );
 }
 {% endif %}
-{% if MOTIF['hull']['blog-header']['enabled'] %}
-    #blog-header {
-        {% if MOTIF['hull']['blog-header']['background-image'] %}
-            background-image: url("{{ MOTIF['hull']['blog-header']['background-image'] }}");
+{% if ACTIVE_CABIN == "Hull" %}
+    {% if MOTIF['hull']['background']['enabled'] %}
+        body {
+        {% if MOTIF['hull']['background']['image'] %}
+            background-image: url("{{ MOTIF['hull']['background']['image'] }}");
         {% endif %}
-        {% if MOTIF['hull']['blog-header']['color'] %}
-            color: #{{ MOTIF['hull']['blog-header']['color'] }};
+        {% if not MOTIF['hull']['background']['tile'] %}
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-position: top right;
         {% endif %}
-    }
+        }
+        #site-wrapper {
+            {% if MOTIF['hull']['background']['shade'] %}
+                background-color: rgba(
+                    {{ MOTIF['hull']['background']['shade']['red'] }},
+                    {{ MOTIF['hull']['background']['shade']['green'] }},
+                    {{ MOTIF['hull']['background']['shade']['blue'] }},
+                    {{ MOTIF['hull']['background']['shade']['alpha']
+                        ? MOTIF['hull']['background']['shade']['alpha']
+                        : 0
+                    }}
+                );
+            {% endif %}
+        }
+    {% endif %}
+    {% if MOTIF['hull']['blog-header']['enabled'] %}
+        #blog-header {
+            {% if MOTIF['hull']['blog-header']['background-image'] %}
+                background-image: url("{{ MOTIF['hull']['blog-header']['background-image'] }}");
+            {% endif %}
+            color: rgb(
+                {{ MOTIF['hull']['blog-header']['font']['red'] }},
+                {{ MOTIF['hull']['blog-header']['font']['green'] }},
+                {{ MOTIF['hull']['blog-header']['font']['blue'] }}
+            );
+        }
+    {% endif %}
 {% endif %}
+{% if MOTIF['manual_css'] %}{{ MOTIF['manual_css']|raw }}{% endif %}

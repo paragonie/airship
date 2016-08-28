@@ -2040,6 +2040,7 @@ h2#comments {
 #database-form fieldset .table {
     line-height: 2;
 }
+#motif-config-form fieldset + fieldset,
 #database-form fieldset + fieldset {
     margin-top: 1em;
 }
@@ -2173,4 +2174,7 @@ a.bridge-left-active:hover .bridge-icon {
 .airship-form textarea {
     line-height: 1.1;
     padding: 1ex;
+}
+.color-input {
+    width: 3em;
 }

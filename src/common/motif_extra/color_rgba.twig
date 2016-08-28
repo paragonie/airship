@@ -1,0 +1,59 @@
+<div id="{{ id }}" class="color-input-container">
+    <label
+        for="{{ id }}-red"
+        title="{{ __("Red")|e('html_attr') }}"
+    >{#
+        #}{{ __("R") }}:</label>{#
+    #}<input
+        class="color-input"
+        id="{{ id }}-red"
+        name="{{ name }}[red]"
+        pattern="^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$"
+        type="text"
+        value="{{ value['red']|e('html_attr') }}"
+    />
+
+    <label
+        for="{{ id }}-green"
+        title="{{ __("Green")|e('html_attr') }}"
+    >{#
+        #}{{ __("G") }}:</label>{#
+    #}<input
+        class="color-input"
+        id="{{ id }}-green"
+        name="{{ name }}[green]"
+        pattern="^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$"
+        type="text"
+        value="{{ value['green']|e('html_attr') }}"
+    />
+
+    <label
+        for="{{ id }}-blue"
+        title="{{ __("Blue")|e('html_attr') }}"
+    >{#
+        #}{{ __("B") }}:</label>{#
+    #}<input
+        class="color-input"
+        id="{{ id }}-blue"
+        name="{{ name }}[blue]"
+        pattern="^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$"
+        type="text"
+        value="{{ value['blue']|e('html_attr') }}"
+    />
+
+    {% if alpha %}
+        <label
+            for="{{ id }}-alpha"
+            title="{{ __("alpha")|e('html_attr') }}"
+        >{#
+            #}{{ __("A") }}:</label>{#
+        #}<input
+            class="color-input"
+            id="{{ id }}-alpha"
+            name="{{ name }}[alpha]"
+            pattern="^(0|1)\.([0-9]+)$"
+            type="text"
+            value="{{ value['alpha']|e('html_attr') }}"
+            />
+    {% endif %}
+</div>

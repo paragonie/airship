@@ -93,6 +93,24 @@ class Install
             echo 'Invalid installer authorization token.', "\n";
             exit(255);
         }
+        $dirs = [
+            'comments',
+            'csp_hash',
+            'csp_static',
+            'hash',
+            'markdown',
+            'static',
+            'twig'
+        ];
+        foreach ($dirs as $d) {
+            if (!\is_dir(\dirname(__DIR__) . '/tmp/cache/' . $d)) {
+                \mkdir(
+                    \dirname(__DIR__) . '/tmp/cache/' . $d,
+                    0775,
+                    true
+                );
+            }
+        }
     }
 
     /**
@@ -915,5 +933,4 @@ class Install
         );
         return $strength['score'] < 3;
     }
-
 }

@@ -129,6 +129,8 @@ if ($autoUpdater->needsUpdate()) {
 // Turn all of this cabins' Landings and Blueprints into gears:
 require ROOT . '/cabin_gears.php';
 
+$lens->addGlobal('ACTIVE_CABIN', \CABIN_NAME);
+
 $autoPilot = Gears::get(
     'AutoPilot',
     $active,

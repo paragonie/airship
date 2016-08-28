@@ -50,8 +50,6 @@ class AirshipFilter extends InputFilterContainer
             ->addFilter('universal.ledger.connection', new StringFilter())
             ->addFilter('universal.ledger.table', new StringFilter())
 
-            ->addFilter('universal.ledger.driver', new StringFilter())
-
             ->addFilter('universal.notary.channel', (new StringFilter())
                 ->setDefault('paragonie')
             )

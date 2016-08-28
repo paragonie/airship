@@ -19,47 +19,115 @@
     </div>
 </fieldset>
 
-<br />
-
 <fieldset>
     <legend><h3 class="nomargin">{{ __("Hull") }}</h3></legend>
 
-    <div class="multiline_checkbox_container">
-        <div class="multiline_checkbox">
-            <input
-                id="motif-config-hull-blog-header-enabled"
-                type="checkbox"
-                name="motif_config[hull][blog-header][enabled]"
-                value="1"
-                {% if motif_config['hull']['blog-header']['enabled'] %}
-                    checked="checked"
-                {% endif %}
-            />
-            <label for="motif-config-hull-blog-header-enabled">
-                {{ __("Show a background image in the blog header?") }}
-            </label>
+    <div class="lineheight-medium">
+        <div class="multiline_checkbox_container">
+            <div class="multiline_checkbox">
+                <input
+                        id="motif-config-hull-background-enabled"
+                        type="checkbox"
+                        name="motif_config[hull][background][enabled]"
+                        value="1"
+                        {% if motif_config['hull']['background']['enabled'] %}
+                            checked="checked"
+                        {% endif %}
+                />
+                <label for="motif-config-hull-background-enabled">
+                    {{ __("Show a background image in Hull?") }}
+                </label>
+            </div>
+            <div class="multiline_checkbox">
+                <input
+                    id="motif-config-hull-background-tile"
+                    type="checkbox"
+                    name="motif_config[hull][background][tile]"
+                    value="1"
+                    {% if motif_config['hull']['background']['tile'] %}
+                        checked="checked"
+                    {% endif %}
+                />
+                <label for="motif-config-hull-background-tile">
+                    {{ __("Tile the background image?") }}
+                </label>
+            </div>
         </div>
-    </div>
 
-    <div class="pure-form">
-        <label for="motif-config-hull-blog-header-background-image">{{ __("Background Image URL") }}:</label>
+        <label for="motif-config-hull-background-image">{{ __("Background Image URL") }}:</label>
         <input
             class="full-width"
-            id="motif-config-hull-blog-header-background-image"
-            name="motif_config[hull][blog-header][background-image]"
+            id="motif-config-hull-background-image"
+            name="motif_config[hull][background][image]"
             type="text"
-            value="{{ motif_config['hull']['blog-header']['background-image']|e('html_attr') }}"
+            value="{{ motif_config['hull']['background']['image']|e('html_attr') }}"
         />
 
-        <label for="motif-config-hull-blog-header-background-image">{{ __("Font color for blog header") }}:</label>
-        <input
-            class="full-width"
-            id="motif-config-hull-blog-header-color"
-            name="motif_config[hull][blog-header][color]"
-            pattenr="^[0-9]{3,6}$"
-            placeholder="FF0099"
-            type="text"
-            value="{{ motif_config['hull']['blog-header']['color']|e('html_attr') }}"
-        />
+        <label for="motif-config-hull-background-background-image">{{ __("Background Image Overlay") }}:</label>
+        {% include "common/motif_extra/color_rgba.twig" with {
+            "id": "motif-config-hull-background-shade",
+            "alpha": true,
+            "name": "motif_config[hull][background][shade]",
+            "value": {
+                "red": motif_config['hull']['background']['shade']['red'],
+                "green": motif_config['hull']['background']['shade']['green'],
+                "blue": motif_config['hull']['background']['shade']['blue'],
+                "alpha": motif_config['hull']['background']['shade']['alpha']
+            }
+        } %}
+
+        <fieldset class="hidden"></fieldset>
+
+        <fieldset>
+            <legend>{{ __("Blog Settings") }}</legend>
+            <div class="multiline_checkbox_container">
+                <div class="multiline_checkbox">
+                    <input
+                        id="motif-config-hull-blog-header-enabled"
+                        type="checkbox"
+                        name="motif_config[hull][blog-header][enabled]"
+                        value="1"
+                        {% if motif_config['hull']['blog-header']['enabled'] %}
+                            checked="checked"
+                        {% endif %}
+                    />
+                    <label for="motif-config-hull-blog-header-enabled">
+                        {{ __("Show a background image in the blog header?") }}
+                    </label>
+                </div>
+            </div>
+
+            <div class="pure-form">
+                <label for="motif-config-hull-blog-header-background-image">
+                    {{ __("Blog Header Image URL") }}:
+                </label>
+                <input
+                    class="full-width"
+                    id="motif-config-hull-blog-header-background-image"
+                    name="motif_config[hull][blog-header][background-image]"
+                    type="text"
+                    value="{{ motif_config['hull']['blog-header']['background-image']|e('html_attr') }}"
+                />
+            </div>
+
+                <label for="motif-config-hull-blog-header-background-image">
+                    {{ __("Font color for blog header") }}:
+                </label>
+                {% include "common/motif_extra/color_rgba.twig" with {
+                    "id": "motif-config-hull-blog-header-font",
+                    "alpha": false,
+                    "name": "motif_config[hull][blog-header][font]",
+                    "value": {
+                        "red": motif_config['hull']['blog-header']['font']['red'],
+                        "green": motif_config['hull']['blog-header']['font']['green'],
+                        "blue": motif_config['hull']['blog-header']['font']['blue']
+                    }
+                } %}
+        </fieldset>
     </div>
+</fieldset>
+
+<fieldset>
+    <legend>{{ __("Extra CSS (Advanced Users)") }}</legend>
+    <textarea name="motif_config[manual_css]" class="full-textarea">{{ motif_config['manual_css']|e('html_attr') }}</textarea>
 </fieldset>

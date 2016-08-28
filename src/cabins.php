@@ -106,6 +106,21 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
                 );
                 \symlink($endLink, $startLink);
             }
+
+            // Expose common template snippets to the template loader:
+            $startLink = \implode(
+                '/',
+                [
+                    ROOT,
+                    'Cabin',
+                    $cabinName,
+                    'Lens',
+                    'common'
+                ]
+            );
+            if (!\is_link($startLink)) {
+                \symlink(ROOT . '/common', $startLink);
+            }
         } catch (Exception $ex) {
             $cabin['data'] = null;
         }
