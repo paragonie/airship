@@ -416,6 +416,13 @@ class Admin extends AdminOnly
             unset($csp['inherit']);
         }
 
+        if ($post['universal']['ledger']['driver'] === 'database') {
+            if (empty($post['universal']['ledger']['table'])) {
+                // Table name must be provided.
+                return false;
+            }
+        }
+
         // Save CSP
         \Airship\saveJSON(
             ROOT . '/config/content_security_policy.json',
