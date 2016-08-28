@@ -31,10 +31,12 @@ trait Security
      * @var Authentication
      */
     public $airship_auth;
+
     /**
      * @var Cookie
      */
     public $airship_cookie;
+
     /**
      * @var Permissions
      */
@@ -181,6 +183,10 @@ trait Security
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
+            if (!$this->verifySessionCanary($userId, false)) {
+                return false;
+            }
+
             // Regenerate session ID:
             \session_regenerate_id(true);
 
@@ -251,9 +257,10 @@ trait Security
      * as per the Bridge configuration. (This /is/ an optional feature.)
      *
      * @param int $userID
+     * @param bool $logOut
      * @return bool
      */
-    public function verifySessionCanary(int $userID): bool
+    public function verifySessionCanary(int $userID, bool $logOut = true): bool
     {
         if (empty($_SESSION['session_canary'])) {
             return false;
@@ -284,7 +291,9 @@ trait Security
                     'possessed' => $_SESSION['session_canary']
                 ]
             );
-            $this->completeLogOut();
+            if ($logOut) {
+                $this->completeLogOut();
+            }
             return false;
         }
         return true;

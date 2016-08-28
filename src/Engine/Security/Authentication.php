@@ -40,11 +40,17 @@ class Authentication
      */
     protected $db;
 
+    /**
+     * @var string
+     */
     protected $dummyHash;
+
     /**
      * $this->tableConfig contains all of the selectors (table/column names)
      * used in the internal queries. This is useful if you need to change the
      * queries in a Gear without rewriting them.
+     *
+     * @var array
      */
     protected $tableConfig = [
         'table' => [
