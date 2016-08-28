@@ -105,10 +105,16 @@ if (\defined('CABIN_DIR')) {
     }
 }
 
-if (isset($_settings['active-motif'])) {
+$userMotif = \Airship\LensFunctions\user_motif();
+if (!empty($userMotif)) {
+    $activeMotif = $userMotif['name'];
+} elseif (isset($_settings['active-motif'])) {
+    $activeMotif = $_settings['active-motif'];
+}
+if (isset($activeMotif)) {
     $lens
-        ->setBaseTemplate($_settings['active-motif'])
-        ->loadMotifCargo($_settings['active-motif'])
-        ->loadMotifConfig($_settings['active-motif'])
+        ->setBaseTemplate($activeMotif)
+        ->loadMotifCargo($activeMotif)
+        ->loadMotifConfig($activeMotif)
         ->addGlobal('MOTIF', $state->motif_config);
 }
