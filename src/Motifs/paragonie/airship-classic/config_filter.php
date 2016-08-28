@@ -16,10 +16,6 @@ $motifInputFilter = (new GeneralFilterContainer())
         new BoolFilter()
     )
     ->addFilter(
-        'style-csp-nonce',
-        new BoolFilter()
-    )
-    ->addFilter(
         'hull.blog-header.enabled',
         new BoolFilter()
     )
