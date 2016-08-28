@@ -78,10 +78,6 @@ a:active, a:hover {
     color: #E4E4F8;
 }
 #hull-header-icon,
-#bridge-header-icon {
-    transform: rotate(-30deg);
-}
-#hull-header-icon,
 #hull-header-image-link {
     border-radius: 32px;
 }
