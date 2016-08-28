@@ -44,6 +44,9 @@ class DBStore implements LedgerStorageInterface
         string $table = self::DEFAULT_TABLE
     ) {
         $this->db = $db ?? \Airship\get_database();
+        if (empty($table)) {
+            $table = self::DEFAULT_TABLE;
+        }
         $this->table = $table;
     }
 
@@ -61,7 +64,8 @@ class DBStore implements LedgerStorageInterface
         string $context
     ) {
         return $this->db->insert(
-            $this->table, [
+            $this->table,
+            [
                 $this->columns['level'] => $level,
                 $this->columns['message'] => $message,
                 $this->columns['context'] => $context
