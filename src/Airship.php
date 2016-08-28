@@ -714,6 +714,8 @@ function saveJSON(string $file, $data = null): bool
 {
     if (\file_exists($file) && !\is_writable($file)) {
         throw new AccessDenied($file);
+    } elseif (!\file_exists($file) && !\is_writable(\dirname($file))) {
+        throw new AccessDenied(\dirname($file));
     }
     return \file_put_contents(
         $file,
