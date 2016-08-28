@@ -8,6 +8,8 @@
   * Update [Halite](https://github.com/paragonie/halite) to 2.2.0.
   * Added a `WhiteList` filter, which is a strict typed alternative to
     switch-case whitelisting.
+  * Extension developers can now make their motifs configurable by
+    end users.
 
 ## Version 1.2.8 - 2016-07-26
 

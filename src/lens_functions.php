@@ -593,7 +593,6 @@ function logout_token(): string
     return $_SESSION['logout_token'];
 }
 
-
 /**
  * Get information about the motifs
  *
@@ -603,6 +602,15 @@ function motifs()
 {
     $state = State::instance();
     return $state->motifs;
+}
+
+/**
+ * @param array ...$args
+ * @return array
+ */
+function next_cargo(...$args)
+{
+    return Gadgets::unloadNextCargo(...$args);
 }
 
 /**
@@ -901,10 +909,13 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
     if (isset($userPrefs['motif'][$cabin])) {
         $split = \explode('/', $userPrefs['motif'][$cabin]);
         foreach ($state->motifs as $k => $motif) {
+            if (empty($motif['config'])) {
+                continue;
+            }
             if (
-                $motif['config']['supplier'] === $split[0]
+                $motif['supplier'] === $split[0]
                     &&
-                $motif['config']['name'] === $split[1]
+                $motif['name'] === $split[1]
             ) {
                 // We've found a match:
                 $userCache[$userId] = $k;

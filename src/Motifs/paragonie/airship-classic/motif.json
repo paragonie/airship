@@ -3,6 +3,9 @@
   "name": "airship-classic",
   "display_name": "Airship Classic v1.3.0",
   "base_template": null,
+  "cargo": {
+    "base_head": "base_head.twig"
+  },
   "css": [
     "style.css"
   ],

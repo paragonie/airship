@@ -1,0 +1,6 @@
+{# For motifs that fail to override this template. #}
+<textarea name="motif_config">{{
+    motif_config|json_encode(
+        constant("JSON_PRETTY_PRINT")
+    )
+}}</textarea>

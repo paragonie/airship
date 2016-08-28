@@ -56,7 +56,7 @@ abstract class Gadgets
         if (!\array_key_exists($name, $cargo)) {
             $cargo[$name] = [];
         }
-        
+
         \array_unshift($cargo[$name], $source);
         $cargo[$name] = \array_values($cargo[$name]);
 
@@ -79,8 +79,8 @@ abstract class Gadgets
         $iterate = $state->cargoIterator;
 
         if (isset($iterate[$name])) {
-            $cargo = self::unloadCargo($name, $iterate[$name]);
             ++$iterate[$name];
+            $cargo = self::unloadCargo($name, $iterate[$name]);
             $state->cargoIterator = $iterate;
             return $cargo;
         }

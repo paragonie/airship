@@ -1,9 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use Airship\Engine\State;
+use Airship\Engine\{
+    Lens,
+    State
+};
 
 /**
+ * @global Lens $lens
+ * @global array $_settings
  * @global array $active
  * @global State $state
  *
@@ -46,7 +51,7 @@ if (\defined('CABIN_DIR')) {
                     // If the Motif is malicious, alert.
                     if (\strpos($motifStart, CABIN_DIR . '/Lens/motif') === false) {
                         $state->logger->alert(
-                            'Potential directory trasversal in Motif config.',
+                            'Potential directory traversal in Motif config.',
                             [
                                 'cabin' => $active['name'],
                                 'motif' => $motif,
@@ -73,7 +78,7 @@ if (\defined('CABIN_DIR')) {
 
                     // Create the necessary symlinks if they do not already exist:
                     if (!\is_link($motifStart)) {
-                        \symlink($motifEnd, $motifStart);
+                        \symlink($motifEnd . '/lens', $motifStart);
                     }
                     if (\is_dir($motifEnd . '/public')) {
                         $motifPublic = CABIN_DIR . '/public/motif/' . $motif;
@@ -100,6 +105,10 @@ if (\defined('CABIN_DIR')) {
     }
 }
 
-if (isset($_settings['active_motif'])) {
-    $lens->setBaseTemplate($_settings['active_motif']);
+if (isset($_settings['active-motif'])) {
+    $lens
+        ->setBaseTemplate($_settings['active-motif'])
+        ->loadMotifCargo($_settings['active-motif'])
+        ->loadMotifConfig($_settings['active-motif'])
+        ->addGlobal('MOTIF', $state->motif_config);
 }

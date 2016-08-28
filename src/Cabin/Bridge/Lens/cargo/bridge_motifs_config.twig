@@ -1,0 +1,16 @@
+<h2>{{ __(title) }}</h2>
+
+<form method="post">{{ form_token() }}
+    {% include cargo("bridge_motifs_config_overloaded") ignore missing %}
+
+    <div class="text-right form-button-group no-border">
+        <a href="{{ cabin_url() }}motifs" class="pure-button pure-button-tertiary">
+            {{ __("Cancel") }}
+        </a>
+
+        <button type="submit" class="pure-button pure-button-primary">
+            <i class="fa fa-paint-brush"></i>
+            {{ __("Save Motif Configuration") }}
+        </button>
+    </div>
+</form>

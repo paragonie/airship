@@ -1,0 +1,26 @@
+<fieldset>
+    <legend><h3 class="nomargin">{{ __("Bridge") }}</h3></legend>
+
+    <div class="multiline_checkbox_container">
+        <div class="multiline_checkbox">
+            <input
+                id="motif-config-bridge-gradient"
+                type="checkbox"
+                name="motif_config[bridge][gradient]"
+                value="1"
+                {% if motif_config['bridge']['gradient'] %}
+                    checked="checked"
+                {% endif %}
+            />
+            <label for="motif-config-bridge-gradient">
+                {{ __("Metallic look? (Uncheck for a flat background color.)") }}
+            </label>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><h3 class="nomargin">{{ __("Hull") }}</h3></legend>
+
+    {{ __("No configurable options yet.") }}
+</fieldset>

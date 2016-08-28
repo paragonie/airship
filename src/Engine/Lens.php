@@ -276,6 +276,56 @@ class Lens
     }
 
     /**
+     * Load the cargo for these motifs
+     *
+     * @param string $name
+     * @return self
+     */
+    public function loadMotifCargo(string $name): self
+    {
+        $state = State::instance();
+        if (
+            isset($state->motifs[$name])
+            &&
+            isset($state->motifs[$name]['config']['cargo'])
+        ) {
+            foreach ($state->motifs[$name]['config']['cargo'] as $key => $subPath) {
+                Gadgets::loadCargo(
+                    $key,
+                    'motif/' . $name . '/cargo/' . $subPath
+                );
+            }
+        }
+        return $this;
+    }
+
+
+    /**
+     * Load the config for this motif
+     *
+     * @param string $name
+     * @return self
+     */
+    public function loadMotifConfig(string $name): self
+    {
+        $state = State::instance();
+        if (isset($state->motifs[$name])) {
+            try {
+                if (\file_exists(ROOT . '/config/motifs/' . $name . '.json')) {
+                    $state->motif_config = \Airship\loadJSON(
+                        ROOT . '/config/motifs/' . $name . '.json'
+                    );
+                } else {
+                    $state->motif_config = [];
+                }
+            } catch (\Throwable $ex) {
+                $state->motif_config = [];
+            }
+        }
+        return $this;
+    }
+
+    /**
      * Set the active motif
      *
      * @param string $name
@@ -308,7 +358,7 @@ class Lens
      * Override the base template
      *
      * @param string $name
-     * @return Lens
+     * @return self
      */
     public function setBaseTemplate(string $name): self
     {
@@ -320,9 +370,10 @@ class Lens
         ) {
             $state->base_template = 'motif/' .
                 $name .
-                '/lens/' .
+                '/' .
                 $state->motifs[$name]['config']['base_template'] .
                 '.twig';
+            \var_dump($state->base_template);
         }
         return $this;
     }

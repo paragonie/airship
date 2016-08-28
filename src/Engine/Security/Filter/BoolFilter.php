@@ -48,11 +48,6 @@ class BoolFilter extends InputFilter
      */
     public function setDefault($value): FilterInterface
     {
-        if ($value !== false) {
-            throw new UnsupportedOperation(
-                'Default must always be set to FALSE.'
-            );
-        }
-        return parent::setDefault(false);
+        return parent::setDefault($value);
     }
 }

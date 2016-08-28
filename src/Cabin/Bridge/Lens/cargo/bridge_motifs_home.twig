@@ -7,11 +7,25 @@
 </p>
 
 <h3>{{ __("Manage Installed Motifs") }}</h3>
-<ul>
+<ul id="motif-cabins-list">
     {% for cabin in cabins %}
         <li>
             <a href="{{ cabin_url() }}motifs/{{ cabin|e('url') }}">
                 {{ __("Motifs for <b>%s</b>", "default", cabin|e('html')) }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h3 id="configure-motifs">{{ __("Configure Motifs") }}</h3>
+<ul id="motif-configure-list">
+    {% for motif in motifs %}
+        <li>
+            <a href="{{ cabin_url() }}motif_config/{{ motif.link|e('url') }}">
+                {{ __("%s/%s", "default",
+                    motif.supplier|e('html'),
+                    motif.name|e('html')
+                ) }}
             </a>
         </li>
     {% endfor %}

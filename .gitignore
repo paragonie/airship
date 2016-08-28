@@ -16,6 +16,7 @@
 /src/config/keyring/*.skey
 /src/config/keyring/*.keypair
 /src/config/universal.json
+/src/config/motifs/*.json
 /src/tmp/cache/*.json
 /src/tmp/installing.json
 /src/tmp/last_update_check.txt
