@@ -56,7 +56,8 @@
             class="full-width"
             id="motif-config-hull-blog-header-color"
             name="motif_config[hull][blog-header][color]"
-            placeholder="#FF0099"
+            pattenr="^[0-9]{3,6}$"
+            placeholder="FF0099"
             type="text"
             value="{{ motif_config['hull']['blog-header']['color']|e('html_attr') }}"
         />

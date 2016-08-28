@@ -12,26 +12,28 @@ use Airship\Engine\Security\Filter\{
  */
 $motifInputFilter = (new GeneralFilterContainer())
     ->addFilter(
-        'bridge.gradient',
+        'motif_config.bridge.gradient',
         new BoolFilter()
     )
     ->addFilter(
-        'hull.blog-header.enabled',
+        'motif_config.hull.blog-header.enabled',
         new BoolFilter()
     )
     ->addFilter(
-        'hull.blog-header.background-image',
+        'motif_config.hull.blog-header.background-image',
         new StringFilter()
     )
     ->addFilter(
-        'hull.blog-header.color',
-        (new StringFilter())->addCallback(
-            function ($input) {
-                if (!\preg_match('/^0-9A-Fa-f{3,6}$/', $input)) {
-                    return '';
+        'motif_config.hull.blog-header.color',
+        (new StringFilter())
+            ->addCallback(
+                function ($input) {
+                    if (!\preg_match('/^[0-9A-Fa-f]{3,6}$/', $input)) {
+                        return null;
+                    }
+                    return $input;
                 }
-                return $input;
-            }
-        )
+            )
+            ->setDefault('181818')
     )
 ;
