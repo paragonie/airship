@@ -82,7 +82,7 @@
             <input
                 id="{{ prefix }}-password"
                 name="database[{{ counter }}][{{ id }}][password]"
-                value="{{ dbconf.password|e('html_attr') }}"
+                placeholder="{{ __("(Leave blank if unchanged)")|e('html_attr') }}"
             />
         </div>
     </div>

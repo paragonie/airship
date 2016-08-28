@@ -146,7 +146,7 @@ class Admin extends AdminOnly
         );
         $post = $this->post();
         if ($post) {
-            if ($this->saveDatabase($post)) {
+            if ($this->saveDatabase($post, $databases)) {
                 \Airship\redirect(
                     $this->airship_cabin_prefix . '/admin/database',
                     [
@@ -325,7 +325,7 @@ class Admin extends AdminOnly
      * @param array $post
      * @return bool
      */
-    protected function saveDatabase(array $post = []): bool
+    protected function saveDatabase(array $post = [], array $old = []): bool
     {
         $twigEnv = \Airship\configWriter(ROOT. '/config/templates');
 
@@ -341,6 +341,11 @@ class Admin extends AdminOnly
                     $post['database'][$index][$i]['options'],
                     true
                 );
+                if (empty($post['database'][$index][$i]['password'])) {
+                    $post['database'][$index][$i]['password'] = (string) (
+                        $old[$key][$i]['password'] ?? ''
+                    );
+                }
             }
             if (!empty($post['database'][$index])) {
                 $databases[$key] = $post['database'][$index];

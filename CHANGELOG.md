@@ -11,6 +11,10 @@
   * [#129](https://github.com/paragonie/airship/issues/129):
     Extension developers can now make their motifs configurable by
     end users.
+  * [#114](https://github.com/paragonie/airship/issues/114):
+    We no longer display the database password on the databases page.
+    This has always only been accessible to administrators, but now it
+    is write-only from the web interface.
 
 ## Version 1.2.8 - 2016-07-26
 
