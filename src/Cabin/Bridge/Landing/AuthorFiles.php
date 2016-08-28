@@ -27,6 +27,11 @@ class AuthorFiles extends FileManager
     /**
      * @var string
      */
+    protected $authorName = '';
+
+    /**
+     * @var string
+     */
     protected $authorSlug = '';
 
     /**
@@ -38,6 +43,7 @@ class AuthorFiles extends FileManager
         parent::airshipLand();
         $this->author = $this->blueprint('Author');
         $this->storeLensVar('active_link', 'bridge-link-authors');
+        $this->storeLensVar('title', \__('Author\'s Files'));
     }
 
     /**
@@ -60,6 +66,7 @@ class AuthorFiles extends FileManager
         if (empty($_GET['file'])) {
             return $this->commonConfirmDeleteDir($dir, $cabin);
         }
+        $this->storeLensVar('title', \__('Confirm file delete'));
         return $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
     }
 
@@ -78,6 +85,17 @@ class AuthorFiles extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar(
+            'title',
+            \__(
+                '%s (Author: %s)', 'default',
+                Util::noHTML(!empty($dir)
+                    ? $dir . '/' . $_GET['file']
+                    : $_GET['file']
+                ),
+                $this->authorName
+            )
+        );
         return $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
     }
 
@@ -159,12 +177,20 @@ class AuthorFiles extends FileManager
     protected function loadAuthorInfo(int $authorId)
     {
         $this->authorId = $authorId;
+        $this->authorName = $this->author->getName($authorId);
         $this->authorSlug = $this->author->getSlug($authorId);
         $this->storeLensVar(
             'header',
             \__(
                 'Files for Author "%s"', 'default',
-                Util::noHTML($this->author->getName($authorId))
+                Util::noHTML($this->authorName)
+            )
+        );
+        $this->storeLensVar(
+            'title',
+            \__(
+                'Files for Author "%s"', 'default',
+                Util::noHTML($this->authorName)
             )
         );
         $this->root_dir = 'author/' . $this->authorSlug;

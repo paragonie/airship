@@ -6,6 +6,7 @@ use Airship\Cabin\Bridge\{
     Blueprint\UserAccounts,
     Landing\Proto\FileManager
 };
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -46,6 +47,7 @@ class MyFiles extends FileManager
         $this->storeLensVar('path_middle', $this->path_middle);
         $this->storeLensVar('active_link', 'bridge-link-my-files');
         $this->storeLensVar('header', 'My Files');
+        $this->storeLensVar('title', 'My Files');
     }
 
     /**
@@ -84,6 +86,16 @@ class MyFiles extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
+        $this->storeLensVar(
+            'title',
+            \__(
+                '%s', 'default',
+                Util::noHTML(!empty($dir)
+                    ? $dir . '/' . $_GET['file']
+                    : $_GET['file']
+                )
+            )
+        );
         $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
     }
 

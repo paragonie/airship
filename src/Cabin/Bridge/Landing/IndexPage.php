@@ -49,7 +49,9 @@ class IndexPage extends LandingGear
             'announce',
             [
                 'active_link' =>
-                    'bridge-link-announce'
+                    'bridge-link-announce',
+                'title' =>
+                    \__('New Announcement')
             ]
         );
     }
@@ -73,22 +75,25 @@ class IndexPage extends LandingGear
                 $page_bp = new CustomPages($db);
             }
 
-            $this->lens('index', [
-                'stats' => [
-                    'num_authors' =>
-                        $author_bp->numAuthors(),
-                    'num_comments' =>
-                        $blog_bp->numComments(true),
-                    'num_pages' =>
-                        $page_bp->numCustomPages(true),
-                    'num_posts' =>
-                        $blog_bp->numPosts(true)
-                ],
-                'announcements' =>
-                    $announce_bp->getForUser(
-                        $this->getActiveUserId()
-                    )
-            ]);
+            $this->lens('index',
+                [
+                    'announcements' =>
+                        $announce_bp->getForUser(
+                            $this->getActiveUserId()
+                        ),
+                    'stats' => [
+                        'num_authors' =>
+                            $author_bp->numAuthors(),
+                        'num_comments' =>
+                            $blog_bp->numComments(true),
+                        'num_pages' =>
+                            $page_bp->numCustomPages(true),
+                        'num_posts' =>
+                            $blog_bp->numPosts(true)
+                    ],
+                    'title' => \__('Dashboard')
+                ]
+            );
         } else {
             $this->storeLensVar('showmenu', false);
             $this->lens('login');

@@ -16,6 +16,7 @@ use Airship\Cabin\Bridge\Filter\Blog\{
     NewTagFilter
 };
 use Airship\Engine\Bolt\Orderable;
+use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -139,7 +140,10 @@ class Blog extends LoggedInUsersOnly
             [
                 'active_link' => 'bridge-link-blog-category',
                 'category' => $category,
-                'categories' => $this->blog->getCategoryTree()
+                'categories' => $this->blog->getCategoryTree(),
+                'title' => \__('Edit Category "%s"', 'default',
+                    Util::noHTML($category['name'])
+                )
             ]
         );
     }
@@ -197,6 +201,9 @@ class Blog extends LoggedInUsersOnly
                 'authors' => $authors,
                 'categories' => $categories,
                 'tags' => $tags,
+                'title' => \__('Edit Blog Post "%s"', 'default',
+                    Util::noHTML($blogPost['title'])
+                )
             ]
         );
     }
@@ -263,7 +270,10 @@ class Blog extends LoggedInUsersOnly
                 'series' => $series,
                 'series_items' => $series_items,
                 'authors' => $authors,
-                'author' => $author
+                'author' => $author,
+                'title' => \__('Edit Blog Series "%s"', 'default',
+                    Util::noHTML($series['name'])
+                )
             ]
         );
     }
@@ -295,6 +305,9 @@ class Blog extends LoggedInUsersOnly
             [
                 'active_link' => 'bridge-link-blog-tags',
                 'tag' => $tag,
+                'title' => \__('Edit Blog Tag "%s"', 'default',
+                    Util::noHTML($tag['name'])
+                )
             ]
         );
     }
