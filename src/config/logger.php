@@ -36,10 +36,21 @@ $log_setup_closure = function() {
             break;
         case 'database':
             $path = $state->universal['ledger']['connection'];
-            $storage = new DBStore(
-                $path,
-                $state->universal['ledger']['table'] ?? DBStore::DEFAULT_TABLE
-            );
+            try {
+                $storage = new DBStore(
+                    $path,
+                    $state->universal['ledger']['table'] ?? DBStore::DEFAULT_TABLE
+                );
+            } catch (\Throwable $ex) {
+                \header('HTTP/1.1 500 Internal Server Error');
+                echo \file_get_contents(
+                    __DIR__ . '/error_pages/uncaught-exception.html'
+                );
+                if ($state->universal['debug']) {
+                    echo '<pre>', $ex->getTraceAsString(), '</pre>';
+                }
+                exit(1);
+            }
             break;
         default:
             throw new \Exception('Invalid logger storage mechansim');
