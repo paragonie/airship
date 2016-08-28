@@ -214,10 +214,12 @@ class Motifs extends AdminOnly
         string $motifName,
         array $config = []
     ): bool {
-        return \Airship\saveJSON(
+        $res = \Airship\saveJSON(
             ROOT . '/config/motifs/' . $motifName . '.json',
             $config
         );
+        \Airship\clear_cache();
+        return $res;
     }
 
     /**

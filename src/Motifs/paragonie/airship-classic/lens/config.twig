@@ -19,6 +19,8 @@
     </div>
 </fieldset>
 
+<br />
+
 <fieldset>
     <legend><h3 class="nomargin">{{ __("Bridge") }}</h3></legend>
 
@@ -40,8 +42,46 @@
     </div>
 </fieldset>
 
+<br />
+
 <fieldset>
     <legend><h3 class="nomargin">{{ __("Hull") }}</h3></legend>
 
-    {{ __("No configurable options yet.") }}
+    <div class="multiline_checkbox_container">
+        <div class="multiline_checkbox">
+            <input
+                id="motif-config-hull-blog-header-enabled"
+                type="checkbox"
+                name="motif_config[hull][blog-header][enabled]"
+                value="1"
+                {% if motif_config['hull']['blog-header']['enabled'] %}
+                    checked="checked"
+                {% endif %}
+            />
+            <label for="motif-config-hull-blog-header-enabled">
+                {{ __("Show a background image in the blog header?") }}
+            </label>
+        </div>
+    </div>
+
+    <div class="pure-form">
+        <label for="motif-config-hull-blog-header-background-image">{{ __("Background Image URL") }}:</label>
+        <input
+            class="full-width"
+            id="motif-config-hull-blog-header-background-image"
+            name="motif_config[hull][blog-header][background-image]"
+            type="text"
+            value="{{ motif_config['hull']['blog-header']['background-image']|e('html_attr') }}"
+        />
+
+        <label for="motif-config-hull-blog-header-background-image">{{ __("Font color for blog header") }}:</label>
+        <input
+            class="full-width"
+            id="motif-config-hull-blog-header-color"
+            name="motif_config[hull][blog-header][color]"
+            placeholder="#FF0099"
+            type="text"
+            value="{{ motif_config['hull']['blog-header']['color']|e('html_attr') }}"
+        />
+    </div>
 </fieldset>

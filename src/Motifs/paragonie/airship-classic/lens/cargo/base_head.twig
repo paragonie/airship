@@ -75,4 +75,14 @@
     );
 }
 {% endif %}
+{% if MOTIF['hull']['blog-header']['enabled'] %}
+#blog-header {
+{% if MOTIF['hull']['blog-header']['background-image'] %}
+    background-image: url("{{ MOTIF['hull']['blog-header']['background-image'] }}");
+{% endif %}
+{% if MOTIF['hull']['blog-header']['color'] %}
+    color: #{{ MOTIF['hull']['blog-header']['color'] }};
+{% endif %}
+}
+{% endif %}
 </style>
