@@ -99,21 +99,23 @@
 {% if can('publish') %}
 <form method="post">{{ form_token() }}
 
-    <fieldset class="form-button-group">
-        <legend>{{ __("Administrative Actions") }}</legend>
+    <fieldset class="form-button-group no-border text-right">
+    <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}blog/comments">
+        {{ __("Cancel and Return") }}
+    </a>
     {% if comment.approved %}
-        <button type="submit" name="comment_btn" value="hide" class="pure-button pure-button-secondary">
+        <button type="submit" name="comment_btn" value="hide" class="pure-button pure-button-primary">
             <i class="fa fa-thumbs-down"></i>
             {{  __("Hide Comment") }}
         </button>
     {% else %}
-        <button type="submit" name="comment_btn" value="publish" class="pure-button pure-button-secondary">
-            <i class="fa fa-thumbs-up"></i>
-            {{  __("Approve Comment") }}
-        </button>
-        <button type="submit" name="comment_btn" value="delete" class="pure-button pure-button-tertiary">
+        <button type="submit" name="comment_btn" value="delete" class="pure-button pure-button-secondary">
             <i class="fa fa-trash"></i>
             {{  __("Delete Comment") }}
+        </button>
+        <button type="submit" name="comment_btn" value="publish" class="pure-button pure-button-primary">
+            <i class="fa fa-thumbs-up"></i>
+            {{  __("Approve Comment") }}
         </button>
     {% endif %}
     </fieldset>

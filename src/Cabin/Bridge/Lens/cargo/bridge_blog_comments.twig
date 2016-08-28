@@ -20,13 +20,15 @@
     </div>
     {% for comment in comments %}
         <div class="table-row">
-            <div class="table-cell icons-1">
-                <a{#
-                #} title="{{ __("View Comment")|e('html_attr') }}"{#
-                #} href="{{ cabin_url() }}blog/comments/view/{{ comment.commentid|e('html_attr') }}"{#
-            #}>{#
-                #}<i class="fa fa-search"></i>{#
-            #}</a>
+            <div class="table-cell table-min-width">
+                <a
+                    class="pure-button pure-button-primary"
+                    href="{{ cabin_url() }}blog/comments/view/{{ comment.commentid|e('html_attr') }}"
+                    title="{{ __("View Comment")|e('html_attr') }}"
+                >
+                    <i class="fa fa-search"></i>
+                    {{ __("View / Manage") }}
+                </a>
             </div>
             <div class="table-cell">#{{ comment.commentid|number_format }}</div>
             <div class="table-cell">

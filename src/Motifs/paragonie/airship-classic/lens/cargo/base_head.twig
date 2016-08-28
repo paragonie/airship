@@ -1,6 +1,11 @@
 {% include next_cargo("base_head") ignore missing %}
 
-<style type="text/css" nonce={{ csp_nonce('style-src') }}>
+<style
+    type="text/css"
+    {% if MOTIF['style-csp-nonce'] %}
+        nonce={{ csp_nonce('style-src') }}
+    {% endif %}
+>
 {% if MOTIF['bridge']['gradient'] %}
 .bridge-body-site-wrapper {
     background-image: -webkit-linear-gradient(

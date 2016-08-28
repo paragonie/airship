@@ -14,4 +14,8 @@ $motifInputFilter = (new GeneralFilterContainer())
         'bridge.gradient',
         new BoolFilter()
     )
+    ->addFilter(
+        'style-csp-nonce',
+        new BoolFilter()
+    )
 ;

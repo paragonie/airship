@@ -1,4 +1,25 @@
 <fieldset>
+    <legend><h3 class="nomargin">{{ __("Universal Options") }}</h3></legend>
+
+    <div class="multiline_checkbox_container">
+        <div class="multiline_checkbox">
+            <input
+                id="motif-config-style-csp-nonce"
+                type="checkbox"
+                name="motif_config[style-csp-nonce]"
+                value="1"
+                {% if motif_config['style-csp-nonce'] %}
+                    checked="checked"
+                {% endif %}
+            />
+            <label for="motif-config-style-csp-nonce">
+                {{ __("Include a Content-Security-Policy nonce for the dynamic CSS?") }}
+            </label>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
     <legend><h3 class="nomargin">{{ __("Bridge") }}</h3></legend>
 
     <div class="multiline_checkbox_container">
@@ -24,3 +45,4 @@
 
     {{ __("No configurable options yet.") }}
 </fieldset>
+style-csp-nonce
