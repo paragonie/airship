@@ -20,40 +20,21 @@ use Psr\Log\LogLevel;
  * @global Lens $lens
  */
 
-// Sanity check:
-foreach ([
-        'comments',
-        'csp_hash',
-        'csp_static',
-        'hash',
-        'markdown',
-        'static',
-        'twig'
-    ] as $d) {
-    if (!\is_dir(\dirname(__DIR__) . '/tmp/cache/' . $d)) {
-        \mkdir(
-            \dirname(__DIR__) . '/tmp/cache/' . $d,
-            0775,
-            true
-        );
-    }
-}
-
 // Are we still installing?
 /** @noinspection PhpUsageOfSilenceOperatorInspection */
 if (
-    @\is_readable(dirname(__DIR__).'/tmp/installing.json')
+    @\is_readable(dirname(__DIR__) . '/tmp/installing.json')
         ||
-    !\file_exists(dirname(__DIR__).'/config/databases.json')
+    !\file_exists(dirname(__DIR__) . '/config/databases.json')
 ) {
-    include dirname(__DIR__).'/Installer/launch.php';
+    include dirname(__DIR__) . '/Installer/launch.php';
     exit;
 }
 
 /**
  * Load the bare minimum:
  */
-require_once \dirname(__DIR__).'/preload.php';
+require_once \dirname(__DIR__) . '/preload.php';
 
 $start = \microtime(true);
 if (empty($_POST)) {
@@ -77,6 +58,9 @@ if (empty($_POST)) {
         $cspCache = (new MemoryCache())
             ->personalize('contentSecurityPolicy:');
     } else {
+        if (!\is_dir(ROOT . '/tmp/cache/static')) {
+            require_once ROOT . '/tmp_dirs.php';
+        }
         $staticCache = new FileCache(ROOT . '/tmp/cache/static');
         $cspCache = new FileCache(ROOT . '/tmp/cache/csp_static');
     }

@@ -28,6 +28,9 @@ if (!defined('ISCLI')) {
     \define('ISCLI', PHP_SAPI === 'cli');
 }
 
+if (!\is_dir(ROOT . '/tmp')) {
+    require_once ROOT . '/tmp_dirs.php';
+}
 if (ISCLI) {
     if (isset($argc)) {
         $_SERVER['REQUEST_URI'] = $argc > 1
