@@ -47,6 +47,8 @@
             ["BlogPosts", "shortURL"],
         "files/(.*)":
             ["PublicFiles", "download"],
+        "motif_extra\\.css":
+            ["IndexPage", "motifExtra"],
         "":
             ["IndexPage", "index"]
     },

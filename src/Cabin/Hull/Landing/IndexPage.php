@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use Airship\Cabin\Hull\Blueprint\Blog;
+use Airship\Engine\State;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -52,5 +53,14 @@ class IndexPage extends LandingGear
         $this->config('blog.cachelists')
             ? $this->stasis('index', $args)
             : $this->lens('index', $args);
+    }
+
+    /**
+     *
+     * @route motif_extra.css
+     */
+    public function motifExtra()
+    {
+        $this->lens('motif_extra', [], 'text/css; charset=UTF-8');
     }
 }

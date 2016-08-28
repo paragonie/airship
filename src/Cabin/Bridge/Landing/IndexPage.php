@@ -247,4 +247,13 @@ class IndexPage extends LandingGear
             \Airship\redirect('https://github.com/paragonie/airship-docs');
         }
     }
+
+    /**
+     *
+     * @route motif_extra.css
+     */
+    public function motifExtra()
+    {
+        $this->lens('motif_extra', [], 'text/css; charset=UTF-8');
+    }
 }

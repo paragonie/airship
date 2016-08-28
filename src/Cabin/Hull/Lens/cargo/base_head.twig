@@ -8,5 +8,6 @@
         #}{% for css in motifs.config.css %}
         <link rel="stylesheet" href="{{ ("/static/Hull/motif/" ~ motifs.config.name|e('url') ~ "/" ~ css)|cachebust }}" type="text/css" />
         {% endfor %}
+        <link rel="stylesheet" href="{{ cabin_url() }}motif_extra.css" type="text/css" />
 
         <link rel="icon" href="/img/airship-icon.svg" type="image/xml+svg" />

@@ -257,6 +257,9 @@
         "redirects":
             ["Redirects", "index"],
 
+        "motif_extra\\.css":
+            ["IndexPage", "motifExtra"],
+
         "users{_page}":
             ["Account", "publicDirectory"],
 

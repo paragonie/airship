@@ -1,11 +1,5 @@
-{% include next_cargo("base_head") ignore missing %}
+{% include next_cargo("motif_extra") ignore missing %}
 
-<style
-    type="text/css"
-    {% if MOTIF['style-csp-nonce'] %}
-        nonce={{ csp_nonce('style-src') }}
-    {% endif %}
->
 {% if MOTIF['bridge']['gradient'] %}
 .bridge-body-site-wrapper {
     background-image: -webkit-linear-gradient(
@@ -76,13 +70,12 @@
 }
 {% endif %}
 {% if MOTIF['hull']['blog-header']['enabled'] %}
-#blog-header {
-{% if MOTIF['hull']['blog-header']['background-image'] %}
-    background-image: url("{{ MOTIF['hull']['blog-header']['background-image'] }}");
+    #blog-header {
+        {% if MOTIF['hull']['blog-header']['background-image'] %}
+            background-image: url("{{ MOTIF['hull']['blog-header']['background-image'] }}");
+        {% endif %}
+        {% if MOTIF['hull']['blog-header']['color'] %}
+            color: #{{ MOTIF['hull']['blog-header']['color'] }};
+        {% endif %}
+    }
 {% endif %}
-{% if MOTIF['hull']['blog-header']['color'] %}
-    color: #{{ MOTIF['hull']['blog-header']['color'] }};
-{% endif %}
-}
-{% endif %}
-</style>
