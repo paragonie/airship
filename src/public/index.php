@@ -20,6 +20,25 @@ use Psr\Log\LogLevel;
  * @global Lens $lens
  */
 
+// Sanity check:
+foreach ([
+        'comments',
+        'csp_hash',
+        'csp_static',
+        'hash',
+        'markdown',
+        'static',
+        'twig'
+    ] as $d) {
+    if (!\is_dir(\dirname(__DIR__) . '/tmp/cache/' . $d)) {
+        \mkdir(
+            \dirname(__DIR__) . '/tmp/cache/' . $d,
+            0775,
+            true
+        );
+    }
+}
+
 // Are we still installing?
 /** @noinspection PhpUsageOfSilenceOperatorInspection */
 if (
