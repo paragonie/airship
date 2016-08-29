@@ -1,6 +1,6 @@
 {
   "name": "paragonie/airship",
-  "description": "PHP7 Content Management Platform - 'The sky is only the beginning'",
+  "description": "Simply Secure Content Management System - 'The sky is only the beginning'",
   "license": [
     "GPL-3.0+"
   ],
@@ -26,7 +26,9 @@
     "Paragon Initiative Enterprises",
     "Free Software",
     "PHP 7",
+    "publishing",
     "secure",
+    "security",
     "self-updating"
   ],
   "homepage": "https://paragonie.com/project/airship",
