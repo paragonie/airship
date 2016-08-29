@@ -53,8 +53,8 @@ if ($type === '--bypass-security') {
 }
 
 $what = \array_shift($args) ?? usage();
-$source = \array_shift($args) ?? null;
-$version = \array_shift($args) ?? null;
+$source = \array_shift($args) ?? '';
+$version = \array_shift($args) ?? '';
 
 list($supplier, $package) = \explode('/', $what);
 if (empty($supplier) || empty($package)) {

@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use ParagonIE\Halite\Util;
 use Airship\Engine\{
     Gears,
     State
