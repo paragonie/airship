@@ -7,7 +7,8 @@ use Airship\Engine\Security\Filter\{
     IntFilter,
     InputFilterContainer,
     StringArrayFilter,
-    StringFilter
+    StringFilter,
+    WhiteList
 };
 
 /**
@@ -28,8 +29,12 @@ class NewPostFilter extends InputFilterContainer
             ->addFilter('description', new StringFilter())
             ->addFilter(
                 'format',
-                (new StringFilter())
-                    ->setDefault('Rich Text')
+                (new WhiteList(
+                    'HTML',
+                    'Markdown',
+                    'Rich Text',
+                    'RST'
+                ))->setDefault('Rich Text')
             )
             ->addFilter('published', new StringFilter())
             ->addFilter('metadata', new StringArrayFilter())

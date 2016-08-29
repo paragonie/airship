@@ -26,6 +26,8 @@ if your company requires one.
 4. [Designed by progressive-minded application security professionals.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#4-designed-by-progressive-minded-application-security-professionals)
 5. [Our Gear system allows the framework to be extended.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#5-our-gear-system-allows-the-framework-to-be-extended)
 
+See [how the out-of-the-box security of CMS Airship compares to WordPress, Drupal, or Joomla](https://paragonie.com/project/airship).
+
 ## Documentation
 
 See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).

@@ -6,7 +6,6 @@ use Airship\Alerts\Router\EmulatePageNotFound;
 use Airship\Cabin\Hull\Blueprint\Blog;
 use Airship\Cabin\Hull\Filter\BlogPosts\CommentFilter;
 use Airship\Engine\Security\Util;
-use Airship\Engine\State;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -441,7 +440,6 @@ class BlogPosts extends LandingGear
      */
     public function listYear(string $year)
     {
-        $state = State::instance();
         list($offset, $limit) = $this->getOffsetAndLimit();
         $count = $this->blog->countByYear($year);
         $blogRoll = $this->blog->listByYear(

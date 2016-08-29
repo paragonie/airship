@@ -6,7 +6,8 @@ use Airship\Engine\Security\Filter\{
     ArrayFilter,
     IntFilter,
     InputFilterContainer,
-    StringFilter
+    StringFilter,
+    WhiteList
 };
 
 /**
@@ -28,7 +29,14 @@ class NewSeriesFilter extends InputFilterContainer
             )
             ->addFilter('author', new IntFilter())
             ->addFilter('preamble', new StringFilter())
-            ->addFilter('format', new StringFilter())
+            ->addFilter('format',
+                (new WhiteList(
+                    'HTML',
+                    'Markdown',
+                    'Rich Text',
+                    'RST'
+                ))->setDefault('Rich Text')
+            )
             ->addFilter('config', new ArrayFilter())
             ->addFilter('items', new StringFilter());
     }

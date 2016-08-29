@@ -6,7 +6,8 @@ use Airship\Engine\Security\Filter\{
     BoolFilter,
     InputFilterContainer,
     IntFilter,
-    StringFilter
+    StringFilter,
+    WhiteList
 };
 
 /**
@@ -28,21 +29,12 @@ class ConfigFilter extends InputFilterContainer
             ->addFilter('config_extra.board.enabled', new BoolFilter())
             ->addFilter(
                 'config_extra.editor.default-format',
-                (new StringFilter())
-                    ->setDefault('Rich Text')
-                    ->addCallback(
-                        function ($choice): string {
-                            switch ($choice) {
-                                case 'HTML':
-                                case 'Markdown':
-                                case 'Rich Text':
-                                case 'RST':
-                                    return $choice;
-                                default:
-                                    return 'Rich Text';
-                            }
-                        }
-                    )
+                (new WhiteList(
+                        'HTML',
+                        'Markdown',
+                        'Rich Text',
+                        'RST'
+                ))->setDefault('Rich Text')
             )
             ->addFilter('config_extra.recaptcha.secret-key', new StringFilter())
             ->addFilter('config_extra.recaptcha.site-key', new StringFilter())

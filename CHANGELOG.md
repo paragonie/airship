@@ -1,4 +1,4 @@
-## Version 1.3.0 (Not released yet)
+## Version 1.3.0 - 2016-08-29
 
   * Significant UI/UX improvements.
     * Redesigned the Bridge UI to be more suitable for a control panel.
