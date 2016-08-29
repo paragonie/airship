@@ -117,7 +117,9 @@ class Blog extends BlueprintGear
                     $publish,
                 'slug' =>
                     $this->makeBlogPostSlug(
-                        $post['slug'] ?? $post['title'] ?? 'Untitled'
+                        !empty($post['slug'])
+                            ? $post['slug']
+                            : ($post['title'] ?? 'Untitled')
                     ),
                 'published' =>
                     $published_time,
