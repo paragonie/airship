@@ -25,3 +25,11 @@ above.
 
 (This does not in any way restrict your rights to use your own modifications.
 The purpose of this agreement is to maximize awareness and transparency.) 
+
+### Labels Requested
+
+Feel free to list any labels you feel are appropriate for this issue,
+and a member of the Airship core team will apply them as soon as 
+possible.
+
+* `label`

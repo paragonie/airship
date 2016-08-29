@@ -23,3 +23,11 @@ for diagnosing any problems. Please paste it below:
 ```
 
 Alternatively, feel free to delete this section.
+
+### Labels Requested
+
+Feel free to list any labels you feel are appropriate for this issue,
+and a member of the Airship core team will apply them as soon as 
+possible.
+
+* `label`
