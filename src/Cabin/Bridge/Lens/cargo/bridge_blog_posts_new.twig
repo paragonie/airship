@@ -18,6 +18,21 @@
         </div>
 
         <div class="table-row">
+            <label class="table-cell" for="blog_post_slug">{{ __("Slug") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input{#
+                    #} class="full-width"{#
+                    #} id="blog_post_slug"{#
+                    #} type="text"{#
+                    #} name="slug"{#
+                    #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
+                    #} value="{{ (_POST.slug|default(blogpost.slug))|e('html_attr') }}"{#
+                    #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
+                #} />
+            </div>
+        </div>
+
+        <div class="table-row">
             <label class="table-cell" for="blog_post_category">{#
                 #}{{ __("Category") }}:{#
             #}</label>

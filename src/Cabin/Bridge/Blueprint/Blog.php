@@ -106,12 +106,17 @@ class Blog extends BlueprintGear
                 'status' =>
                     $publish,
                 'slug' =>
-                    $this->makeBlogPostSlug($post['title'] ?? 'Untitled'),
+                    $this->makeBlogPostSlug(
+                        $post['slug'] ?? $post['title'] ?? 'Untitled'
+                    ),
                 'title' =>
                     $post['title'] ?? 'Untitled',
             ],
             'postid'
         );
+        if ($publish) {
+            \Airship\clear_cache();
+        }
 
         // Insert the initial blog post version
         $this->db->insert(
@@ -1397,7 +1402,7 @@ class Blog extends BlueprintGear
     protected function makeBlogPostSlug(
         string $title,
         string $year = '',
-        string $month =''
+        string $month = ''
     ): string {
         if (empty($year)) {
             $year = \date('Y');
