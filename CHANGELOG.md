@@ -15,6 +15,14 @@
     We no longer display the database password on the databases page.
     This has always only been accessible to administrators, but now it
     is write-only from the web interface.
+  * [#131](https://github.com/paragonie/airship/issues/131):
+    If an exception is thrown by the part of code that loads the logger,
+    and the database driver was selected, it will no longer silently
+    produce a white screen.
+  * [#132](https://github.com/paragonie/airship/issues/132):
+    You can now control the date/time a blog post is published.
+  * [#133](https://github.com/paragonie/airship/issues/133):
+    Added the "slug" field to the "Create New Blog Post" form.
 
 ## Version 1.2.8 - 2016-07-26
 

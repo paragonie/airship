@@ -533,6 +533,8 @@ class Blog extends LoggedInUsersOnly
         }
         $this->lens(
             'blog/posts_new', [
+                'current_time' => (new \DateTime())
+                    ->format(\AIRSHIP_DATE_FORMAT),
                 'active_link' => 'bridge-link-blog-posts',
                 'authors' => $authors,
                 'categories' => $categories,

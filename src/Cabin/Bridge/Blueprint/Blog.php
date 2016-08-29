@@ -87,6 +87,16 @@ class Blog extends BlueprintGear
     {
         $this->db->beginTransaction();
 
+        if ($publish) {
+            $published_time = !empty($post['published'])
+                ? (new \DateTime($post['published']))
+                    ->format(\AIRSHIP_DATE_FORMAT)
+                : (new \DateTime())
+                    ->format(\AIRSHIP_DATE_FORMAT);
+        } else {
+            $published_time = null;
+        }
+
         // Create the post entry
         $newPostId = $this->db->insertGet(
             'hull_blog_posts',
@@ -109,6 +119,8 @@ class Blog extends BlueprintGear
                     $this->makeBlogPostSlug(
                         $post['slug'] ?? $post['title'] ?? 'Untitled'
                     ),
+                'published' =>
+                    $published_time,
                 'title' =>
                     $post['title'] ?? 'Untitled',
             ],
@@ -1188,7 +1200,9 @@ class Blog extends BlueprintGear
         }
         if ($publish && !$old['status']) {
             $postUpdates['status'] = true;
-            $now = new \DateTime();
+            $now = !empty($post['published'])
+                ? (new \DateTime($post['published']))
+                : new \DateTime();
             $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
         }
         if ($publish) {

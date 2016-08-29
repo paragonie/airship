@@ -22,6 +22,11 @@ require_once __DIR__.'/init_gear.php';
 class Blog extends BlueprintGear
 {
     /**
+     * @var string Break after this token.
+     */
+    protected $defaultSeparator = '<!--FOLD-->';
+
+    /**
      * Adds a new comment to a blog post
      *
      * @param array $post
@@ -145,6 +150,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
+                AND published <= current_timestamp
                 AND author = ?',
             $authorId
         );
@@ -166,6 +172,7 @@ class Blog extends BlueprintGear
                     view_hull_blog_list
                 WHERE
                     status
+                    AND published <= current_timestamp
                     AND categoryid IS NULL'
             );
         }
@@ -177,6 +184,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
+                AND published <= current_timestamp
                 AND categoryid IN ' . $imp
         );
     }
@@ -197,6 +205,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
+                AND published <= current_timestamp
                 AND blogyear = ?
                 AND blogmonth = ?',
             $year,
@@ -219,6 +228,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
+                AND published <= current_timestamp
                 AND blogyear = ?',
             $year
         );
@@ -237,6 +247,7 @@ class Blog extends BlueprintGear
                 hull_blog_series_items
             WHERE
                 parent IS NULL
+                AND published <= current_timestamp
                 AND series IS NOT NULL'
         );
     }
@@ -256,6 +267,7 @@ class Blog extends BlueprintGear
                 hull_blog_series_items
             WHERE
                 parent = ?
+                AND published <= current_timestamp
                 AND series IS NOT NULL',
             $seriesId
         );
@@ -271,6 +283,7 @@ class Blog extends BlueprintGear
             WHERE
                 i.parent = ?
                 AND p.status
+                AND p.published <= current_timestamp
                 AND i.post IS NOT NULL',
             $seriesId
         );
@@ -296,6 +309,7 @@ class Blog extends BlueprintGear
               ON t.postid = p.postid
             WHERE
                 p.status
+                AND p.published <= current_timestamp
                 AND t.tagid = ?',
             $tag
         );
@@ -420,8 +434,11 @@ class Blog extends BlueprintGear
             "SELECT DISTINCT
                 date_part('year', published) AS blogyear,
                 date_part('month', published) AS blogmonth
-            FROM hull_blog_posts
-            WHERE status = 't'
+            FROM
+                hull_blog_posts
+            WHERE
+                status
+                AND published <= current_timestamp
             GROUP BY
                 date_part('year', published),
                 date_part('month', published)
@@ -468,6 +485,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
                 AND blogyear = ?
                 AND blogmonth = ?
                 AND slug = ?
@@ -534,6 +552,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_list
             WHERE
                 status
+                AND published <= current_timestamp
                 AND postid = ?
             ',
             $id
@@ -1030,7 +1049,30 @@ class Blog extends BlueprintGear
                 $post['body']
             );
         }
+
+        // Just in case:
+        $post['body'] = \str_replace("\r\n", "\n", $post['body']);
         $lines = \explode("\n", $post['body']);
+
+        // If we find <!--FOLD--> in the body, split on that instead:
+        $search = \array_search($this->defaultSeparator, $lines);
+        if ($search !== false) {
+            $post['snippet'] = \implode(
+                "\n",
+                \array_slice($lines, 0, $search - 1)
+            );
+            if ($after) {
+                $post['after_fold'] = \implode(
+                    "\n",
+                    \array_slice($lines, $search)
+                // We skip the token line here, intentionally, as it's
+                // not a header.
+                );
+            }
+            return $post;
+        }
+
+        // Short post? Just dump it as-is:
         if (count($lines) < 4 || \strlen($post['body']) < 200) {
             $post['snippet'] = $post['body'];
             $post['after_fold'] = '';
@@ -1156,6 +1198,7 @@ class Blog extends BlueprintGear
                 ON j.postid = p.postid
             WHERE
                 p.status
+                AND p.published <= current_timestamp
             GROUP BY
                 t.tagid,
                 t.name,
@@ -1230,6 +1273,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
             ORDER BY published DESC
             '
         );
@@ -1295,6 +1339,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
                 AND author = ?
             ORDER BY published DESC
             OFFSET '.$offset.'
@@ -1334,6 +1379,7 @@ class Blog extends BlueprintGear
                     view_hull_blog_post
                 WHERE
                     status
+                    AND published <= current_timestamp
                     AND categoryid IS NULL
                 ORDER BY published DESC
                 OFFSET ' . $offset . '
@@ -1347,6 +1393,7 @@ class Blog extends BlueprintGear
                     view_hull_blog_post
                 WHERE
                     status
+                    AND published <= current_timestamp
                     AND categoryid IN ' . $this->db->escapeValueSet(
                         $categories,
                         'int'
@@ -1398,9 +1445,13 @@ class Blog extends BlueprintGear
 
         foreach ($items as $item) {
             if ($item['post']) {
-                $row = $this->getBlogPostById(
-                    (int) $item['post']
-                );
+                try {
+                    $row = $this->getBlogPostById(
+                        (int)$item['post']
+                    );
+                } catch (EmulatePageNotFound $ex) {
+                    continue;
+                }
                 if (!empty($row)) {
                     $row['type'] = 'blogpost';
                     $series_items []= $row;
@@ -1441,6 +1492,7 @@ class Blog extends BlueprintGear
                 ON p.postid = t.postid
             WHERE
                 p.status
+                AND p.published <= current_timestamp
                 AND t.tagid = ?
             ORDER BY published DESC
             OFFSET ' . $offset . '
@@ -1479,6 +1531,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
                 AND blogyear = ?
             ORDER BY published DESC
             OFFSET ' . $offset . '
@@ -1519,6 +1572,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
                 AND blogyear = ?
                 AND blogmonth = ?
             ORDER BY published DESC
@@ -1581,6 +1635,7 @@ class Blog extends BlueprintGear
                 view_hull_blog_post
             WHERE
                 status
+                AND published <= current_timestamp
             ORDER BY published DESC
             OFFSET ' . $offset . '
             LIMIT ' . $num

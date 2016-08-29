@@ -31,6 +31,7 @@ class NewPostFilter extends InputFilterContainer
                 (new StringFilter())
                     ->setDefault('Rich Text')
             )
+            ->addFilter('published', new StringFilter())
             ->addFilter('metadata', new StringArrayFilter())
             ->addFilter(
                 'title',

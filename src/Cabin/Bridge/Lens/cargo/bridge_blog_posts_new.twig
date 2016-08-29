@@ -1,3 +1,4 @@
+{% set can_publish = can('publish') %}
 <h3>{{ __("New Blog Post") }}</h3>
 <form method="post">{{ form_token() }}
     <div class="table">
@@ -26,11 +27,27 @@
                     #} type="text"{#
                     #} name="slug"{#
                     #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
-                    #} value="{{ (_POST.slug|default(blogpost.slug))|e('html_attr') }}"{#
+                    #} value="{{ _POST.slug|e('html_attr') }}"{#
                     #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
                 #} />
             </div>
         </div>
+
+        {% if can_publish %}
+        <div class="table-row">
+            <label class="table-cell table-min-width" for="blog_post_publish_date">{{ __("Date/Time Published") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input{#
+                    #} class="full-width"{#
+                    #} id="blog_post_published"{#
+                    #} type="text"{#
+                    #} name="published"{#
+                    #} value="{{ _POST.published|default(current_time)|e('html_attr') }}"{#
+                    #} pattern="^2[0-9]{3}\-(0[0-9]|1[0-2])\-([012][0-9]|3[0-1])(T| )([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([\.:\+0-9]+)?$"{#
+                #} />
+            </div>
+        </div>
+        {% endif %}
 
         <div class="table-row">
             <label class="table-cell" for="blog_post_category">{#
@@ -148,7 +165,7 @@
     </fieldset>
 
     <fieldset class="form-button-group">
-        {% if can('publish') %}
+        {% if can_publish %}
             <button type="submit" name="save_btn" value="publish" class="pure-button pure-button-secondary">
                 <i class="fa fa-check"></i>
                 {{  __("Publish") }}
