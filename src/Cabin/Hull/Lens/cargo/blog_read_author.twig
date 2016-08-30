@@ -1,3 +1,4 @@
+{% if author.biography|length > 1 %}
 <h2 id="about-the-author">{{ __("About the Author") }}</h2>
 {% set avatar = get_avatar(author.authorid, 'bio') %}
 <div id="author-wrap">
@@ -22,3 +23,4 @@
         {% endif %}
     </div>
 </div>
+{% endif %}
