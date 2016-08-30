@@ -2,7 +2,9 @@
 <h1>{{ blogTitle | default(
         SETTINGS.blog.title | default('Airship Blog')
     ) }}</h1>
-<p class="tagline">{{ blogTagline | default(
-        SETTINGS.blog.tagline | default('Even the sky shall not limit you.')
-    ) }}</p>
+{% if blogtagline or SETTINGS.blog.tagline %}
+<p class="tagline">{{
+    blogTagline|default(SETTINGS.blog.tagline)
+}}</p>
+{% endif %}
 </div>
