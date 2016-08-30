@@ -1204,30 +1204,27 @@ class Blog extends BlueprintGear
                 );
             }
         }
+        $now = new \DateTime();
+        if (!empty($post['published'])) {
+            try {
+                $now = new \DateTime($post['published']);
+            } catch (\Throwable $ex) {
+            }
+        }
+
         if (!\array_key_exists('category', $post)) {
             $post['category'] = 0;
         }
         if ($post['category'] !== $old['category']) {
             $postUpdates['category'] = (int) $post['category'];
         }
+
         if ($publish) {
             $postUpdates['status'] = true;
             $postUpdates['cache'] = !empty($post['cache']);
 
             // Let's set the publishing time.
-            if (!$old['published'] || !$old['status']) {
-                if (!empty($post['published'])) {
-                    try {
-                        $now = new \DateTime($post['published']);
-                    } catch (\Throwable $ex) {
-                        // Invalid DateTime format
-                        $now = new \DateTime();
-                    }
-                } else {
-                    $now = new \DateTime();
-                }
-                $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
-            }
+            $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
         }
         if ($post['title'] !== $old['title']) {
             $postUpdates['title'] = (string) $post['title'];
