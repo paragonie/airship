@@ -110,4 +110,17 @@ $(document).ready(function() {
     $("#add-hpkp-hash").on('click', function() {
         return window.hpkpAdd();
     });
+
+    $("#clear-cache-button").on('click', function() {
+        var base_url = $("#clear_cache").data('baseurl');
+        var val = $("#clear_cache").data('saved');
+        $.get(
+            base_url + 'ajax/clear_cache/' + val,
+            function (result) {
+                if (result.status !== "OK") {
+                    alert(result.message);
+                }
+            }
+        );
+    });
 });
