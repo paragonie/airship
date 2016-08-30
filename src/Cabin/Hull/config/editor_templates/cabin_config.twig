@@ -243,13 +243,28 @@
             </label>
         </div>
         <div class="table-cell full-width">
-            <input
-                class="full-width"
-                id="file_cache"
-                type="text"
-                name="{{ form_key_config }}[cache-secret]"
-                value="{{ config_extra['cache-secret']|e('html_attr') }}"
-            />
+
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell full-width table-pad-right">
+                        <input
+                            class="full-width"
+                            id="clear_cache"
+                            type="text"
+                            name="{{ form_key_config }}[cache-secret]"
+                            data-baseurl="{{ cabin_url('Hull')|e('html_attr') }}"
+                            data-saved="{{ config_extra['cache-secret']|e('html_attr') }}"
+                            value="{{ config_extra['cache-secret']|e('html_attr') }}"
+                        />
+                    </div>
+                    <div class="table-cell table-min-width">
+                        <a class="pure-button pure-button-tertiary" id="clear-cache-button">
+                            {{ __("Clear Cache Now") }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="table-row">
