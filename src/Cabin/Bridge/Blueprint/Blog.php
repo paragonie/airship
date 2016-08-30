@@ -1215,7 +1215,7 @@ class Blog extends BlueprintGear
             $postUpdates['cache'] = !empty($post['cache']);
 
             // Let's set the publishing time.
-            if (!$old['published'] && !$old['status']) {
+            if (!$old['published'] || !$old['status']) {
                 if (!empty($post['published'])) {
                     try {
                         $now = new \DateTime($post['published']);
