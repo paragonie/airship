@@ -20,12 +20,14 @@
     <div class="blog-sidebar-categories-wrapper">
         <ol class="blog_categories">
             {% for branch in blogmenu.categories %} {{ bcat.blogCategories(branch) }} {% endfor %}
+            {% if blogmenu.uncategorized %}
             <li>{#
                 #}<a href="{{ cabin_url() }}blog/category/">{#
                     #}<i class="fa fa-folder-o"></i>
                     {{ __("Uncategorized") }}{#
                 #}</a>{#
             #}</li>
+            {% endif %}
         </ol>
     </div>
 </div>

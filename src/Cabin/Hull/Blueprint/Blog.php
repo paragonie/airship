@@ -462,6 +462,7 @@ class Blog extends BlueprintGear
         return [
             'years' => $years,
             'categories' => $this->getCategoryTree(),
+            'uncategorized' => $this->countByCategories([]),
             'tags' => $this->getTagCloud()
         ];
     }
