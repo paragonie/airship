@@ -1210,23 +1210,24 @@ class Blog extends BlueprintGear
         if ($post['category'] !== $old['category']) {
             $postUpdates['category'] = (int) $post['category'];
         }
-        if ($publish && !$old['status']) {
-            // If we are publishing, let's set the publishing time.
-            if (!empty($post['published'])) {
-                try {
-                    $now = new \DateTime($post['published']);
-                } catch (\Throwable $ex) {
-                    // Invalid DateTime format
+        if ($publish) {
+            $postUpdates['status'] = true;
+            $postUpdates['cache'] = !empty($post['cache']);
+
+            // Let's set the publishing time.
+            if (!$old['published'] && !$old['status']) {
+                if (!empty($post['published'])) {
+                    try {
+                        $now = new \DateTime($post['published']);
+                    } catch (\Throwable $ex) {
+                        // Invalid DateTime format
+                        $now = new \DateTime();
+                    }
+                } else {
                     $now = new \DateTime();
                 }
-            } else {
-                $now = new \DateTime();
+                $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
             }
-            $postUpdates['status'] = true;
-            $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
-        }
-        if ($publish) {
-            $postUpdates['cache'] = !empty($post['cache']);
         }
         if ($post['title'] !== $old['title']) {
             $postUpdates['title'] = (string) $post['title'];
