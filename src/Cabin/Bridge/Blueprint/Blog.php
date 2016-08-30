@@ -87,47 +87,57 @@ class Blog extends BlueprintGear
     {
         $this->db->beginTransaction();
 
+        $newPostArgs = [
+            'author' =>
+                $post['author'],
+            'category' =>
+                $post['category'] > 0
+                    ? $post['category']
+                    : null,
+            'description' =>
+                $post['description'],
+            'format' =>
+                $post['format'],
+            'shorturl' =>
+                \Airship\uniqueId(),
+            'status' =>
+                $publish,
+            'slug' =>
+                $this->makeBlogPostSlug(
+                    !empty($post['slug'])
+                        ? $post['slug']
+                        : ($post['title'] ?? 'Untitled')
+                ),
+            'title' =>
+                $post['title'] ?? 'Untitled',
+        ];
+
+        // If we are publishing, let's set the publishing time.
         if ($publish) {
-            $published_time = !empty($post['published'])
-                ? (new \DateTime($post['published']))
-                    ->format(\AIRSHIP_DATE_FORMAT)
-                : (new \DateTime())
-                    ->format(\AIRSHIP_DATE_FORMAT);
-        } else {
-            $published_time = null;
+            if (!empty($post['published'])) {
+                try {
+                    $pub = new \DateTime($post['published']);
+                } catch (\Throwable $ex) {
+                    // Invalid DateTime format
+                    $pub = new \DateTime();
+                }
+            } else {
+                $pub = new \DateTime();
+            }
+            $newPostArgs['published'] = $pub->format(\AIRSHIP_DATE_FORMAT);
         }
 
         // Create the post entry
         $newPostId = $this->db->insertGet(
             'hull_blog_posts',
-            [
-                'author' =>
-                    $post['author'],
-                'category' =>
-                    $post['category'] > 0
-                        ? $post['category']
-                        : null,
-                'description' =>
-                    $post['description'],
-                'format' =>
-                    $post['format'],
-                'shorturl' =>
-                    \Airship\uniqueId(),
-                'status' =>
-                    $publish,
-                'slug' =>
-                    $this->makeBlogPostSlug(
-                        !empty($post['slug'])
-                            ? $post['slug']
-                            : ($post['title'] ?? 'Untitled')
-                    ),
-                'published' =>
-                    $published_time,
-                'title' =>
-                    $post['title'] ?? 'Untitled',
-            ],
+            $newPostArgs,
             'postid'
         );
+
+        // Did something break?
+        if ($newPostId === false) {
+            return false;
+        }
         if ($publish) {
             \Airship\clear_cache();
         }
@@ -1201,10 +1211,18 @@ class Blog extends BlueprintGear
             $postUpdates['category'] = (int) $post['category'];
         }
         if ($publish && !$old['status']) {
+            // If we are publishing, let's set the publishing time.
+            if (!empty($post['published'])) {
+                try {
+                    $now = new \DateTime($post['published']);
+                } catch (\Throwable $ex) {
+                    // Invalid DateTime format
+                    $now = new \DateTime();
+                }
+            } else {
+                $now = new \DateTime();
+            }
             $postUpdates['status'] = true;
-            $now = !empty($post['published'])
-                ? (new \DateTime($post['published']))
-                : new \DateTime();
             $postUpdates['published'] = $now->format(\AIRSHIP_DATE_FORMAT);
         }
         if ($publish) {
