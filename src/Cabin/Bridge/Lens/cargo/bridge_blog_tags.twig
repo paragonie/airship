@@ -3,7 +3,7 @@
 <form method="post">{{ form_token() }}
     <fieldset id="new-tag-form">
         <label for="name">{{ __("New Tag:") }}</label>
-        <input id="name" type="text" name="name" pattern="^[^\#]+$" required="required" />
+        <input id="name" type="text" name="name" pattern="^[^\\#]+$" required="required" />
         <button type="submit" class="pure-button pure-button-secondary">
             <i class="fa fa-tag"></i>
             {{ __("Create Tag") }}
