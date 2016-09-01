@@ -36,6 +36,7 @@ class EditPostFilter extends InputFilterContainer
                     'RST'
                 ))->setDefault('Rich Text')
             )
+            ->addFilter('published', new StringFilter())
             ->addFilter('metadata', new StringArrayFilter())
             ->addFilter(
                 'title',
