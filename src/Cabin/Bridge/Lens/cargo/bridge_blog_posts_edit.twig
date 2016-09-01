@@ -11,7 +11,7 @@
                     id="blog_post_title"
                     name="title"
                     type="text"
-                    value="{{ (_POST.title|default(blogpost.title))|e('html_attr') }}"
+                    value="{{ blogpost.title|e('html_attr') }}"
                 />
             </div>
         </div>
@@ -25,7 +25,7 @@
                     #} type="text"{#
                     #} name="slug"{#
                     #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
-                    #} value="{{ (_POST.slug|default(blogpost.slug))|e('html_attr') }}"{#
+                    #} value="{{ blogpost.slug|e('html_attr') }}"{#
                     #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
                 #} />
                 <div id="blog_post_slug_checkbox_wrapper">
@@ -44,7 +44,7 @@
                     #} id="blog_post_published"{#
                     #} type="text"{#
                     #} name="published"{#
-                    #} value="{{ _POST.published|default(blogpost.published)|e('html_attr') }}"{#
+                    #} value="{{ blogpost.published|e('html_attr') }}"{#
                     #} pattern="^2[0-9]{3}\-(0[0-9]|1[0-2])\-([012][0-9]|3[0-1])(T| )([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([\.:\+0-9]+)?$"{#
                 #} />
                 </div>
@@ -58,11 +58,7 @@
                     <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
                         {{
-                            bcatmac.selectBox(
-                                category,
-                                _POST.category|default(
-                                    blogpost.category)
-                            )
+                            bcatmac.selectBox(category, blogpost.category)
                         }}
                     {% endfor %}
                 </select>
@@ -78,11 +74,7 @@
                     {% for auth in authors %}
                         <option{#
                             #} value="{{ auth.authorid }}"{#
-                            #}{% if _POST.author %}{#
-                                #}{% if auth.authorid == _POST.author %}{#
-                                    #} selected="selected"{#
-                                #}{% endif %}{#
-                            #}{% elseif auth.authorid == blogpost.author %}{#
+                            #}{% if auth.authorid == blogpost.author %}{#
                                 #} selected="selected"{#
                             #}{% endif %}>{{ auth.name }}</option>
                     {% endfor %}
@@ -97,9 +89,7 @@
             <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
             <div class="table-cell bottom-pad">
                 {% include cargo("bridge_pages_select_format") with {
-                    "format": _POST.format|default(
-                        latest.format
-                    )
+                    "format": latest.format
                 } %}
             </div>
         </div>
@@ -112,7 +102,7 @@
                     #} class="large_checkbox"{#
                     #} id="cache"{#
                     #} name="cache"{#
-                    #}{% if (_POST.cache or blogpost.cache) %} checked="checked"{% endif %}{#
+                        #}{% if blogpost.cache %} checked="checked"{% endif %}{#
                     #} value="1"{#
                 #} />
                 <label for="cache">{{ __("Cache this blog post?") }}</label>
@@ -124,7 +114,7 @@
             <div class="table-cell bridge_blog_post_tags bottom-pad">
                 {% include cargo("bridge_blog_post_tags") with {
                     "tags": tags,
-                    "checked": _POST.tags|default(blogpost.tags)
+                    "checked": blogpost.tags
                 } %}
             </div>
         </div>
@@ -137,11 +127,7 @@
                     type="text"
                     name="description"
                     placeholder="{{ __("RSS Feed Description (Summary)")|e('html_attr') }}"
-                    value="{{ (
-                        _POST.description|default(
-                            blogpost.description
-                        )
-                    )|e('html_attr') }}"
+                    value="{{ blogpost.description|e('html_attr') }}"
                 />
             </div>
         </div>
@@ -152,9 +138,7 @@
         {% include cargo("rich_text_editor") with {
             "name": "blog_post_body",
             "placeholder": "",
-            "contents": _POST.blog_post_body|default(
-                latest.body
-            )
+            "contents": latest.body
         } %}
     </div>
 
@@ -165,9 +149,7 @@
         </legend>
         <div class="form-table" id="blog_posts_metadata">
             {% include cargo("bridge_blog_posts_metadata") with {
-                "metadata": _POST.metadata|default(
-                    latest.metadata
-                )
+                "metadata": latest.metadata
             } %}
         </div>
     </fieldset>
