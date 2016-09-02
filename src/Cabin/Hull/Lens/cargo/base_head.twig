@@ -10,4 +10,5 @@
         {% endfor %}
         <link rel="stylesheet" href="{{ cabin_url() }}motif_extra.css" type="text/css" />
 
-        <link rel="icon" href="/img/airship-icon.svg" type="image/xml+svg" />
+        <link rel="icon" href="{{ "/img/airship-icon.svg"|cachebust }}" type="image/xml+svg" />
+        <link rel="shortcut icon" href="{{ "/img/airship-icon.svg"|cachebust }}" type="image/xml+svg" />
