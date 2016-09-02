@@ -28,6 +28,17 @@ class PublicFiles extends LandingGear
     protected $files;
 
     /**
+     * @var string[]
+     */
+    protected $viewableMimeTypes = [
+        'image/gif',
+        'image/jpg',
+        'image/jpeg',
+        'image/png',
+        'text/plain'
+    ];
+
+    /**
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
@@ -82,9 +93,11 @@ class PublicFiles extends LandingGear
              * would be "never use Internet Explorer", but some people don't have
              * a choice in that matter.
              */
-            \header('Content-Disposition: attachment; filename="' . \urlencode($fileData['filename']) . '"');
+            if (!$this->isViewable($fileData['type'])) {
+                \header('Content-Disposition: attachment; filename="' . \urlencode($fileData['filename']) . '"');
+                \header('X-Download-Options: noopen');
+            }
             \header('X-Content-Type-Options: nosniff');
-            \header('X-Download-Options: noopen');
 
             $this->airship_lens_object->sendStandardHeaders($fileData['type']);
             \readfile($realPath);
@@ -95,5 +108,18 @@ class PublicFiles extends LandingGear
             $this->lens('404');
             exit(1);
         }
+    }
+
+    /**
+     * @param string $mimeHeader
+     * @return bool
+     */
+    protected function isViewable(string $mimeHeader): bool
+    {
+        $pos = \strpos($mimeHeader, ';');
+        if ($pos !== false) {
+            $mimeHeader = Util::subString($mimeHeader, 0, $pos);
+        }
+        return \in_array($mimeHeader, $this->viewableMimeTypes);
     }
 }
