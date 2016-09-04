@@ -108,7 +108,7 @@ abstract class Util
         $p = \strpos($mimeType, ';');
         if ($p !== false) {
             return self::charWhitelist(
-                self::subString($mimeType, 0, $p),
+                self::subString($mimeType, 0, $p - 1),
                 self::MIME_CHARS
             ) .
             '; ' .
