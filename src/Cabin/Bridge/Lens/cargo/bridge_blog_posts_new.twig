@@ -1,4 +1,5 @@
 {% set can_publish = can('publish') %}
+{% set cabin_config = cabin_custom_config() %}
 <h3>{{ __("New Blog Post") }}</h3>
 <form method="post">{{ form_token() }}
     <div class="table">
@@ -103,7 +104,7 @@
             <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {
                     "format": _POST.format|default(
-                        cabin_config('editor.default-format')|default('Rich Text')
+                        cabin_config['editor']['default-format']|default('Rich Text')
                     )
                 } %}
             </div>

@@ -1,3 +1,4 @@
+{% set cabin_config = cabin_custom_config() %}
 <form method="post" class="airship-form">{{ form_token() }}
     <div class="form-table">
         <div class="table-row">
@@ -43,7 +44,7 @@
             <div class="table-cell">
                 {% include cargo("bridge_pages_select_format") with {
                     "format": _POST.format|default(
-                        cabin_config('editor.default-format')|default('Rich Text')
+                        cabin_config['editor']['default-format']|default('Rich Text')
                     )
                 } %}
             </div>

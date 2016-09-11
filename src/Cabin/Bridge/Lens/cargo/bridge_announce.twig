@@ -1,3 +1,4 @@
+{% set cabin_config = cabin_custom_config() %}
 <h2 class="bottom-pad">{{ __("New Announcement") }}</h2>
 <form method="post">{{ form_token() }}
     <div class="table full-width">
@@ -33,7 +34,7 @@
         <div class="table-cell bottom-extra-pad">
             {% include cargo("bridge_pages_select_format") with {
                 "format": _POST.format|default(
-                    cabin_config('editor.default-format')|default('Rich Text')
+                    cabin_config['editor']['default-format']|default('Rich Text')
                 )
             } %}
         </div>
