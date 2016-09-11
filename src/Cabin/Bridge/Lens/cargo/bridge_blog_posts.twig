@@ -33,13 +33,15 @@
                 #}<i class="fa fa-pencil"></i>{#
             #}</a>
             {% endif %}
-            <a{#
-                #} title="{{ __("Blog Post Revision History")|e('html_attr') }}"{#
-                #} class="pure-button pure-button-secondary"{#
-                #} href="{{ cabin_url() }}blog/post/history/{{ post.postid|e('html_attr') }}"{#
-            #}>{#
-                #}<i class="fa fa-history"></i>{#
-            #}</a>
+            {#
+            <a
+                class="pure-button pure-button-secondary"
+                href="{{ cabin_url() }}blog/post/history/{{ post.postid|e('html_attr') }}"
+                title="{{ __("Blog Post Revision History")|e('html_attr') }}"
+            >
+                <i class="fa fa-history"></i>
+            </a>
+            #}
             {% if can_delete or post.author in my_author_ids %}
                 <a{#
                 #} title="{{ __("Delete Blog Post")|e('html_attr') }}"{#
