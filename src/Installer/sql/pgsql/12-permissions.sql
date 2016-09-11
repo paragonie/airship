@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS airship_perm_rules (
     FOREIGN KEY(action) REFERENCES airship_perm_actions (actionid)
 );
 
-CREATE INDEX IF NOT EXISTS airship_perm_actions_label_idx ON airship_perm_actions (label);
+CREATE INDEX airship_perm_actions_label_idx ON airship_perm_actions (label);
 
 DROP TRIGGER IF EXISTS update_airship_perm_actions_modtime ON airship_perm_actions;
 CREATE TRIGGER update_airship_perm_actions_modtime

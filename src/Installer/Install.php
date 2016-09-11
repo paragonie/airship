@@ -567,7 +567,7 @@ class Install
             $cabins[$conf['path']] = [
                 'https' => !empty($conf['https']),
                 'enabled' => true,
-                'language' => $conf['lang'],
+                'language' => $conf['lang'] ?? 'en-us',
                 'canon_url' => $conf['canon_url'],
                 'name' => $name
             ];
@@ -824,6 +824,9 @@ class Install
      */
     protected function finalProcessAdminAccount()
     {
+        if (!\array_key_exists('passphrase', $this->data['admin'])) {
+            throw new \Exception('Passphrase is not defined. This is a serious error.');
+        }
         $sessionCanary = Base64UrlSafe::encode(\random_bytes(33));
         $this->db->insert('airship_users', [
             'username' => $this->data['admin']['username'],
