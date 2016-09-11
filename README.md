@@ -13,24 +13,29 @@ engine, and application development framework written for PHP 7.
 CMS Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
 
-> [CMS Airship is available on the AWS Marketplace](https://aws.amazon.com/marketplace/seller-profile?ref=cns_srchrow&id=139a5240-4d65-457b-81cf-6f13833a6ecd)
-
 [Commercial license are available for purchase](https://paragonie.com/contact)
-if your company requires one.
+if your company requires an alternative to the GNU Public License.
 
 ## Benefits of CMS Airship
 
 1. [**Digitally signed automatic security updates.**](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#1-digitally-signed-automatic-security-updates)
-2. [The community is always in control of any add-ons it produces.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#2-the-community-is-always-in-control-of-any-add-ons-it-produces)
+2. [Community first.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#2-the-community-is-always-in-control-of-any-add-ons-it-produces)
+   The community is always in control of any add-ons it produces. No one
+   can backdoor your extensions without your signing keys.
 3. [Supports a multi-site architecture out of the box.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#3-supports-a-multi-site-architecture-out-of-the-box)
 4. [Designed by progressive-minded application security professionals.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#4-designed-by-progressive-minded-application-security-professionals)
-5. [Our Gear system allows the framework to be extended.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#5-our-gear-system-allows-the-framework-to-be-extended)
+5. [Fully customizable and extensible.](https://github.com/paragonie/airship-docs/blob/master/en-us/WHY.md#5-our-gear-system-allows-the-framework-to-be-extended)
+   Our `Gears` system allows extensions to easily restructure and/or
+   replace entire Airship features without causing conflicts with our
+   secure automatic updating process.
 
 See [how the out-of-the-box security of CMS Airship compares to WordPress, Drupal, or Joomla](https://paragonie.com/project/airship).
 
 ## Documentation
 
 See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
+
+# [Available on the AWS Marketplace](https://aws.amazon.com/marketplace/seller-profile?ref=cns_srchrow&id=139a5240-4d65-457b-81cf-6f13833a6ecd)
 
 ## Minimum Requirements
 
