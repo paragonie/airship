@@ -7,8 +7,8 @@
 
 *The sky is only the beginning.*
 
-CMS Airship is a content management system, blog engine, and application 
-development framework written for PHP 7.
+CMS Airship is a **secure-by-default** content management system, blog
+engine, and application development framework written for PHP 7.
 
 CMS Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).

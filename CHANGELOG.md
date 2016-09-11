@@ -1,3 +1,35 @@
+## Version 1.3.1 - 2016-09-12
+
+  * [#134](https://github.com/paragonie/airship/issues/134):
+    Fixed a few bugs that caused the installer to fail in weird ways
+    during a fresh install (i.e. for Docker users).
+  * [#136](https://github.com/paragonie/airship/issues/136):
+    If you don't specify a subheader in the blog config, nothing will be
+    displayed.
+  * [#139](https://github.com/paragonie/airship/issues/139):
+    If an author's biography is empty, the "About the Author" section
+    will not be displayed. In a future version, we may change this
+    behavior to be dependent on the status of a checkbox rather than the
+    non-emptiness of the biography field.
+  * [#142](https://github.com/paragonie/airship/issues/142):
+    Hide "Uncategorized" from the right menu if there are no blog posts
+    without a category.
+  * [#143](https://github.com/paragonie/airship/issues/143):
+    Fixed issues with date/time handling that broke post editing.
+  * [#144](https://github.com/paragonie/airship/issues/144):
+    Fixed the regular expression in the `required` attribute that caused
+    browsers to prevent form submission.
+  * [#145](https://github.com/paragonie/airship/issues/145):
+    The "default format" is now respected by the forms that support
+    different input formats.
+  * [#146](https://github.com/paragonie/airship/issues/146):
+    Created a button to purge the caches.
+  * Hid the link to view blog post history, as that feature was 
+    overlooked. We'll implement it in version 1.4.0.
+  * Some image types can be viewed directly instead of always forcing a
+    download. The enforcement logic is a whitelist (that gadgets can
+    extend).
+
 ## Version 1.3.0 - 2016-08-29
 
   * Significant UI/UX improvements.
