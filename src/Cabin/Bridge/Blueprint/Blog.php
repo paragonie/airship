@@ -97,7 +97,9 @@ class Blog extends BlueprintGear
             'description' =>
                 $post['description'],
             'format' =>
-                $post['format'],
+                !empty($post['format'])
+                    ? $post['format']
+                    : 'Rich Text',
             'shorturl' =>
                 \Airship\uniqueId(),
             'status' =>
