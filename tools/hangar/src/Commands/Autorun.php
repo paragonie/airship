@@ -102,9 +102,8 @@ class autoRun extends SessionCommand
      */
     protected function getType(string $path): string
     {
-        $ds = \preg_quote(DIRECTORY_SEPARATOR, '#');
-        if (\preg_match('#'.$ds.'.*?\.(.*)#', $path, $matches)) {
-            $t = \strtolower($matches[1]);
+        if (\preg_match('#/(.+?)\.([^\\.]+)$#', $path, $matches)) {
+            $t = \strtolower($matches[2]);
             switch ($t) {
                 case 'php':
                 case 'php3':
