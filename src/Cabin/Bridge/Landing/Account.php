@@ -28,7 +28,7 @@ use ParagonIE\GPGMailer\GPGMailer;
 use ParagonIE\Halite\{
     Alerts\InvalidMessage,
     Asymmetric\Crypto as Asymmetric,
-    Util as CryptoUtil
+    Symmetric\Crypto as Symmetric
 };
 use ParagonIE\MultiFactor\OTP\TOTP;
 use ParagonIE\MultiFactor\Vendor\GoogleAuth;
@@ -816,12 +816,15 @@ class Account extends LandingGear
         if (empty($recoveryInfo)) {
             \Airship\redirect($this->airship_cabin_prefix . '/login');
         }
-        $calc = CryptoUtil::keyed_hash(
-            $validator,
-            CryptoUtil::raw_hash('' . $recoveryInfo['userid'])
-        );
-        if (\hash_equals($recoveryInfo['hashedtoken'], $calc)) {
+
+        $state = State::instance();
+        if (Symmetric::verify(
+            $validator . $recoveryInfo['userid'],
+            $state->keyring['auth.recovery_key'],
+            $recoveryInfo['hashedtoken']
+        )) {
             $_SESSION['userid'] = (int) $recoveryInfo['userid'];
+            $_SESSION['session_canary'] = $this->acct->createSessionCanary($recoveryInfo['userid']);
             $this->acct->deleteRecoveryToken($selector);
             \Airship\redirect($this->airship_cabin_prefix . '/my/account');
         }

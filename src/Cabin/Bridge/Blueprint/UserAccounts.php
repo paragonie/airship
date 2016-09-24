@@ -12,7 +12,6 @@ use Airship\Engine\{
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
-use ParagonIE\Halite\Util as CryptoUtil;
 use Psr\Log\LogLevel;
 use ZxcvbnPhp\Zxcvbn;
 
@@ -83,16 +82,20 @@ class UserAccounts extends BlueprintGear
         $this->db->beginTransaction();
         $selector = Base64UrlSafe::encode(\random_bytes(static::RECOVERY_SELECTOR_BYTES));
         $token = Base64UrlSafe::encode(\random_bytes(static::RECOVERY_TOKEN_BYTES));
-        $hashedToken = CryptoUtil::keyed_hash(
-            $token,
-            CryptoUtil::raw_hash('' . $userID)
+
+        $state = State::instance();
+        $hashedToken = Symmetric::authenticate(
+            $token . $userID,
+            $state->keyring['auth.recovery_key']
         );
         $this->db->insert(
             'airship_user_recovery',
             [
                 'userid' => $userID,
                 'selector' => $selector,
-                'hashedtoken' => $hashedToken
+                'hashedtoken' => $hashedToken,
+                'created' => (new \DateTime('NOW'))
+                    ->format(\AIRSHIP_DATE_FORMAT)
             ]
         );
         if (!$this->db->commit()) {
@@ -435,7 +438,7 @@ class UserAccounts extends BlueprintGear
             new \DateInterval('PT' . $maxTokenLife . 'S')
         );
         $result = $this->db->row(
-            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created > ?',
+            'SELECT * FROM airship_user_recovery WHERE selector = ? AND created >= ?',
             $selector,
             $dateTime->format(\AIRSHIP_DATE_FORMAT)
         );

@@ -7,6 +7,10 @@
     "type": "EncryptionKey",
     "file": "password_encryption.skey"
   },
+  "auth.recovery_key": {
+    "type": "AuthenticationKey",
+    "file": "recovery_token.skey"
+  },
   "cookie.encrypt_key": {
     "type": "EncryptionKey",
     "file": "cookie_encryption.skey"

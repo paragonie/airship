@@ -60,10 +60,12 @@
                             <i class="fa fa-key"></i>
                             {{ __("Log In") }}
                         </button>
+                        {% if cabin_custom_config()['password-reset']['enabled'] %}
                         <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary float-right">
                             <i class="fa fa-undo"></i>
                             {{ __("I Forgot My Passphrase") }}
                         </a>
+                        {% endif %}
                     </div>
                 </form>
             </fieldset>
