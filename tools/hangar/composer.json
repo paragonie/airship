@@ -18,7 +18,7 @@
     "source":   "https://github.com/paragonie/airship"
   },
   "require": {
-    "php": "^7.0.5",
+    "php": "^7",
     "paragonie/constant_time_encoding": "^2",
     "paragonie/halite": "^2.1"
   }
