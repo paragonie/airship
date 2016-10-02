@@ -25,15 +25,14 @@
     <div class="table-row">
         <div class="table-cell table-min-width">
             {% if can_edit or post.author in my_author_ids %}
-                <a{#
-                #} title="{{ __("Edit Blog Post")|e('html_attr') }}"{#
-                #} class="pure-button pure-button-primary"{#
-                #} href="{{ cabin_url() }}blog/post/edit/{{ post.postid|e('html_attr') }}"{#
-            #}>{#
-                #}<i class="fa fa-pencil"></i>{#
-            #}</a>
+                <a
+                    class="pure-button pure-button-primary"
+                    href="{{ cabin_url() }}blog/post/edit/{{ post.postid|e('html_attr') }}"
+                    title="{{ __("Edit Blog Post")|e('html_attr') }}"
+                >
+                    <i class="fa fa-pencil"></i>
+                </a>
             {% endif %}
-            {#
             <a
                 class="pure-button pure-button-secondary"
                 href="{{ cabin_url() }}blog/post/history/{{ post.postid|e('html_attr') }}"
@@ -41,15 +40,14 @@
             >
                 <i class="fa fa-history"></i>
             </a>
-            #}
             {% if can_delete or post.author in my_author_ids %}
-                <a{#
-                #} title="{{ __("Delete Blog Post")|e('html_attr') }}"{#
-                #} class="pure-button pure-button-primary"{#
-                #} href="{{ cabin_url() }}blog/post/delete/{{ post.postid|e('html_attr') }}"{#
-            #}>{#
-                #}<i class="fa fa-trash"></i>{#
-            #}</a>
+                <a
+                    class="pure-button pure-button-primary"
+                    href="{{ cabin_url() }}blog/post/delete/{{ post.postid|e('html_attr') }}"
+                    title="{{ __("Delete Blog Post")|e('html_attr') }}"
+                >
+                    <i class="fa fa-trash"></i>
+                </a>
             {% endif %}
         </div>
         <div class="table-cell">
