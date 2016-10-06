@@ -479,6 +479,22 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * @param int $postId
+     * @return array
+     */
+    public function getBlogPostVersions(int $postId): array
+    {
+        $posts = $this->db->run(
+            \Airship\queryString('blog.posts.list_versions'),
+            $postId
+        );
+        if (empty($posts)) {
+            return [];
+        }
+        return $posts;
+    }
+
+    /**
      * Get all of a category's parents
      *
      * @param int $categoryId

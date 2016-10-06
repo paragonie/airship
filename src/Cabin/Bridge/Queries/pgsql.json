@@ -9,6 +9,8 @@
         "SELECT * FROM view_hull_blog_list ORDER BY postid DESC OFFSET {{offset}} LIMIT {{limit}}",
       "list_mine":
         "SELECT * FROM view_hull_blog_list l LEFT JOIN hull_blog_author_owners a ON l.author = a.authorid WHERE l.status OR a.userid = ? ORDER BY postid DESC OFFSET {{offset}} LIMIT {{limit}}",
+      "list_versions":
+        "SELECT * FROM hull_blog_post_versions WHERE post = ? ORDER BY versionid DESC",
       "latest_version":
         "SELECT * FROM hull_blog_post_versions WHERE post = ? ORDER BY versionid DESC OFFSET 0 LIMIT 1"
     },

@@ -102,11 +102,11 @@ class PageManager extends LoggedInUsersOnly
                 if ($resp->isSuccess()) {
                     // CAPTCHA verification and CSRF token both passed
                     if ($this->processDeleteDir(
-                        (int) $dirInfo['directoryid'],
-                        $post,
-                        $cabin,
-                        $cabins
-                    )
+                            (int) $dirInfo['directoryid'],
+                            $post,
+                            $cabin,
+                            $cabins
+                        )
                     ) {
                         // Return to the parent directory.
                         \Airship\redirect(

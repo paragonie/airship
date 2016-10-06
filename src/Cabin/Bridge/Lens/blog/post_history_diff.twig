@@ -1,0 +1,10 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_pages_page_history_diff") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/js/diff.min.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/page_history_diff.js"|cachebust }}"></script>
+{% endblock %}

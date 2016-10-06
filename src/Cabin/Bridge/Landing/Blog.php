@@ -583,6 +583,28 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * @param string $postID
+     */
+    public function postHistory(string $postID = '')
+    {
+        $blog = $this->blog->getBlogPostById((int) $postID);
+        if (!$blog || !$this->can('read')) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/blog/post'
+            );
+        }
+        $this->lens(
+            'blog/post_history',
+            [
+                'blog' =>
+                    $blog,
+                'revisions' =>
+                    $this->blog->getBlogPostVersions((int) $postID)
+            ]
+        );
+    }
+
+    /**
      * View a comment
      *
      * @param string $commentId
