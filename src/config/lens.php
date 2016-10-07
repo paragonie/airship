@@ -21,13 +21,13 @@ $lens->filter('ucfirst', 'ucfirst');
 /**
  * @filter cachebust
  * Cache-busting filter
- * 
+ *
  * Usage: {{ "/path/to/file"|cachebust }}
  */
 $lens->filter('cachebust', '\\Airship\\LensFunctions\\cachebust');
 /**
  * @filter gravatar
- * Get a gravtar URL
+ * Get a gravatar URL
  *
  * Usage: {{ "user@example.com"|gravatar }}
  */
