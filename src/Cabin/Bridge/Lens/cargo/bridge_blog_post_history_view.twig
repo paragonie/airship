@@ -1,0 +1,184 @@
+<div id="page_history_header">
+    {% include cargo("bridge_blog_post_history_header") %}
+</div>
+
+<ul id="page_history_nav">
+    {% if prev_uniqueid %}
+        <li>
+            <a href="{{ cabin_url() }}blog/post/history/{{ blogpost.postid }}/view/{{ prev_uniqueid|e('html_attr') }}">{{ __("Previous") }}</a>
+            (<a href="{{ cabin_url() }}blog/post/history/{{ blogpost.postid }}/diff/{{ prev_uniqueid|e('html_attr') }}/{{ version['version_unique']|e('html_attr') }}">{{ __("Diff") }}</a>)
+        </li>
+    {% else %}
+        <li>
+            ({{ __("Earliest Version") }})
+        </li>
+    {% endif %}{% if next_uniqueid %}
+        <li>
+            <a href="{{ cabin_url() }}blog/post/history/{{ blogpost.postid }}/view/{{ next_uniqueid|e('html_attr') }}">{{ __("Next") }}</a>
+            (<a href="{{ cabin_url() }}blog/post/history/{{ blogpost.postid }}/diff/{{ version['version_unique']|e('html_attr') }}/{{ next_uniqueid|e('html_attr') }}">{{ __("Diff") }}</a>)
+        </li>
+    {% else %}
+        <li>
+            ({{ __("Latest Version") }})
+        </li>
+    {% endif %}
+</ul>
+
+
+<div class="table full-width">
+    <div class="table-row">
+        <label class="table-cell table-min-width" for="blog_post_title">{{ __("Post Title") }}:</label>
+        <div class="table-cell bottom-pad">
+            <input
+                class="full-width"
+                disabled="disabled"
+                readonly="readonly"
+                id="blog_post_title"
+                name="title"
+                type="text"
+                value="{{ blogpost.title|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    <div class="table-row">
+        <label class="table-cell" for="blog_post_slug">{{ __("Slug") }}:</label>
+        <div class="table-cell bottom-pad">
+            <input{#
+                #} class="full-width"{#
+                #} disabled="disabled"{#
+                #} readonly="readonly"{#
+                #} id="blog_post_slug"{#
+                #} type="text"{#
+                #} name="slug"{#
+                #} data-original="{{ blogpost.slug|e('html_attr') }}"{#
+                #} value="{{ blogpost.slug|e('html_attr') }}"{#
+                #} pattern="^[a-z0-9][a-z0-9\-]+$"{#
+            #} />
+        </div>
+    </div>
+
+    {% if can_publish %}
+        <div class="table-row">
+            <label class="table-cell table-min-width" for="blog_post_publish_date">{{ __("Date/Time Published") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input{#
+                    #} class="full-width"{#
+                    #} disabled="disabled"{#
+                    #} readonly="readonly"{#
+                    #} id="blog_post_published"{#
+                    #} type="text"{#
+                    #} name="published"{#
+                    #} value="{{ blogpost.published|e('html_attr') }}"{#
+                    #} pattern="^2[0-9]{3}\-(0[0-9]|1[0-2])\-([012][0-9]|3[0-1])(T| )([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([\.:\+0-9]+)?$"{#
+                #} />
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="table-row">
+        <label class="table-cell" for="blog_post_category">{{ __("Category") }}:</label>
+        <div class="table-cell bottom-pad">
+            <select
+                class="treeselect"
+                disabled="disabled"
+                id="blog_post_category"
+                name="category"
+                readonly="readonly"
+            >
+                <option value="0"> -- {{ __("None") }} -- </option>
+                {% for category in categories %}
+                    {{
+                        bcatmac.nonExclusiveSelectBox(
+                            category,
+                            blogpost.categoryid,
+                            null
+                        )
+                    }}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="table-row">
+        <label class="table-cell" for="blog_post_author">{{ __("Author") }}:</label>
+        <div class="table-cell bottom-pad">
+            {% if is_admin() %}
+                <select
+                    disabled="disabled"
+                    id="blog_post_author"
+                    name="author"
+                    readonly="readonly"
+                >
+                    <option value="">{% if authors %} -- {{ __("Please Select an Author") }} -- {% endif %}</option>
+                    {% for auth in authors %}
+                        <option{#
+                            #} value="{{ auth.authorid }}"{#
+                            #}{% if auth.authorid == blogpost.author %}{#
+                                #} selected="selected"{#
+                            #}{% endif %}>{{ auth.name }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                {{ __("To change the authorship of an existing blog post, please contact an administrator.") }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="table-row">
+        <label class="table-cell table-min-width" for="format">{{ __("Post Format") }}:</label>
+        <div class="table-cell bottom-pad">
+            {% include cargo("bridge_pages_select_format") with {
+                "readonly": true,
+                "format": version.format
+            } %}
+        </div>
+    </div>
+
+    <div class="table-row">
+        <label class="table-cell" for="format">{{ __("Tags") }}:</label>
+        <div class="table-cell bridge_blog_post_tags bottom-pad">
+            {% include cargo("bridge_blog_post_tags") with {
+                "readonly": true,
+                "tags": tags,
+                "checked": blogpost.tags
+            } %}
+        </div>
+    </div>
+
+    <div class="table-row">
+        <label class="table-cell" for="blog_post_description">{{ __("Description") }}:</label>
+        <div class="table-cell bottom-pad">
+            <input
+                class="full-width"
+                disabled="disabled"
+                type="text"
+                name="description"
+                placeholder="{{ __("RSS Feed Description (Summary)")|e('html_attr') }}"
+                readonly="readonly"
+                value="{{ blogpost.description|e('html_attr') }}"
+            />
+        </div>
+    </div>
+
+    {% include cargo("bridge_blog_post_extra_fields") ignore missing %}
+</div>
+<div class="bridge_blog_rich_text_wrapper">
+    {% include cargo("rich_text_editor") with {
+        "readonly": true,
+        "name": "blog_post_body",
+        "placeholder": "",
+        "contents": version.body
+    } %}
+</div>
+
+<fieldset>
+    <legend>
+        {{ __("Metadata Fields") }}
+    </legend>
+    <div class="form-table">
+        {% include cargo("bridge_blog_posts_metadata") with {
+            "metadata": version.metadata
+        } %}
+    </div>
+</fieldset>

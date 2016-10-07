@@ -15,6 +15,7 @@
                 id="rich_text_{{ name|e('html_attr') }}"
                 placeholder="{{ placeholder|e('html_attr') }}"
                 {% if readonly %}
+                    disabled="disabled"
                     readonly="readonly"
                 {% endif %}
             >{#

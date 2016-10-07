@@ -583,7 +583,11 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * View the history for a blog post.
+     *
      * @param string $postID
+     *
+     * @route blog/post/history/{id}
      */
     public function postHistory(string $postID = '')
     {
@@ -598,8 +602,120 @@ class Blog extends LoggedInUsersOnly
             [
                 'blog' =>
                     $blog,
-                'revisions' =>
+                'history' =>
                     $this->blog->getBlogPostVersions((int) $postID)
+            ]
+        );
+    }
+
+    /**
+     * Compare two versions of a blog post.
+     *
+     * @param string $postID
+     * @param string $leftUnique
+     * @param string $rightUnique
+     *
+     * @route blog/post/history/{id}/diff/{string}/{string}
+     */
+    public function postHistoryDiff(
+        string $postID = '',
+        string $leftUnique = '',
+        string $rightUnique = ''
+    ) {
+        $postID = (int) $postID;
+        $blog = $this->blog->getBlogPostById($postID);
+        if (!$blog || !$this->can('read')) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/blog/post'
+            );
+        }
+        $left = $this->blog->getBlogPostVersionByUniqueId($leftUnique);
+        $right = $this->blog->getBlogPostVersionByUniqueId($rightUnique);
+
+        // Sanity check. If it fails, go back to the history list.
+        if ((int) $left['postid'] !== $postID || (int) $right['postid'] !== $postID) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/blog/post/history/' . $postID
+            );
+        }
+
+        $this->lens(
+            'blog/post_history_diff',
+            [
+                'active_link' =>
+                    'bridge-link-blog-posts',
+                'blog' =>
+                    $blog,
+                'left' =>
+                    $left,
+                'right' =>
+                    $right
+            ]
+        );
+    }
+
+    /**
+     * View a version of a blog post.
+     *
+     * @param string $postID
+     * @param string $uniqueID
+     *
+     * @route blog/post/history/{id}/view/{string}
+     */
+    public function postHistoryView(
+        string $postID = '',
+        string $uniqueID = ''
+    ) {
+        $postID = (int) $postID;
+        $blog = $this->blog->getBlogPostById($postID);
+        if (!$blog || !$this->can('read')) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/blog/post'
+            );
+        }
+        $blog['tags'] = $this->blog->getTagsForPost($postID);
+        $version = $this->blog->getBlogPostVersionByUniqueId($uniqueID);
+        if ((int) $version['postid'] !== $postID || empty($version)) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/blog/post/history/' . $postID
+            );
+        }
+        if ($this->isSuperUser()) {
+            $authors = $this->author->getAll();
+        } else {
+            $authors = $this->author->getForUser(
+                $this->getActiveUserId()
+            );
+        }
+        $categories = $this->blog->getCategoryTree();
+        $tags = $this->blog->getTags();
+
+        $this->lens(
+            'blog/post_history_view',
+            [
+                'active_link' =>
+                    'bridge-link-blog-posts',
+                'authors' =>
+                    $authors,
+                'blogpost' =>
+                    $blog,
+                'categories' =>
+                    $categories,
+                'tags' =>
+                    $tags,
+                'title' => \__('Revision for  Blog Post "%s"', 'default',
+                    Util::noHTML($blog['title'])
+                ),
+                'prev_uniqueid' => $this->blog->getPrevVersionUniqueId(
+                    $postID,
+                    (int) $version['versionid']
+                ),
+                'next_uniqueid' => $this->blog->getNextVersionUniqueId(
+                    $postID,
+                    (int) $version['versionid']
+                ),
+                'version' =>
+                    $version
             ]
         );
     }

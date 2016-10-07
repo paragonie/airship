@@ -485,13 +485,13 @@ class Permissions extends BlueprintGear
      * Update the label for a given action.
      *
      * @param string $cabin
-     * @param string $actionId
+     * @param int $actionId
      * @param array $post
      * @return bool
      */
     public function saveAction(
         string $cabin,
-        string $actionId,
+        int $actionId,
         array $post = []
     ): bool
     {

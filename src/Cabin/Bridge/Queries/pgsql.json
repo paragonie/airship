@@ -5,6 +5,8 @@
       "SELECT * FROM hull_blog_comments ORDER BY approved ASC, commentid ASC OFFSET {{offset}} LIMIT {{limit}}"
     },
     "posts": {
+      "get_version":
+        "SELECT * FROM view_hull_blog_unfiltered WHERE version_unique = ?",
       "list_all":
         "SELECT * FROM view_hull_blog_list ORDER BY postid DESC OFFSET {{offset}} LIMIT {{limit}}",
       "list_mine":

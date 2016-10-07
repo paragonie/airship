@@ -1,4 +1,5 @@
 {% extends base_template() %}
+{% import "macros/blog_categories.twig" as bcatmac %}
 
 {% block main %}
     {% include cargo("bridge_blog_post_history_view") ignore missing %}

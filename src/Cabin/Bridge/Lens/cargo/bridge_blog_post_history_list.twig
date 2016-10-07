@@ -11,11 +11,11 @@
     {% for hist in history %}
         <div class="table-row">
             <div class="table-cell">
-                <a href="{{ cabin_url() }}pages/{{ cabin|e('url') }}/history/view/{{ hist.uniqueid|e("url") }}">{{ hist.uniqueid }}</a>
+                <a href="{{ cabin_url() }}blog/post/history/{{ blog.postid }}/view/{{ hist.uniqueid|e("url") }}">{{ hist.uniqueid }}</a>
             </div>
             {% if can('publish') %}
                 <div class="table-cell">
-                    {{ {{ user_unique_id(hist.bridge_user) }}
+                    {{ user_unique_id(hist.bridge_user) }}
                 </div>
             {% endif %}
             <div class="table-cell" title="{{ hist.body|length }} body, {{  hist.metadata|json_encode|length }} metadata">

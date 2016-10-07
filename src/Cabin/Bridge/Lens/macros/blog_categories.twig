@@ -17,28 +17,28 @@
 {% endif %}</li>
 {% endmacro %}
 
-{% macro selectBox(catdata, selected, parentid, fullpath = "", depth = 0) %}{#
+{% macro selectBox(catdata, selected, parentid = null, fullpath = "", depth = 0) %}{#
     #}{% if fullpath %}{#
         #}{% set fullpath = fullpath ~ " &rsaquo; " ~ catdata.name %}{#
     #}{% else %}{#
         #}{% set fullpath = catdata.name %}{#
     #}{% endif %}
     {% if not selected or catdata.categoryid != selected %}
-    <option
-            value="{{ catdata.categoryid|e('html_attr') }}"
-            data-ancestors="{{ catdata.ancestors|json_encode }}"
-            data-fullpath="{{ fullpath|e('html_attr') }}"
-            class="treeselect {#
+        <option
+                value="{{ catdata.categoryid|e('html_attr') }}"
+                data-ancestors="{{ catdata.ancestors|json_encode }}"
+                data-fullpath="{{ fullpath|e('html_attr') }}"
+                class="treeselect {#
             #}branch_{{ depth|default(0)|e('html_attr') }}{#
             #}{% if catdata.children %}{#
                 #} treeselect_parent{#
             #}{% endif %}"
-            {% if catdata.categoryid == selected %}
-                selected="selected"
-            {% endif %}
-    >
-        {{ catdata.name }}
-    </option>
+                {% if catdata.categoryid == selected %}
+                    selected="selected"
+                {% endif %}
+        >
+            {{ catdata.name }}
+        </option>
         {% if catdata.children %}
             {% for child in catdata.children %}
                 {% if child.categoryid not in catdata.ancestors %}
@@ -54,5 +54,41 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro nonExclusiveSelectBox(catdata, selected, parentid = null, fullpath = "", depth = 0) %}{#
+    #}{% if fullpath %}{#
+        #}{% set fullpath = fullpath ~ " &rsaquo; " ~ catdata.name %}{#
+    #}{% else %}{#
+        #}{% set fullpath = catdata.name %}{#
+    #}{% endif %}
+    <option
+            value="{{ catdata.categoryid|e('html_attr') }}"
+            data-ancestors="{{ catdata.ancestors|json_encode }}"
+            data-fullpath="{{ fullpath|e('html_attr') }}"
+            class="treeselect {#
+        #}branch_{{ depth|default(0)|e('html_attr') }}{#
+        #}{% if catdata.children %}{#
+            #} treeselect_parent{#
+        #}{% endif %}"
+        {% if catdata.categoryid == selected %}
+            selected="selected"
+        {% endif %}
+    >
+        {{ catdata.name }}
+    </option>
+    {% if catdata.children %}
+        {% for child in catdata.children %}
+            {{
+                _self.nonExclusiveSelectBox(
+                    child,
+                    selected|default(''),
+                    catdata.categoryid,
+                    fullpath,
+                    depth + 1
+                )
+            }}
+        {% endfor %}
     {% endif %}
 {% endmacro %}

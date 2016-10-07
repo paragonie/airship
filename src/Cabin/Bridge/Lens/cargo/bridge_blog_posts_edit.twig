@@ -58,7 +58,7 @@
                     <option value="0"> -- {{ __("None") }} -- </option>
                     {% for category in categories %}
                         {{
-                            bcatmac.selectBox(category, blogpost.category)
+                            bcatmac.nonExclusiveSelectBox(category, blogpost.category)
                         }}
                     {% endfor %}
                 </select>

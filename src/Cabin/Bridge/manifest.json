@@ -101,6 +101,10 @@
             ["Blog", "deletePost"],
         "blog/post/edit/{id}":
             ["Blog", "editPost"],
+        "blog/post/history/{id}/diff/{string}/{string}":
+            ["Blog", "postHistoryDiff"],
+        "blog/post/history/{id}/view/{string}":
+            ["Blog", "postHistoryView"],
         "blog/post/history/{id}":
             ["Blog", "postHistory"],
         "blog/post/new":

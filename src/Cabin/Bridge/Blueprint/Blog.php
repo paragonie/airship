@@ -495,6 +495,27 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Get a specific blog post version, given a unique ID
+     *
+     * @param string $uniqueID
+     * @return array
+     */
+    public function getBlogPostVersionByUniqueId(string $uniqueID): array
+    {
+        $post = $this->db->row(
+            \Airship\queryString('blog.posts.get_version'),
+            $uniqueID
+        );
+        if (empty($post)) {
+            return [];
+        }
+        if (!empty($post['metadata'])) {
+            $post['metadata'] = \json_decode($post['metadata'], true);
+        }
+        return $post;
+    }
+
+    /**
      * Get all of a category's parents
      *
      * @param int $categoryId
@@ -789,6 +810,64 @@ class Blog extends BlueprintGear
             'SELECT tagid FROM hull_blog_post_tags WHERE postid = ?',
             $postId
         );
+    }
+
+    /**
+     * Get the next version's unique ID
+     *
+     * @param int $postId
+     * @param int $currentVersionId
+     * @return string
+     */
+    public function getNextVersionUniqueId(int $postId, int $currentVersionId): string
+    {
+        $latest = $this->db->cell(
+            'SELECT
+                uniqueid
+            FROM
+                hull_blog_post_versions
+            WHERE
+                    post = ?
+                AND versionid > ?
+                ORDER BY versionid DESC
+                LIMIT 1
+            ',
+            $postId,
+            $currentVersionId
+        );
+        if (empty($latest)) {
+            return '';
+        }
+        return $latest;
+    }
+
+    /**
+     * Get the previous version's unique ID
+     *
+     * @param int $postId
+     * @param int $currentVersionId
+     * @return string
+     */
+    public function getPrevVersionUniqueId(int $postId, int $currentVersionId): string
+    {
+        $latest = $this->db->cell(
+            'SELECT
+                uniqueid
+            FROM
+                hull_blog_post_versions
+            WHERE
+                    post = ?
+                AND versionid < ?
+                ORDER BY versionid DESC
+                LIMIT 1
+            ',
+            $postId,
+            $currentVersionId
+        );
+        if (empty($latest)) {
+            return '';
+        }
+        return $latest;
     }
 
     /**
@@ -1256,6 +1335,13 @@ class Blog extends BlueprintGear
                 ]
             );
         }
+        do {
+            $unique = \Airship\uniqueId();
+            $exists = $this->db->exists(
+                'SELECT COUNT(*) FROM hull_blog_post_versions WHERE uniqueid = ?',
+                $unique
+            );
+        } while ($exists);
 
         // Second, create a new entry in hull_blog_post_versions
         $this->db->insert(
@@ -1274,7 +1360,9 @@ class Blog extends BlueprintGear
                 'published_by' =>
                     $publish
                         ? $this->getActiveUserId()
-                        : null
+                        : null,
+                'uniqueid' =>
+                    $unique
             ]
         );
 

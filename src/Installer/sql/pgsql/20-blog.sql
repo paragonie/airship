@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS hull_blog_post_versions (
     versionid BIGSERIAL PRIMARY KEY,
     post BIGINT,
     body TEXT,
+    uniqueid TEXT,
     format TEXT,
     metadata JSONB,
     live BOOLEAN DEFAULT FALSE,
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS hull_blog_post_versions (
     modified TIMESTAMP DEFAULT NOW(),
     published TIMESTAMP DEFAULT NOW()
 );
+CREATE UNIQUE INDEX ON hull_blog_post_versions(uniqueid);
 
 CREATE TABLE IF NOT EXISTS hull_blog_post_tags (
     postid integer,
