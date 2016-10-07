@@ -272,6 +272,7 @@ abstract class AutoUpdater
     /**
      * Download an update into a temp file
      *
+     * @throws TransferException
      * @param UpdateInfo $update
      * @param string $apiEndpoint
      * @return UpdateFile

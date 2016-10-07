@@ -31,6 +31,7 @@ class WordPress implements MigrationInterface
      * Use during imports to populate a table with metadata and a rehashed hash.
      *
      * @param string $oldHash
+     * @param EncryptionKey $passwordKey
      * @return array [HiddenString, array]
      * @throws \Exception
      */

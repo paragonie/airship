@@ -323,6 +323,7 @@ class Admin extends AdminOnly
      * Write the updated JSON configuration file.
      *
      * @param array $post
+     * @param array $old
      * @return bool
      */
     protected function saveDatabase(array $post = [], array $old = []): bool
