@@ -589,6 +589,11 @@ class PageManager extends LoggedInUsersOnly
         try {
             $left = $this->pg->getPageVersionByUniqueId($leftUnique);
             $right = $this->pg->getPageVersionByUniqueId($rightUnique);
+            if ($left['page'] !== $right['page']) {
+                throw new CustomPageNotFoundException(
+                    'Unique IDs for different pages.'
+                );
+            }
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
                 'Page not found',
