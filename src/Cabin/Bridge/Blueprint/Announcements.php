@@ -2,12 +2,6 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Blueprint;
 
-use Airship\Engine\Bolt\{
-    Common,
-    Orderable,
-    Slug
-};
-
 require_once __DIR__.'/init_gear.php';
 
 /**
