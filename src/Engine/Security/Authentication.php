@@ -3,7 +3,10 @@ declare(strict_types=1);
 namespace Airship\Engine\Security;
 
 use Airship\Alerts\Security\LongTermAuthAlert;
+use Airship\Alerts\Security\SecurityAlert;
 use Airship\Engine\Contract\DBInterface;
+use Airship\Engine\Gadgets;
+use Airship\Engine\Security\Migration\WordPress;
 use ParagonIE\ConstantTime\{
     Base64,
     Binary
@@ -87,6 +90,7 @@ class Authentication
         $this->dummyHash = Password::hash($dummy, $this->key);
 
         $this->db = $db ?? \Airship\get_database();
+        $this->registerMigrations();
     }
     
     /**
@@ -146,16 +150,9 @@ class Authentication
         $table = $this->db->escapeIdentifier(
             $this->tableConfig['table']['accounts']
         );
-
-        $f = [
-            'userid' => $this->tableConfig['fields']['accounts']['userid'],
-            'username' => $this->tableConfig['fields']['accounts']['username'],
-            'password' => $this->tableConfig['fields']['accounts']['password']
-        ];
-        
         // Let's fetch the user data from the database
         $user = $this->db->row(
-            'SELECT * FROM ' . $table . ' WHERE ' . $f['username'] . ' = ?',
+            'SELECT * FROM ' . $table . ' WHERE username = ?',
             $username
         );
         if (empty($user)) {
@@ -167,8 +164,21 @@ class Authentication
             
             // No matter what, return false here:
             return false;
-        } elseif (Password::verify($password->getString(), $user[$f['password']], $this->key)) {
-            return (int) $user[$f['userid']];
+        } else {
+            if (!empty($user['migration'])) {
+                $success = $this->migrateImportedHash(
+                    $password,
+                    new HiddenString($user['password']),
+                    $user
+                );
+                if ($success) {
+                    return (int) $user['userid'];
+                }
+            }
+
+            if (Password::verify($password->getString(), $user['password'], $this->key)) {
+                return (int) $user['userid'];
+            }
         }
         return false;
     }
@@ -234,6 +244,59 @@ class Authentication
             $userID
         );
         return $userID;
+    }
+
+    /**
+     * Attempt to login against a migrated hash. If successful,
+     * replace the existing password hash with an encrypted hash
+     * of the original password.
+     *
+     * @param HiddenString $password
+     * @param HiddenString $passwordHash
+     * @param array $userData
+     * @return bool
+     * @throws SecurityAlert
+     */
+    public function migrateImportedHash(
+        HiddenString $password,
+        HiddenString $passwordHash,
+        array $userData = []
+    ): bool {
+        if (!isset($userData['migration']['type'])) {
+            throw new SecurityAlert(
+                'No migration type registered'
+            );
+        }
+        $migration = Gadgets::loadMigration(
+            $userData['migration']['type']
+        );
+        $migration->setPasswordKey($this->key);
+
+        $table = $this->db->escapeIdentifier(
+            $this->tableConfig['table']['accounts']
+        );
+
+        if ($migration->validate($password, $passwordHash, $userData['migration'])) {
+            $this->db->beginTransaction();
+            // We now know the plaintext. Let's replace their password.
+            $this->db->update(
+                $table,
+                [
+                    'password' => Password::hash(
+                        $password->getString(),
+                        $this->key
+                    ),
+                    'migration' =>
+                        null
+                ],
+                [
+                    'userId' =>
+                        $userData['userid']
+                ]
+            );
+            return $this->db->commit();
+        }
+        return false;
     }
 
     /**
@@ -366,5 +429,13 @@ class Authentication
     {
         $this->tableConfig['field']['accounts']['username'] = $field;
         return $this;
+    }
+
+    /**
+     * Overloadable.
+     */
+    protected function registerMigrations()
+    {
+       Gadgets::registerMigration(WordPress::TYPE, new WordPress());
     }
 }

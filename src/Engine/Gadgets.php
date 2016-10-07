@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Airship\Engine;
+use Airship\Alerts\Security\SecurityAlert;
+use Airship\Engine\Security\Migration\MigrationInterface;
 
 /**
  * Class Gadgets
@@ -65,6 +67,40 @@ abstract class Gadgets
         }
         $state->cargoIterator = $cargoIterator;
         $state->cargo = $cargo;
+    }
+
+    /**
+     * Register a migration class
+     *
+     * @param string $key
+     * @param MigrationInterface $migration
+     * @return Gadgets
+     */
+    public static function registerMigration(string $key, MigrationInterface $migration)
+    {
+        $state = State::instance();
+        $registry = $state->migrations ?? [];
+        if (!isset($registry[$key])) {
+            $registry[$key] = $migration;
+            $state->migrations = $registry;
+        }
+    }
+
+    /**
+     * Find a migration class
+     *
+     * @param string $key
+     * @return MigrationInterface
+     * @throws SecurityAlert
+     */
+    public static function loadMigration(string $key): MigrationInterface
+    {
+        $state = State::instance();
+        $registry = $state->migrations ?? [];
+        if (!isset($registry[$key])) {
+            throw new SecurityAlert('Migration not found');
+        }
+        return $registry[$key];
     }
 
     /**
