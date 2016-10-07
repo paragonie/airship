@@ -1,3 +1,19 @@
+## Version 1.4.0 - Not Released Yet
+
+  * Cryptographically associate account recovery tokens with the row ID
+    of the user who requested the reset. This means that updating the
+    userid column of an existing recovery token will not allow you to
+    login as the arbitrary user.
+  * [#128](https://github.com/paragonie/airship/issues/128):
+    All CMS Airship cookies send a Same-Site header (strictly). This
+    adds another layer of resilience against CSRF attacks.
+  * [#147](https://github.com/paragonie/airship/issues/147):
+    Implemented a framework for importing data (i.e. password hashes)
+    into a CMS Airship project. This will allow users to log in with
+    their old password, when Airship only knows the old password hash.
+  * [#149](https://github.com/paragonie/airship/issues/149):
+    Implemented a View History feature for Blog Posts.
+
 ## Version 1.3.1 - 2016-09-12
 
   * [#134](https://github.com/paragonie/airship/issues/134):
