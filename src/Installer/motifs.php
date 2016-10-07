@@ -35,7 +35,7 @@ foreach (['Hull', 'Bridge'] as $cabinName) {
 
                 if (\strpos($motifStart, $cabinDir.'/Lens/motif') === false) {
                     $state->logger->alert(
-                        'Potential directory trasversal in Motif config.',
+                        'Potential directory traversal in Motif config.',
                         [
                             'cabin' => $active['name'],
                             'motif' => $motif,
@@ -48,7 +48,7 @@ foreach (['Hull', 'Bridge'] as $cabinName) {
                 }
                 if (\strpos($motifEnd, ROOT.'/Motifs') === false) {
                     $state->logger->alert(
-                        'Potential directory trasversal in Motif config.',
+                        'Potential directory traversal in Motif config.',
                         [
                             'cabin' => $active['name'],
                             'motif' => $motif,

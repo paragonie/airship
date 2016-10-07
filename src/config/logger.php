@@ -53,9 +53,9 @@ $log_setup_closure = function() {
             }
             break;
         default:
-            throw new \Exception('Invalid logger storage mechansim');
+            throw new \Exception('Invalid logger storage mechanism');
     }
-    
+
     /**
      * We inject any more dependencies here:
      */

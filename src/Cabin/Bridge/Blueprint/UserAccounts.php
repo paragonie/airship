@@ -712,8 +712,8 @@ class UserAccounts extends BlueprintGear
                 username = ?',
             $username
         );
-        
-        // We're expecing an integer, not a boolean
+
+        // We're expecting an integer, not a boolean
         if ($num === false) {
             throw new QueryError($this->db->errorInfo());
         }
