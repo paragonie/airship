@@ -24,6 +24,7 @@ use Airship\Engine\Security\{
     Util
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Cookie\Cookie;
 use ParagonIE\GPGMailer\GPGMailer;
 use ParagonIE\Halite\{
     Alerts\InvalidMessage,
@@ -658,9 +659,12 @@ class Account extends LandingGear
                 }
                 $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
                 
-                $this->airship_cookie->store(
+                Cookie::setcookie(
                     'airship_token',
-                    $this->airship_auth->createAuthToken($userID),
+                    Symmetric::encrypt(
+                        $this->airship_auth->createAuthToken($userID),
+                        $state->keyring['cookie.encrypt_key']
+                    ),
                     \time() + (
                         $state->universal['long-term-auth-expire']
                             ??

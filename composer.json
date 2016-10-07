@@ -50,6 +50,7 @@
     "guzzlehttp/guzzle": "^6",
     "league/commonmark": "^0.13",
     "paragonie/constant_time_encoding": "^2",
+    "paragonie/cookie": "^3",
     "paragonie/csp-builder": "^2",
     "paragonie/gpg-mailer": "^0|^1",
     "paragonie/halite": "^2",

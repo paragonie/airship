@@ -5,12 +5,16 @@ use Airship\Engine\{
     AutoPilot,
     State
 };
+use ParagonIE\Cookie\{
+    Cookie,
+    Session
+};
 /**
  * @global State $state
  */
 
 // Start the session
-if (!\session_id()) {
+if (!Session::id()) {
     if (!isset($state)) {
         $state = State::instance();
     }
@@ -33,14 +37,24 @@ if (!\session_id()) {
             }
         }
     }
-    /** @noinspection PhpMethodParametersCountMismatchInspection */
-    \session_start($session_config);
+
+    // Override the configuration directives:
+    foreach ($session_config as $key => $value) {
+        if (\is_bool($value)) {
+            $value = $value ? 'On' : 'Off';
+        }
+        \ini_set(
+            'session.' . $key,
+            (string) $value
+        );
+    }
+    Session::start(Cookie::SAME_SITE_RESTRICTION_STRICT);
 }
 
 if (empty($_SESSION['created_canary'])) {
     // We haven't seen this session ID before
     $_SESSION = [];
-    \session_regenerate_id(true);
+    Session::regenerate(true);
     // Create the canary
     $_SESSION['created_canary'] = (new \DateTime())
         ->format(\AIRSHIP_DATE_FORMAT);
@@ -52,7 +66,7 @@ if (empty($_SESSION['created_canary'])) {
     // Has an hour passed?
     if ($dt < $now) {
         // An hour has passed:
-        \session_regenerate_id(true);
+        Session::regenerate(true);
         // Create the canary
         $_SESSION['created_canary'] = $now->format(\AIRSHIP_DATE_FORMAT);
     }

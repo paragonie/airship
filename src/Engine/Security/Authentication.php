@@ -203,7 +203,13 @@ class Authentication
             'validator' => $this->tableConfig['fields']['longterm']['validator']
         ];
 
-        $decoded = Base64::decode($token);
+        try {
+            $decoded = Base64::decode($token);
+        } catch (\RangeException $ex) {
+            throw new LongTermAuthAlert(
+                \trk('errors.security.invalid_persistent_token')
+            );
+        }
         if ($decoded === false) {
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
@@ -308,7 +314,11 @@ class Authentication
      */
     public function rotateToken(string $token, int $userId = 0)
     {
-        $decoded = Base64::decode($token);
+        try {
+            $decoded = Base64::decode($token);
+        } catch (\RangeException $ex) {
+            return false;
+        }
         if ($decoded === false) {
             return false;
         } elseif (Binary::safeStrlen($decoded) !== self::LONG_TERM_AUTH_BYTES) {

@@ -15,7 +15,8 @@ use Airship\Engine\{
     Security\Permissions,
     State
 };
-use ParagonIE\Halite\Cookie;
+use ParagonIE\Cookie\Cookie;
+use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use Psr\Log\LogLevel;
 
 /**
@@ -31,11 +32,6 @@ trait Security
      * @var Authentication
      */
     public $airship_auth;
-
-    /**
-     * @var Cookie
-     */
-    public $airship_cookie;
 
     /**
      * @var Permissions
@@ -62,11 +58,7 @@ trait Security
             $state->keyring['auth.password_key'],
             $db
         );
-        
-        $this->airship_cookie = new Cookie(
-            $state->keyring['cookie.encrypt_key']
-        );
-        
+
         $this->airship_perms = Gears::get('Permissions', $db);
     }
 
@@ -139,9 +131,10 @@ trait Security
      */
     public function isLoggedIn()
     {
-        if (!($this->airship_cookie instanceof Cookie)) {
+        if (!($this->airship_auth instanceof Authentication)) {
             $this->tightenSecurityBolt();
         }
+        $state = State::instance();
         if (!empty($_SESSION['userid'])) {
             // We're logged in!
             if ($this instanceof Landing && $this->config('password-reset.logout')) {
@@ -152,7 +145,10 @@ trait Security
             // We're not logged in, but we have a long-term
             // authentication token, so we should do an automatic
             // login and, if successful, respond affirmatively.
-            $token = $this->airship_cookie->fetch('airship_token');
+            $token = Symmetric::decrypt(
+                $_COOKIE['airship_token'],
+                $state->keyring['cookie.encrypt_key']
+            );
             if (!empty($token)) {
                 return $this->doAutoLogin($token, 'userid', 'airship_token');
             }
@@ -173,11 +169,7 @@ trait Security
         string $uid_idx,
         string $token_idx
     ): bool {
-        if (
-            !($this->airship_cookie instanceof Cookie)
-                ||
-            !($this->airship_auth instanceof Authentication)
-        ) {
+        if (!($this->airship_auth instanceof Authentication)) {
             $this->tightenSecurityBolt();
         }
         $state = State::instance();
@@ -200,9 +192,12 @@ trait Security
             $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 
             // Rotate the authentication token:
-            $this->airship_cookie->store(
+            Cookie::setcookie(
                 $token_idx,
-                $this->airship_auth->rotateToken($token, $userId),
+                Symmetric::encrypt(
+                    $this->airship_auth->rotateToken($token, $userId),
+                    $state->keyring['cookie.encrypt_key']
+                ),
                 \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
                 '/',
                 '',
@@ -212,7 +207,7 @@ trait Security
             return true;
         } catch (LongTermAuthAlert $e) {
             // Let's wipe our long-term authentication cookies
-            $this->airship_cookie->store($token_idx, null);
+            Cookie::setcookie($token_idx, null);
 
             // Let's log this incident
             if (\property_exists($this, 'log')) {
@@ -244,11 +239,11 @@ trait Security
      */
     public function completeLogOut(): bool
     {
-        if (!($this->airship_cookie instanceof Cookie)) {
+        if (!($this->airship_auth instanceof Authentication)) {
             $this->tightenSecurityBolt();
         }
         $_SESSION = [];
-        $this->airship_cookie->store('airship_token', null);
+        Cookie::setcookie('airship_token', null);
         return \session_regenerate_id(true);
     }
 
