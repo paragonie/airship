@@ -600,6 +600,8 @@ class Blog extends LoggedInUsersOnly
         $this->lens(
             'blog/post_history',
             [
+                'active_link' =>
+                    'bridge-link-blog-posts',
                 'blog' =>
                     $blog,
                 'history' =>
