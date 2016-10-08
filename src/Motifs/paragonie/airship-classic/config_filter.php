@@ -63,6 +63,14 @@ $motifInputFilter = (new GeneralFilterContainer())
             ->addCallback($alphaCallback)
     )
     ->addFilter(
+        'motif_config.hull.footer.override',
+        new BoolFilter()
+    )
+    ->addFilter(
+        'motif_config.hull.footer.html',
+        new StringFilter()
+    )
+    ->addFilter(
         'motif_config.hull.blog-header.enabled',
         new BoolFilter()
     )

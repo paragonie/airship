@@ -26,13 +26,13 @@
         <div class="multiline_checkbox_container">
             <div class="multiline_checkbox">
                 <input
-                        id="motif-config-hull-background-enabled"
-                        type="checkbox"
-                        name="motif_config[hull][background][enabled]"
-                        value="1"
-                        {% if motif_config['hull']['background']['enabled'] %}
-                            checked="checked"
-                        {% endif %}
+                    id="motif-config-hull-background-enabled"
+                    type="checkbox"
+                    name="motif_config[hull][background][enabled]"
+                    value="1"
+                    {% if motif_config['hull']['background']['enabled'] %}
+                        checked="checked"
+                    {% endif %}
                 />
                 <label for="motif-config-hull-background-enabled">
                     {{ __("Show a background image in Hull?") }}
@@ -68,6 +68,7 @@
             "id": "motif-config-hull-background-shade",
             "alpha": true,
             "name": "motif_config[hull][background][shade]",
+            "preview": true,
             "value": {
                 "red": motif_config['hull']['background']['shade']['red'],
                 "green": motif_config['hull']['background']['shade']['green'],
@@ -123,6 +124,33 @@
                         "blue": motif_config['hull']['blog-header']['font']['blue']
                     }
                 } %}
+        </fieldset>
+
+        <fieldset class="hidden"></fieldset>
+
+        <fieldset>
+            <legend>
+                <input
+                    id="motif-config-hull-footer-override"
+                    type="checkbox"
+                    name="motif_config[hull][footer][override]"
+                    value="1"
+                    {% if motif_config['hull']['footer']['override'] %}
+                        checked="checked"
+                    {% endif %}
+                />
+                <label for="motif-config-hull-footer-override">
+                    {{ __("Custom Footer HTML") }}
+                </label>
+            </legend>
+            <textarea
+                class="full-textarea"
+                name="motif_config[hull][footer][html]"
+                title="Custom HTML to override the page footer."
+            >{% if motif_config['hull']['footer']['html'] %}{#
+                #}{{ motif_config['hull']['footer']['html']|e('html_attr') }}{#
+            #}{% endif %}</textarea>
+
         </fieldset>
     </div>
 </fieldset>

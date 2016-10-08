@@ -1,4 +1,5 @@
-<div id="{{ id }}" class="color-input-container">
+<div id="{{ id }}" class="color-input-container" data-preview="{{ preview ? '1' : '0' }}">
+    <div class="color-input-preview" id="{{ id }}-preview"></div>
     <label
         for="{{ id }}-red"
         title="{{ __("Red")|e('html_attr') }}"

@@ -79,6 +79,7 @@ $(document).ready(function() {
                     return;
                 }
             }
+            console.log(k);
         });
 
         $("#rich_text_" + name + "_text").show();

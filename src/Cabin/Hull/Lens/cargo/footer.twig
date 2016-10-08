@@ -1,8 +1,18 @@
 {% set bridge_config = cabin_config("Bridge") %}
-<p class="footer-hull">
-    <a href="{{ cabin_url('Bridge')|e('html_attr') }}">{{ __("Go to the Bridge") }}</a>
-    &bull;
-    {{ __("Powered by") }} <a href="https://airship.paragonie.com">CMS Airship</a>
-    &copy; 2016{% if now|date("Y") != 2016 %} - {{ now|date("Y") }}{% endif %}
-    <a href="https://paragonie.com">Paragon Initiative Enterprises</a>
-</p>
+{% if MOTIF['hull']['footer']['override'] and MOTIF['hull']['footer']['html'] %}
+    {{ MOTIF['hull']['footer']['html']|raw }}
+{% else %}
+    <p class="footer-hull">
+        <a href="{{ cabin_url('Bridge')|e('html_attr') }}">{{ __("Go to the Bridge") }}</a>
+            &bull;
+        {{ __("Powered by") }} <a href="https://airship.paragonie.com">CMS Airship</a>
+            &copy;
+        2016{#
+            #}{% if now|date("Y") != 2016 %}{#
+                #} - {{ now|date("Y") }}{#
+            #}{% endif %}
+        <a href="https://paragonie.com">{#
+            #}Paragon Initiative Enterprises{#
+        #}</a>
+    </p>
+{% endif %}

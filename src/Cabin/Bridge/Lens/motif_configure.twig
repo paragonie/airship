@@ -3,3 +3,10 @@
 {% block main %}
     {% include cargo("bridge_motifs_config") %}
 {% endblock %}
+{% block page_js %}
+    <script src="{{ "/js/wysihtml5/wysihtml.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/wysihtml-toolbar.min.js"|cachebust }}"></script>
+    <script src="{{ "/js/wysihtml5/parser_rules/advanced_and_extended.js"|cachebust }}"></script>
+    <script src="{{ "/js/colors.js"|cachebust }}"></script>
+    <script src="{{ "/static/Bridge/editor.js"|cachebust }}"></script>
+{% endblock %}
