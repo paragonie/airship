@@ -13,9 +13,7 @@
     },
     "default-groups": {{ universal["default-groups"]|default([2])|je(1) }},
     "debug": {{ universal.debug ? 'true' : 'false' }},
-    "email": {
-        "from": {{ universal["email"]["from"]|je }}
-    },
+    "email": {{ universal["email"]|je(1) }},
     "guest_groups": {{ universal["guest_groups"]|je(1) }},
     "ledger": {
     {% if universal.ledger.driver == "file" %}{#

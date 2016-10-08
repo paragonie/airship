@@ -315,19 +315,225 @@
         </div>
     </div>
 
+    {% set transports = ["Sendmail", "SMTP", "File"] %}
     <div class="table-row">
         <div class="table-min-width table-pad-right text-right table-cell">
-            <label for="email_from">
-                {{  __("Send Emails From") }}:
-            </label>
+            {{ __("Email Configuration") }}:
         </div>
         <div class="table-cell">
-            <input
-                id="email_from"
-                type="text"
-                name="universal[email][from]"
-                value="{{ universal['email']['from']|e('html_attr') }}"
-            />
+            <!-- Begin email configuration table -->
+            <div class="table full-width" id="email_config_table">
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_from">
+                            {{  __("Send Emails From") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_from"
+                            type="text"
+                            name="universal[email][from]"
+                            value="{{ universal['email']['from']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+                <div class="table-row">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_transport">
+                            {{  __("Transport") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <select id="email_transport" name="universal[email][transport]">
+                            {% for tr in transports %}
+                            <option value="{{ __(tr)|e('html_attr') }}" {% if universal['email']['transport'] == tr %} selected="selected"{% endif %}>
+                                {{ __(tr) }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {#
+                    -- Email options --
+                    Visibility is managed by the data-transport attribute
+                    and is processed in the admin_settings.js file.
+                #}
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["File"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_file_path">
+                            {{  __("File Path") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_file_path"
+                            class="full-width"
+                            type="text"
+                            name="universal[email][file][path]"
+                            placeholder="/home/user/mail"
+                            value="{{ universal['email']['file']['path']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["Sendmail"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_sendmail_parameters">
+                            {{  __("Sendmail Parameters") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_sendmail_parameters"
+                            class="full-width"
+                            type="text"
+                            name="universal[email][sendmail][parameters]"
+                            placeholder="-freturn_to_me@example.com"
+                            value="{{ universal['email']['sendmail']['parameters']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_name">
+                            {{  __("SMTP Name") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_smtp_name"
+                            type="text"
+                            name="universal[email][smtp][name]"
+                            placeholder="localhost.localdomain"
+                            value="{{ universal['email']['smtp']['name']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_host">
+                            {{  __("SMTP Host") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_smtp_host"
+                            type="text"
+                            name="universal[email][smtp][host]"
+                            placeholder="127.0.0.1"
+                            value="{{ universal['email']['smtp']['host']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_port">
+                            {{  __("SMTP Port") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                                id="email_smtp_port"
+                                type="text"
+                                name="universal[email][smtp][port]"
+                                placeholder="25"
+                                value="{{ universal['email']['smtp']['port']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_connection_class">
+                            {{  __("Connection Class") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <select
+                            id="email_smtp_connection_class"
+                            name="universal[email][smtp][connection_class]"
+                        >{% for key, label in {
+                            "smtp": "SMTP (No username or password needed)",
+                            "plain": "PLAIN Authentication",
+                            "login": "LOGIN Authentication",
+                            "cdammd5": "CRAM-MD5 Authentication"
+                        } %}
+                            <option
+                                {% if key == universal['email']['smtp']['connection_class'] %}
+                                    selected="selected"
+                                {% endif %}
+                                value="{{ key|e('html_attr') }}"
+                            >
+                                {{ __(label) }}
+                            </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_username">
+                            {{  __("SMTP Username") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_smtp_username"
+                            type="text"
+                            name="universal[email][smtp][username]"
+                            value="{{ universal['email']['smtp']['username']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_password">
+                            {{  __("SMTP Password") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <input
+                            id="email_smtp_password"
+                            type="text"
+                            name="universal[email][smtp][password]"
+                            value="{{ universal['email']['smtp']['password']|e('html_attr') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="table-row config-email-toggled" data-transport="{{ ["SMTP"]|json_encode|e('html_attr') }}">
+                    <div class="table-min-width table-pad-right text-right table-cell align-top">
+                        <label for="email_smtp_options">
+                            {{  __("SMTP Options") }}:
+                        </label>
+                    </div>
+                    <div class="table-cell full-width">
+                        <div class="multiline_checkbox">
+                            <input
+                                id="email_smtp_disable_tls"
+                                type="checkbox"
+                                name="universal[email][smtp][disable_tls]"
+                                value="1"
+                                {% if universal['email']['smtp']['disable_tls'] %}
+                                    checked="checked"
+                                {% endif %}
+                            />
+                            <label for="email_smtp_disable_tls">
+                                {{ __("Disable SSL/TLS for Sending Emails? (Degrades security, often needed for compatibility.)") }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End email configuration table -->
         </div>
     </div>
 

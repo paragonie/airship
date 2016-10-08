@@ -4,6 +4,45 @@ var ledger_defaults = {
 };
 var old_driver = "";
 
+/**
+ * Configuration toggle with a control element.
+ */
+var configToggle = {
+    "togglers": {},
+
+    "init": function (table, controller) {
+        configToggle.togglers[controller] = table;
+        configToggle.toggle(controller);
+        $(controller).on('change', configToggle.onChangeHandler);
+    },
+
+    "onChangeHandler": function (e) {
+        var _id = '#' + $(this).attr('id');
+        if (typeof configToggle.togglers[_id] === 'string') {
+            configToggle.toggle(_id);
+        }
+    },
+
+    "toggle": function(_id) {
+        var value = $(_id).val();
+        $(configToggle.togglers[_id]).find('.config-email-toggled').each(
+            function (index, element) {
+                var tr = $(this).data('transport');
+                console.log(tr);
+                if (!tr) {
+                    // Do nothing.
+                    return;
+                }
+                if (tr.indexOf(value) >= 0) {
+                    $(this).show('fast');
+                } else {
+                    $(this).hide('fast');
+                }
+            }
+        );
+    }
+};
+
 $(document).ready(function() {
     $("#admin_settings_accordion").accordion({
         heightStyle: "content"
@@ -28,4 +67,5 @@ $(document).ready(function() {
         // Update the reference to the current driver
         old_driver = new_driver;
     });
+    configToggle.init("#email_config_table", "#email_transport");
 });

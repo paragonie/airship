@@ -4,13 +4,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge;
 
 use Airship\Engine\Security\Filter\{
-    ArrayFilter,
-    BoolFilter,
-    FloatFilter,
-    InputFilterContainer,
-    IntArrayFilter,
-    IntFilter,
-    StringFilter
+    ArrayFilter, BoolFilter, FloatFilter, InputFilterContainer, IntArrayFilter, IntFilter, StringFilter, WhiteList
 };
 
 /**
@@ -37,7 +31,22 @@ class AirshipFilter extends InputFilterContainer
 
             ->addFilter('universal.debug', new BoolFilter())
 
+            ->addFilter('universal.email.file.path', new StringFilter())
             ->addFilter('universal.email.from', new StringFilter())
+            ->addFilter('universal.email.sendmail.parameters', new StringFilter())
+            ->addFilter('universal.email.smtp.connection_class',
+                (new WhiteList('smtp', 'plain', 'login', 'crammd5'))
+                    ->setDefault('smtp')
+            )
+            ->addFilter('universal.email.smtp.disable_ssl', new BoolFilter())
+            ->addFilter('universal.email.smtp.name', new StringFilter())
+            ->addFilter('universal.email.smtp.host', new StringFilter())
+            ->addFilter('universal.email.smtp.username', new StringFilter())
+            ->addFilter('universal.email.smtp.password', new StringFilter())
+            ->addFilter('universal.email.transport',
+                (new WhiteList('File', 'Sendmail', 'SMTP'))
+                    ->setDefault('Sendmail')
+            )
 
             ->addFilter('universal.guest_groups', new IntArrayFilter())
 
@@ -86,7 +95,10 @@ class AirshipFilter extends InputFilterContainer
                         }
                     )
             )
-            ->addFilter('universal.rate-limiting.log-after', (new IntFilter())->setDefault(3))
+            ->addFilter('universal.rate-limiting.log-after',
+                (new IntFilter())
+                    ->setDefault(3)
+            )
             ->addFilter('universal.rate-limiting.log-public-key',
                 (new StringFilter())
                     ->addCallback(function ($var): string {
@@ -97,7 +109,10 @@ class AirshipFilter extends InputFilterContainer
                         return '';
                     })
             )
-            ->addFilter('universal.rate-limiting.max-delay', (new IntFilter())->setDefault(30))
+            ->addFilter('universal.rate-limiting.max-delay',
+                (new IntFilter())
+                    ->setDefault(30)
+            )
 
             ->addFilter('universal.session_config.cookie_domain', new StringFilter())
             ->addFilter('universal.tor-only', new BoolFilter())
