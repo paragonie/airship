@@ -78,6 +78,8 @@
             ["Author", "users"],
         "author/photos/{id}":
             ["Author", "photos"],
+        "author/delete/{id}":
+            ["Author", "delete"],
         "author/edit/{id}":
             ["Author", "edit"],
         "author/new":
@@ -112,6 +114,8 @@
         "blog/post{_page}":
             ["Blog", "listPosts"],
 
+        "blog/series/delete/{id}":
+            ["Blog", "deleteSeries"],
         "blog/series/edit/{id}":
             ["Blog", "editSeries"],
         "blog/series/new":
@@ -119,6 +123,8 @@
         "blog/series{_page}":
             ["Blog", "listSeries"],
 
+        "blog/tag/delete/{id}":
+            ["Blog", "deleteTag"],
         "blog/tag/edit/{id}":
             ["Blog", "editTag"],
         "blog/tag{_page}":
@@ -139,6 +145,8 @@
         "cabins":
             ["Cabins", "index"],
 
+        "crew/groups/delete/{id}":
+            ["Crew", "deleteGroup"],
         "crew/groups/edit/{id}":
             ["Crew", "editGroup"],
         "crew/groups/new":
@@ -153,8 +161,12 @@
             ["Permissions", "cabinSubMenu"],
         "crew/permissions":
             ["Permissions", "index"],
+        "crew/users/delete/{id}":
+            ["Crew", "deleteUser"],
         "crew/users/edit/{id}":
             ["Crew", "editUser"],
+        "crew/users/new":
+            ["Crew", "newUser"],
         "crew/users":
             ["Crew", "users"],
         "crew":
