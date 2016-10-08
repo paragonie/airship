@@ -136,7 +136,7 @@
                     </label><br />
                     {% if key[-4:] == '-src' %}
                         <input
-                            id="csp_{{ key|e('html_attr') }}_self"
+                            id="csp_{{ key|e('html_attr') }}_data"
                             type="checkbox"
                             name="content_security_policy[{{ key|e('html_attr') }}][data]"
                             value="1"
@@ -144,7 +144,7 @@
                                 checked="checked"
                             {% endif %}
                         />
-                        <label for="csp_{{ key|e('html_attr') }}_self">
+                        <label for="csp_{{ key|e('html_attr') }}_data">
                             {{ __("Allow data URIs?") }}
                         </label>
                     {% endif %}
