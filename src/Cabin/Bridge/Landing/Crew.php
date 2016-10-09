@@ -4,6 +4,8 @@ namespace Airship\Cabin\Bridge\Landing;
 
 use Airship\Cabin\Bridge\Blueprint\UserAccounts;
 use Airship\Cabin\Bridge\Filter\Crew\{
+    DeleteGroupFilter,
+    DeleteUserFilter,
     EditGroupFilter,
     EditUserFilter,
     NewGroupFilter
@@ -72,6 +74,61 @@ class Crew extends AdminOnly
     }
 
     /**
+     * @param string $groupId
+     * @route crew/groups/edit/{id}
+     */
+    public function deleteGroup(string $groupId = '')
+    {
+        $groupId = (int) $groupId;
+        $group = $this->account->getGroup($groupId);
+        $post = $this->post(new DeleteGroupFilter());
+        if ($post) {
+            if ($this->account->deleteGroup($groupId, $post['move_children'] ?? 0)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/groups'
+                );
+            }
+        }
+
+        $this->lens('crew/group_delete', [
+            'active_link' =>
+                'bridge-link-admin-crew-groups',
+            'group' =>
+                $group,
+            'allowed_parents' =>
+                $this->account->getGroupTree(0, 'children', [$groupId])
+        ]);
+    }
+
+    /**
+     * @param string $userId
+     * @route crew/users/edit/{id}
+     */
+    public function deleteUser(string $userId = '')
+    {
+        $userId = (int) $userId;
+        $user = $this->account->getUserAccount($userId, true);
+        $post = $this->post(new DeleteUserFilter());
+        if ($post) {
+            if ($this->account->deleteUser($userId)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/users'
+                );
+            }
+        }
+
+        $this->lens(
+            'crew/user_delete',
+            [
+                'active_link' =>
+                    'bridge-link-admin-crew-users',
+                'user' =>
+                    $user
+            ]
+        );
+    }
+
+    /**
      * Edit a group's information
      *
      * @route crew/groups/edit/{id}
@@ -121,14 +178,17 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens('crew/user_edit', [
-            'active_link' =>
-                'bridge-link-admin-crew-users',
-            'user' =>
-                $user,
-            'groups' =>
-                $this->account->getGroupTree()
-        ]);
+        $this->lens(
+            'crew/user_edit',
+            [
+                'active_link' =>
+                    'bridge-link-admin-crew-users',
+                'user' =>
+                    $user,
+                'groups' =>
+                    $this->account->getGroupTree()
+            ]
+        );
     }
 
     /**

@@ -8,8 +8,10 @@
         title="{{ __("CMS Airship - Powered by Paragon Initiative Enterprises")|e('html_attr') }}"
     /></a>
     <div id="bridge_greeting_right">
-    {% if userid() %}
+    {% if showmenu and userid() > 0 %}
         {{ __("Hello, %s.", "default", user_display_name()) }}
+    {% elseif cabin_custom_config()['board']['enabled'] %}
+        {{ __("Please create an account or log in.") }}
     {% else %}
         {{ __("Please log in.") }}
     {% endif %}

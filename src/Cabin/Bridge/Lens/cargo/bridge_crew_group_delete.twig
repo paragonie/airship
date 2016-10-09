@@ -1,0 +1,33 @@
+{% import "macros/groups.twig" as grpmac %}
+<h2 class="bottom-pad">{{ __("Confirm Group Deletion") }}</h2>
+<div id="bridge_crew_users_delete">
+    <p>
+        {{ __("Are you sure you want to delete %s? There is no undo.", "default", user_display_name(user.userid)) }}
+    </p>
+    <form method="post">{{ form_token() }}
+
+        <fieldset>
+            <legend>{{ __("Move inherited groups to another group?") }}</legend>
+
+            <select title="{{ __("New Parent")|e('html_attr') }}" name="move_children">
+                <option value=""> -- {{ __("None") }} -- </option>
+                {% for g in allowed_parents %}
+                    {{ grpmac.selectBox(g) }}
+                {% endfor %}
+            </select>
+        </fieldset>
+
+        <br />
+
+        <button type="submit" name="confirm" value="1" class="pure-button pure-button-primary pure-button-danger">
+            {{ __("Delete Group") }}
+        </button>
+
+        <a
+            class="pure-button pure-button-tertiary"
+            href="{{ cabin_url() }}crew/groups"
+        >
+            {{ __("Cancel") }}
+        </a>
+    </form>
+</div>

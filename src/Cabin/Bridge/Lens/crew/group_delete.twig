@@ -1,0 +1,9 @@
+{% extends base_template() %}
+
+{% block main %}
+    {% include cargo("bridge_crew_group_delete") ignore missing %}
+{% endblock %}
+
+{% block page_js %}
+    <script src="{{ "/static/Bridge/crew_groups.js"|cachebust }}"></script>
+{% endblock %}

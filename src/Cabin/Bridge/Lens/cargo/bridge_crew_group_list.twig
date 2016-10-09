@@ -2,7 +2,7 @@
 
 <h2>{{ __("Group Heirarchy") }}</h2>
 
-<ul>
+<ul id="group-tree">
     {% for grp in groups %}
         {{ grpmac.groupTree(grp) }}
     {% endfor %}

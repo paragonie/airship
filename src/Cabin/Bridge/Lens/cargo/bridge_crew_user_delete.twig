@@ -1,0 +1,18 @@
+<h2 class="bottom-pad">{{ __("Confirm User Deletion") }}</h2>
+<div id="bridge_crew_users_delete">
+    <p>
+        {{ __("Are you sure you want to delete %s? There is no undo.", "default", user_display_name(user.userid)) }}
+    </p>
+    <form method="post">{{ form_token() }}
+        <button type="submit" name="confirm" value="1" class="pure-button pure-button-primary pure-button-danger">
+            {{ __("Delete User Account") }}
+        </button>
+
+        <a
+            class="pure-button pure-button-tertiary"
+            href="{{ cabin_url() }}crew/users"
+        >
+            {{ __("Cancel") }}
+        </a>
+    </form>
+</div>
