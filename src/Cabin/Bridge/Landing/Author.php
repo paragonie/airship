@@ -61,7 +61,7 @@ class Author extends LoggedInUsersOnly
     }
 
     /**
-     * Create a new author profile
+     * Update an existing author's profile
      *
      * @route author/edit/{id}
      * @param string $authorId
