@@ -201,6 +201,75 @@ class UserAccounts extends BlueprintGear
     }
 
     /**
+     * @param int $groupId
+     * @param int $newParent
+     * @return bool
+     */
+    public function deleteGroup(int $groupId, int $newParent = 0): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_groups',
+            [
+                'inherits' => $newParent > 0
+                    ? $newParent
+                    : null
+            ],
+            [
+                'inherits' => $groupId
+            ]
+        );
+
+        $this->deleteGroupCascade($groupId);
+
+        $this->db->delete(
+            'airship_groups',
+            [
+                'groupid' => $groupId
+            ]
+        );
+
+        // And finally...
+        return $this->db->commit();
+    }
+
+    /**
+     * @param int $userId
+     * @return bool
+     */
+    public function deleteUser(int $userId): bool
+    {
+        $this->db->beginTransaction();
+
+        // To avoid deleting files unnecessarily...
+        $this->db->update(
+            'airship_files',
+            [
+                'uploaded_by' =>
+                    null
+            ],
+            [
+                'uploaded_by' =>
+                    $userId
+            ]
+        );
+
+        // Cascade-delete all foreign keys:
+        $this->deleteUserCascade($userId);
+
+        // Actually delete the user account:
+        $this->db->delete(
+            'airship_users',
+            [
+                'userid' => $userId
+            ]
+        );
+
+        // And finally...
+        return $this->db->commit();
+    }
+
+    /**
      * @param string $selector
      * @return bool
      */
@@ -926,6 +995,51 @@ class UserAccounts extends BlueprintGear
         }
         return $this->db->commit();
     }
+
+    /**
+     * Overloadable in gadgets. Deletes all entries that depend
+     * on the user table.
+     *
+     * @param int $userId
+     */
+    protected function deleteUserCascade(int $userId)
+    {
+        $this->db->delete(
+            'airship_auth_tokens',
+            ['userid' => $userId]
+        );
+        $this->db->delete(
+            'airship_user_preferences',
+            ['userid' => $userId]
+        );
+        $this->db->delete(
+            'airship_user_recovery',
+            ['userid' => $userId]
+        );
+        $this->db->delete(
+            'bridge_announcements_dismiss',
+            ['userid' => $userId]
+        );
+    }
+
+    /**
+     * Overloadable in gadgets. Deletes all entries that depend
+     * on the group table.
+     *
+     * @param int $groupId
+     */
+    protected function deleteGroupCascade(int $groupId)
+    {
+        $this->db->delete(
+            'airship_users_groups',
+            ['groupid' => $groupId]
+        );
+        $this->db->delete(
+            'airship_perm_rules',
+            ['groupid' => $groupId]
+        );
+    }
+
 
     /**
      * Generate a unique random public ID for this user, which is distinct from the username they use to log in.

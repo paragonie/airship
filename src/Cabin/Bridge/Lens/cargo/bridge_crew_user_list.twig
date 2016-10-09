@@ -2,7 +2,7 @@
 <div id="bridge_crew_users_list">
     <div class="table full-width">
         <div class="table-row table-header">
-            <div class="table-cell table-2-btn-left">
+            <div class="table-cell table-3-btn-left">
                 {{ __("Actions") }}
             </div>
             <div class="table-cell">
@@ -23,7 +23,7 @@
         </div>
         {% for u in users %}
             <div class="table-row">
-                <div class="table-cell table-2-btn-left">
+                <div class="table-cell table-3-btn-left">
                     <a{#
                         #} class="pure-button pure-button-secondary"{#
                         #} href="{{ cabin_url() }}crew/users/edit/{{ u.userid|e('html_attr') }}"{#
@@ -37,6 +37,13 @@
                         #} title="{{ __("User's Files")|e('html_attr') }}"{#
                     #}>
                         <i class="fa fa-file-photo-o"></i>
+                    </a>{#
+                    #}<a{#
+                        #} class="pure-button pure-button-secondary"{#
+                        #} href="{{ cabin_url() }}crew/users/delete/{{ u.userid|e('html_attr') }}"{#
+                        #} title="{{ __("Delete This User")|e('html_attr') }}"{#
+                    #}>
+                        <i class="fa fa-trash-o"></i>
                     </a>
                 </div>
                 <div class="table-cell monospace">
