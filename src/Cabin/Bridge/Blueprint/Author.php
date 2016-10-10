@@ -118,6 +118,31 @@ class Author extends BlueprintGear
     }
 
     /**
+     * Delete an author profile
+     *
+     * @param int $authorId
+     * @param int $reassignTo
+     * @return bool
+     */
+    public function deleteAuthor(int $authorId, int $reassignTo = 0): bool
+    {
+        $this->db->beginTransaction();
+
+        $this->reassignAuthorship($authorId, $reassignTo);
+        $this->deleteAuthorCascade($authorId);
+
+        $this->db->delete(
+            'hull_blog_authors',
+            [
+                'authorid' => $authorId
+            ]
+        );
+
+        // And finally...
+        return $this->db->commit();
+    }
+
+    /**
      * Get all authors, sorting by a particular field
      *
      * @param string $sortby
@@ -740,6 +765,59 @@ class Author extends BlueprintGear
             'SELECT in_charge FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
             $authorId,
             $userId
+        );
+    }
+
+    /**
+     * Overloadable. Delete all entries that depend on the authors table in any
+     * capacity.
+     *
+     * @param int $authorId
+     */
+    protected function deleteAuthorCascade(int $authorId)
+    {
+        $this->db->delete(
+            'hull_blog_author_photos',
+            ['author' => $authorId]
+        );
+
+        $this->db->delete(
+            'hull_blog_author_owners',
+            ['authorid' => $authorId]
+        );
+    }
+
+    /**
+     * Overloadable. Reassign all entries that depend on the authors table in
+     * any capacity to a differnet author (or NULL).
+     *
+     * @param int $oldAuthorId
+     * @param int $newAuthorId = 0
+     */
+    protected function reassignAuthorship(int $oldAuthorId, int $newAuthorId = 0)
+    {
+        if ($newAuthorId < 1) {
+            $newAuthorId = null;
+        }
+        $this->db->update(
+            'airship_files',
+            ['author' => $newAuthorId],
+            ['author' => $oldAuthorId]
+        );
+        $this->db->update(
+            'hull_blog_comments',
+            ['author' => $newAuthorId],
+            ['author' => $oldAuthorId]
+        );
+        $this->db->update(
+            'hull_blog_posts',
+            ['author' => $newAuthorId],
+            ['author' => $oldAuthorId]
+        );
+        $this->db->update(
+            'hull_blog_series',
+            ['author' => $newAuthorId],
+            ['author' => $oldAuthorId]
         );
     }
 }

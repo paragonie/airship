@@ -1,0 +1,34 @@
+<h2 class="bottom-pad">{{ __("Confirm Author Deletion") }}</h2>
+<div id="bridge_authors_delete">
+    <p>
+        {{ __("Are you sure you want to delete %s? There is no undo.", "default", author.name) }}
+    </p>
+    <form method="post">{{ form_token() }}
+
+        <fieldset>
+            <legend>{{ __("Reassign all contributions to another author?") }}</legend>
+
+            <select title="{{ __("New Parent")|e('html_attr') }}" name="reassign">
+                <option value=""> -- {{ __("None") }} -- </option>
+                {% for auth in authorsAvailable %}
+                    {% if auth.authorid != author.authorid %}
+                    <option value="{{ auth.authorid }}">{{ auth.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </fieldset>
+
+        <br />
+
+        <button type="submit" name="confirm" value="1" class="pure-button pure-button-primary pure-button-danger">
+            {{ __("Delete Author") }}
+        </button>
+
+        <a
+            class="pure-button pure-button-tertiary"
+            href="{{ cabin_url() }}crew/groups"
+        >
+            {{ __("Cancel") }}
+        </a>
+    </form>
+</div>
