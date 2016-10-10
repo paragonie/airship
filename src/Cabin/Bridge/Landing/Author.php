@@ -7,6 +7,7 @@ use Airship\Cabin\Bridge\{
     Exceptions\UserFeedbackException
 };
 use Airship\Cabin\Bridge\Filter\Author\{
+    DeleteAuthorFilter,
     AuthorFilter,
     UsersFilter
 };
@@ -58,6 +59,55 @@ class Author extends LoggedInUsersOnly
         }
 
         $this->lens('author/new');
+    }
+
+
+    /**
+     * Create a new author profile
+     *
+     * @route author/edit/{id}
+     * @param string $authorId
+     */
+    public function delete(string $authorId = '')
+    {
+        $authorId = (int) $authorId;
+
+        if (!$this->isSuperUser()) {
+            $authorsForUser = $this->author->getAuthorIdsForUser(
+                $this->getActiveUserId()
+            );
+            // Check
+            if (!\in_array($authorId, $authorsForUser)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
+            }
+        }
+
+        $post = $this->post(new DeleteAuthorFilter());
+        if (!empty($post)) {
+            if ($this->author->deleteAuthor($authorId, $post['reassign'] ?? 0)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
+            }
+        }
+
+        if ($this->isSuperUser()) {
+            $authors = $this->author->getAll();
+        } else {
+            $authors = $this->author->getForUser($this->getActiveUserId());
+        }
+
+        $this->lens(
+            'author/delete',
+            [
+                'author' =>
+                    $this->author->getById($authorId),
+                'authorsAvailable' =>
+                    $authors
+            ]
+        );
     }
 
     /**

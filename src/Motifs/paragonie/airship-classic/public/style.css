@@ -2245,3 +2245,6 @@ a.bridge-left-active:hover .bridge-icon {
     border-top-style: solid;
     border-top-color: #fff;
 }
+.icon-1px-right {
+    margin-right: 1px;
+}
