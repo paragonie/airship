@@ -1,0 +1,9 @@
+{% extends base_template() %}
+{% import "macros/blog_categories.twig" as bcatmac %}
+
+{% block main %}
+    {% include cargo("bridge_blog_categories_delete") ignore missing %}
+{% endblock %}
+{% block page_js %}
+    <script src="{{ "/static/Bridge/blog_categories.js"|cachebust }}"></script>
+{% endblock %}

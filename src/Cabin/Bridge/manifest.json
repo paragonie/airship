@@ -87,6 +87,8 @@
         "author{_page}":
             ["Author", "index"],
 
+        "blog/category/delete/{slug}":
+            ["Blog", "deleteCategory"],
         "blog/category/edit/{slug}":
             ["Blog", "editCategory"],
         "blog/category/new":
