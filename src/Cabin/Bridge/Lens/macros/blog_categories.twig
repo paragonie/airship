@@ -1,4 +1,4 @@
-{% macro frontCatTree(catdata, parentid, this_cargo, can_edit = false, depth = 0) %}
+{% macro frontCatTree(catdata, parentid, this_cargo, can_edit = false, can_delete = false, depth = 0) %}
     <li>{% include this_cargo %}{#
     #}{% if catdata.children %}
     <ul class="blogcat_child">
@@ -9,6 +9,7 @@
                     catpdata.groupid,
                     this_cargo,
                     can_edit,
+                    can_delete,
                     depth + 1
                 )
             }}
@@ -25,17 +26,17 @@
     #}{% endif %}
     {% if not selected or catdata.categoryid != selected %}
         <option
-                value="{{ catdata.categoryid|e('html_attr') }}"
-                data-ancestors="{{ catdata.ancestors|json_encode }}"
-                data-fullpath="{{ fullpath|e('html_attr') }}"
-                class="treeselect {#
+            value="{{ catdata.categoryid|e('html_attr') }}"
+            data-ancestors="{{ catdata.ancestors|json_encode }}"
+            data-fullpath="{{ fullpath|e('html_attr') }}"
+            class="treeselect {#
             #}branch_{{ depth|default(0)|e('html_attr') }}{#
             #}{% if catdata.children %}{#
                 #} treeselect_parent{#
             #}{% endif %}"
-                {% if catdata.categoryid == selected %}
-                    selected="selected"
-                {% endif %}
+            {% if catdata.categoryid == selected %}
+                selected="selected"
+            {% endif %}
         >
             {{ catdata.name }}
         </option>

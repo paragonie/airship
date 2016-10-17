@@ -5,6 +5,7 @@ namespace Airship\Cabin\Bridge\Landing;
 use Airship\Cabin\Bridge\Blueprint as BP;
 use Airship\Cabin\Bridge\Filter\Blog\{
     CommentFilter,
+    DeleteCategoryFilter,
     DeletePostFilter,
     EditCategoryFilter,
     EditPostFilter,
@@ -61,6 +62,40 @@ class Blog extends LoggedInUsersOnly
     }
 
     /**
+     * Delete a category
+     *
+     * @route blog/category/delete/{id}
+     * @param string $id
+     */
+    public function deleteCategory(string $id = '')
+    {
+        $id = (int) $id;
+
+        $post = $this->post(new DeleteCategoryFilter());
+        if ($post) {
+            if ($this->processDeleteCategory($id, $post)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/blog/category'
+                );
+            }
+        }
+        $category = $this->blog->getCategoryInfo($id);
+
+        $this->lens(
+            'blog/category_delete',
+            [
+                'active_link' => 'bridge-link-blog-category',
+                'category' => $category,
+                'categories' => $this->blog->getCategoryTree(),
+                'title' => \__('Edit Category "%s"', 'default',
+                    Util::noHTML($category['name'])
+                )
+            ]
+        );
+
+    }
+
+    /**
      * Delete a blog post
      *
      * @route blog/post/delete/{id}
@@ -69,6 +104,7 @@ class Blog extends LoggedInUsersOnly
     public function deletePost(string $id)
     {
         $id = (int) $id;
+
         // Load Data
         $blogPost = $this->blog->getBlogPostById($id);
         $blogPost['tags'] = $this->blog->getTagsForPost($id);
@@ -784,6 +820,27 @@ class Blog extends LoggedInUsersOnly
     }
 
     // POST data processing methods below:
+
+    /**
+     * Delete a blog post category
+     *
+     * @param int $categoryId
+     * @param array $post
+     * @return bool
+     */
+    protected function processDeleteCategory(int $categoryId, array $post = []): bool
+    {
+        if (!$this->isSuperUser()) {
+            if (!$this->can('delete')) {
+                return false;
+            }
+        }
+
+        return $this->blog->deleteCategory(
+            $categoryId,
+            (int) ($post['moveChildrenTo'] ?? 0)
+        );
+    }
 
     /**
      * Delete a blog post
