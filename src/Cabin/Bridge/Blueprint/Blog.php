@@ -301,6 +301,30 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Delete this comment and all of its revision history.
+     *
+     * @param int $commentId
+     * @return bool
+     */
+    public function deleteComment(int $commentId): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'hull_blog_comment_versions',
+            [
+                'comment' => $commentId
+            ]
+        );
+        $this->db->delete(
+            'hull_blog_comments',
+            [
+                'commentid' => $commentId
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Delete a blog post
      *
      * @param array $formData
@@ -376,31 +400,6 @@ class Blog extends BlueprintGear
             return false;
         }
         \Airship\clear_cache();
-        return $this->db->commit();
-    }
-
-
-    /**
-     * Delete this comment and all of its revision history.
-     *
-     * @param int $commentId
-     * @return bool
-     */
-    public function deleteComment(int $commentId): bool
-    {
-        $this->db->beginTransaction();
-        $this->db->delete(
-            'hull_blog_comment_versions',
-            [
-                'comment' => $commentId
-            ]
-        );
-        $this->db->delete(
-            'hull_blog_comments',
-            [
-                'commentid' => $commentId
-            ]
-        );
         return $this->db->commit();
     }
 
