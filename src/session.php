@@ -32,7 +32,7 @@ if (!Session::id()) {
     if (isset($state->universal['session_config'])) {
         $session_config = $state->universal['session_config'] + $session_config;
         if (isset($session_config['cookie_domain'])) {
-            if ($session_config['cookie_domain'] === '*' || $session_config['cookie_domain'] === '') {
+            if ($session_config['cookie_domain'] === '*' || \trim($session_config['cookie_domain']) === '') {
                 unset($session_config['cookie_domain']);
             }
         }
