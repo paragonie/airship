@@ -261,6 +261,70 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Delete a category and move all related content
+     *
+     * @param int $categoryID
+     * @param int $moveChildrenTo
+     * @return bool
+     */
+    public function deleteCategory(int $categoryID, int $moveChildrenTo = 0): bool
+    {
+        if ($moveChildrenTo <= 0) {
+            $moveChildrenTo = null;
+        }
+        $this->db->beginTransaction();
+        try {
+            $this->db->update(
+                'hull_blog_posts',
+                [
+                    'category' =>
+                        $moveChildrenTo
+                ],
+                [
+                    'category' =>
+                        $categoryID
+                ]
+            );
+            $this->db->delete(
+                'hull_blog_categories',
+                [
+                    'categoryid' =>
+                        $categoryID
+                ]
+            );
+        } catch (DBException $ex) {
+            $this->db->rollBack();
+            return false;
+        }
+        \Airship\clear_cache();
+        return $this->db->commit();
+    }
+
+    /**
+     * Delete this comment and all of its revision history.
+     *
+     * @param int $commentId
+     * @return bool
+     */
+    public function deleteComment(int $commentId): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->delete(
+            'hull_blog_comment_versions',
+            [
+                'comment' => $commentId
+            ]
+        );
+        $this->db->delete(
+            'hull_blog_comments',
+            [
+                'commentid' => $commentId
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
      * Delete a blog post
      *
      * @param array $formData
