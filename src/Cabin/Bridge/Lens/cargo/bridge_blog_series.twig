@@ -22,13 +22,19 @@
     </div>
     {% for ser in series %}
         <div class="table-row">
-            <div class="table-cell table-1-btn-left">
+            <div class="table-cell table-min-width">
                 <a
                     class="pure-button pure-button-primary"
                     href="{{ cabin_url() }}blog/series/edit/{{ ser.seriesid|e('html_attr') }}"
-                >{#
-                    #}<i class="fa fa-pencil"></i>{#
-                #}</a>
+                >
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a
+                    class="pure-button pure-button-secondary"
+                    href="{{ cabin_url() }}blog/series/delete/{{ ser.seriesid|e('html_attr') }}"
+                >
+                    <i class="fa fa-trash-o"></i>
+                </a>
             </div>
             <div class="table-cell">
                 {{ ser.name }}
