@@ -15,7 +15,10 @@ use Airship\Engine\{
     Security\Permissions,
     State
 };
-use ParagonIE\Cookie\Cookie;
+use ParagonIE\Cookie\{
+    Cookie,
+    Session
+};
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use Psr\Log\LogLevel;
 
@@ -108,9 +111,10 @@ trait Security
     /**
      * Are we currently logged in as an admin?
      * @param integer $user_id (defaults to current user)
-     * @return boolean
+     * @return bool
      */
-    public function isSuperUser(int $user_id = 0) {
+    public function isSuperUser(int $user_id = 0): bool
+    {
         if (!($this->airship_perms instanceof Permissions)) {
             $this->tightenSecurityBolt();
         }
@@ -127,9 +131,9 @@ trait Security
     /**
      * Are we logged in to a user account?
      * 
-     * @return boolean
+     * @return bool
      */
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         if (!($this->airship_auth instanceof Authentication)) {
             $this->tightenSecurityBolt();
@@ -163,6 +167,8 @@ trait Security
      * @param string $uid_idx
      * @param string $token_idx
      * @return bool
+     * @throws LongTermAuthAlert (only in debug mode)
+     * @throws \TypeError
      */
     protected function doAutoLogin(
         string $token,
@@ -180,14 +186,21 @@ trait Security
             }
 
             // Regenerate session ID:
-            \session_regenerate_id(true);
+            Session::regenerate(true);
 
             // Set session variable
             $_SESSION[$uid_idx] = $userId;
 
             $autoPilot = Gears::getName('AutoPilot');
-            if (IDE_HACKS) {
-                $autoPilot = new AutoPilot();
+            if (!($autoPilot instanceof AutoPilot)) {
+                throw new \TypeError(
+                    \sprintf(
+                        'Expected AutoPilot, got %s',
+                        \is_object($autoPilot)
+                            ? \get_class($autoPilot)
+                            : \gettype($autoPilot)
+                    )
+                );
             }
             $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 
@@ -206,6 +219,7 @@ trait Security
             );
             return true;
         } catch (LongTermAuthAlert $e) {
+            $state = State::instance();
             // Let's wipe our long-term authentication cookies
             Cookie::setcookie(
                 $token_idx,
@@ -227,7 +241,6 @@ trait Security
                     ]
                 );
             } else {
-                $state = State::instance();
                 $state->logger->log(
                     LogLevel::CRITICAL,
                     $e->getMessage(),
@@ -235,6 +248,11 @@ trait Security
                         'exception' => \Airship\throwableToArray($e)
                     ]
                 );
+            }
+
+            // In debug mode, re-throw the exception:
+            if ($state->universal['debug']) {
+                throw $e;
             }
         }
         return false;
