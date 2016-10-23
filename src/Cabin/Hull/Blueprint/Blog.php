@@ -54,6 +54,9 @@ class Blog extends BlueprintGear
                 $replyTo = null;
             }
         }
+        if ($replyTo === 0) {
+            $replyTo = null;
+        }
 
         if (!empty($post['author'])) {
             $authors = $this->getAuthorsForUser(
@@ -680,7 +683,7 @@ class Blog extends BlueprintGear
               hull_blog_comments
             WHERE
                 blogpost = ?
-                AND replyto IS NULL',
+                AND (replyto IS NULL OR replyto = 0)',
             $blogPostId
         );
         foreach ($comments as $com) {
