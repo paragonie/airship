@@ -404,6 +404,41 @@ class Blog extends BlueprintGear
     }
 
     /**
+     * Permanently remove a blog post series.
+     *
+     * @param int $seriesId
+     * @return bool
+     */
+    public function deleteSeries(int $seriesId): bool
+    {
+        $this->db->beginTransaction();
+
+        $this->db->delete(
+            'hull_blog_series_items',
+            [
+                'parent' =>
+                    $seriesId
+            ]
+        );
+        $this->db->delete(
+            'hull_blog_series_items',
+            [
+                'series' =>
+                    $seriesId
+            ]
+        );
+        $this->db->delete(
+            'hull_blog_series',
+            [
+                'seriesid' =>
+                    $seriesId
+            ]
+        );
+        \Airship\clear_cache();
+        return $this->db->commit();
+    }
+
+    /**
      * Rename a tag
      *
      * @param int $tagId

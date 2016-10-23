@@ -4,15 +4,14 @@ namespace Airship\Cabin\Bridge\Filter\Blog;
 
 use Airship\Engine\Security\Filter\{
     BoolFilter,
-    InputFilterContainer,
-    IntFilter
+    InputFilterContainer
 };
 
 /**
- * Class DeleteCategoryFilter
+ * Class DeleteSeriesFilter
  * @package Airship\Cabin\Bridge\Filter\Account
  */
-class DeleteCategoryFilter extends InputFilterContainer
+class DeleteSeriesFilter extends InputFilterContainer
 {
     /**
      * DeletePostFilter constructor.
@@ -20,8 +19,7 @@ class DeleteCategoryFilter extends InputFilterContainer
     public function __construct()
     {
         $this
-            ->addFilter('confirm', new BoolFilter())
-            ->addFilter('moveChildrenTo', new IntFilter())
+            ->addFilter('delete_btn', new BoolFilter())
         ;
     }
 }

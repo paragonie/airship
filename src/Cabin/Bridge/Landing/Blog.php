@@ -7,6 +7,7 @@ use Airship\Cabin\Bridge\Filter\Blog\{
     CommentFilter,
     DeleteCategoryFilter,
     DeletePostFilter,
+    DeleteSeriesFilter,
     EditCategoryFilter,
     EditPostFilter,
     EditSeriesFilter,
@@ -148,6 +149,34 @@ class Blog extends LoggedInUsersOnly
                 'active_link' => 'bridge-link-blog-posts',
                 'blogpost' => $blogPost,
                 'latest' => $latestVersion
+            ]
+        );
+    }
+
+    /**
+     * Delete a series.
+     *
+     * @param string $id
+     */
+    public function deleteSeries(string $id = '')
+    {
+        $id = (int) $id;
+        $post = $this->post(new DeleteSeriesFilter());
+        if (!empty($post)) {
+            if ($this->blog->deleteSeries($id)) {
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/blog/series'
+                );
+            }
+        }
+        $series = $this->blog->getSeries($id);
+        $this->lens(
+            'blog/series_delete',
+            [
+                'active_link' =>
+                    'bridge-link-blog-series',
+                'series' =>
+                    $series
             ]
         );
     }
