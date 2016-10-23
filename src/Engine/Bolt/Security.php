@@ -207,7 +207,15 @@ trait Security
             return true;
         } catch (LongTermAuthAlert $e) {
             // Let's wipe our long-term authentication cookies
-            Cookie::setcookie($token_idx, null);
+            Cookie::setcookie(
+                $token_idx,
+                null,
+                0,
+                '/',
+                '',
+                $httpsOnly ?? false,
+                true
+            );
 
             // Let's log this incident
             if (\property_exists($this, 'log')) {
