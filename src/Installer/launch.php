@@ -131,6 +131,15 @@ $twigEnv->addFunction(
 
 $twigEnv->addFunction(
     new Twig_SimpleFunction(
+        'cabin_url',
+        function() {
+            return '/';
+        }
+    )
+);
+
+$twigEnv->addFunction(
+    new Twig_SimpleFunction(
         '__',
         function(string $str = '') {
             // Not translating here.
