@@ -1,8 +1,8 @@
-fff{% set cabin_config = cabin_custom_config() %}
+{% set cabin_config = cabin_custom_config() %}
 <form method="post">{{ form_token() }}
     <div class="table full-width table-pad-1">
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="author_name">{{ __("Author Name") }}:</label>
             </div>
             <div class="table-cell">
@@ -19,7 +19,7 @@ fff{% set cabin_config = cabin_custom_config() %}
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="byline">{{ __("Byline") }}</label>:
             </div>
             <div class="table-cell">
@@ -37,7 +37,7 @@ fff{% set cabin_config = cabin_custom_config() %}
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="format">{{ __("Format") }}</label>:
             </div>
             <div class="table-cell">
@@ -50,7 +50,7 @@ fff{% set cabin_config = cabin_custom_config() %}
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label align-top">
+            <div class="table-cell table-label align-top table-min-width">
                 {{ __("Biography") }}:
             </div>
             <div class="table-cell">

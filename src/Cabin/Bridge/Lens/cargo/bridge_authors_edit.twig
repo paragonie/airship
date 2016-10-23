@@ -2,23 +2,23 @@
 <form method="post">{{ form_token() }}
     <div class="table full-width table-pad-1">
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="author_name">{{ __("Author Name") }}:</label>
             </div>
             <div class="table-cell">
-                <input{#
-                    #} class="full-width"{#
-                    #} id="author_name"{#
-                    #} name="name"{#
-                    #} placeholder="{{ __("e.g. Information Technology Department")|e('html_attr') }}"{#
-                    #} value="{{ author.name|e('html_attr') }}"{#
-                    #} type="text"{#
-                #} />
+                <input
+                     class="full-width"
+                     id="author_name"
+                     name="name"
+                     placeholder="{{ __("e.g. Information Technology Department")|e('html_attr') }}"
+                     value="{{ author.name|e('html_attr') }}"
+                     type="text"
+                 />
             </div>
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="byline">{{ __("Byline") }}</label>:
             </div>
             <div class="table-cell">
@@ -36,7 +36,7 @@
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label">
+            <div class="table-cell table-label table-min-width">
                 <label for="format">{{ __("Format") }}</label>:
             </div>
             <div class="table-cell">
@@ -47,7 +47,7 @@
         </div>
 
         <div class="table-row">
-            <div class="table-cell table-label align-top">
+            <div class="table-cell table-label align-top table-min-width">
                 {{ __("Biography") }}:
             </div>
             <div class="table-cell">
