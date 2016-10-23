@@ -55,7 +55,7 @@ trait Security
         $db = isset($this->db)
             ? $this->db
             : \Airship\get_database();
-        
+
         $this->airship_auth = Gears::get(
             'Authentication',
             $state->keyring['auth.password_key'],
@@ -110,22 +110,22 @@ trait Security
 
     /**
      * Are we currently logged in as an admin?
-     * @param integer $user_id (defaults to current user)
+     * @param integer $userId (defaults to current user)
      * @return bool
      */
-    public function isSuperUser(int $user_id = 0): bool
+    public function isSuperUser(int $userId = 0): bool
     {
         if (!($this->airship_perms instanceof Permissions)) {
             $this->tightenSecurityBolt();
         }
-        if (empty($user_id)) {
+        if (empty($userId)) {
             try {
-                $user_id = $this->getActiveUserId();
+                $userId = $this->getActiveUserId();
             } catch (SecurityAlert $e) {
                 return false;
             }
         }
-        return $this->airship_perms->isSuperUser($user_id);
+        return $this->airship_perms->isSuperUser($userId);
     }
     
     /**
