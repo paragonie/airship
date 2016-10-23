@@ -1,0 +1,32 @@
+<h2 class="bottom-pad">{{ __("Confirm Category Deletion") }}</h2>
+<div id="bridge_crew_category_delete">
+    <p>
+        {{ __("Are you sure you want to delete %s? There is no undo.", "default", category.name) }}
+    </p>
+    <form method="post">{{ form_token() }}
+
+        <div class="bottom-pad">
+            <label for="parent">{{ __("Move blog posts and child categories to") }}:</label>
+            <select id="parent" class="treeselect" name="moveChildrenTo">
+            {% for cat in categories %}
+                {{ bcatmac.selectBox(
+                    cat,
+                    category.categoryid,
+                    category.parent
+                ) }}
+            {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" name="confirm" value="1" class="pure-button pure-button-primary pure-button-danger">
+            {{ __("Delete Category") }}
+        </button>
+
+        <a
+            class="pure-button pure-button-tertiary"
+            href="{{ cabin_url() }}blog/category"
+        >
+            {{ __("Cancel") }}
+        </a>
+    </form>
+</div>

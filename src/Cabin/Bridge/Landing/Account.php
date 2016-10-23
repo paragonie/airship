@@ -88,6 +88,7 @@ class Account extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
 
+        $this->storeLensVar('showmenu', false);
         $post = $this->post(new BoardFilter());
         if (!empty($post)) {
             // Optional: CAPTCHA enforcement

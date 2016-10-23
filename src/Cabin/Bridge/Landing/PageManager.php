@@ -145,7 +145,7 @@ class PageManager extends LoggedInUsersOnly
     {
         $page = [];
         $path = $this->determinePath($cabin);
-        if (\is1DArray($_GET)) {
+        if (!\is1DArray($_GET)) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/')
             );

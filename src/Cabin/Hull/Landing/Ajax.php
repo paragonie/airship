@@ -83,7 +83,14 @@ class Ajax extends LandingGear
      */
     public function clearCache(string $key)
     {
-        if (!\hash_equals($this->config('cache-secret'), $key)) {
+        $secret = $this->config('cache-secret');
+        if ($secret === null) {
+            \Airship\json_response([
+                'status' => 'ERROR',
+                'message' => 'Cache-clearing secret value not set'
+            ]);
+        }
+        if (!\hash_equals($secret, $key)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => 'Invalid cache-clearing secret value'

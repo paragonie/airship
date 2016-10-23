@@ -339,28 +339,38 @@ class Blog extends BlueprintGear
         return $this->db->commit();
     }
 
-
     /**
-     * Delete this comment and all of its revision history.
+     * Permanently remove a blog post series.
      *
-     * @param int $commentId
+     * @param int $seriesId
      * @return bool
      */
-    public function deleteComment(int $commentId): bool
+    public function deleteSeries(int $seriesId): bool
     {
         $this->db->beginTransaction();
+
         $this->db->delete(
-            'hull_blog_comment_versions',
+            'hull_blog_series_items',
             [
-                'comment' => $commentId
+                'parent' =>
+                    $seriesId
             ]
         );
         $this->db->delete(
-            'hull_blog_comments',
+            'hull_blog_series_items',
             [
-                'commentid' => $commentId
+                'series' =>
+                    $seriesId
             ]
         );
+        $this->db->delete(
+            'hull_blog_series',
+            [
+                'seriesid' =>
+                    $seriesId
+            ]
+        );
+        \Airship\clear_cache();
         return $this->db->commit();
     }
 

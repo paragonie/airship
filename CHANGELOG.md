@@ -13,6 +13,11 @@
     their old password, when Airship only knows the old password hash.
   * [#149](https://github.com/paragonie/airship/issues/149):
     Implemented a View History feature for Blog Posts.
+  * [#52](https://github.com/paragonie/airship/issues/52),
+    [#137](https://github.com/paragonie/airship/issues/137),
+    [#140](https://github.com/paragonie/airship/issues/140):
+    Allow users, groups, blog post categories, author profiles,
+    and series to be deleted.
 
 ## Version 1.3.1 - 2016-09-12
 

@@ -34,10 +34,33 @@
 
 {% macro groupTree(groupdata, depth) %}
     <li>
-        <a href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid|e('html_attr') }}">{#
-            #}<i class="fa fa-pencil"></i>{#
-        #}</a>{#
-        #}{{ groupdata.name }}
+        <a
+            class="pure-button pure-button-primary"
+            href="{{ cabin_url() }}crew/groups/edit/{{ groupdata.groupid|e('html_attr') }}"
+        >
+            <i
+                class="fa fa-pencil"
+                title="{{ __(
+                        "Edit Group (%s)", "default",
+                        groupdata.name
+                    )|e('html_attr')
+                }}"
+            ></i>
+        </a>
+        <a
+            class="pure-button pure-button-secondary"
+            href="{{ cabin_url() }}crew/groups/delete/{{ groupdata.groupid|e('html_attr') }}"
+        >
+            <i
+                class="fa fa-trash-o"
+                title="{{ __(
+                        "Delete Group (%s)", "default",
+                        groupdata.name
+                    )|e('html_attr')
+                }}"
+            ></i>
+        </a>
+        {{ groupdata.name }}
     </li>
     {% if groupdata.children %}
         <ul>

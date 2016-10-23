@@ -1,0 +1,15 @@
+<h2 class="bottom-pad">{{ __("Confirm Blog Series Deletion") }}</h2>
+<h3>{{ series.name }}</h3>
+<p>
+    {{ __("Are you sure you want to delete this blog series? There is no undo.") }}
+</p>
+<form method="post">{{ form_token() }}
+    {% if form_error %}<p class="error_header">{{ form_error }}</p>{% endif %}
+
+    <fieldset class="form-button-group">
+        <button type="submit" name="delete_btn" value="draft" class="pure-button pure-button-primary">
+            <i class="fa fa-trash"></i>
+            {{  __("Delete Blog Series") }}
+        </button>
+    </fieldset>
+</form>

@@ -1,5 +1,18 @@
-{% if can_edit %}<a class="blog_icon" href="{{ cabin_url() }}blog/category/edit/{{ catdata.categoryid|e('url') }}">{#
-    #}<i class="fa fa-pencil" title="{{
-        __("Edit Details for", "default", catdata.name)|e('html_attr')
-    }}"></i>{#
-#}</a>{% endif %}{{ catdata.name }}
+{% if can_edit %}
+<a
+    class="pure-button pure-button-primary"
+    href="{{ cabin_url() }}blog/category/edit/{{ catdata.categoryid|e('url') }}"
+><i class="fa fa-pencil" title="{{
+        __("Edit Details for %s", "default", catdata.name)|e('html_attr')
+    }}"></i></a>
+{% endif %}
+{% if can_delete %}
+<a
+    class="pure-button pure-button-secondary"
+    href="{{ cabin_url() }}blog/category/delete/{{ catdata.categoryid|e('url') }}"
+><i class="fa fa-trash-o" title="{{
+        __("Delete Category %s", "default", catdata.name)|e('html_attr')
+    }}"></i></a>
+{% endif %}
+
+{{ catdata.name }}
