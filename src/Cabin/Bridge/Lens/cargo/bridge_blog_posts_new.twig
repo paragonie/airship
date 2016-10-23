@@ -149,51 +149,6 @@
         {% include cargo("rich_text_editor") with {
             "contents": _POST.blog_post_body|default(""),
             "name": "blog_post_body",
-
-<script nonce={{ csp_nonce() }}>
-    function deferUntilExists(func, poll, delay, counter) {
-        var counter = counter || 0;
-        if (counter > 1000) {
-            return;
-        }
-        if (typeof(window[poll]) === "undefined") {
-            window.setTimeout(
-                    function() {
-                        deferUntilExists(func, poll, delay, counter + 1)
-                    },
-                    delay
-            );
-            return;
-        }
-        return func();
-    }
-    if (typeof($) === 'undefined') {
-        /**
-         * We can't reliably depend on jQuery already being loaded.
-         */
-        deferUntilExists(
-                function () {
-                    window['richTextWrapper'](
-                            "{{ name|e("html_attr") }}",
-                            "{{ format_element|default("format")|e("html_attr") }}"
-                    );
-                },
-                "richTextWrapper",
-                100 // milliseconds
-        );
-    } else {
-        /**
-         * If jQuery is already loaded, then just use it.
-         */
-        $(document).ready(function() {
-            window['richTextWrapper'](
-                    "{{ name|e("html_attr") }}",
-                    "{{ format_element|default("format")|e("html_attr") }}"
-            );
-        });
-    }
-</script>
-
             "placeholder": ""
         } %}
     </div>
