@@ -24,7 +24,10 @@ use Airship\Engine\Security\{
     Util
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\Cookie\Cookie;
+use ParagonIE\Cookie\{
+    Cookie,
+    Session
+};
 use ParagonIE\GPGMailer\GPGMailer;
 use ParagonIE\Halite\{
     Alerts\InvalidMessage,
@@ -649,7 +652,7 @@ class Account extends LandingGear
             }
 
             // Regenerate session ID:
-            \session_regenerate_id(true);
+            Session::regenerate(true);
 
             $_SESSION['userid'] = (int) $userID;
 

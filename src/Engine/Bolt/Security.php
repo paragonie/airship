@@ -270,7 +270,8 @@ trait Security
         }
         $_SESSION = [];
         Cookie::setcookie('airship_token', null);
-        return \session_regenerate_id(true);
+        Session::regenerate(true);
+        return true;
     }
 
     /**
