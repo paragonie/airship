@@ -457,6 +457,17 @@ class Install
             ]
         ];
 
+        if (empty($this->data['admin'])) {
+            $state = State::instance();
+            $this->data['admin'] = [
+                'username' => $post['username'],
+                'passphrase' => Password::hash(
+                    $post['passphrase'],
+                    $state->keyring['auth.password_key']
+                )
+            ];
+        }
+
         return [
             'database' => $this->data['database'],
             'username' => $post['username'],
@@ -829,17 +840,15 @@ class Install
             throw new \Exception('Passphrase is not defined. This is a serious error.');
         }
         $sessionCanary = Base64UrlSafe::encode(\random_bytes(33));
-        $this->db->insert('airship_users', [
-            'username' => $this->data['admin']['username'],
-            'password' => $this->data['admin']['passphrase'],
-            'session_canary' => $sessionCanary,
-            'uniqueid' => \Airship\uniqueId()
-        ]);
-        
-        // This SHOULD be 1...
-        $userid = $this->db->cell(
-            'SELECT userid FROM airship_users WHERE username = ?',
-            $this->data['admin']['username']
+        $userid = $this->db->insertGet(
+            'airship_users',
+            [
+                'username' => $this->data['admin']['username'],
+                'password' => $this->data['admin']['passphrase'],
+                'session_canary' => $sessionCanary,
+                'uniqueid' => \Airship\uniqueId()
+            ],
+            'userid'
         );
         $this->db->insert(
             'airship_users_groups',
