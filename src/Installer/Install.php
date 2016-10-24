@@ -679,6 +679,7 @@ class Install
                     'channel' => 'paragonie',
                     'enabled' => false,
                 ],
+                'session_config' => $this->data['config']['session_config'] ?? [],
                 'rate-limiting' => [
                     'expire' => 43200,
                     'fast-exit' => true,
