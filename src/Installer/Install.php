@@ -85,6 +85,7 @@ class Install
                 \time() + 8640000,
                 '/'
             );
+            \Airship\redirect('/');
         } elseif (empty($_COOKIE['installer'])) {
             echo 'No installer authorization token found.', "\n";
             exit(255);
