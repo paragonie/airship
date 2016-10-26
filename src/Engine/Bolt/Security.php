@@ -192,15 +192,9 @@ trait Security
             $_SESSION[$uid_idx] = $userId;
 
             $autoPilot = Gears::getName('AutoPilot');
-            if (!($autoPilot instanceof AutoPilot)) {
-                throw new \TypeError(
-                    \sprintf(
-                        'Expected AutoPilot, got %s',
-                        \is_object($autoPilot)
-                            ? \get_class($autoPilot)
-                            : \gettype($autoPilot)
-                    )
-                );
+            if (IDE_HACKS) {
+                // We're using getName(), this is just to fool IDEs.
+                $autoPilot = new AutoPilot();
             }
             $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 
