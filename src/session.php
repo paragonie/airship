@@ -38,17 +38,10 @@ if (!Session::id()) {
         }
     }
 
-    // Override the configuration directives:
-    foreach ($session_config as $key => $value) {
-        if (\is_bool($value)) {
-            $value = $value ? 'On' : 'Off';
-        }
-        \ini_set(
-            'session.' . $key,
-            (string) $value
-        );
-    }
-    Session::start(Cookie::SAME_SITE_RESTRICTION_STRICT);
+    Session::start(
+        Cookie::SAME_SITE_RESTRICTION_STRICT,
+        $session_config
+    );
 }
 
 if (empty($_SESSION['created_canary'])) {
