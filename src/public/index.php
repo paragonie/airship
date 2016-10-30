@@ -183,15 +183,14 @@ if (!empty($state->universal['debug'])) {
         // The methods below exist in both \Exception and \Error.
         while ($e instanceof \Exception || $e instanceof \Error) {
             echo "\n", \str_repeat('#', 80), "\n";
-            /** @noinspection PhpUndefinedMethodInspection */
             echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                 $e->getMessage(), "\n\n",
                 $e->getCode(), "\n\n",
                 $e->getTraceAsString();
             ++$n;
-            /** @noinspection PhpUndefinedMethodInspection */
             $e = $e->getPrevious();
         }
+        exit(255);
     }
     // This is just for benchmarking purposes:
     echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';
