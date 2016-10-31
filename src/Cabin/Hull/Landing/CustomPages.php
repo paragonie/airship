@@ -180,7 +180,8 @@ class CustomPages extends LandingGear
                 }
                 return $md->convertToHtml($latest['body']);
             case 'RST':
-                $rst = new RSTParser;
+                $rst = (new RSTParser())
+                    ->setIncludePolicy(false);
                 if (empty($latest['raw'])) {
                     $state->HTMLPurifier->purify(
                         (string) $rst->parse($latest['body'])

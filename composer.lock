@@ -203,17 +203,17 @@
         },
         {
             "name": "gregwar/rst",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "target-dir": "Gregwar/RST",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/RST.git",
-                "reference": "8dda3ef1f00de3368b46ec8cf2fdf57a8bc39ee4"
+                "reference": "e8d90ccbeddd91ba3abc506079661dce234f9870"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/RST/zipball/8dda3ef1f00de3368b46ec8cf2fdf57a8bc39ee4",
-                "reference": "8dda3ef1f00de3368b46ec8cf2fdf57a8bc39ee4",
+                "url": "https://api.github.com/repos/Gregwar/RST/zipball/e8d90ccbeddd91ba3abc506079661dce234f9870",
+                "reference": "e8d90ccbeddd91ba3abc506079661dce234f9870",
                 "shasum": ""
             },
             "require": {
@@ -243,7 +243,7 @@
                 "parser",
                 "rst"
             ],
-            "time": "2016-10-04 16:14:44"
+            "time": "2016-10-31 11:15:54"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -922,7 +922,7 @@
             "authors": [
                 {
                     "name": "Richard Quadling",
-                    "email": "rquadling@gmail.com"
+                    "email": "RQuadling@GMail.com"
                 },
                 {
                     "name": "David Jean Louis",
