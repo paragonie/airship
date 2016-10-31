@@ -67,3 +67,7 @@ To create and/or manage these extensions, check out
 
 Airship is fully mobile responsive thanks to the [Pure CSS framework](http://purecss.io/).
 See it in action at [CSPR.NG](https://cspr.ng).
+
+## Contributing to CMS Airship  
+
+* See [CONTRIBUTING.md](https://github.com/paragonie/airship/blob/master/.github/CONTRIBUTING.md)
