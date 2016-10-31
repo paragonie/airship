@@ -682,7 +682,7 @@ function render_rst(string $string = '', bool $return = false): string
 {
     static $rst = null;
     if (empty($rst)) {
-        $rst = new RSTParser();
+        $rst = (new RSTParser())->setIncludePolicy(false);
     }
 
     $checksum = CryptoUtil::hash('ReStructuredText' . $string);

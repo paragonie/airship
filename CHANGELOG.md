@@ -1,3 +1,8 @@
+## Version 1.3.2 - 2016-10-31
+
+  * Update Gregwar/RST to v1.0.3 to prevent LFI attacks.
+    [HackerOne Report](https://hackerone.com/reports/179034).
+
 ## Version 1.3.1 - 2016-09-12
 
   * [#134](https://github.com/paragonie/airship/issues/134):
