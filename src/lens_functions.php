@@ -154,12 +154,15 @@ function can(
 }
 
 /**
- * @param array ...$args
+ * Wrapper for `Gadgets::unloadCargo()`
+ *
+ * @param string $name
+ * @param int $offset
  * @return array
  */
-function cargo(...$args)
+function cargo(string $name, int $offset = 0): array
 {
-    return Gadgets::unloadCargo(...$args);
+    return Gadgets::unloadCargo($name, $offset);
 }
 
 /**
