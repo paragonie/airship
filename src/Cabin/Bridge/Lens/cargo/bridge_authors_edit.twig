@@ -18,6 +18,25 @@
         </div>
 
         <div class="table-row">
+            <label class="table-cell" for="author_slug">{{ __("Slug") }}:</label>
+            <div class="table-cell bottom-pad">
+                <input
+                    class="full-width"
+                    id="author_slug"
+                    type="text"
+                    name="slug"
+                    data-original="{{ author.slug|e('html_attr') }}"
+                    value="{{ author.slug|e('html_attr') }}"
+                    pattern="^[a-z0-9][a-z0-9\-]+$"
+                />
+                <div id="author_slug_checkbox_wrapper">
+                    <input type="checkbox" class="large_checkbox" name="redirect_slug" id="redirect_slug" value="1" />
+                    <label for="redirect_slug">{{ __("Redirect the old URL to the new destination?") }}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-row">
             <div class="table-cell table-label table-min-width">
                 <label for="byline">{{ __("Byline") }}</label>:
             </div>
