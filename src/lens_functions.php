@@ -14,7 +14,8 @@ use League\CommonMark\CommonMarkConverter;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use ParagonIE\ConstantTime\{
     Base64,
-    Base64UrlSafe
+    Base64UrlSafe,
+    Binary
 };
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
@@ -82,7 +83,7 @@ function cabin_url(string $cabin = \CABIN_NAME): string
     foreach ($state->cabins as $c) {
         if ($c['name'] === $cabin) {
             if (isset($c['canon_url'])) {
-                $lookup[$cabin] = \rtrim($c['canon_url'], '/').'/';
+                $lookup[$cabin] = \rtrim($c['canon_url'], '/') . '/';
                 return $lookup[$cabin];
             }
             $lookup[$cabin] = '/';
@@ -468,9 +469,9 @@ function get_purified(string $string = '')
         'HTML Purifier' . $string
     );
 
-    $h1 = substr($checksum, 0, 2);
-    $h2 = substr($checksum, 2, 2);
-    $hash = substr($checksum, 4);
+    $h1 = Binary::safeSubstr($checksum, 0, 2);
+    $h2 = Binary::safeSubstr($checksum, 2, 2);
+    $hash = Binary::safeSubstr($checksum, 4);
 
     $cacheDir = \implode(
         '/',
@@ -608,15 +609,19 @@ function motifs()
 }
 
 /**
- * @param array ...$args
+ * Unload the "next" cargo, using an internal iterator.
+ *
+ * @param string $cargoName
  * @return array
  */
-function next_cargo(...$args)
+function next_cargo(string $cargoName)
 {
-    return Gadgets::unloadNextCargo(...$args);
+    return Gadgets::unloadNextCargo($cargoName);
 }
 
 /**
+ * Render user input, with CommonMark.
+ *
  * @param string $string
  * @param bool $return
  * @output HTML
@@ -631,9 +636,9 @@ function render_markdown(string $string = '', bool $return = false): string
 
     $checksum = CryptoUtil::hash('Markdown' . $string);
 
-    $h1 = substr($checksum, 0, 2);
-    $h2 = substr($checksum, 2, 2);
-    $hash = substr($checksum, 4);
+    $h1 = Binary::safeSubstr($checksum, 0, 2);
+    $h2 = Binary::safeSubstr($checksum, 2, 2);
+    $hash = Binary::safeSubstr($checksum, 4);
 
     $cacheDir = \implode(
         '/',
@@ -691,9 +696,9 @@ function render_rst(string $string = '', bool $return = false): string
 
     $checksum = CryptoUtil::hash('ReStructuredText' . $string);
 
-    $h1 = substr($checksum, 0, 2);
-    $h2 = substr($checksum, 2, 2);
-    $hash = substr($checksum, 4);
+    $h1 = Binary::safeSubstr($checksum, 0, 2);
+    $h2 = Binary::safeSubstr($checksum, 2, 2);
+    $hash = Binary::safeSubstr($checksum, 4);
 
     $cacheDir = \implode(
         '/',
@@ -735,10 +740,10 @@ function render_rst(string $string = '', bool $return = false): string
 }
 
 /**
- * Purify a string using HTMLPurifier
+ * Purify a string using HTMLPurifier. Echo its contents.
  *
  * @param $string
- * @return string
+ * @return void
  */
 function purify(string $string = '')
 {
@@ -750,7 +755,7 @@ function purify(string $string = '')
  *
  * @param string $string
  * @param bool $return
- * @return string
+ * @return string|null
  */
 function render_purified_markdown(string $string = '', bool $return = false)
 {
@@ -771,7 +776,7 @@ function render_purified_markdown(string $string = '', bool $return = false)
  *
  * @param string $string
  * @param bool $return
- * @return string
+ * @return string|null
  */
 function render_purified_rest(string $string = '', bool $return = false)
 {
@@ -859,7 +864,17 @@ function user_display_name(int $userId = null): string
     }
     $db = \Airship\get_database();
     $displayName = $db->cell(
-        'SELECT COALESCE(display_name, username) FROM airship_users WHERE userid = ?',
+        "SELECT
+             COALESCE(
+                 display_name,
+                 custom_fields->>'realname',
+                 username
+             )
+         FROM
+             airship_users
+         WHERE
+             userid = ?
+         ",
         $userId
     );
     if (empty($displayName)) {
@@ -880,7 +895,7 @@ function user_motif(int $userId = null, string $cabin = \CABIN_NAME): array
     static $userCache = [];
     $state = State::instance();
 
-    if (count($state->motifs) === 0) {
+    if (\count($state->motifs) === 0) {
         return [];
     }
     if (empty($userId)) {

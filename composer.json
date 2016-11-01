@@ -45,7 +45,7 @@
     "ext-zip": "*",
 
     "bjeavons/zxcvbn-php": "*",
-    "ezyang/htmlpurifier": "^4.7",
+    "ezyang/htmlpurifier": "^4.8",
     "gregwar/rst": "^1.0",
     "guzzlehttp/guzzle": "^6",
     "league/commonmark": "^0.13",

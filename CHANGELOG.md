@@ -18,6 +18,7 @@
     [#140](https://github.com/paragonie/airship/issues/140):
     Allow users, groups, blog post categories, author profiles,
     and series to be deleted.
+  * Prevent LFI attacks in Gregwar/RST by disabling all file inclusion.
 
 ## Version 1.3.1 - 2016-09-12
 
