@@ -1295,8 +1295,14 @@ class Blog extends BlueprintGear
                 ? $post['parent']
                 : null;
         }
+
         $this->db->beginTransaction();
 
+        if (!empty($post['slug'])) {
+            if ($this->updateCategorySlug($id, $post)) {
+                $changes['slug'] = $post['slug'];
+            }
+        }
         $this->db->update(
             'hull_blog_categories',
             $changes,
@@ -1306,6 +1312,49 @@ class Blog extends BlueprintGear
         );
 
         return $this->db->commit();
+    }
+
+    /**
+     * @param int $id
+     * @param array $post
+     * @return bool
+     */
+    public function updateCategorySlug(int $id, array $post): bool
+    {
+        $slug = $this->db->cell('SELECT slug FROM hull_blog_categories WHERE categoryid = ?', $id);
+        if ($slug === $post['slug']) {
+            // Don't update. It's the same.
+            return false;
+        }
+        if ($this->db->exists('SELECT count(*) FROM hull_blog_categories WHERE slug = ?', $post['slug'])) {
+            // Don't update.
+            return false;
+        }
+
+        if (!empty($post['redirect_slug'])) {
+            $oldUrl = \implode('/', [
+                'blog',
+                'category',
+                $slug
+            ]);
+            $newUrl = \implode('/', [
+                'blog',
+                'category',
+                $post['slug']
+            ]);
+            $this->db->insert(
+                'airship_custom_redirect',
+                [
+                    'oldpath' => $oldUrl,
+                    'newpath' => $newUrl,
+                    'cabin' => $this->cabin,
+                    'same_cabin' => true
+                ]
+            );
+        }
+
+        // Allow updates to go through.
+        return true;
     }
 
     /**
