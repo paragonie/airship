@@ -164,7 +164,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
     {
         if (!$file->hashMatches($info->getChecksum())) {
             throw new CouldNotUpdate(
-                'Checksum mismatched'
+                \__('Checksum mismatched')
             );
         }
         // Let's open the update package:

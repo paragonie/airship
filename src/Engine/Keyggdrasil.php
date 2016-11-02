@@ -152,7 +152,7 @@ class Keyggdrasil
                         LogLevel::EMERGENCY
                     );
                     throw new CouldNotUpdate(
-                        'Challenge-response authentication failed.'
+                        \__('Challenge-response authentication failed.')
                     );
                 }
 
@@ -162,7 +162,10 @@ class Keyggdrasil
                 $time = new \DateTime($decoded['timestamp']);
                 if ($time < $min) {
                     throw new CouldNotUpdate(
-                        'Timestamp ' . $decoded['timestamp'] . ' is far too old.'
+                        \__(
+                            'Timestamp %s is far too old.', 'default',
+                            $decoded['timestamp']
+                        )
                     );
                 }
 
@@ -362,7 +365,9 @@ class Keyggdrasil
                     $datetime->format(DATE_ISO8601),
                     $stale->format(DATE_ISO8601)
                 );
-                throw new CouldNotUpdate('Stale response.');
+                throw new CouldNotUpdate(
+                    \__('Stale response.')
+                );
             }
 
             // We got nothing to do:
@@ -679,7 +684,7 @@ class Keyggdrasil
                 ]
             );
             throw new CouldNotUpdate(
-                'Calculated Merkle root did not match the update.'
+                \__('Calculated Merkle root did not match the update.')
             );
         }
 

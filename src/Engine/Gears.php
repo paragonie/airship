@@ -51,7 +51,11 @@ abstract class Gears
         $reflector = new \ReflectionClass($type);
         if (!$reflector->isSubclassOf($gears[$index])) {
             throw new GearWrongType(
-                "{$type} does not inherit from {$gears[$index]}"
+                \__(
+                    '%s does not inherit from %s', 'default',
+                    $type,
+                    $gears[$index]
+                )
             );
         }
         $gears[$index] = $type;

@@ -343,14 +343,14 @@ class TreeUpdate
         } catch (NoSupplier $ex) {
             if ($updateData['action'] !== self::ACTION_INSERT_KEY) {
                 throw new CouldNotUpdate(
-                    'For new suppliers, we can only insert their first master key',
+                    \__('For new suppliers, we can only insert their first master key.'),
                     0,
                     $ex
                 );
             }
             if ($updateData['type'] !== self::KEY_TYPE_MASTER) {
                 throw new CouldNotUpdate(
-                    'Non-master key provided. It is possible that the channel is borked.',
+                    \__('Non-master key provided. It is possible that the channel is borked.'),
                     0,
                     $ex
                 );
@@ -408,7 +408,7 @@ class TreeUpdate
         }
         if ($updateData['master'] === null) {
             throw new CouldNotUpdate(
-                'master data is NULL, but the supplier exists'
+                \__('The master data is NULL, but the supplier exists.')
             );
         }
         $master = \json_decode($updateData['master'], true);
@@ -433,13 +433,13 @@ class TreeUpdate
         }
         if (empty($this->supplierMasterKeyUsed)) {
             throw new CouldNotUpdate(
-                'The provided public key does not match any known master key '
+                \__('The provided public key does not match any known master key.')
             );
         }
         $encoded = \json_encode($messageToSign);
         if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $master['signature'])) {
             throw new CouldNotUpdate(
-                'Invalid signature for this master key'
+                \__('Invalid signature for this master key.')
             );
         }
     }

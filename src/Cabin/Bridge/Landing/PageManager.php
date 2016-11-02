@@ -591,7 +591,7 @@ class PageManager extends LoggedInUsersOnly
             $right = $this->pg->getPageVersionByUniqueId($rightUnique);
             if ($left['page'] !== $right['page']) {
                 throw new CustomPageNotFoundException(
-                    'Unique IDs for different pages.'
+                    \__('Unique IDs for different pages.')
                 );
             }
         } catch (CustomPageNotFoundException $ex) {
@@ -1044,7 +1044,9 @@ class PageManager extends LoggedInUsersOnly
         $state = State::instance();
         $ap = Gears::getName('AutoPilot');
         if (!($ap instanceof AutoPilot)) {
-            throw new \TypeError('AutoPilot Blueprint');
+            throw new \TypeError(
+                \__('AutoPilot Blueprint')
+            );
         }
         $nop = [];
         foreach ($state->cabins as $pattern => $cab) {

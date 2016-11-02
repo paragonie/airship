@@ -26,7 +26,9 @@ class PublicAjax extends LandingGear
         parent::airshipLand();
         $this->acct = $this->blueprint('UserAccounts');
         if (!($this->acct instanceof UserAccounts)) {
-            throw new \TypeError('UserAccounts Blueprint');
+            throw new \TypeError(
+                \__('UserAccounts Blueprint')
+            );
         }
     }
 

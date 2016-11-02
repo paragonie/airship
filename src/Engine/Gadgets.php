@@ -97,7 +97,9 @@ abstract class Gadgets
         $state = State::instance();
         $registry = $state->migrations ?? [];
         if (!isset($registry[$key])) {
-            throw new SecurityAlert('Migration not found');
+            throw new SecurityAlert(
+                \__('Migration (%s) not found', 'default', $key)
+            );
         }
         return $registry[$key];
     }

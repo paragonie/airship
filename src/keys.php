@@ -14,7 +14,7 @@ $key_management_closure = function() {
     $keyRing = \Airship\loadJSON(ROOT . '/config/keyring.json');
     if (empty($keyRing)) {
         // This is critical to Airship's functioning.
-        throw new \Error('Keyring configuration file not found.');
+        throw new \Error(\trk('errors.crypto.keyring_missing'));
     }
 
     $state = \Airship\Engine\State::instance();
@@ -51,7 +51,7 @@ $key_management_closure = function() {
                     break;
                 default:
                     throw new \Error(
-                        'Unknown key type: '.$keyConfig['type']
+                        \trk('errors.crypto.unknown_key_type', $keyConfig['type'])
                     );
             }
         } else {
@@ -60,7 +60,7 @@ $key_management_closure = function() {
                 case 'EncryptionPublicKey':
                 case 'SignaturePublicKey':
                     throw new \Error(
-                        'We can\'t just generate public keys on the fly. That wouldn\'t make any sense.'
+                        \trk('errors.crypto.cannot_generate_public_key')
                     );
                 case 'AuthenticationKey':
                     $keys[$index] = KeyFactory::generateAuthenticationKey();
@@ -79,7 +79,7 @@ $key_management_closure = function() {
                     $kp = KeyFactory::generateSignatureKeyPair();
                     $keys[$index] = $kp->getSecretKey();
                     KeyFactory::save($keys[$index], $path);
-                    break;
+                    break ;
                 case 'EncryptionKeyPair':
                     $keys[$index] = KeyFactory::generateEncryptionKeyPair();
                     KeyFactory::save($keys[$index], $path);
@@ -90,7 +90,7 @@ $key_management_closure = function() {
                     break;
                 default:
                     throw new \Error(
-                        'Unknown key type: '.$keyConfig['type']
+                        \trk('errors.crypto.unknown_key_type', $keyConfig['type'])
                     );
             }
         }

@@ -52,13 +52,13 @@ class Author extends BlueprintGear
         );
 
         if (empty($userID)) {
-            throw new UserFeedbackException(
-                'There is no user with this Public ID.'
+             throw new UserFeedbackException(
+                \__('There is no user with this Public ID.')
             );
         }
         if ($this->userHasAccess($authorId, $userID)) {
             throw new UserFeedbackException(
-                'This User already has access to this Author.'
+                \__('This User already has access to this Author.')
             );
         }
         $this->db->insert(
@@ -573,12 +573,12 @@ class Author extends BlueprintGear
 
         if (empty($userID)) {
             throw new UserFeedbackException(
-                'There is no user with this Public ID.'
+                \__('There is no user with this Public ID.')
             );
         }
         if (!$this->userHasAccess($authorId, $userID)) {
             throw new UserFeedbackException(
-                "This User doesn't have access to this Author."
+                \__("This User doesn't have access to this Author.")
             );
         }
         $this->db->delete(
@@ -678,12 +678,12 @@ class Author extends BlueprintGear
 
         if (empty($userID)) {
             throw new UserFeedbackException(
-                'There is no user with this Public ID.'
+                \__('There is no user with this Public ID.')
             );
         }
         if (!$this->userHasAccess($authorId, $userID)) {
             throw new UserFeedbackException(
-                "This User doesn't have access to this Author."
+                \__("This User doesn't have access to this Author.")
             );
         }
         $this->db->update(

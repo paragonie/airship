@@ -167,7 +167,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
     {
         if (!$file->hashMatches($info->getChecksum())) {
             throw new CouldNotUpdate(
-                'Checksum mismatched'
+                \__('Checksum mismatched')
             );
         }
         // Let's open the update package:
@@ -175,7 +175,12 @@ class Motif extends AutoUpdater implements ContinuumInterface
         $zip = new \ZipArchive();
         $res = $zip->open($path);
         if ($res !== true) {
-            throw new MotifZipFailed($res);
+            throw new MotifZipFailed(
+                \__(
+                    "ZIP Error: %s", "default",
+                    $res
+                )
+            );
         }
         $dir = \implode(
             DIRECTORY_SEPARATOR,

@@ -53,7 +53,7 @@ class CustomPages extends LandingGear
     {
         if (!\is1DArray($args)) {
             throw new CustomPageNotFoundException(
-                'Invalid arguments'
+                \__('Invalid arguments')
             );
         }
         $dirs = $args;

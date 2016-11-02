@@ -189,7 +189,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     {
         if (!$file->hashMatches($info->getChecksum())) {
             throw new CouldNotUpdate(
-                'Checksum mismatched'
+                \__('Checksum mismatched')
             );
         }
         $path = $file->getPath();

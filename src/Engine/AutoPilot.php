@@ -402,7 +402,7 @@ class AutoPilot implements RouterInterface
         $landing = new $class_name;
         if (!($landing instanceof Landing)) {
             throw new \Error(
-                "{$class_name} is not a Landing"
+                \__("%s is not a Landing", "default", $class_name)
             );
         }
         

@@ -298,7 +298,12 @@ class CustomPages extends BlueprintGear
             $pageId
         );
         if (empty($latest)) {
-            throw new CustomPageNotFoundException("Page ID: ".$pageId);
+            throw new CustomPageNotFoundException(
+                \__(
+                    "Page ID: %s", 'default',
+                    $pageId
+                )
+            );
         }
         if (!empty($latest['metadata'])) {
             $latest['metadata'] = \json_decode(

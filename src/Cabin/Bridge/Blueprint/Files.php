@@ -909,19 +909,29 @@ class Files extends BlueprintGear
         switch ($file['error']) {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                throw new UploadError('File is too large');
+                throw new UploadError(
+                    \__('File is too large')
+                );
             case UPLOAD_ERR_PARTIAL:
-                throw new UploadError('Partial file received');
+                throw new UploadError(
+                    \__('Partial file received')
+                );
             case UPLOAD_ERR_NO_TMP_DIR:
-                throw new UploadError('Temporary directory does not exist');
+                throw new UploadError(
+                    \__('Temporary directory does not exist')
+                );
             case UPLOAD_ERR_CANT_WRITE:
-                throw new UploadError('Cannot write to temporary directory');
+                throw new UploadError(
+                    \__('Cannot write to temporary directory')
+                );
             case UPLOAD_ERR_OK:
                 // Continue
                 break;
         }
         if ($file['name'] === '..') {
-            throw new UploadError('Invalid file name');
+            throw new UploadError(
+                \__('Invalid file name')
+            );
         }
         if (\preg_match('#([^/]+)\.([a-zA-Z0-9]+)$#', $file['name'], $matches)) {
             $name = $matches[1];
@@ -930,7 +940,9 @@ class Files extends BlueprintGear
             $name = $matches[1];
             $ext = 'txt';
         } else {
-            throw new UploadError('Invalid file name');
+            throw new UploadError(
+                \__('Invalid file name')
+            );
         }
 
         // Actually upload the file.
@@ -986,7 +998,10 @@ class Files extends BlueprintGear
             \unlink($fullpath);
             $this->db->rollBack();
             throw new UploadError(
-                'A database error occurred trying to save ' . $destination
+                \__(
+                    'A database error occurred trying to save %s', 'default',
+                    $destination
+                )
             );
         }
 
@@ -1093,7 +1108,7 @@ class Files extends BlueprintGear
 
         if (!\move_uploaded_file($tmp_name, $base . DIRECTORY_SEPARATOR . $filename)) {
             throw new UploadError(
-                'Could not move temporary file to its permanent home'
+                \__('Could not move temporary file to its permanent home')
             );
         }
         return $dir1 . DIRECTORY_SEPARATOR .

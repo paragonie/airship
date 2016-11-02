@@ -27,7 +27,9 @@ class Redirects extends LoggedInUsersOnly
         parent::airshipLand();
         $this->pg = $this->blueprint('CustomPages');
         if (!($this->pg instanceof  CustomPages)) {
-            throw new \TypeError('Custom Pages Blueprint');
+            throw new \TypeError(
+                \__('Custom Pages Blueprint')
+            );
         }
     }
 

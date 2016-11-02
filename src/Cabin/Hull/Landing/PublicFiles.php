@@ -59,7 +59,7 @@ class PublicFiles extends LandingGear
     public function download(string $path, string $default = 'text/plain')
     {
         if (!$this->can('read')) {
-            throw new EmulatePageNotFound;
+            throw new EmulatePageNotFound();
         }
         $pieces = \Airship\chunk($path);
         $filename = \array_pop($pieces);

@@ -124,7 +124,7 @@ class Version
                 return intdiv($left, self::GROUP_PATCH);
             default:
                 throw new \InvalidArgumentException(
-                    __METHOD__.': $group must be a constant'
+                    \__('%s: $group must be a constant', 'default', __METHOD__)
                 );
         }
     }

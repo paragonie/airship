@@ -74,7 +74,7 @@ class SettingsFilter extends InputFilterContainer
                         return 'database';
                     }
                     throw new \TypeError(
-                        'Invalid Ledger driver'
+                        \__('Invalid Ledger driver')
                     );
                 })
             )

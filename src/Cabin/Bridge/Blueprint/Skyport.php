@@ -122,7 +122,7 @@ class Skyport extends BlueprintGear
         $packageInfo = $this->getDetails($type, $supplier, $package);
         if (empty($packageInfo)) {
             throw new \Exception(
-                'Package not found!'
+                \__('Package not found!')
             );
         }
         if (!$packageInfo['installed']) {

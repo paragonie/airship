@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\LedgerStorage;
 
 use Airship\Alerts\FileSystem\AccessDenied as FileAccessDenied;
+use Airship\Alerts\FileSystem\FileNotFound;
 use Airship\Engine\Contract\LedgerStorageInterface;
 
 /**
@@ -59,6 +60,7 @@ class FileStore implements LedgerStorageInterface
      * @param string $message
      * @param string $context (JSON encoded)
      * @return mixed
+     * @throws FileNotFound
      * @throws FileAccessDenied
      */
     public function store(string $level, string $message, string $context)
@@ -69,8 +71,8 @@ class FileStore implements LedgerStorageInterface
         \touch($this->basedir . DIRECTORY_SEPARATOR . $filename);
         $file = \realpath($this->basedir . DIRECTORY_SEPARATOR . $filename);
         if ($file === false) {
-            throw new FileAccessDenied(
-                \trk('errors.file.lfi')
+            throw new FileNotFound(
+                \trk('errors.file.cannot_write_file')
             );
         }
         if (\strpos($file, $this->basedir) === false) {

@@ -31,8 +31,10 @@ class Database implements DBInterface
     {
         if (!$pdo) {
             throw new DBAlert\DBException(
-                'An instance of PDO was expected. ' .
-                'This parameter only defaults to NULL for unit testing purposes.'
+                \__(
+                    'An instance of PDO was expected. ' .
+                    'This parameter only defaults to NULL for unit testing purposes.'
+                )
             );
         }
         $this->pdo = $pdo;
@@ -74,7 +76,9 @@ class Database implements DBInterface
                 $password
             );
         } elseif (!\is_string($dsn)) {
-            throw new \TypeError('DSN must be string or array');
+            throw new \TypeError(
+                \__('DSN must be string or array')
+            );
         } elseif (\strpos($dsn, ':') !== false) {
             $dbEngine = \explode(':', $dsn)[0];
         }
@@ -349,7 +353,9 @@ class Database implements DBInterface
             switch ($type) {
                 case 'int':
                     if (!\is_int($v)) {
-                        throw new \TypeError($v . ' is not an integer');
+                        throw new \TypeError(
+                            \__('%s is not an integer', 'default', $v)
+                        );
                     }
                     $join[] = (int) $v + 0;
                     break;
@@ -358,7 +364,9 @@ class Database implements DBInterface
                 case 'number':
                 case 'numeric':
                     if (!\is_numeric($v)) {
-                        throw new \TypeError($v . ' is not a number');
+                        throw new \TypeError(
+                            \__('%s is not a number', 'default', $v)
+                        );
                     }
                     $join[] = (float) $v + 0.0;
                     break;
@@ -367,7 +375,9 @@ class Database implements DBInterface
                         $v = (string) $v;
                     }
                     if (!\is_string($v)) {
-                        throw new \TypeError($v . ' is not a string');
+                        throw new \TypeError(
+                            \__('%s is not a string.', 'default', \serialize($v))
+                        );
                     }
                     $join[] = $this->pdo->quote($v, \PDO::PARAM_STR);
                     break;

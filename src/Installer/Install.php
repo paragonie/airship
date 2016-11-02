@@ -838,7 +838,9 @@ class Install
     protected function finalProcessAdminAccount()
     {
         if (!\array_key_exists('passphrase', $this->data['admin'])) {
-            throw new \Exception('Passphrase is not defined. This is a serious error.');
+            throw new \Exception(
+                \__('Passphrase is not defined. This is a serious error.')
+            );
         }
         $sessionCanary = Base64UrlSafe::encode(\random_bytes(33));
         $userid = $this->db->insertGet(

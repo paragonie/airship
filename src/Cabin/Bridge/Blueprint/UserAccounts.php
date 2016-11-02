@@ -606,7 +606,7 @@ class UserAccounts extends BlueprintGear
             $userId
         );
         if (empty($unique)) {
-            throw new UserNotFound;
+            throw new UserNotFound();
         }
         return $unique;
     }
@@ -808,10 +808,6 @@ class UserAccounts extends BlueprintGear
             $username
         );
 
-        // We're expecting an integer, not a boolean
-        if ($num === false) {
-            throw new QueryError($this->db->errorInfo());
-        }
         return $num > 0;
     }
 

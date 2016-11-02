@@ -44,7 +44,9 @@ class Skyport extends AdminOnly
         parent::airshipLand();
         $this->skyport = $this->blueprint('Skyport');
         if (!($this->skyport instanceof SkyportBP)) {
-            throw new \TypeError('Skyport Blueprint');
+            throw new \TypeError(
+                \__('Skyport Blueprint')
+            );
         }
         $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
         $this->storeLensVar('active_link', 'bridge-link-skyport');

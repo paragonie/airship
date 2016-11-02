@@ -162,7 +162,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
         // You shall not pass!
         
         throw new \Error(
-            'You cannot clone a singleton (i.e. \Airship\Engine\State).'
+            \__('You cannot clone a singleton (i.e. \Airship\Engine\State).')
         );
     }
     

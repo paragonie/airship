@@ -481,7 +481,9 @@ class CustomPages extends HullCustomPages
                 $directoryId
             );
             if (empty($branches)) {
-                throw new CustomPageNotFoundException('No branches');
+                throw new CustomPageNotFoundException(
+                    \__('No branches')
+                );
             }
         }
         // Now let's recurse:
@@ -634,7 +636,9 @@ class CustomPages extends HullCustomPages
             );
         }
         if (empty($info)) {
-            throw new CustomPageNotFoundException();
+            throw new CustomPageNotFoundException(
+                \__('No directory was found at this given path.')
+            );
         }
         return $info;
     }

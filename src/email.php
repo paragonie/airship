@@ -91,8 +91,8 @@ $email_closure = function() {
 
                 default:
                     throw new Exception(
-                        \sprintf(
-                            'Miconfigured Email Configuration -- unknown transport: %s',
+                        \trk(
+                            'errors.email.invalid_transport',
                             \print_r($state->universal['email']['transport'], true)
                         )
                     );

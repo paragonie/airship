@@ -174,7 +174,9 @@ class ChannelUpdates extends BlueprintGear
             }
         }
         // When all else fails, TransferException
-        throw new TransferException();
+        throw new TransferException(
+            \__("All else has failed.")
+        );
     }
 
     /**
@@ -255,7 +257,7 @@ class ChannelUpdates extends BlueprintGear
         $supplier = \preg_replace('/[^A-Za-z0-9_\-]/', '', $keyData['supplier']);
         if (empty($supplier)) {
             throw new InvalidType(
-                'Expected non-empty string for supplier name'
+                \__('Expected non-empty string for supplier name.')
             );
         }
         $filePath = ROOT . '/config/supplier_keys/' . $supplier . '.json';
@@ -342,7 +344,7 @@ class ChannelUpdates extends BlueprintGear
     ): array {
         if ($data['status'] !== 'success') {
             throw new CouldNotUpdate(
-                $data['message'] ?? 'An update error has occurred'
+                $data['message'] ?? \__('An update error has occurred')
             );
         }
         $valid = [];
@@ -350,11 +352,15 @@ class ChannelUpdates extends BlueprintGear
             // Verify signature of the "no updates" timestamp.
             $sig = Base64UrlSafe::decode($data['signature']);
             if (!AsymmetricCrypto::verify($data['no_updates'], $this->channelPublicKey, $sig, true)) {
-                throw new CouldNotUpdate('Invalid signature from channel');
+                throw new CouldNotUpdate(
+                    \__('Invalid signature from channel')
+                );
             }
             $time = (new \DateTime($data['no_updates']))->add(new \DateInterval('P01D'));
             if ($time < $originated) {
-                throw new CouldNotUpdate('Channel is reporting a stale "no update" status');
+                throw new CouldNotUpdate(
+                    \__('Channel is reporting a stale "no update" status')
+                );
             }
             // No updates.
             return [];
@@ -394,7 +400,7 @@ class ChannelUpdates extends BlueprintGear
         $supplier = \preg_replace('/[^A-Za-z0-9_\-]/', '', $keyData['supplier']);
         if (empty($supplier)) {
             throw new InvalidType(
-                'Expected non-empty string for supplier name'
+                \__('Expected non-empty string for supplier name')
             );
         }
         $filePath = ROOT . '/config/supplier_keys/' . $supplier . '.json';

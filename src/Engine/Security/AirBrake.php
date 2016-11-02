@@ -298,7 +298,7 @@ class AirBrake
             $publicKey = $this->config['log-public-key'] ?? null;
             if (!$publicKey) {
                 throw new SecurityAlert(
-                    'Encryption public key not configured'
+                    \__('Encryption public key not configured.')
                 );
             }
         }

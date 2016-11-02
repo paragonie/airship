@@ -270,7 +270,7 @@ class Authentication
     ): bool {
         if (!isset($userData['migration']['type'])) {
             throw new SecurityAlert(
-                'No migration type registered'
+                \__('No migration type registered.')
             );
         }
         $migration = Gadgets::loadMigration(

@@ -39,7 +39,9 @@ class WordPress implements MigrationInterface
     {
         if (!$passwordKey) {
             if (!($this->key instanceof EncryptionKey)) {
-                throw new \Exception('No key was passed to this migration');
+                throw new \Exception(
+                    \__('No key was passed to this migration')
+                );
             }
             $passwordKey = $this->key;
         }
@@ -80,7 +82,9 @@ class WordPress implements MigrationInterface
     ): bool {
         if (!$passwordKey) {
             if (!($this->key instanceof EncryptionKey)) {
-                throw new \Exception('No key was passed to this migration');
+                throw new \Exception(
+                    \__('No key was passed to this migration')
+                );
             }
             $passwordKey = $this->key;
         }

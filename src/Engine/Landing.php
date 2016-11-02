@@ -363,7 +363,7 @@ class Landing
         if ($state->universal['debug']) {
             // This is only thrown during development, to be noisy.
             throw new SecurityAlert(
-                'CSRF validation failed'
+                \__('CSRF validation failed')
             );
         }
         $this->log('CSRF validation failed', LogLevel::ALERT);
