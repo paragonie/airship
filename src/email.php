@@ -65,7 +65,7 @@ $email_closure = function() {
                                     ? $state->universal['email']['file']['path']
                                     : ROOT . '/files/email',
                             'callback' =>
-                                function (Zend\Mail\Transport\File $t) {
+                                function (Zend\Mail\Transport\File $t): string {
                                     return \implode(
                                         '_',
                                         [
