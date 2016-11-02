@@ -8,7 +8,8 @@ use Airship\Cabin\Bridge\Filter\Crew\{
     DeleteUserFilter,
     EditGroupFilter,
     EditUserFilter,
-    NewGroupFilter
+    NewGroupFilter,
+    NewUserFilter
 };
 use Airship\Engine\Bolt\Get;
 
@@ -71,6 +72,53 @@ class Crew extends AdminOnly
             'groups' =>
                 $this->account->getGroupTree()
         ]);
+    }
+
+    /**
+     * Create a new user
+     *
+     * @route crew/users/new
+     * @param string $userId
+     */
+    public function createUser(string $userId = '')
+    {
+        $userId = (int) $userId;
+        $user = $this->account->getUserAccount($userId, true);
+        $post = $this->post(new NewUserFilter());
+        if ($post) {
+            if (!empty($post['preferences'])) {
+                if (\is_string($post['preferences'])) {
+                    $post['preferences'] = \json_decode(
+                        $post['preferences'],
+                        true
+                    );
+                }
+            } else {
+                $post['preferences'] = [];
+            }
+            $userId = $this->account->createUser($post);
+            if ($userId) {
+                $this->account->editUserCustomFields(
+                    $userId,
+                    $post['custom_fields'] ?? '[]'
+                );
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/crew/users'
+                );
+            }
+        }
+
+        $this->lens(
+            'crew/user_new',
+            [
+                'active_link' =>
+                    'bridge-link-admin-crew-users',
+                'user' =>
+                    $user,
+                'groups' =>
+                    $this->account->getGroupTree()
+            ]
+        );
     }
 
     /**

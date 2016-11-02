@@ -867,7 +867,7 @@ function user_display_name(int $userId = null): string
         "SELECT
              COALESCE(
                  display_name,
-                 custom_fields->>'realname',
+                 real_name,
                  username
              )
          FROM

@@ -160,6 +160,8 @@ class UserAccounts extends BlueprintGear
                     $post['email'] ?? '',
                 'display_name' =>
                     $post['display_name'] ?? '',
+                'real_name' =>
+                    $post['real_name'] ?? '',
                 'allow_reset' =>
                     !empty($post['allow_reset']),
                 'gpg_public_key' =>
@@ -370,6 +372,30 @@ class UserAccounts extends BlueprintGear
             $updates,
             [
                 'userid' => $userId
+            ]
+        );
+        return $this->db->commit();
+    }
+
+    /**
+     * Only change the custom fields.
+     *
+     * @param int $userId
+     * @param string $customFields
+     * @return bool
+     */
+    public function editUserCustomFields(int $userId, string $customFields = '[]'): bool
+    {
+        $this->db->beginTransaction();
+        $this->db->update(
+            'airship_users',
+            [
+                'custom_fields' =>
+                    \json_encode(\json_decode($customFields, true))
+            ],
+            [
+                'userid' =>
+                    $userId
             ]
         );
         return $this->db->commit();

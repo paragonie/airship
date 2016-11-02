@@ -13,36 +13,21 @@
                     name="username"
                     title="{{ __("Username")|e('html_attr') }}"
                     type="text"
-                    value="{{ user.username|e("html_attr") }}"
                 />
             </div>
         </div>
 
         <div class="table-row">
             <div class="table-cell table-label">
-                {{ __("Unique ID") }}:
-            </div>
-            <div class="table-cell">
-                <input
-                    class="full-width"
-                    name="uniqueid"
-                    title="{{ __("Unique ID")|e('html_attr') }}"
-                    type="text"
-                    value="{{ user.uniqueid|e("html_attr") }}"
-                />
-            </div>
-        </div>
-
-        <div class="table-row">
-            <div class="table-cell table-label">
-                {{ __("Change Passphrase") }}:
+                {{ __("Passphrase") }}:
             </div>
             <div class="table-cell">
                 <input
                     class="full-width"
                     id="password"
                     name="passphrase"
-                    placeholder="{{ __("Optional")|e('html_attr') }}"
+                    required="required"
+                    title="{{ __("Passphrase")|e('html_attr') }}"
                     type="password"
                 />
                 <div id="password_feedback" class="text-shadow"></div>
@@ -59,7 +44,6 @@
                     name="display_name"
                     title="{{ __("Display Name")|e('html_attr') }}"
                     type="text"
-                    value="{{ user.display_name|e("html_attr") }}"
                 />
             </div>
         </div>
@@ -74,7 +58,6 @@
                     name="real_name"
                     title="{{ __("Real Name")|e('html_attr') }}"
                     type="text"
-                    value="{{ user.real_name|e("html_attr") }}"
                 />
             </div>
         </div>
@@ -89,32 +72,10 @@
                     name="email"
                     title="{{ __("Email Address")|e('html_attr') }}"
                     type="text"
-                    value="{{ user.email|e("html_attr") }}"
                 />
             </div>
         </div>
 
-        <div class="table-row">
-            <div class="table-cell table-label align-top">
-                {{ __("Groups") }}:
-            </div>
-            <div class="table-cell">
-                <select
-                    class="treeselect full-width tall-select"
-                    id="users_groups"
-                    multiple="multiple"
-                    name="groups[]"
-                    title="{{ __("Groups") }}"
-                >
-                    {% for grp in groups %}
-                        {{ grpmac.selectBox(
-                            grp,
-                            user.groups
-                        ) }}
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
         <div class="table-row">
             <div class="table-cell table-label align-top">
                 {{ __("Custom Profile Fields (JSON)") }}:
@@ -124,16 +85,15 @@
                     class="full-width full-textarea"
                     title="{{ __("Custom Profile Fields (JSON)")|e('html_attr') }}"
                     name="custom_fields"
-                >{{
-                    user.custom_fields|default([])|json_encode(constant("JSON_PRETTY_PRINT"))
-                }}</textarea>
+                >[]</textarea>
             </div>
         </div>
+
         <div class="table-row">
             <div class="table-cell table-label"></div>
             <div class="table-cell">
                 <button type="submit" class="pure-button pure-button-primary">
-                    {{ __("Update Account Information") }}
+                    {{ __("Create User Account") }}
                 </button>
                 <a class="pure-button pure-button-tertiary" href="{{ cabin_url() }}crew/users">
                     {{ __("Cancel") }}
