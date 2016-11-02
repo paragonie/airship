@@ -60,7 +60,7 @@
         },
         "email": {
             "invalid_transport":
-                "Miconfigured Email Configuration -- unknown transport: %s"
+                "Misconfigured Email Configuration -- unknown transport: %s"
         },
         "file": {
             "cannot_read_file":
