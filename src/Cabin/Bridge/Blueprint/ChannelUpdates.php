@@ -375,8 +375,8 @@ class ChannelUpdates extends BlueprintGear
             }
         }
         // Sort by ID
-        \uasort($valid, function (array $a, array $b) {
-            return $a['id'] <=> $b['id'];
+        \uasort($valid, function (array $a, array $b): int {
+            return (int) ($a['id'] <=> $b['id']);
         });
         return $valid;
     }

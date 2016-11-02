@@ -191,9 +191,12 @@ abstract class Installer
         }
 
         $supplierName = $this->supplier->getName();
-        \uasort($update['versions'], function(array $a, array $b) {
-            return $a['version'] <=> $b['version'];
-        });
+        \uasort(
+            $update['versions'],
+            function(array $a, array $b): int {
+                return (int) ($a['version'] <=> $b['version']);
+            }
+        );
         $data = \array_pop($update['versions']);
         $version = $data['version'];
 

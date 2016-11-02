@@ -392,9 +392,9 @@ class Keyggdrasil
         // Sort by ID
         \uasort(
             $TreeUpdateArray,
-            function (TreeUpdate $a, TreeUpdate $b)
+            function (TreeUpdate $a, TreeUpdate $b): int
             {
-                return $a->getChannelId() <=> $b->getChannelId();
+                return (int) ($a->getChannelId() <=> $b->getChannelId());
             }
         );
         return $TreeUpdateArray;

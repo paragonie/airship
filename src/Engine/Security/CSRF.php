@@ -246,8 +246,8 @@ class CSRF
         // Sort by creation time
         \uasort(
             $_SESSION[$this->sessionIndex],
-            function (array $a, array $b) {
-                return $a['created'] <=> $b['created'];
+            function (array $a, array $b): int {
+                return (int) ($a['created'] <=> $b['created']);
             }
         );
 

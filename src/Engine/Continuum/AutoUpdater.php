@@ -483,9 +483,9 @@ abstract class AutoUpdater
     {
         \uasort(
             $updates,
-            function(UpdateInfo $a, UpdateInfo $b)
+            function(UpdateInfo $a, UpdateInfo $b): int
             {
-                return $a->getVersionExpanded() <=> $b->getVersionExpanded();
+                return (int) ($a->getVersionExpanded() <=> $b->getVersionExpanded());
             }
         );
         return $updates;
