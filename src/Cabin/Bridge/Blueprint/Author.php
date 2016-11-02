@@ -710,24 +710,77 @@ class Author extends BlueprintGear
     {
         $this->db->beginTransaction();
 
+        $updates = [
+            'name' =>
+                $post['name'] ?? '',
+            'byline' =>
+                $post['byline'] ?? '',
+            'bio_format' =>
+                $post['format'] ?? 'Markdown',
+            'biography' =>
+                $post['biography'] ?? ''
+        ];
+
+        if (!empty($post['slug'])) {
+            if ($this->updateAuthorSlug($authorId, $post)) {
+                $updates['slug'] = $post['slug'];
+            }
+        }
+
         $this->db->update(
             'hull_blog_authors',
-            [
-                'name' =>
-                    $post['name'] ?? '',
-                'byline' =>
-                    $post['byline'] ?? '',
-                'bio_format' =>
-                    $post['format'] ?? 'Markdown',
-                'biography' =>
-                    $post['biography'] ?? ''
-            ],
+            $updates,
             [
                 'authorid' => $authorId
             ]
         );
 
         return $this->db->commit();
+    }
+
+    /**
+     * Should we update the author's slug?
+     *
+     * @param int $authorId
+     * @param array $post
+     * @return bool
+     */
+    public function updateAuthorSlug(int $authorId, array $post): bool
+    {
+        $slug = $this->db->cell('SELECT slug FROM hull_blog_authors WHERE authorid = ?', $authorId);
+        if ($slug === $post['slug']) {
+            // Don't update. It's the same.
+            return false;
+        }
+        if ($this->db->exists('SELECT count(*) FROM hull_blog_authors WHERE slug = ?', $post['slug'])) {
+            // Don't update.
+            return false;
+        }
+
+        if (!empty($post['redirect_slug'])) {
+            $oldUrl = \implode('/', [
+                'blog',
+                'author',
+                $slug
+            ]);
+            $newUrl = \implode('/', [
+                'blog',
+                'author',
+                $post['slug']
+            ]);
+            $this->db->insert(
+                'airship_custom_redirect',
+                [
+                    'oldpath' => $oldUrl,
+                    'newpath' => $newUrl,
+                    'cabin' => 'Hull',
+                    'same_cabin' => true
+                ]
+            );
+        }
+
+        // Allow updates to go through.
+        return true;
     }
 
     /**
