@@ -1,9 +1,17 @@
-## Version 1.4.0 - Not Released Yet
+## Version 1.4.0 - 2016-11-0?
 
   * Cryptographically associate account recovery tokens with the row ID
     of the user who requested the reset. This means that updating the
     userid column of an existing recovery token will not allow you to
     login as the arbitrary user.
+  * [#52](https://github.com/paragonie/airship/issues/52),
+    [#137](https://github.com/paragonie/airship/issues/137),
+    [#140](https://github.com/paragonie/airship/issues/140):
+    Allow users, groups, blog post categories, author profiles,
+    and series to be deleted.
+  * [#72](https://github.com/paragonie/airship/issues/72):
+    You can now configure how emails are sent out. All of the options
+    currently provided by [Zend\Mail](https://framework.zend.com/manual/2.4/en/modules/zend.mail.introduction.html#configuring-the-default-sendmail-transport).
   * [#128](https://github.com/paragonie/airship/issues/128):
     All CMS Airship cookies send a Same-Site header (strictly). This
     adds another layer of resilience against CSRF attacks.
@@ -11,13 +19,17 @@
     Implemented a framework for importing data (i.e. password hashes)
     into a CMS Airship project. This will allow users to log in with
     their old password, when Airship only knows the old password hash.
+  * [#138](https://github.com/paragonie/airship/issues/138),
+    [#141](https://github.com/paragonie/airship/issues/141):
+    In addition to being able to change the name of a blog category or
+    author, you can also update the slug (and optionally create a
+    redirect from the old slug to the new one).
+  * [#148](https://github.com/paragonie/airship/issues/148):
+    You can now override the footer text.
   * [#149](https://github.com/paragonie/airship/issues/149):
     Implemented a View History feature for Blog Posts.
-  * [#52](https://github.com/paragonie/airship/issues/52),
-    [#137](https://github.com/paragonie/airship/issues/137),
-    [#140](https://github.com/paragonie/airship/issues/140):
-    Allow users, groups, blog post categories, author profiles,
-    and series to be deleted.
+  * [#155](https://github.com/paragonie/airship/issues/155):
+    You can now create user accounts from the Bridge.
   * Prevent LFI attacks in Gregwar/RST by disabling all file inclusion.
 
 ## Version 1.3.1 - 2016-09-12
