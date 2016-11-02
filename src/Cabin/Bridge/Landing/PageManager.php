@@ -766,13 +766,13 @@ class PageManager extends LoggedInUsersOnly
                 'dir' => $dir
             ]
         );
-        $oldURL = $this->pg->getPathByPageId((int) $pageId);
+        list($oldCabin, $oldPath, $oldURL) = $this->pg->getPathByPageId((int) $pageId, $cabin);
         if ($this->pg->deletePage($pageId)) {
             if (!empty($post['create_redirect']) && !empty($post['redirect_to'])) {
                 $this->pg->createSameCabinRedirect(
-                    $oldURL,
+                    $oldPath . '/' . $oldURL,
                     $post['redirect_to'],
-                    $cabin
+                    $oldCabin
                 );
             }
             \Airship\redirect(
@@ -780,6 +780,7 @@ class PageManager extends LoggedInUsersOnly
                 'dir' => $dir
             ]);
         }
+        return false;
     }
 
     /**

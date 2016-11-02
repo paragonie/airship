@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 use Airship\Engine\{
     Gears,
+    Hail,
     State
 };
 
 /**
  * @global State $state
+ * @global Hail $hail
  */
 
 // Always check for changes to channel keys before initiating update

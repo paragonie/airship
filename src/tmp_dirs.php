@@ -2,9 +2,6 @@
 declare(strict_types=1);
 
 $tmpDirsClosure = function () {
-    if (!\is_dir(ROOT . '/tmp/cache/' . $d)) {
-
-    }
 // Sanity check:
     $tmpDirs = [
         'comments',

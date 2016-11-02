@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Airship\Engine\{
     Gears,
+    Hail,
     Keyggdrasil,
     State
 };
@@ -12,6 +13,7 @@ use Airship\Engine\{
  * triggered every time a page loads after enough time has elapsed
  *
  * @global State $state
+ * @global Hail $hail
  */
 \ignore_user_abort(true);
 \set_time_limit(0);

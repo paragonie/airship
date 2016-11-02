@@ -20,12 +20,15 @@ define('IDE_HACKS', false);
 /**
  * 1. Define come constants
  */
-if (!defined('ROOT')) {
-    \define('ROOT', __DIR__);
+if (!\defined('ROOT')) {
+    define('ROOT', __DIR__);
 }
-\define('AIRSHIP_UPLOADS', ROOT . '/files/uploaded/');
-if (!defined('ISCLI')) {
-    \define('ISCLI', PHP_SAPI === 'cli');
+define('AIRSHIP_UPLOADS', ROOT . '/files/uploaded/');
+if (!\defined('ISCLI')) {
+    define('ISCLI', PHP_SAPI === 'cli');
+}
+if (!\defined('CURLPROXY_SOCKS5_HOSTNAME')) {
+    define('CURLPROXY_SOCKS5_HOSTNAME', 7);
 }
 
 if (!\is_dir(ROOT . '/tmp')) {

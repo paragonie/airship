@@ -123,8 +123,8 @@ if ($autoUpdater->needsUpdate()) {
 /**
  * Let's load the latest gear for our autoloader
  */
-\define('CABIN_NAME', $active['name']);
-\define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
+define('CABIN_NAME', $active['name']);
+define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
 
 // Turn all of this cabins' Landings and Blueprints into gears:
 require ROOT . '/cabin_gears.php';
@@ -179,18 +179,33 @@ if (!empty($state->universal['debug'])) {
 
         // Show previous throwables as well:
         $n = 1;
-        $e = $e->getPrevious();
-        // The methods below exist in both \Exception and \Error.
-        while ($e instanceof \Exception || $e instanceof \Error) {
-            echo "\n", \str_repeat('#', 80), "\n";
-            echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
-                $e->getMessage(), "\n\n",
-                $e->getCode(), "\n\n",
-                $e->getTraceAsString();
-            ++$n;
-            $e = $e->getPrevious();
-        }
-        exit(255);
+            // The methods below exist in both \Exception and \Error.
+            while ($e = $e->getPrevious()) {
+                if ($e instanceof \Exception) {
+                    echo "\n", \str_repeat('#', 80), "\n";
+                    echo "PREVIOUS EXCEPTION (", $n, "): ", \get_class($e), "\n\n",
+                    $e->getMessage(), "\n\n",
+                    $e->getCode(), "\n\n",
+                    $e->getTraceAsString();
+                    ++$n;
+                    if (!$e) {
+                        exit(255);
+                    }
+                } elseif ($e instanceof \Error) {
+                    echo "\n", \str_repeat('#', 80), "\n";
+                    echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
+                    $e->getMessage(), "\n\n",
+                    $e->getCode(), "\n\n",
+                    $e->getTraceAsString();
+                    ++$n;
+                    if (!$e) {
+                        exit(255);
+                    }
+                } else {
+                    break;
+                }
+            }
+            exit(255);
     }
     // This is just for benchmarking purposes:
     echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';

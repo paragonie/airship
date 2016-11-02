@@ -80,11 +80,11 @@ trait Orderable
         bool $reverse = false
     ): bool {
         if ($reverse) {
-            return \uasort($array, function ($a, $b) use ($sort):int {
+            return \uasort($array, function ($a, $b) use ($sort) {
                 return $b[$sort] <=> $a[$sort];
             });
         }
-        return \uasort($array, function ($a, $b) use ($sort):int {
+        return \uasort($array, function ($a, $b) use ($sort) {
             return $a[$sort] <=> $b[$sort];
         });
     }

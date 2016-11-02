@@ -128,12 +128,14 @@ $lens_edited = true;
 $lens->func(
     'can_create',
     function(...$args) {
+        /** @noinspection PhpStrictTypeCheckingInspection */
         return \Airship\LensFunctions\can('create', ...$args);
     }
 );
 $lens->func(
     'can_read',
     function(...$args) {
+        /** @noinspection PhpStrictTypeCheckingInspection */
         return \Airship\LensFunctions\can('read', ...$args);
     }
 );
@@ -141,12 +143,14 @@ $lens->func(
 $lens->func(
     'can_update',
     function(...$args) {
+        /** @noinspection PhpStrictTypeCheckingInspection */
         return \Airship\LensFunctions\can('update', ...$args);
     }
 );
 $lens->func(
     'can_delete',
     function(...$args) {
+        /** @noinspection PhpStrictTypeCheckingInspection */
         return \Airship\LensFunctions\can('delete', ...$args);
     }
 );

@@ -153,7 +153,6 @@ class Account extends LandingGear
      *
      * @route logout/(.*)
      * @param string $token
-     * @return mixed
      */
     public function logout(string $token)
     {

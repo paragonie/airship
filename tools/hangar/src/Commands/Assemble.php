@@ -246,6 +246,7 @@ class Assemble extends SessionCommand
      */
     protected function setupFiles(string $workspace, array $args = [])
     {
+        unset($args);
         $from = $this->session['dir'];
         if (\in_array('metadata', $this->session)) {
             $this->metadata = $this->session['metadata'];

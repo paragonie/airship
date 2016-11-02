@@ -9,7 +9,7 @@
                         $('#database_'+i+'_port').attr('placeholder', 5432);
                         break;
                 }
-            };
+            }
 
             var num_db = {% if databases %}{{ databases.length|default(1) }}{% else %}1{% endif %};
 

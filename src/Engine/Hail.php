@@ -116,6 +116,7 @@ class Hail
         string $url,
         array $params = []
     ): ResponseInterface {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->client->getAsync(
             $url,
             $this->params($params, $url)
@@ -322,6 +323,7 @@ class Hail
         string $url,
         array $params = []
     ): ResponseInterface {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->client->postAsync(
             $url,
             $this->params($params, $url)

@@ -74,7 +74,6 @@ abstract class Gadgets
      *
      * @param string $key
      * @param MigrationInterface $migration
-     * @return Gadgets
      */
     public static function registerMigration(string $key, MigrationInterface $migration)
     {

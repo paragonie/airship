@@ -52,6 +52,7 @@ class PublicFiles extends LandingGear
      * Download a file (assuming we are allowed to)
      *
      * @param string $path
+     * @param string $default Default MIME type
      * @route files/(.*)
      * @throws EmulatePageNotFound
      */
@@ -73,8 +74,8 @@ class PublicFiles extends LandingGear
             if (!\file_exists($realPath)) {
                 throw new FileNotFound();
             }
-            // All text/whatever needs to be text/plain; no HTML or JS payloads allowed
-            $fileData['type'] = Util::downloadFileType($fileData['type'], 'text/plain');
+            
+            $fileData['type'] = Util::downloadFileType($fileData['type'], $default);
 
             $c = $this->config('file.cache');
             if ($c > 0) {

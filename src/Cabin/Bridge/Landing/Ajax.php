@@ -374,8 +374,6 @@ class Ajax extends LoggedInUsersOnly
 
     /**
      * @route ajax/rich_text_preview
-     *
-     * @return mixed
      */
     public function richTextPreview()
     {
@@ -385,7 +383,7 @@ class Ajax extends LoggedInUsersOnly
                 case 'Rich Text':
                     \Airship\json_response([
                         'status' => 'OK',
-                        'body' => \Airship\LensFunctions\purify($_POST['body'] ?? '')
+                        'body' => \Airship\LensFunctions\get_purified($_POST['body'] ?? '')
                     ]);
                     break;
                 case 'Markdown':
@@ -400,7 +398,7 @@ class Ajax extends LoggedInUsersOnly
                 case 'RST':
                     \Airship\json_response([
                         'status' => 'OK',
-                        'body' => \Airship\LensFunctions\purify(
+                        'body' => \Airship\LensFunctions\get_purified(
                             \Airship\LensFunctions\render_rst($_POST['body'] ?? '', true)
                         )
                     ]);

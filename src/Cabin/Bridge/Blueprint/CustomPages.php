@@ -687,7 +687,11 @@ class CustomPages extends HullCustomPages
                     $cabin
                 )
             );
-            return \trim($path, '/') . '/' . $page['url'];
+            return [
+                $cabin,
+                \trim($path, '/'),
+                $page['url']
+            ];
         } catch (CustomPageNotFoundException $ex) {
             $this->log(
                 'Custom directory not found',

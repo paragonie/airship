@@ -27,12 +27,12 @@ use ParagonIE\Halite\{
 use ReCaptcha\ReCaptcha;
 use ReCaptcha\RequestMethod\CurlPost;
 
-\define('AIRSHIP_VERSION', '1.4.0');
-\define(
+define('AIRSHIP_VERSION', '1.4.0');
+define(
     'AIRSHIP_BLAKE2B_PERSONALIZATION',
     'ParagonInitiativeEnterprises:Airship-PoweredByHalite:Keyggdrasil'
 );
-\define('AIRSHIP_DATE_FORMAT', 'Y-m-d\TH:i:s');
+define('AIRSHIP_DATE_FORMAT', 'Y-m-d\TH:i:s');
 
 /**
  * Do all of these keys exist in the target array
@@ -210,6 +210,7 @@ function clear_cache()
         \unlink($file);
     }
     \clearstatcache();
+    return true;
 }
 
 /**

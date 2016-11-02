@@ -157,5 +157,11 @@
 
 <fieldset>
     <legend>{{ __("Extra CSS (Advanced Users)") }}</legend>
-    <textarea name="motif_config[manual_css]" class="full-textarea">{{ motif_config['manual_css']|e('html_attr') }}</textarea>
+    <textarea
+        class="full-textarea"
+        name="motif_config[manual_css]"
+        title="{{ __("Motif Configuration")|e('html_attr') }}"
+    >{{
+        motif_config['manual_css']|e('html_attr')
+    }}</textarea>
 </fieldset>

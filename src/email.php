@@ -57,6 +57,7 @@ $email_closure = function() {
 
                 case 'File':
                     $transport = new Zend\Mail\Transport\File();
+                    /** @noinspection PhpUnusedParameterInspection */
                     $transport->setOptions(
                         new \Zend\Mail\Transport\FileOptions([
                             'path' =>

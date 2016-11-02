@@ -1441,7 +1441,7 @@ fieldset.preferences > legend {
 #cabin_accordion h3 + div,
 #admin_settings_accordion h3 + div {
     border: 1px solid rgba(0, 0, 0, 0.5);
-    font-family: 'Open Sans', Sans-serif;
+    font-family: 'Open Sans', sans-serif;
     padding: 1.5em 1em 1em 1em;
     line-height: 1.7;
 }

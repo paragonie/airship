@@ -375,7 +375,7 @@ class ChannelUpdates extends BlueprintGear
             }
         }
         // Sort by ID
-        \uasort($valid, function (array $a, array $b): array {
+        \uasort($valid, function (array $a, array $b) {
             return $a['id'] <=> $b['id'];
         });
         return $valid;
@@ -527,7 +527,7 @@ class ChannelUpdates extends BlueprintGear
 
             ]
         );
-        $this->db->commit();
+        return $this->db->commit();
     }
 
     /**

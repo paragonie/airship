@@ -207,10 +207,11 @@ abstract class Command
      *
      * @param array $args - CLI arguments
      * @echo
-     * @return null
+     * @return bool
      */
     public function usageInfo(array $args = [])
     {
+        unset($args);
         $TAB = str_repeat(' ', self::TAB_SIZE);
         $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 

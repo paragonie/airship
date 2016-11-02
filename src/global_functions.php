@@ -63,7 +63,7 @@ use Airship\Engine\{
          *
          * @param string $text
          * @param string $domain
-         * @param array ...$params
+         * @param string[] ...$params
          * @return string
          */
         function __(string $text, string $domain = 'default', ...$params)
@@ -87,14 +87,15 @@ use Airship\Engine\{
          * Translate and echo a string of text
          * 
          * @param string $text String to translate
-         * @param mixed ...$params
-         * @return string
+         * @param string[] ...$params
+         * @return void
          */
-        function _e(string $text, ...$params) : string
+        function _e(string $text, ...$params)
         {
             if (!empty($params)) {
                 \array_walk($params, '\\Airship\LensFunctions\\get_purified');
             }
+            /** @noinspection PhpStrictTypeCheckingInspection */
             echo __($text, ...$params);
         }
     }
@@ -115,8 +116,10 @@ use Airship\Engine\{
                 \array_walk($params, '\\Airship\LensFunctions\\get_purified');
             }
             if (abs($arg) == 1) {
+                /** @noinspection PhpStrictTypeCheckingInspection */
                 return __($text, ...$params);
             } else {
+                /** @noinspection PhpStrictTypeCheckingInspection */
                 return __($pltext, ...$params);
             }
         }
