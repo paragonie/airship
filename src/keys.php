@@ -79,7 +79,7 @@ $key_management_closure = function() {
                     $kp = KeyFactory::generateSignatureKeyPair();
                     $keys[$index] = $kp->getSecretKey();
                     KeyFactory::save($keys[$index], $path);
-                    break ;
+                    break;
                 case 'EncryptionKeyPair':
                     $keys[$index] = KeyFactory::generateEncryptionKeyPair();
                     KeyFactory::save($keys[$index], $path);
