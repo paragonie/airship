@@ -9,6 +9,7 @@ use ParagonIE\Cookie\{
     Cookie,
     Session
 };
+
 /**
  * @global State $state
  */
@@ -37,6 +38,10 @@ if (!Session::id()) {
             }
         }
     }
+    if (\PHP_VERSION_ID >= 70100) {
+        // Forward compatibility.
+        unset($session_config['entropy_length']);
+    }
 
     Session::start(
         Cookie::SAME_SITE_RESTRICTION_STRICT,
@@ -60,7 +65,7 @@ if (empty($_SESSION['created_canary'])) {
     if ($dt < $now) {
         // An hour has passed:
         Session::regenerate(true);
-        // Create the canary
+        // Recreate the canary
         $_SESSION['created_canary'] = $now->format(\AIRSHIP_DATE_FORMAT);
     }
 }

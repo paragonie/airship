@@ -184,9 +184,9 @@ function csp_hash(
         $checksum = CryptoUtil::hash(
             'Content Security Policy Hash:' . $file
         );
-        $h1 = substr($checksum, 0, 2);
-        $h2 = substr($checksum, 2, 2);
-        $fhash = substr($checksum, 4);
+        $h1 = Binary::safeSubstr($checksum, 0, 2);
+        $h2 = Binary::safeSubstr($checksum, 2, 2);
+        $fhash = Binary::safeSubstr($checksum, 4);
 
         $fileName = \implode(
             '/',
