@@ -82,29 +82,29 @@
         <div class="table-row">
             <div class="table-cell table-min-width">
                 <a
-                     href="{{ cabin_url() }}author/edit/{{ auth.authorid|e('html_attr') }}"
-                     class="pure-button pure-button-secondary icon-1px-right"
-                     title="{{ __("Edit Author Profile")|e('html_attr') }}"
-                ><i class="fa fa-pencil"></i></a>
-                <a
-                     href="{{ cabin_url() }}author/users/{{ auth.authorid|e('html_attr') }}"
-                     class="pure-button pure-button-primary icon-1px-right"
-                     title="{{ __("Manage Members")|e('html_attr') }}"
-                ><i class="fa fa-users"></i></a>
-                <a
-                     href="{{ cabin_url() }}author/photos/{{ auth.authorid|e('html_attr') }}"
-                     class="pure-button pure-button-secondary icon-1px-right"
-                     title="{{ __("Author Photos")|e('html_attr') }}"
-                ><i class="fa fa-photo"></i></a>
-                <a
-                     href="{{ cabin_url() }}author/files/{{ auth.authorid|e('html_attr') }}/Hull"
-                     class="pure-button pure-button-primary icon-1px-right"
-                     title="{{ __("Author Files")|e('html_attr') }}"
-                ><i class="fa fa-folder-open-o"></i></a>
-                <a
-                     href="{{ cabin_url() }}author/delete/{{ auth.authorid|e('html_attr') }}"
-                     class="pure-button pure-button-secondary"
-                     title="{{ __("Delete Author")|e('html_attr') }}"
+                    href="{{ cabin_url() }}author/edit/{{ auth.authorid|e('html_attr') }}"
+                    class="pure-button pure-button-secondary icon-1px-right"
+                    title="{{ __("Edit Author Profile")|e('html_attr') }}"
+                ><i class="fa fa-pencil"></i></a>{#
+                #}<a
+                    href="{{ cabin_url() }}author/users/{{ auth.authorid|e('html_attr') }}"
+                    class="pure-button pure-button-primary icon-1px-right"
+                    title="{{ __("Manage Members")|e('html_attr') }}"
+                ><i class="fa fa-users"></i></a>{#
+                #}<a
+                    href="{{ cabin_url() }}author/photos/{{ auth.authorid|e('html_attr') }}"
+                    class="pure-button pure-button-secondary icon-1px-right"
+                    title="{{ __("Author Photos")|e('html_attr') }}"
+                ><i class="fa fa-photo"></i></a>{#
+                #}<a
+                    href="{{ cabin_url() }}author/files/{{ auth.authorid|e('html_attr') }}/Hull"
+                    class="pure-button pure-button-primary icon-1px-right"
+                    title="{{ __("Author Files")|e('html_attr') }}"
+                ><i class="fa fa-folder-open-o"></i></a>{#
+                #}<a
+                    href="{{ cabin_url() }}author/delete/{{ auth.authorid|e('html_attr') }}"
+                    class="pure-button pure-button-secondary"
+                    title="{{ __("Delete Author")|e('html_attr') }}"
                 ><i class="fa fa-trash-o"></i></a>
             </div>
             <div class="table-cell">
