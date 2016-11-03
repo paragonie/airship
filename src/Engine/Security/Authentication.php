@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security;
 
-use Airship\Alerts\Security\LongTermAuthAlert;
-use Airship\Alerts\Security\SecurityAlert;
+use Airship\Alerts\Security\{
+    LongTermAuthAlert,
+    SecurityAlert
+};
 use Airship\Engine\Contract\DBInterface;
 use Airship\Engine\Gadgets;
 use Airship\Engine\Security\Migration\WordPress;
@@ -122,9 +124,7 @@ class Authentication
             [
                 $f['userid'] => $userId,
                 $f['selector'] => Base64::encode($selector),
-                $f['validator'] => \Sodium\bin2hex(
-                    \Sodium\crypto_generichash($validator)
-                )
+                $f['validator'] => CryptoUtil::hash($validator)
             ]
         );
         return Base64::encode($selector . $validator);
@@ -232,6 +232,7 @@ class Authentication
             Base64::encode($sel)
         );
         if (empty($record)) {
+            \Sodium\memzero($val);
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
             );
@@ -240,10 +241,15 @@ class Authentication
         \Sodium\memzero($record[$f['validator']]);
 
         if (!\hash_equals($stored, $val)) {
+            \Sodium\memzero($val);
+            \Sodium\memzero($stored);
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
             );
         }
+        \Sodium\memzero($stored);
+        \Sodium\memzero($val);
+
         $userID = (int) $record[$f['userid']];
         $_SESSION['session_canary'] = $this->db->cell(
             'SELECT session_canary FROM airship_users WHERE userid = ?',

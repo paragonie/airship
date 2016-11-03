@@ -72,7 +72,7 @@ trait Security
      * @param string $context context regex (in perm_contexts)
      * @param string $cabin (defaults to current cabin)
      * @param integer $userID (defaults to current user)
-     * @return boolean
+     * @return bool
      */
     public function can(
         string $action,
@@ -110,6 +110,7 @@ trait Security
 
     /**
      * Are we currently logged in as an admin?
+     *
      * @param integer $userId (defaults to current user)
      * @return bool
      */
@@ -181,6 +182,8 @@ trait Security
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
+            \Sodium\memzero($token);
+
             if (!$this->verifySessionCanary($userId, false)) {
                 return false;
             }
@@ -288,7 +291,7 @@ trait Security
         );
         if (empty($canary)) {
             $this->log(
-                'What is this even.',
+                'No session canary was registered with this user in the database.',
                 LogLevel::DEBUG,
                 [
                     'database' => $canary,

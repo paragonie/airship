@@ -13,7 +13,14 @@ use ParagonIE\Halite\Util as CryptoUtil;
  */
 class HiddenString
 {
+    /**
+     * @var string
+     */
     protected $internalStringValue = '';
+
+    /**
+     * @var bool
+     */
     protected $allowInline = false;
 
     /**
