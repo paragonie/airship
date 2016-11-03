@@ -4,13 +4,15 @@ declare(strict_types=1);
 use Airship\Hangar\Command;
 use Airship\Hangar\Commands\Help;
 use ParagonIE\Halite\Halite;
+
 /**
  * This script is the entry point for all Hangar commands.
  */
-\define('HANGAR_ROOT', __DIR__);
+define('HANGAR_ROOT', __DIR__);
 $homeDir = isset($_SERVER['HOME'])
     ? $_SERVER['HOME']
     : \posix_getpwuid(posix_getuid())['dir'];
+
 define('AIRSHIP_USER_HOME', $homeDir);
 define('AIRSHIP_LOCAL_CONFIG', AIRSHIP_USER_HOME . DIRECTORY_SEPARATOR . '.airship');
 
@@ -21,8 +23,8 @@ if (!\is_dir(AIRSHIP_LOCAL_CONFIG)) {
 /**
  * 1. Register an autoloader for all the classes we use
  */
-require __DIR__."/autoload.php";
-require \dirname(__DIR__)."/vendor/autoload.php";
+require __DIR__ . "/autoload.php";
+require \dirname(__DIR__) . "/vendor/autoload.php";
 
 /**
  * 2. Load the configuration

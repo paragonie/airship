@@ -5,11 +5,30 @@ namespace Airship\Hangar\Commands;
 use Airship\Hangar\SessionCommand;
 use ParagonIE\ConstantTime\Base64;
 
+/**
+ * Class autoRun
+ * @package Airship\Hangar\Commands
+ */
 class autoRun extends SessionCommand
 {
+    /**
+     * @var bool
+     */
     public $essential = false;
+
+    /**
+     * @var int
+     */
     public $display = 4;
+
+    /**
+     * @var string
+     */
     public $name = 'Add autoRun Script';
+
+    /**
+     * @var string
+     */
     public $description = 'Add scripts to run after the update has complete.';
 
     /**

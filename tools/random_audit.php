@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
+
+require_once \dirname(__DIR__).'/src/bootstrap.php';
+
 /**
  * Grabs a random file and tells you to audit it.
  */
-require_once \dirname(__DIR__).'/src/bootstrap.php';
 
 if ($argc > 1) {
     $extensions = \array_slice($argv, 1);
