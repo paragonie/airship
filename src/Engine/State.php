@@ -13,7 +13,14 @@ namespace Airship\Engine;
  */
 class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
+    /**
+     * @var State
+     */
     private static $instance = null;
+
+    /**
+     * @var \ArrayObject
+     */
     private $engine_state_registry = null;
 
     /**

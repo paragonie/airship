@@ -9,6 +9,7 @@ use Airship\Alerts\{
     FileSystem\FileNotFound
 };
 use Airship\Engine\Continuum\Supplier as SupplierObject;
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * Trait Supplier
@@ -31,7 +32,7 @@ trait Supplier
      */
     public function createSupplier(string $channelName, array $data): SupplierObject
     {
-        $supplierName = $data['supplier'];
+        $supplierName = $this->escapeSupplierName($data['supplier']);
         if (\file_exists(ROOT . '/config/supplier_keys/' . $supplierName . '.json')) {
             throw new CouldNotCreateSupplier(
                 'File already exists: config/supplier_keys/' . $supplierName . '.json'
@@ -59,6 +60,19 @@ trait Supplier
     }
 
     /**
+     * @param string $supplier
+     * @return string
+     */
+    public function escapeSupplierName(string $supplier): string
+    {
+        return \preg_replace(
+            '#[^A-Za-z0-9\-\_]#',
+            '',
+            $supplier
+        );
+    }
+
+    /**
      * For objects that don't bother caching
      *
      * @param string $supplier
@@ -69,6 +83,7 @@ trait Supplier
      */
     public function getSupplierDontCache(string $supplier): SupplierObject
     {
+        $supplier = $this->escapeSupplierName($supplier);
         if (!\file_exists(ROOT . '/config/supplier_keys/' . $supplier . '.json')) {
             throw new NoSupplier(
                 \__(
@@ -103,7 +118,13 @@ trait Supplier
                 );
                 foreach ($allSuppliers as $supplierKeyFile) {
                     // We want everything except the .json
-                    $supplier = \substr($this->getEndPiece($supplierKeyFile), 0, -5);
+                    $supplier = $this->escapeSupplierName(
+                        Binary::safeSubstr(
+                            $this->getEndPiece($supplierKeyFile),
+                            0,
+                            -5
+                        )
+                    );
                     try {
                         $data = \Airship\loadJSON($supplierKeyFile);
                     } catch (FileNotFound $ex) {
@@ -118,6 +139,7 @@ trait Supplier
         // Otherwise, we're just fetching one supplier's keys
         if ($force_flush || empty($this->supplierCache[$supplier])) {
             try {
+                $supplier = $this->escapeSupplierName($supplier);
                 $supplierFile = ROOT . '/config/supplier_keys/' . $supplier . '.json';
                 if (!\file_exists($supplierFile)) {
                     throw new NoSupplier(

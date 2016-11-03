@@ -5,6 +5,7 @@ namespace Airship\Engine\LedgerStorage;
 use Airship\Alerts\FileSystem\AccessDenied as FileAccessDenied;
 use Airship\Alerts\FileSystem\FileNotFound;
 use Airship\Engine\Contract\LedgerStorageInterface;
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * Class FileStore
@@ -41,7 +42,7 @@ class FileStore implements LedgerStorageInterface
         string $logfileFormat = self::FILE_FORMAT,
         string $timeFormat = self::TIME_FORMAT
     ) {
-        if (\strlen($baseDirectory) < 2) {
+        if (Binary::safeStrlen($baseDirectory) < 2) {
             $this->basedir = ROOT . '/tmp/logs/';
         } else {
             $this->basedir = $baseDirectory;

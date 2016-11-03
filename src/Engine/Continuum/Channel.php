@@ -118,7 +118,7 @@ class Channel
      */
     public function getAllSuppliers(): array
     {
-        return $this->parent->getSupplier('');
+        return $this->parent->getSupplier();
     }
 
     /**
@@ -136,6 +136,9 @@ class Channel
 
     /**
      * Get all URLs
+     *
+     * By default, this shuffles them randomly.
+     * If you're in tor-only mode, it prioritizes .onion domains first.
      *
      * @param bool $doNotShuffle
      * @return string[]
@@ -165,6 +168,7 @@ class Channel
                 $candidates[] = $url;
             }
         } else {
+            // All URLs treated the same.
             $candidates = $this->urls;
             if (!$doNotShuffle) {
                 \Airship\secure_shuffle($candidates);

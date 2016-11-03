@@ -158,6 +158,12 @@ class Motif extends AutoUpdater implements ContinuumInterface
     /**
      * Install the new version
      *
+     * If we get to this point:
+     *
+     * 1. We know the signature is signed by the supplier.
+     * 2. The hash was checked into Keyggdrasil, which
+     *    was independently vouched for by our peers.
+     *
      * @param UpdateInfo $info (part of definition but not used here)
      * @param UpdateFile $file
      * @throws CouldNotUpdate

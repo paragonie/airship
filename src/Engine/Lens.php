@@ -385,7 +385,9 @@ class Lens
 
     /**
      * Send HTTP headers
+     *
      * @param string $mimeType
+     * @return void
      */
     public function sendStandardHeaders(string $mimeType)
     {

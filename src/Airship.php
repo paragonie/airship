@@ -118,31 +118,31 @@ function autoload(string $namespace, string $directory): bool
     $dir = preg_replace('#^~'.$ds.'#', ROOT.$ds, $directory);
    
     return \spl_autoload_register(
-        function(string $class) use ($ds, $ns, $dir)
+        function (string $class) use ($ds, $ns, $dir)
         {
             // project-specific namespace prefix
-            $prefix = $ns.'\\';
+            $prefix = $ns . '\\';
 
             // base directory for the namespace prefix
-            $base_dir =  $dir.$ds;
+            $base_dir =  $dir . $ds;
 
             // does the class use the namespace prefix?
-            $len = strlen($prefix);
-            if (strncmp($prefix, $class, $len) !== 0) {
+            $len = Binary::safeStrlen($prefix);
+            if (\strncmp($prefix, $class, $len) !== 0) {
                 // no, move to the next registered autoloader
                 return;
             }
 
             // get the relative class name
-            $relative_class = substr($class, $len);
+            $relative_class = Binary::safeSubstr($class, $len);
 
             // replace the namespace prefix with the base directory, replace
             // namespace separators with directory separators in the relative 
             // class name, append with .php
-            $file = $base_dir . str_replace('\\', $ds, $relative_class) . '.php';
+            $file = $base_dir . \str_replace('\\', $ds, $relative_class) . '.php';
             
             // if the file exists, require it
-            if (file_exists($file)) {
+            if (\file_exists($file)) {
                 require $file;
             }
         }
@@ -653,13 +653,13 @@ function queryString(
         \Sodium\CRYPTO_GENERICHASH_BYTES_MIN
     );
     if (empty($_cache[$cacheKey])) {
-        $driver = preg_replace('/[^a-z]/', '', \strtolower($driver));
+        $driver = \preg_replace('/[^a-z]/', '', \strtolower($driver));
         $path = !empty($cabin)
             ? ROOT . '/Cabin/' . $cabin.'/Queries/' . $driver . '.json'
             : ROOT . '/Engine/Queries/' . $driver . '.json';
         $_cache[$cacheKey] = \Airship\loadJSON($path);
     }
-    $split_key = explode('.', $index);
+    $split_key = \explode('.', $index);
     $v = $_cache[$cacheKey];
     foreach ($split_key as $k) {
         if (!\array_key_exists($k, $v)) {

@@ -17,17 +17,24 @@ use Airship\Engine\Security\Util;
  */
 class Database implements DBInterface
 {
-    protected $dbengine = null;
-    protected $pdo = null;
+    /**
+     * @var string
+     */
+    protected $dbengine = '';
+
+    /**
+     * @var \PDO
+     */
+    protected $pdo;
     
     /**
      * Dependency-Injectable constructor
      * 
      * @param \PDO $pdo
-     * @param string $dbengine
+     * @param string $dbEngine
      * @throws DBAlert\DBException
      */
-    public function __construct(\PDO $pdo = null, $dbengine = '')
+    public function __construct(\PDO $pdo = null, $dbEngine = '')
     {
         if (!$pdo) {
             throw new DBAlert\DBException(
@@ -37,8 +44,11 @@ class Database implements DBInterface
                 )
             );
         }
+        if (empty($dbEngine)) {
+            $dbEngine = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        }
+        $this->dbengine = $dbEngine;
         $this->pdo = $pdo;
-        $this->dbengine = $dbengine;
         $this->pdo->setAttribute(
             \PDO::ATTR_EMULATE_PREPARES,
             false
@@ -48,7 +58,7 @@ class Database implements DBInterface
             \PDO::ERRMODE_EXCEPTION
         );
     }
-    
+
     /**
      * Create a new Database object based on PDO constructors
      * 

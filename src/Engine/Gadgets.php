@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Airship\Engine;
+
 use Airship\Alerts\Security\SecurityAlert;
 use Airship\Engine\Security\Migration\MigrationInterface;
 

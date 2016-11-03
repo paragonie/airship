@@ -170,6 +170,10 @@ class Ledger implements LoggerInterface
      */
     public function debug($message, array $context = [])
     {
+        $state = State::instance();
+        if (!$state->universal['debug']) {
+            return null;
+        }
         return $this->log(LogLevel::DEBUG, $message, $context);
     }
 }

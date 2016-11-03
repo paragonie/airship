@@ -4,20 +4,41 @@ namespace Airship\Hangar\Commands;
 
 use Airship\Hangar\Command;
 use ParagonIE\Halite\{
-    Asymmetric\SignaturePublicKey,
-    Asymmetric\SignatureSecretKey,
     File,
     KeyFactory,
     SignatureKeyPair
 };
 
+/**
+ * Class Sign
+ * @package Airship\Hangar\Commands
+ */
 class Sign extends Command
 {
+    /**
+     * @var bool
+     */
     public $essential = true;
+
+    /**
+     * @var int
+     */
     public $display = 7;
+
+    /**
+     * @var string
+     */
     public $name = 'Sign';
+
+    /**
+     * @var string
+     */
     public $description = 'Cryptographically sign an update file.';
-    protected $history = null;
+
+    /**
+     * @var array
+     */
+    protected $history = [];
 
     /**
      * Execute the start command, which will start a new hangar session.
@@ -28,7 +49,7 @@ class Sign extends Command
      */
     public function fire(array $args = []): bool
     {
-        $file = $this->selectFile($args[0] ?? null);
+        $file = $this->selectFile($args[0] ?? '');
         if (!isset($this->config['salt']) && \count($args) < 2) {
             throw new \Error('No salt configured or passed');
         }
@@ -74,6 +95,7 @@ class Sign extends Command
         echo 'Generating a signature for: ', $file, "\n";
         $password = $this->silentPrompt('Enter password: ');
 
+        // We can get rid of the 'false' in version 2.0.0 (with Halite 3)
         $sign_kp = KeyFactory::deriveSignatureKeyPair(
             $password,
             $salt,
@@ -102,11 +124,11 @@ class Sign extends Command
     /**
      * Select which file to sign
      *
-     * @param mixed $filename
+     * @param string $filename
      * @return string
      * @throws \Error
      */
-    protected function selectFile($filename = null): string
+    protected function selectFile(string $filename = ''): string
     {
         if (!empty($filename)) {
             // Did we get passed an absolute path?

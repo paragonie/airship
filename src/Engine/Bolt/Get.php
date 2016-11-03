@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
+use ParagonIE\ConstantTime\Binary;
+
 /**
  * Trait Get
  *
@@ -27,9 +29,9 @@ trait Get
         $p = \strpos($lastPiece, '?');
         if ($p !== false && empty($_GET)) {
             $_GET = \Airship\array_from_http_query(
-                \substr($lastPiece, $p + 1)
+                Binary::safeSubstr($lastPiece, $p + 1)
             );
-            $lastPiece = \substr($lastPiece, 0, $p);
+            $lastPiece = Binary::safeSubstr($lastPiece, 0, $p);
         }
         return $_GET;
     }

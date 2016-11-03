@@ -32,6 +32,8 @@ if (!\defined('CURLPROXY_SOCKS5_HOSTNAME')) {
 }
 
 if (!\is_dir(ROOT . '/tmp')) {
+    // Load the sanity check script that makes sure the necessary
+    // tmp/* directories exist and are writable.
     require_once ROOT . '/tmp_dirs.php';
 }
 if (ISCLI) {

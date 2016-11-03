@@ -9,16 +9,50 @@ use ParagonIE\ConstantTime\{
 };
 use ParagonIE\Halite\Util;
 
+/**
+ * Class Assemble
+ * @package Airship\Hangar\Commands
+ */
 class Assemble extends SessionCommand
 {
+    /**
+     * @var bool
+     */
     public $essential = true;
+
+    /**
+     * @var int
+     */
     public $display = 6;
+
+    /**
+     * @var string
+     */
     public $name = 'Assemble';
+
+    /**
+     * @var string
+     */
     public $description = 'Build a PHP Archive with an update package.';
-    public $pharname; // File name of the output PHP archive
+
+    /**
+     * @var string File name of the output PHP archive
+     */
+    public $pharname = '';
+
+    /**
+     * @var string
+     */
     public $pharAlias = 'airship-update.phar';
+
+    /**
+     * @var string
+     */
     public $pharStub;
 
+    /**
+     * @var array
+     */
     protected $metadata;
 
     /**

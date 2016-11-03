@@ -122,60 +122,10 @@ class Keyggdrasil
         foreach ($peer->getAllURLs('/verify') as $url) {
             // Challenge nonce:
             $challenge = Base64UrlSafe::encode(\random_bytes(33));
+
             // Peer's response:
             $response = $this->hail->postJSON($url, ['challenge' => $challenge]);
-            if ($response['status'] === 'OK') {
-                // Decode then verify signature
-                $message = Base64UrlSafe::decode($response['response']);
-                $signature = Base64UrlSafe::decode($response['signature']);
-                $isValid = AsymmetricCrypto::verify(
-                    $message,
-                    $peer->getPublicKey(),
-                    $signature,
-                    true
-                );
-                if (!$isValid) {
-                    $this->log(
-                        'Invalid digital signature (i.e. it was signed with an incorrect key).',
-                        LogLevel::EMERGENCY
-                    );
-                    throw new PeerSignatureFailed(
-                        'Invalid digital signature (i.e. it was signed with an incorrect key).'
-                    );
-                }
-
-                // Make sure our challenge was signed.
-                $decoded = \json_decode($message, true);
-                if (!\hash_equals($challenge, $decoded['challenge'])) {
-                    $this->log(
-                        'Challenge-response authentication failed.',
-                        LogLevel::EMERGENCY
-                    );
-                    throw new CouldNotUpdate(
-                        \__('Challenge-response authentication failed.')
-                    );
-                }
-
-                // Make sure this was a recent signature (it *should* be):
-                $min = (new \DateTime('now'))
-                    ->sub(new \DateInterval('P01D'));
-                $time = new \DateTime($decoded['timestamp']);
-                if ($time < $min) {
-                    throw new CouldNotUpdate(
-                        \__(
-                            'Timestamp %s is far too old.', 'default',
-                            $decoded['timestamp']
-                        )
-                    );
-                }
-
-                // Return TRUE if it matches the expected root.
-                // Return FALSE if it matches.
-                return \hash_equals(
-                    $expectedRoot,
-                    $decoded['root']
-                );
-            } else {
+            if ($response['status'] !== 'OK') {
                 $this->log(
                     'Upstream error.',
                     LogLevel::EMERGENCY,
@@ -185,7 +135,61 @@ class Keyggdrasil
                 );
                 return false;
             }
-            // If we're still here, Guzzle failed.
+            // Decode then verify signature
+            $message = Base64UrlSafe::decode($response['response']);
+            $signature = Base64UrlSafe::decode($response['signature']);
+            $isValid = AsymmetricCrypto::verify(
+                $message,
+                $peer->getPublicKey(),
+                $signature,
+                true
+            );
+            if (!$isValid) {
+                $this->log(
+                    'Invalid digital signature (i.e. it was signed with an incorrect key).',
+                    LogLevel::EMERGENCY
+                );
+                throw new PeerSignatureFailed(
+                    'Invalid digital signature (i.e. it was signed with an incorrect key).'
+                );
+            }
+
+            // Make sure our challenge was signed.
+            $decoded = \json_decode($message, true);
+            if (!\hash_equals($challenge, $decoded['challenge'])) {
+                $this->log(
+                    'Challenge-response authentication failed.',
+                    LogLevel::EMERGENCY
+                );
+                throw new CouldNotUpdate(
+                    \__('Challenge-response authentication failed.')
+                );
+            }
+
+            // Make sure this was a recent signature (it *should* be).
+
+            // The earliest timestamp we will accept from a peer:
+            $min = (new \DateTime('now'))
+                ->sub(new \DateInterval('P01D'));
+
+            // The timestamp the server provided:
+            $time = new \DateTime($decoded['timestamp']);
+
+            if ($time < $min) {
+                throw new CouldNotUpdate(
+                    \__(
+                        'Timestamp %s is far too old.', 'default',
+                        $decoded['timestamp']
+                    )
+                );
+            }
+
+            // Return TRUE if it matches the expected root.
+            // Return FALSE if it matches.
+            return \hash_equals(
+                $expectedRoot,
+                $decoded['root']
+            );
         }
         // When all else fails, throw a TransferException
         throw new TransferException();
@@ -241,6 +245,8 @@ class Keyggdrasil
     }
 
     /**
+     * Given a TreeUpdate, return an array formatted for logging.
+     *
      * @param TreeUpdate $up
      * @return array
      */
@@ -333,6 +339,8 @@ class Keyggdrasil
      * Interpret the TreeUpdate objects from the API response. OR verify the signature
      * of the "no updates" message to prevent a DoS.
      *
+     * Dear future security auditors: This is important.
+     *
      * @param Channel $chan
      * @param array $response
      * @return TreeUpdate[]
@@ -361,10 +369,6 @@ class Keyggdrasil
                 ->sub(new \DateInterval('P01D'));
 
             if ($datetime < $stale) {
-                \var_dump(
-                    $datetime->format(DATE_ISO8601),
-                    $stale->format(DATE_ISO8601)
-                );
                 throw new CouldNotUpdate(
                     \__('Stale response.')
                 );
@@ -374,6 +378,7 @@ class Keyggdrasil
             return [];
         }
 
+        // We were given updates. Let's validate them!
         $TreeUpdateArray = [];
         foreach ($response['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
@@ -394,6 +399,7 @@ class Keyggdrasil
                 \json_decode($data, true)
             );
         }
+
         // Sort by ID
         \uasort(
             $TreeUpdateArray,
@@ -407,6 +413,8 @@ class Keyggdrasil
 
     /**
      * Insert/delete entries in supplier_keys, while updating the database.
+     *
+     * Dear future security auditors: This is important.
      *
      * @param Channel $chan)
      * @param TreeUpdate[] $updates
@@ -479,6 +487,7 @@ class Keyggdrasil
      *
      * @param Channel $chan
      * @param TreeUpdate $update
+     * @return void
      */
     protected function revokeKey(Channel $chan, TreeUpdate $update)
     {
@@ -515,18 +524,33 @@ class Keyggdrasil
      */
     protected function updateChannel(Channel $chan)
     {
+        // The original Merkle Tree (and root) from the last-known-good state.
         $originalTree = $this->getMerkleTree($chan);
         $originalRoot = $originalTree->getRoot();
         foreach ($chan->getAllURLs() as $url) {
             try {
+                /**
+                 * Fetch all the alleged updates from the server, which are to
+                 * be treated with severe skepticism. The updates we see here
+                 * are, at least, authenticated by the server API's signing key
+                 * which means we're commmunicating with the correct channel.
+                 *
+                 * @var TreeUpdate[]
+                 */
                 $updates = $this->fetchTreeUpdates(
                     $chan,
                     $url,
                     $originalRoot
-                ); // TreeUpdate[]
+                );
                 if (empty($updates)) {
+                    // Nothing to do.
                     return;
                 }
+
+                /**
+                 * We'll keep retrying until we're in a good state or we have
+                 * no more candidate updates left to add to our tree.
+                 */
                 while (!empty($updates)) {
                     $merkleTree = $originalTree->getExpandedTree();
                     // Verify these updates with our Peers.
@@ -542,6 +566,16 @@ class Keyggdrasil
                         }
                         // If we're here, verification failed
                     } catch (CouldNotUpdate $ex) {
+                        /**
+                         * Something bad happened. Possibilities:
+                         *
+                         * 1. One of our peers disagreed with the Merkle root
+                         *    that we saw, so we aborted for safety.
+                         * 2. Too many network failures occurred, so we aborted
+                         *    to prevent a DoS to create a false consensus.
+                         *
+                         * Log the details, then the loop will continue.
+                         */
                         $this->log(
                             $ex->getMessage(),
                             LogLevel::ALERT,
@@ -569,6 +603,16 @@ class Keyggdrasil
                 // Received a successful API response.
                 return;
             } catch (ChannelSignatureFailed $ex) {
+                /**
+                 * We can't even trust the channel's API response. An error
+                 * occurred. We aborte entirely at this step.
+                 *
+                 * This may mean a MITM attacker with a valid CA certificate.
+                 * This may mean a server-side error.
+                 *
+                 * Log and abort; don't try to automate any decisions based
+                 * on a strange network state.
+                 */
                 $this->log(
                     'Invalid Channel Signature for ' . $chan->getName(),
                     LogLevel::ALERT,
@@ -582,6 +626,11 @@ class Keyggdrasil
                     ]
                 );
             } catch (TransferException $ex) {
+                /**
+                 * Typical network error. Maybe an HTTP 5xx response code?
+                 *
+                 * Either way: log and abort.
+                 */
                 $this->log(
                     'Channel update error',
                     LogLevel::NOTICE,
@@ -603,7 +652,7 @@ class Keyggdrasil
     protected function updatePackageQueue(TreeUpdate $update, int $treeUpdateID)
     {
         $packageId = $this->db->cell(
-            "SELECT
+            'SELECT
                   packageid 
              FROM
                   airship_package_cache
@@ -611,7 +660,7 @@ class Keyggdrasil
                  packagetype = ?
                  AND supplier = ?
                  AND name = ? 
-            ",
+            ',
             $update->getPackageType(),
             $update->getSupplierName(),
             $update->getPackageName()
@@ -652,6 +701,8 @@ class Keyggdrasil
 
     /**
      * Return true if the Merkle roots match.
+     *
+     * Dear future security auditors: This is important.
      *
      * This employs challenge-response authentication:
      * @ref https://github.com/paragonie/airship/issues/13
@@ -698,6 +749,18 @@ class Keyggdrasil
 
         /**
          * These numbers are negotiable in future versions.
+         *
+         * If P is the set of trusted peer notaries (where ||P|| is the number
+         * of trusted peer notaries):
+         *
+         * 1. At least 1 must return 'success'.
+         * 2. At least ln(||P||) must return 'success'.
+         * 3. At most e * ln(||P||) can timeout.
+         * 4. If any peer disagrees with what we see, our
+         *    result is discarded as invalid.
+         *
+         * The most harm a malicious peer can do is DoS if they
+         * are selected.
          */
         $minSuccess = $channel->getAppropriatePeerSize();
         $maxFailure = (int) \min(

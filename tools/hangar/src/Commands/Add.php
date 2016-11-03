@@ -4,11 +4,30 @@ namespace Airship\Hangar\Commands;
 
 use Airship\Hangar\SessionCommand;
 
+/**
+ * Class Add
+ * @package Airship\Hangar\Commands
+ */
 class Add extends SessionCommand
 {
+    /**
+     * @var bool
+     */
     public $essential = false;
+
+    /**
+     * @var int
+     */
     public $display = 3;
+
+    /**
+     * @var string
+     */
     public $name = 'Add Files';
+
+    /**
+     * @var string
+     */
     public $description = 'Add files/directories to the Airship update package.';
 
     /**
@@ -40,7 +59,7 @@ class Add extends SessionCommand
         foreach ($args as $file) {
             $l = \strlen($file) - 1;
             if ($file[$l] === DIRECTORY_SEPARATOR) {
-                $file = substr($file, 0, -1);
+                $file = \substr($file, 0, -1);
             }
             $added += $this->addFile($file, $dir);
         }
@@ -49,13 +68,13 @@ class Add extends SessionCommand
     }
 
     /**
-     * Add a file or directory to the
+     * Add a file or directory to the update list.
      *
      * @param string $filename
      * @param string $dir
      * @return int
      */
-    protected function addFile(string $filename, string $dir): int
+    protected function addFile(string $filename, string $dir = ''): int
     {
         if (!empty($dir)) {
             if ($dir[\strlen($dir) - 1] !== DIRECTORY_SEPARATOR) {
@@ -68,7 +87,7 @@ class Add extends SessionCommand
         }
 
         try {
-            $path = $this->getRealPath(\realpath($filename));
+            $path = $this->getRealPath(\realpath($dir . $filename));
         } catch (\Error $e) {
             echo $this->c['red'], $e->getMessage(), $this->c[''], "\n";
             return 0;

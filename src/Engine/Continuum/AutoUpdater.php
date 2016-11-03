@@ -219,6 +219,8 @@ abstract class AutoUpdater
     /**
      * Was the checksum of this update stored in Keyggdrasil?
      *
+     * Dear future security auditors: This is important.
+     *
      * @param UpdateInfo $info
      * @param UpdateFile $file
      * @return bool
@@ -235,6 +237,7 @@ abstract class AutoUpdater
         ];
         $this->log('Checking Keyggdrasil', LogLevel::DEBUG, $debugArgs);
         $db = \Airship\get_database();
+
         $merkle = $db->row(
             'SELECT * FROM airship_tree_updates WHERE merkleroot = ?',
             $info->getMerkleRoot()
@@ -631,7 +634,6 @@ abstract class AutoUpdater
         return $db->commit();
     }
 
-
     /**
      * For CLI usage: Bypass the download process, use a local file instead.
      *
@@ -660,6 +662,8 @@ abstract class AutoUpdater
     /**
      * Verify the Ed25519 signature of the update file against the
      * supplier's public key.
+     *
+     * Dear future security auditors: This is important.
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file

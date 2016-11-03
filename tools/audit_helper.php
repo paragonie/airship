@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
+require_once \dirname(__DIR__).'/src/bootstrap.php';
+
 /**
  * Generates a list of all files -- use this for narrowing
  * the scope of a pre-release code audit.
  */
-require_once \dirname(__DIR__).'/src/bootstrap.php';
 
 if ($argc > 1) {
     $extensions = \array_slice($argv, 1);

@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 require_once \dirname(__DIR__).'/src/bootstrap.php';
 
+/**
+ * This will nuke and reset the local update tree. Essentially,
+ * only use it if Keyggdrasil ends up in an invalid state (e.g.
+ * hard fork).
+ */
+
 $db = \Airship\get_database();
 
 $db->beginTransaction();

@@ -136,6 +136,8 @@ class TreeUpdate
             // This is the JSON message from the tree node, stored as an array:
             $data = \json_decode($updateData['data'], true);
             $this->updateMessage = $data;
+
+            // What action are we performing?
             if ($this->action === self::ACTION_PACKAGE_UPDATE) {
                 $this->packageType = $data['pkg_type'];
                 $this->packageName = $data['name'];
@@ -291,7 +293,7 @@ class TreeUpdate
      */
     public function isAirshipUpdate(): bool
     {
-        return $this->action === self::ACTION_CORE_UPDATE;
+        return \hash_equals(self::ACTION_CORE_UPDATE, $this->action);
     }
 
     /**
@@ -301,7 +303,7 @@ class TreeUpdate
      */
     public function isCreateKey(): bool
     {
-        return $this->action === self::ACTION_INSERT_KEY;
+        return \hash_equals(self::ACTION_INSERT_KEY, $this->action);
     }
 
     /**
@@ -311,7 +313,7 @@ class TreeUpdate
      */
     public function isPackageUpdate(): bool
     {
-        return $this->action === self::ACTION_PACKAGE_UPDATE;
+        return \hash_equals(self::ACTION_PACKAGE_UPDATE, $this->action);
     }
 
     /**
@@ -321,7 +323,7 @@ class TreeUpdate
      */
     public function isRevokeKey(): bool
     {
-        return $this->action === self::ACTION_REVOKE_KEY;
+        return \hash_equals(self::ACTION_REVOKE_KEY, $this->action);
     }
 
     /**
@@ -334,7 +336,12 @@ class TreeUpdate
      */
     protected function loadSupplier(Channel $chan, array $updateData): Supplier
     {
-        $this->supplierName = \preg_replace('#[^A-Za-z0-9\-_]#', '', $updateData['supplier']);
+        // No invalid names:
+        $this->supplierName = \preg_replace(
+            '#[^A-Za-z0-9\-_]#',
+            '',
+            $updateData['supplier']
+        );
         try {
             if (!\file_exists(ROOT . '/config/supplier_keys/' . $this->supplierName . '.json')) {
                 throw new NoSupplier($this->supplierName);
@@ -382,6 +389,7 @@ class TreeUpdate
         // We need a precise format:
         $dateGen = (new \DateTime($this->stored['date_generated']))
             ->format(\AIRSHIP_DATE_FORMAT);
+
         $messageToSign = [
             'action' =>
                 $this->action,
@@ -412,6 +420,7 @@ class TreeUpdate
             );
         }
         $master = \json_decode($updateData['master'], true);
+
         foreach ($this->supplier->getSigningKeys() as $supKey) {
             // Yes, this is (in fact) a SignaturePublicKey:
             if (IDE_HACKS) {

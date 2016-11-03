@@ -4,11 +4,30 @@ namespace Airship\Hangar\Commands;
 
 use Airship\Hangar\Command;
 
+/**
+ * Class Start
+ * @package Airship\Hangar\Commands
+ */
 class Start extends Command
 {
+    /**
+     * @var bool
+     */
     public $essential = true;
+
+    /**
+     * @var int
+     */
     public $display = 3;
+
+    /**
+     * @var string
+     */
     public $name = 'Start Session';
+
+    /**
+     * @var string
+     */
     public $description = 'Start a Hangar session.';
 
     /**

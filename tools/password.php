@@ -1,7 +1,14 @@
 <?php
+declare(strict_types=1);
+
 use Airship\Engine\State;
 use ParagonIE\Halite\Password;
+
 require_once \dirname(__DIR__).'/src/bootstrap.php';
+
+/**
+ * Generate an encrypted password hash from the command line.
+ */
 
 $state = State::instance();
 

@@ -1,5 +1,5 @@
 <?php
-$db = \Airship\getDB();
+$db = \Airship\get_database();
 
 if ($db->getDriver() === '@_DRIVER_@') {
     $db->exec("@_QUERY_@");

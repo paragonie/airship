@@ -2,14 +2,32 @@
 declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
-use Airship\Engine\Continuum\Airship;
 use Airship\Hangar\SessionCommand;
 
+/**
+ * Class Meta
+ * @package Airship\Hangar\Commands
+ */
 class Meta extends SessionCommand
 {
+    /**
+     * @var bool
+     */
     public $essential = false;
+
+    /**
+     * @var int
+     */
     public $display = 5;
+
+    /**
+     * @var string
+     */
     public $name = 'Meta';
+
+    /**
+     * @var string
+     */
     public $description = 'Add metadata to an update bundle.';
 
     /**

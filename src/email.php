@@ -31,6 +31,7 @@ $email_closure = function() {
                         'connection_class' =>
                             $state->universal['email']['smtp']['connection_class']
                     ];
+
                     if ($state->universal['email']['smtp']['connection_class'] !== 'smtp') {
                         $transportConfig['connection_config'] = [
                             'username' =>
@@ -65,7 +66,7 @@ $email_closure = function() {
                                     ? $state->universal['email']['file']['path']
                                     : ROOT . '/files/email',
                             'callback' =>
-                                function (Zend\Mail\Transport\File $t) {
+                                function (Zend\Mail\Transport\File $t): string {
                                     return \implode(
                                         '_',
                                         [
@@ -100,6 +101,8 @@ $email_closure = function() {
         }
         $state->mailer = $transport;
     }
+
+    // Now that our mailer is set up, let's make sure GPGMailer is too.
     $gpgMailer = new GPGMailer(
         $state->mailer,
         [

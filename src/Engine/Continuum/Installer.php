@@ -330,7 +330,7 @@ abstract class Installer
     {
         return [
             'action' => 'INSTALL',
-            'name' => $this->name,
+            'name' => $this->package,
             'supplier' => $this->supplier->getName(),
             'type' => $this->type,
             'installFile' => [
@@ -388,7 +388,11 @@ abstract class Installer
             // mode enabled, it will prioritize those URLs.
             foreach ($chan->getAllURLs() as $ch) {
                 try {
-                    $result = $this->hail->postSignedJSON($ch . API::get('version'), $publicKey, $args);
+                    $result = $this->hail->postSignedJSON(
+                        $ch . API::get('version'),
+                        $publicKey,
+                        $args
+                    );
                     // Add the channel to this data...
                     $result['channel'] = $ch;
                     $result['minimum'] = (string) ($minVersion ?? '0.0.0');
@@ -569,6 +573,7 @@ abstract class Installer
         $data = \Airship\parseJSON($merkle['data'], true);
         $instType = \strtolower($this->type);
         $keyggdrasilType = \strtolower($data['pkg_type']);
+
         if (!\hash_equals($instType, $keyggdrasilType)) {
             $this->log('Wrong package type', LogLevel::DEBUG, $debugArgs);
             // Wrong package type
@@ -584,6 +589,7 @@ abstract class Installer
             // Wrong package
             return false;
         }
+
         // Finally, we verify that the checksum matches the entry in our Merkle tree:
         return \hash_equals($file->getHash(), $data['checksum']);
     }

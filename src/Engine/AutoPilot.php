@@ -8,6 +8,7 @@ use Airship\Alerts\Router\{
     FallbackLoop
 };
 use Airship\Engine\Contract\RouterInterface;
+use ParagonIE\ConstantTime\Binary;
 use ParagonIE\CSPBuilder\CSPBuilder;
 
 /**
@@ -94,11 +95,11 @@ class AutoPilot implements RouterInterface
         if ($prefix === '*') {
             self::$patternPrefix = '';
         } elseif ($prefix[0] === '*') {
-            self::$patternPrefix = \substr($prefix, 2);
+            self::$patternPrefix = Binary::safeSubstr($prefix, 2);
         } else {
             $start = \strpos($prefix, '/');
             if ($start !== false) {
-                self::$patternPrefix = \substr($prefix, $start + 1);
+                self::$patternPrefix = Binary::safeSubstr($prefix, $start + 1);
             }
         }
     }
@@ -208,7 +209,7 @@ class AutoPilot implements RouterInterface
         if ($cabinKey[0] === '*') {
             if ($cabinKey[1] === '/') {
                 // */some_dir/
-                $pattern = \preg_quote(\substr($cabinKey, 2), '#');
+                $pattern = \preg_quote(Binary::safeSubstr($cabinKey, 2), '#');
                 if (\preg_match('#^/'.$pattern.'#', $uri) === 1) {
                     return $https_only
                         ? self::forceHTTPS()
@@ -225,11 +226,11 @@ class AutoPilot implements RouterInterface
                     ? self::forceHTTPS($scheme)
                     : true;
             } elseif ($pos !== false) {
-                $sub = \substr($cabinKey, $pos);
-                $host = \substr($cabinKey, 0, $pos);
+                $sub = Binary::safeSubstr($cabinKey, $pos);
+                $host = Binary::safeSubstr($cabinKey, 0, $pos);
                 if (
                     \strtolower($activeHost) === \strtolower($host) &&
-                    \preg_match('#^'.\preg_quote($sub, '#').'#', $uri)
+                    \preg_match('#^' . \preg_quote($sub, '#') . '#', $uri)
                 ) {
                     return $https_only
                         ? self::forceHTTPS($scheme)
@@ -257,7 +258,7 @@ class AutoPilot implements RouterInterface
                 self::$mypath = $path;
                 self::$path = \substr(
                     $_SERVER['REQUEST_URI'],
-                    \strlen(self::$patternPrefix) + 1
+                    Binary::safeStrlen(self::$patternPrefix) + 1
                 );
                 try {
                     // Attempt to serve the page:
