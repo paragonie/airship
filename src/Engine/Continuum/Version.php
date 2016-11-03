@@ -15,7 +15,10 @@ class Version
     const GROUP_MINOR     =   10000;
     const GROUP_PATCH     =     100;
     const GROUP_INCREMENT =       1;
-    
+
+    /**
+     * @var string
+     */
     protected $currentVersion;
 
     /**

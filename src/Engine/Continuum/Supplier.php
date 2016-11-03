@@ -13,18 +13,35 @@ use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
  */
 class Supplier
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var array
+     */
     private $channels;
+
+    /**
+     * @var SignaturePublicKey[]
+     */
     private $signing_keys = [];
 
     /**
      * Supplier constructor.
+     *
      * @param $name
      * @param array $data
      */
     public function __construct($name, array $data = [])
     {
-        $this->name = $name;
+        // Do not allow invalid characters in the name:
+        $this->name = \preg_replace(
+            '#[^0-9A-Za-z\-\_]#',
+            '',
+            $name
+        );
         $this->channels = isset($data['channels'])
             ? $data['channels']
             : [];
@@ -44,7 +61,7 @@ class Supplier
     /**
      * Get an array SignaturePublicKey objects
      *
-     * @return array ('key' => SignaturePublicKey
+     * @return SignaturePublicKey[]
      */
     public function getSigningKeys(): array
     {

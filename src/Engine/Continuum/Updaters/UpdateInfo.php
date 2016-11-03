@@ -173,7 +173,6 @@ class UpdateInfo
         return $this->version;
     }
 
-
     /**
      * Get the expanded version for this particular update
      *

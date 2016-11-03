@@ -158,6 +158,12 @@ class Gadget extends AutoUpdater implements ContinuumInterface
     /**
      * We just need to replace the Phar
      *
+     * If we get to this point:
+     *
+     * 1. We know the signature is signed by the supplier.
+     * 2. The hash was checked into Keyggdrasil, which
+     *    was independently vouched for by our peers.
+     *
      * @param UpdateInfo $info
      * @param UpdateFile $file
      * @throws CouldNotUpdate

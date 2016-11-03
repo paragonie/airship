@@ -80,8 +80,14 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 \AIRSHIP_VERSION,
                 'airship_version'
             );
+
+            /**
+             * Let's iterate through every possible available update,
+             * until we find the desired version.
+             */
             foreach ($updateInfoArray as $updateInfo) {
                 if (!$this->checkVersionSettings($updateInfo, \AIRSHIP_VERSION)) {
+                    // This is not the update we are looking for.
                     $this->log(
                         'Skipping update',
                         LogLevel::DEBUG,
@@ -93,6 +99,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
                     );
                     continue;
                 }
+
                 /**
                  * @var UpdateFile
                  */
@@ -155,6 +162,13 @@ class Airship extends AutoUpdater implements ContinuumInterface
 
     /**
      * Let's install the automatic update.
+     *
+     * If we get to this point:
+     *
+     * 1. We know the signature is signed by
+     *    Paragon Initiative Enterprises, LLC.
+     * 2. The hash was checked into Keyggdrasil, which
+     *    was independently vouched for by our peers.
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
