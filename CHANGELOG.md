@@ -1,4 +1,4 @@
-## Version 1.4.0 - 2016-11-0?
+## Version 1.4.0 - 2016-11-03
 
   * Cryptographically associate account recovery tokens with the row ID
     of the user who requested the reset. This means that updating the
@@ -30,7 +30,11 @@
     Implemented a View History feature for Blog Posts.
   * [#155](https://github.com/paragonie/airship/issues/155):
     You can now create user accounts from the Bridge.
-  * Prevent LFI attacks in Gregwar/RST by disabling all file inclusion.
+
+## Version 1.3.2 - 2016-10-31
+
+  * Update Gregwar/RST to v1.0.3 to prevent LFI attacks.
+    [HackerOne Report](https://hackerone.com/reports/179034).
 
 ## Version 1.3.1 - 2016-09-12
 
