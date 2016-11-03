@@ -111,10 +111,10 @@ class WordPress implements MigrationInterface
         string $setting
     ): string {
         $output = '*0';
-        if (substr($setting, 0, 2) === $output) {
+        if (Binary::safeSubstr($setting, 0, 2) === $output) {
             $output = '*1';
         }
-        $id = substr($setting, 0, 3);
+        $id = Binary::safeSubstr($setting, 0, 3);
 
         if ($id !== '$P$' && $id !== '$H$') {
             return $output;
@@ -155,15 +155,15 @@ class WordPress implements MigrationInterface
         $output = '';
         $i = 0;
         do {
-            $value = ord($input[$i++]);
+            $value = \ord($input[$i++]);
             $output .= $this->itoa64[$value & 0x3f];
             if ($i < $count)
-                $value |= ord($input[$i]) << 8;
+                $value |= \ord($input[$i]) << 8;
             $output .= $this->itoa64[($value >> 6) & 0x3f];
             if ($i++ >= $count)
                 break;
             if ($i < $count)
-                $value |= ord($input[$i]) << 16;
+                $value |= \ord($input[$i]) << 16;
             $output .= $this->itoa64[($value >> 12) & 0x3f];
             if ($i++ >= $count)
                 break;

@@ -11,6 +11,7 @@ use Airship\Engine\{
     Lens,
     State
 };
+use ParagonIE\ConstantTime\Binary;
 use Psr\Log\LogLevel;
 
 /**
@@ -42,7 +43,7 @@ if (empty($_POST)) {
     /**
      * Let's get rid of trailing slashes in URLs without POST data
      */
-    $sliceAt = \strlen($_SERVER['REQUEST_URI']) - 1;
+    $sliceAt = Binary::safeStrlen($_SERVER['REQUEST_URI']) - 1;
     if ($sliceAt > 0 && $_SERVER['REQUEST_URI'][$sliceAt] === '/') {
         \Airship\redirect(
             '/' . \trim($_SERVER['REQUEST_URI'], '/')
@@ -115,7 +116,7 @@ if ($autoUpdater->needsUpdate()) {
     );
 
     \file_put_contents(
-        ROOT.'/tmp/last_update_check.txt',
+        ROOT . '/tmp/last_update_check.txt',
         time()
     );
 }
@@ -164,8 +165,8 @@ if (!empty($state->universal['debug'])) {
         $autoPilot->route();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
-            header('Content-Type: text/plain;charset=UTF-8');
-            header('X-Content-Type-Options: nosniff');
+            \header('Content-Type: text/plain;charset=UTF-8');
+            \header('X-Content-Type-Options: nosniff');
         }
         $state->logger->log(
             LogLevel::ERROR,
