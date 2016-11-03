@@ -11,6 +11,7 @@ use GuzzleHttp\{
     Psr7\Response
 };
 use ParagonIE\ConstantTime\{
+    Base64,
     Base64UrlSafe,
     Binary
 };
@@ -280,7 +281,14 @@ class Hail
             $firstNewLine = \strpos($body, "\n");
             // There should be a newline immediately after the base64urlsafe-encoded signature
             if ($firstNewLine !== self::ENCODED_SIGNATURE_LENGTH) {
-                throw new SignatureFailed();
+                throw new SignatureFailed(
+                    \sprintf(
+                        "First newline found at position %s, expected %d.\n%s",
+                        \print_r($firstNewLine, true),
+                        \print_r(self::ENCODED_SIGNATURE_LENGTH, true),
+                        Base64::encode($body)
+                    )
+                );
             }
             $sig = Base64UrlSafe::decode(
                 Binary::safeSubstr($body, 0, 88)

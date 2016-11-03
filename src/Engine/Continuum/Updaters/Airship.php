@@ -84,7 +84,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 if (!$this->checkVersionSettings($updateInfo, \AIRSHIP_VERSION)) {
                     $this->log(
                         'Skipping update',
-                        LogLevel::INFO,
+                        LogLevel::DEBUG,
                         [
                             'info' => $updateInfo->getResponse(),
                             'new_version' => $updateInfo->getVersion(),
