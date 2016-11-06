@@ -1,3 +1,7 @@
+## Version 2.0.0 - Not Released Yet
+
+  * Set the minimum PHP version to 7.1.
+
 ## Version 1.4.0 - 2016-11-03
 
   * Cryptographically associate account recovery tokens with the row ID
