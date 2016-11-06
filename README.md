@@ -39,7 +39,7 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 ## Minimum Requirements
 
-* PHP 7.0 or newer
+* PHP 7.1 or newer
 * PECL Libsodium 1.0.6 or newer
 * Libsodium 1.0.10 or newer
 
