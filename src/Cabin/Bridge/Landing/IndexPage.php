@@ -109,7 +109,7 @@ class IndexPage extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if ($_GET['error'] === '403 Forbidden') {
-            \header('HTTP/1.1 403 Forbidden');
+            \http_response_code(403);
         }
         switch ($_GET['error']) {
             case '403 Forbidden':

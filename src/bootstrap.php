@@ -29,7 +29,7 @@ require_once ROOT . '/cabins.php';
  *    for the current cabin (set in cabins.php)
  */
 if (!$state->active_cabin) {
-    \header('HTTP/1.1 404 Not Found');
+    \http_response_code(404);
     echo \file_get_contents(
         __DIR__ . '/error_pages/no-cabin.html'
     );

@@ -220,7 +220,7 @@ if (!empty($state->universal['debug'])) {
             \Airship\throwableToArray($e)
         );
 
-        \header('HTTP/1.1 500 Internal Server Error');
+        \http_response_code(500);
         echo \file_get_contents(
             ROOT . '/error_pages/uncaught-exception.html'
         );
