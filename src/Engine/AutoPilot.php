@@ -467,7 +467,7 @@ class AutoPilot implements RouterInterface
         }
 
         // If we don't have a fallback handler defined, just give a 404 status and kill the script.
-        \header('HTTP/1.1 404 Not Found');
+        \http_response_code(404);
         exit(255);
     }
 

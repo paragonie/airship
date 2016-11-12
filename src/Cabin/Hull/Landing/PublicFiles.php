@@ -105,7 +105,7 @@ class PublicFiles extends LandingGear
             exit;
         } catch (FileNotFound $ex) {
             // When all else fails, 404 not found
-            \header('HTTP/1.1 404 Not Found');
+            \http_response_code(404);
             $this->lens('404');
             exit(1);
         }

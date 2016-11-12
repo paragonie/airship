@@ -42,7 +42,7 @@ $log_setup_closure = function() {
                     $state->universal['ledger']['table'] ?? DBStore::DEFAULT_TABLE
                 );
             } catch (\Throwable $ex) {
-                \header('HTTP/1.1 500 Internal Server Error');
+                \http_response_code(500);
                 echo \file_get_contents(
                     __DIR__ . '/error_pages/uncaught-exception.html'
                 );
