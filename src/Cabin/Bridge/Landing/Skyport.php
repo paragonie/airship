@@ -169,6 +169,7 @@ class Skyport extends AdminOnly
             echo 'Invalid POST request.', "\n";
             return;
         }
+        $post = $_POST ?? [];
         $type = '';
         if (isset($post['type'])) {
             switch ($post['type']) {
