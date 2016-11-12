@@ -47,7 +47,7 @@ class Peer
         );
         $this->urls = $config['urls'];
         foreach ($this->urls as $url) {
-            if (\strpos($url, '.onion') !== false) {
+            if (\Airship\isOnionUrl($url)) {
                 $this->onion = true;
                 break;
             }
@@ -79,7 +79,7 @@ class Peer
             // Prioritize Tor Hidden Services
             $after = [];
             foreach ($this->urls as $url) {
-                if (\strpos($url, '.onion') !== false) {
+                if (\Airship\isOnionUrl($url)) {
                     $candidates[] = $url . $suffix;
                 } else {
                     $after[] = $url . $suffix;

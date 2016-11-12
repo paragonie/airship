@@ -442,6 +442,25 @@ function is_disabled(string $function): bool
 }
 
 /**
+ * Is this URL a Tor Hidden Service?
+ *
+ * @param string $url
+ * @return bool
+ */
+function isOnionUrl(string $url): bool
+{
+    $host = \parse_url($url, \PHP_URL_HOST);
+    if ($host !== null) {
+        if (Binary::safeStrlen($host) < 7) {
+            return false;
+        }
+        $suffix = Binary::safeSubstr($host, -6);
+        return \strtolower($suffix) === '.onion';
+    }
+    return false;
+}
+
+/**
  * Output a JSON response, terminate script execution.
  *
  * @param mixed $result

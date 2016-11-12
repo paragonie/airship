@@ -114,7 +114,7 @@ class ChannelUpdates extends BlueprintGear
             // Prioritize Tor Hidden Services
             $after = [];
             foreach ($this->urls as $url) {
-                if (\strpos($url, '.onion') !== false) {
+                if (\Airship\isOnionUrl($url)) {
                     $candidates[] = $url;
                 } else {
                     $after[] = $url;
