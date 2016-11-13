@@ -1,3 +1,18 @@
+## Version 1.4.1 - 2016-11-12
+
+  * [#161](https://github.com/paragonie/airship/issues/161):
+    Don't hard-code `HTTP/1.1` in response headers.
+  * [#164](https://github.com/paragonie/airship/issues/164):
+    Fixed dead code in Skyport landing.
+  * [HackerOne #181210](https://hackerone.com/reports/181210):
+    Correctly detect `.onion` URLs. If this malfunctions, there is a
+    nonzero risk of MITM attack (because HTTPS wasn't enforced on
+    `.onion` URLs).
+  * [HackerOne #181225](https://hackerone.com/reports/181225):
+    Prevent phishing attacks via pages opened with `target="_blank"`.
+  * [HackerOne #181315](https://hackerone.com/reports/181315):
+    Consistently use binary-safe string functions.
+
 ## Version 1.4.0 - 2016-11-03
 
   * Cryptographically associate account recovery tokens with the row ID
