@@ -5,6 +5,7 @@ use Airship\Engine\{
     Gadgets,
     State
 };
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * @global array $active The active cabin configuration
@@ -45,7 +46,7 @@ if (\is_dir(CABIN_DIR.'/Lens/cargo')) {
             $idx = \str_replace(
                 ['__', '/'],
                 ['',   '__'],
-                \substr($cargo, 6, -5)
+                Binary::safeSubstr($cargo, 6, -5)
             );
             Gadgets::loadCargo($idx, $cargo);
         }

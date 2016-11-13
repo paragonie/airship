@@ -8,6 +8,7 @@ use Airship\Engine\Continuum\Updaters\{
     Motif
 };
 use Airship\Engine\State;
+use ParagonIE\ConstantTime\Binary;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 
@@ -37,7 +38,7 @@ function prompt(string $text = '')
         $fp = \fopen('php://stdin', 'r');
     }
     echo $text;
-    return \substr(\fgets($fp), 0, -1);
+    return Binary::safeSubstr(\fgets($fp), 0, -1);
 }
 
 /* ========================================================================= */

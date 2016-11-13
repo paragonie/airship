@@ -2,28 +2,77 @@
 declare(strict_types=1);
 namespace Airship\Hangar;
 
+use ParagonIE\ConstantTime\Binary;
+
+/**
+ * Class Command
+ * @package Airship\Hangar
+ */
 abstract class Command
 {
     const TAB_SIZE = 8;
 
+    /**
+     * @var bool
+     */
     public $essential = false;
+
+    /**
+     * @var int
+     */
     public $display = 65535;
+
+    /**
+     * @var string
+     */
     public $name = 'CommandName';
+
+    /**
+     * @var string
+     */
     public $description = 'CLI description';
+
+    /**
+     * @var array
+     */
     public $tag = [
         'color' => '',
         'text' => ''
     ];
-    public static $cache = []; // Cache references to other commands
-    public static $userConfig; // Current user's configuration
 
-    protected $config = []; // hangar.json
-    public $session = []; // hangar.session.json
+    /**
+     * Cache references to other commands
+     *
+     * @var array
+     */
+    public static $cache = [];
 
-    // Database adapter
-    protected $db;
+    /**
+     * Current user's configuration
+     *
+     * @var = []
+     */
+    public static $userConfig = [];
 
-    // BASH COLORS
+    /**
+     * hangar.json
+     *
+     * @var array
+     */
+    protected $config = [];
+
+    /**
+     * hangar.session.json
+     *
+     * @var array
+     */
+    public $session = [];
+
+    /**
+     * BASH COLORS
+     *
+     * @var array
+     */
     protected $c = [
         '' => "\033[0;39m",
         'red'       => "\033[0;31m",
@@ -46,7 +95,7 @@ abstract class Command
      *
      * @return array (int, int)
      */
-    public function getScreenSize()
+    public function getScreenSize(): array
     {
         $output = [];
         \preg_match_all(
@@ -60,6 +109,7 @@ abstract class Command
                 'height' => $output[1][0]
             ];
         }
+        return [80, 25];
     }
 
     /**
@@ -165,7 +215,7 @@ abstract class Command
             $fp = \fopen('php://stdin', 'r');
         }
         echo $text;
-        return \substr(\fgets($fp), 0, -1);
+        return Binary::safeSubstr(\fgets($fp), 0, -1);
     }
 
 
@@ -180,7 +230,7 @@ abstract class Command
     {
         if (\preg_match('/^win/i', PHP_OS)) {
             $vbscript = sys_get_temp_dir() . 'prompt_password.vbs';
-            file_put_contents(
+            \file_put_contents(
                 $vbscript,
                 'wscript.echo(InputBox("'. \addslashes($text) . '", "", "password here"))'
             );
@@ -196,7 +246,7 @@ abstract class Command
                 throw new \Exception("Can't invoke bash");
             }
             $command = "/usr/bin/env bash -c 'read -s -p \"". addslashes($text). "\" mypassword && echo \$mypassword'";
-            $password = rtrim(shell_exec($command));
+            $password = \rtrim(shell_exec($command));
             echo "\n";
             return $password;
         }
@@ -212,8 +262,8 @@ abstract class Command
     public function usageInfo(array $args = [])
     {
         unset($args);
-        $TAB = str_repeat(' ', self::TAB_SIZE);
-        $HTAB = str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
+        $TAB = \str_repeat(' ', self::TAB_SIZE);
+        $HTAB = \str_repeat(' ', (int) ceil(self::TAB_SIZE / 2));
 
         echo $HTAB, 'Airship / Hangar - ', $this->name, "\n\n";
         echo $TAB, $this->description, "\n\n";

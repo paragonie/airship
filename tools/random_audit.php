@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use ParagonIE\ConstantTime\Binary;
+
 require_once \dirname(__DIR__).'/src/bootstrap.php';
 
 /**
@@ -23,6 +25,6 @@ $choice = \random_int(0, \count($fileList) - 1);
 
 echo "Audit this file:\n\t";
 
-$l = \strlen(\dirname(__DIR__));
+$l = Binary::safeStrlen(\dirname(__DIR__));
 
-echo \substr($fileList[$choice], $l), "\n";
+echo Binary::safeSubstr($fileList[$choice], $l), "\n";

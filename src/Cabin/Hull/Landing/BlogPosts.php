@@ -6,6 +6,7 @@ use Airship\Alerts\Router\EmulatePageNotFound;
 use Airship\Cabin\Hull\Blueprint\Blog;
 use Airship\Cabin\Hull\Filter\BlogPosts\CommentFilter;
 use Airship\Engine\Security\Util;
+use ParagonIE\ConstantTime\Binary;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -82,7 +83,7 @@ class BlogPosts extends LandingGear
             }
         }
         $msg = \trim($post['message']);
-        if (\strlen($msg) < 2) {
+        if (Binary::safeStrlen($msg) < 2) {
             $this->storeLensVar(
                 'blog_error',
                 \__('The comment you attempted to leave is much too short.')
@@ -144,7 +145,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
@@ -189,7 +190,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
@@ -244,7 +245,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
@@ -356,7 +357,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim(
                     $blogRoll[$i]['snippet'], "\n"
                 );
@@ -401,7 +402,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim(
                     $blogRoll[$i]['snippet'], "\n"
                 );
@@ -450,7 +451,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;
@@ -493,7 +494,7 @@ class BlogPosts extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX = $mathJAX || \strpos($blog['body'], '$$') !== false;

@@ -1,5 +1,8 @@
 <?php
 declare(strict_types=1);
+
+use ParagonIE\ConstantTime\Binary;
+
 /**
  * Paragon Initiative Enterprises
  * PSR-4 compatible autoloader
@@ -19,7 +22,7 @@ declare(strict_types=1);
     }
 
     // Get the relative class name
-    $relative_class = \substr($class, $len);
+    $relative_class = Binary::safeSubstr($class, $len);
 
     // Replace the namespace prefix with the base directory, replace namespace
     // separators with directory separators in the relative class name, append

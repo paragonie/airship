@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use Airship\Engine\LedgerStorage\{
     DBStore,
     FileStore
@@ -7,6 +9,7 @@ use Airship\Engine\{
     Gears,
     State
 };
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * Configure the application event logger here
@@ -23,9 +26,9 @@ $log_setup_closure = function() {
     switch ($state->universal['ledger']['driver']) {
         case 'file':
             $path = $state->universal['ledger']['path'];
-            if (\strlen($path) >= 2) {
+            if (Binary::safeStrlen($path) >= 2) {
                 if ($path[0] === '~' && $path[1] === '/') {
-                    $path = ROOT.'/'.substr($path, 2);
+                    $path = ROOT . '/' . Binary::safeSubstr($path, 2);
                 }
             }
             $storage = new FileStore(

@@ -84,7 +84,7 @@ class CSRF
         }
 
         if (\preg_match('#/$#', $lockTo)) {
-            $lockTo = \substr($lockTo, 0, strlen($lockTo) - 1);
+            $lockTo = Util::subString($lockTo, 0, Util::stringLength($lockTo) - 1);
         }
 
         list($index, $token) = $this->generateToken($lockTo);
