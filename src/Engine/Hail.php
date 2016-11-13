@@ -219,21 +219,17 @@ class Hail
         /**
          * Support for Tor Hidden Services
          */
-        $matches = [];
-        if (\preg_match('#^https://([^/:]+)\.onion:(?:([0-9]+))#', $url, $matches)) {
-            if (\preg_match('#\.onion#', $matches[0])) {
-                // A .onion domain should be a Tor Hidden Service
-                $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
-                $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
-                // Don't force HTTPS
-                unset($defaults['curl'][CURLOPT_SSLVERSION]);
-            }
-        } elseif (\preg_match('#^https?://([^/]+)\.onion#', ($this->client->getConfig('base_uri') ?? ''))) {
-            // Use Tor for .onion addresses
+        if (\Airship\isOnionUrl($url)) {
+            // A .onion domain should be a Tor Hidden Service
             $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
             $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+            if (!\preg_match('#^https://', $url)) {
+                // If it's a .onion site, HTTPS is not required.
+                // If HTTPS is specified, still enforce it.
+                unset($defaults['curl'][CURLOPT_SSLVERSION]);
+            }
         } elseif (!empty($config->universal['tor-only'])) {
-            // We were configured to use TOR for everything.
+            // We were configured to use Tor for everything.
             $defaults['curl'][CURLOPT_PROXY] = 'http://127.0.0.1:9050/';
             $defaults['curl'][CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
         }
