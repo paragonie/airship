@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Airship\Engine\Security\Util;
+
 require_once \dirname(__DIR__).'/src/bootstrap.php';
 
 /**
@@ -21,13 +23,13 @@ $dirs = [];
 $allDirs = \Airship\list_all_files(\dirname(__DIR__) . '/src');
 \sort($allDirs, \SORT_STRING & ~\SORT_FLAG_CASE);
 foreach ($allDirs as $file) {
-    $print = \trim(\substr($file, $cutoff), '/');
+    $print = \trim(Util::subString($file, $cutoff), '/');
 
     $pieces = \explode('/', $print);
     $max = \count($pieces) - 1;
     $name = \array_pop($pieces);
 
-    if (\substr($print, 0, 3) === 'tmp' || \substr($print, 0, 5) === 'files') {
+    if (Util::subString($print, 0, 3) === 'tmp' || Util::subString($print, 0, 5) === 'files') {
         continue;
     }
 

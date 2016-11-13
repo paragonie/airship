@@ -256,7 +256,7 @@ class AutoPilot implements RouterInterface
             $path = self::makePath($path);
             if (self::testLanding($path, $_SERVER['REQUEST_URI'], $args)) {
                 self::$mypath = $path;
-                self::$path = \substr(
+                self::$path = Binary::safeSubstr(
                     $_SERVER['REQUEST_URI'],
                     Binary::safeStrlen(self::$patternPrefix) + 1
                 );

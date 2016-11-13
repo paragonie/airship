@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Hangar\Commands;
 
 use Airship\Hangar\SessionCommand;
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * Class Add
@@ -57,9 +58,9 @@ class Add extends SessionCommand
 
         $added = 0;
         foreach ($args as $file) {
-            $l = \strlen($file) - 1;
+            $l = Binary::safeStrlen($file) - 1;
             if ($file[$l] === DIRECTORY_SEPARATOR) {
-                $file = \substr($file, 0, -1);
+                $file = Binary::safeSubstr($file, 0, -1);
             }
             $added += $this->addFile($file, $dir);
         }

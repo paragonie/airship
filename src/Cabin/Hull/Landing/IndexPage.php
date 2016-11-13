@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Landing;
 
 use Airship\Cabin\Hull\Blueprint\Blog;
+use ParagonIE\ConstantTime\Binary;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -40,7 +41,7 @@ class IndexPage extends LandingGear
         $mathJAX = false;
         foreach ($blogRoll as $i => $blog) {
             $blogRoll[$i] = $this->blog->getSnippet($blog);
-            if (\strlen($blogRoll[$i]['snippet']) !== \strlen($blog['body'])) {
+            if (Binary::safeStrlen($blogRoll[$i]['snippet']) !== Binary::safeStrlen($blog['body'])) {
                 $blogRoll[$i]['snippet'] = \rtrim($blogRoll[$i]['snippet'], "\n");
             }
             $mathJAX |= \strpos($blog['body'], '$$') !== false;

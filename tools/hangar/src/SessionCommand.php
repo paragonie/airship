@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Hangar;
 
+use ParagonIE\ConstantTime\Binary;
+
 /**
  * For commands that add to the hangar.session.json file
  *
@@ -20,8 +22,8 @@ abstract class SessionCommand extends Command
     {
         $current = \getcwd();
         if (\strpos($this->session['dir'], $current) === 0) {
-            $x = \strlen($this->session['dir']);
-            return \substr($current, $x + 1);
+            $x = Binary::safeStrlen($this->session['dir']);
+            return Binary::safeSubstr($current, $x + 1);
         } else {
             throw new \Error('Current path is outside the root directory');
         }
@@ -43,8 +45,8 @@ abstract class SessionCommand extends Command
             throw new \Error('File not found: '.$file);
         }
         if (\strpos($file, $this->session['dir']) === 0) {
-            $x = \strlen($this->session['dir']);
-            return \substr($file, $x + 1);
+            $x = Binary::safeStrlen($this->session['dir']);
+            return Binary::safeSubstr($file, $x + 1);
         } elseif ($file[0] !== DIRECTORY_SEPARATOR) {
             return $file;
         } else {

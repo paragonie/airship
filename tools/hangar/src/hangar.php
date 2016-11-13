@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Airship\Hangar\Command;
 use Airship\Hangar\Commands\Help;
 use ParagonIE\Halite\Halite;
+use ParagonIE\ConstantTime\Binary;
 
 /**
  * This script is the entry point for all Hangar commands.
@@ -65,7 +66,7 @@ if (!Halite::isLibsodiumSetupCorrectly()) {
             continue;
         }
         if (\strpos($line, 'libsodium compiled version') !== false) {
-            $version = \trim(\substr(\trim($line), -6));
+            $version = \trim(Binary::safeSubstr(\trim($line), -6));
             break;
         }
     }

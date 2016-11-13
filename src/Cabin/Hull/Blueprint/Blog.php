@@ -8,6 +8,7 @@ use Airship\Engine\{
     Cache\SharedMemory as MemoryCache,
     Contract\CacheInterface
 };
+use ParagonIE\ConstantTime\Binary;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -1077,7 +1078,7 @@ class Blog extends BlueprintGear
         }
 
         // Short post? Just dump it as-is:
-        if (count($lines) < 4 || \strlen($post['body']) < 200) {
+        if (count($lines) < 4 || Binary::safeStrlen($post['body']) < 200) {
             $post['snippet'] = $post['body'];
             $post['after_fold'] = '';
             return $post;
@@ -1095,7 +1096,7 @@ class Blog extends BlueprintGear
             }
             if ($post['format'] === 'RST') {
                 if (\preg_match($regex, $line[0], $m)) {
-                    if ($i > 2 && \trim($line) === \str_repeat($m[1], \strlen($line))) {
+                    if ($i > 2 && \trim($line) === \str_repeat($m[1], Binary::safeStrlen($line))) {
                         $cutoff = $i;
                         break;
                     }

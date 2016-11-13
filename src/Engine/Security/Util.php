@@ -95,7 +95,7 @@ abstract class Util
                     ) .
                     '; ' .
                     self::charWhitelist(
-                        \substr($mimeType, $p),
+                        self::subString($mimeType, $p),
                         self::MIME_CHARS
                     );
             }
