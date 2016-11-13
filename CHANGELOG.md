@@ -1,3 +1,7 @@
+## Version 1.4.2 - 2016-11-12
+
+  * Update version constants to prevent endless update loops.
+
 ## Version 1.4.1 - 2016-11-12
 
   * [#161](https://github.com/paragonie/airship/issues/161):
