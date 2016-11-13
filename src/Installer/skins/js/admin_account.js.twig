@@ -23,7 +23,7 @@ function passwordWarning(text, score) {
             .removeClass('passwordBad')
             .removeClass('passwordAcceptable')
             .addClass('passwordGood');
-        html = 'Good password, as long as it\'s unique!<br />If you\'re not already, consider using a password manager such as <a target="_blank" href="https://github.com/keepassx/keepassx/">KeePassX</a>.';
+        html = 'Good password, as long as it\'s unique!<br />If you\'re not already, consider using a password manager such as <a target="_blank" href="https://github.com/keepassx/keepassx/" rel="noopener noreferrer">KeePassX</a>.';
     } else if (score === 3) {
         $("#password_feedback")
             .addClass('passwordBad')
