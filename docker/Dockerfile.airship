@@ -13,7 +13,13 @@ RUN a2enmod rewrite
 
 RUN git clone https://github.com/jedisct1/libsodium.git /tmp/sodium
 WORKDIR /tmp/sodium
-RUN git checkout tags/1.0.10
+RUN git tag -v 1.0.11
+RUN if [[ $? -eq 0 ]]; then \
+        git checkout tags/1.0.11 \
+    else \
+        echo "Invalid signature for libsodium tag" \
+        exit 1 \
+    endif
 RUN ./autogen.sh
 RUN ./configure && make distcheck
 RUN make install
