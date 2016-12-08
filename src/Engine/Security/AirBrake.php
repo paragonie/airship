@@ -11,6 +11,7 @@ use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     EncryptionPublicKey
 };
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class AirBrake
@@ -304,7 +305,9 @@ class AirBrake
         }
 
         return new EncryptionPublicKey(
-            \Sodium\hex2bin($publicKey)
+            new HiddenString(
+                \Sodium\hex2bin($publicKey)
+            )
         );
     }
 

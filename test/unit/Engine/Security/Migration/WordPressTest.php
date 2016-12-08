@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 use Airship\Engine\Security\{
-    HiddenString,
     Migration\WordPress
 };
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 
 /**
@@ -17,7 +17,7 @@ class WordPressTest extends PHPUnit_Framework_TestCase
     {
         $migrate = new WordPress();
         $migrate->setPasswordKey(
-            new EncryptionKey(\str_repeat("\x00", 32))
+            new EncryptionKey(new HiddenString(\str_repeat("\x00", 32)))
         );
 
         list ($newHash, $data) = $migrate->getHashWithMetadata(

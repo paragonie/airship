@@ -105,13 +105,13 @@ $twigEnv->addFilter(
             }
             $absolute = $_SERVER['DOCUMENT_ROOT'] . $relative_path;
             if (\is_readable($absolute)) {
-                return $relative_path.'?'.Base64UrlSafe::encode(
+                return $relative_path . '?' . Base64UrlSafe::encode(
                     \Sodium\crypto_generichash(
-                        \file_get_contents($absolute).\filemtime($absolute)
+                        \file_get_contents($absolute) . \filemtime($absolute)
                     )
                 );
             }
-            return $relative_path.'?404NotFound';
+            return $relative_path . '?404NotFound';
         }
     )
 );

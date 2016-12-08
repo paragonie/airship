@@ -5,6 +5,7 @@ namespace Airship\Engine\Keyggdrasil;
 use Airship\Engine\State;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class Peer
@@ -43,7 +44,9 @@ class Peer
     {
         $this->name = $config['name'];
         $this->publicKey = new SignaturePublicKey(
-            Base64UrlSafe::decode($config['public_key'])
+            new HiddenString(
+                Base64UrlSafe::decode($config['public_key'])
+            )
         );
         $this->urls = $config['urls'];
         foreach ($this->urls as $url) {

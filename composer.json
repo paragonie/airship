@@ -53,7 +53,7 @@
     "paragonie/cookie": "^3.1",
     "paragonie/csp-builder": "^2",
     "paragonie/gpg-mailer": "^0|^1",
-    "paragonie/halite": "^2",
+    "paragonie/halite": "^3",
     "paragonie/hpkp-builder": "^0|^1",
     "paragonie/passwdqc": "dev-master",
     "paragonie/multi-factor": "^0|^1",

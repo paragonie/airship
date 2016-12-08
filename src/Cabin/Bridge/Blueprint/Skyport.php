@@ -7,12 +7,12 @@ use Airship\Engine\{
     Bolt\Common,
     Continuum\Version,
     Hail,
-    Security\HiddenString,
     State
 };
 use GuzzleHttp\Client;
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
+    HiddenString,
     Password
 };
 
@@ -576,7 +576,9 @@ class Skyport extends BlueprintGear
             return [];
         }
         $publicKey = new SignaturePublicKey(
-            \Sodium\hex2bin($channels[$ch]['publickey'])
+            new HiddenString(
+                \Sodium\hex2bin($channels[$ch]['publickey'])
+            )
         );
 
         foreach ($channels[$ch]['urls'] as $url) {

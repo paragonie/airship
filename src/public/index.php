@@ -124,7 +124,7 @@ if ($autoUpdater->needsUpdate()) {
 /**
  * Let's load the latest gear for our autoloader
  */
-define('CABIN_NAME', $active['name']);
+define('CABIN_NAME', (string) $active['name']);
 define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
 
 // Turn all of this cabins' Landings and Blueprints into gears:

@@ -12,7 +12,6 @@ use GuzzleHttp\{
 };
 use ParagonIE\ConstantTime\{
     Base64,
-    Base64UrlSafe,
     Binary
 };
 use ParagonIE\Halite\Asymmetric\{
@@ -286,11 +285,9 @@ class Hail
                     )
                 );
             }
-            $sig = Base64UrlSafe::decode(
-                Binary::safeSubstr($body, 0, 88)
-            );
+            $sig = Binary::safeSubstr($body, 0, 88);
             $msg = Binary::safeSubstr($body, 89);
-            if (!Asymmetric::verify($msg, $publicKey, $sig, true)) {
+            if (!Asymmetric::verify($msg, $publicKey, $sig)) {
                 throw new SignatureFailed();
             }
             return \Airship\parseJSON($msg, true);

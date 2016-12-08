@@ -19,8 +19,7 @@ use Airship\Engine\{
 use GuzzleHttp\Exception\TransferException;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\Halite\{
-    File,
-    Util
+    File, Halite, Util
 };
 use Psr\Log\LogLevel;
 
@@ -687,7 +686,7 @@ abstract class AutoUpdater
             if ($key['type'] !== 'signing') {
                 continue;
             }
-            $ret = $ret ||  File::verify(
+            $ret = $ret || File::verify(
                 $file->getPath(),
                 $key['key'],
                 $info->getSignature(true)

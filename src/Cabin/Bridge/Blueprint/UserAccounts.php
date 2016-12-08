@@ -6,11 +6,11 @@ use Airship\Alerts\Database\QueryError;
 use Airship\Alerts\Security\UserNotFound;
 use Airship\Engine\{
     Bolt\Security as SecurityBolt,
-    Security\HiddenString,
     Security\Util,
     State
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use Psr\Log\LogLevel;
 use ZxcvbnPhp\Zxcvbn;
