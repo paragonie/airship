@@ -17,7 +17,7 @@ class WordPressTest extends PHPUnit_Framework_TestCase
     {
         $migrate = new WordPress();
         $migrate->setPasswordKey(
-            new EncryptionKey(\str_repeat("\x00", 32))
+            new EncryptionKey(new HiddenString(\str_repeat("\x00", 32)))
         );
 
         list ($newHash, $data) = $migrate->getHashWithMetadata(

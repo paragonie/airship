@@ -10,8 +10,7 @@ use Airship\Engine\{
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\{
-    Key,
-    Symmetric\Crypto as Symmetric,
+    HiddenString,
     Symmetric\AuthenticationKey
 };
 
@@ -112,8 +111,8 @@ class SharedMemoryTest extends PHPUnit_Framework_TestCase
      */
     private function getAdapter(): SharedMemory
     {
-        $cacheKey = new AuthenticationKey(\str_repeat("\x80", 32));
-        $authKey = new AuthenticationKey(\str_repeat("\x7F", 32));
+        $cacheKey = new AuthenticationKey(new HiddenString(\str_repeat("\x80", 32)));
+        $authKey = new AuthenticationKey(new HiddenString(\str_repeat("\x7F", 32)));
 
         return new SharedMemory($cacheKey, $authKey);
     }
@@ -125,7 +124,7 @@ class SharedMemoryTest extends PHPUnit_Framework_TestCase
      */
     private function getRandomAdapter(): SharedMemory
     {
-        $cacheKey = new AuthenticationKey(\random_bytes(32));
+        $cacheKey = new AuthenticationKey(new HiddenString(\random_bytes(32)));
 
         return new SharedMemory($cacheKey);
     }
@@ -137,7 +136,7 @@ class SharedMemoryTest extends PHPUnit_Framework_TestCase
      */
     private function getWeakAdapter(): SharedMemory
     {
-        $cacheKey = new AuthenticationKey(\str_repeat("\x00", 32));
+        $cacheKey = new AuthenticationKey(new HiddenString(\str_repeat("\x00", 32)));
 
         return new SharedMemory($cacheKey);
     }

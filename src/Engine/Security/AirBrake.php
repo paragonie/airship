@@ -305,7 +305,9 @@ class AirBrake
         }
 
         return new EncryptionPublicKey(
-            \Sodium\hex2bin($publicKey)
+            new HiddenString(
+                \Sodium\hex2bin($publicKey)
+            )
         );
     }
 

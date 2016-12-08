@@ -21,6 +21,7 @@ use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     Asymmetric\SignatureSecretKey,
     File,
+    HiddenString,
     Symmetric\AuthenticationKey,
     Util as CryptoUtil
 };
@@ -109,8 +110,10 @@ function cachebust($relative_path)
         // Halite's File::checksum() uses less memory than reading the entire
         // file into memory.
         $key = new AuthenticationKey(
-            CryptoUtil::raw_hash(
-                (string) \filemtime($absolute)
+            new HiddenString(
+                CryptoUtil::raw_hash(
+                    (string) \filemtime($absolute)
+                )
             )
         );
         return $relative_path . '?' . Base64UrlSafe::encode(

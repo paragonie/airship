@@ -576,7 +576,9 @@ class Skyport extends BlueprintGear
             return [];
         }
         $publicKey = new SignaturePublicKey(
-            \Sodium\hex2bin($channels[$ch]['publickey'])
+            new HiddenString(
+                \Sodium\hex2bin($channels[$ch]['publickey'])
+            )
         );
 
         foreach ($channels[$ch]['urls'] as $url) {

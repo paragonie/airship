@@ -8,6 +8,7 @@ use Airship\Engine\{
     State
 };
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\HiddenString;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 
@@ -54,7 +55,9 @@ $db = \Airship\get_database();
 if ($state->hail instanceof Hail) {
     foreach ($channels as $identifier => $channel) {
         $publicKey = new SignaturePublicKey(
-            \Sodium\hex2bin($channel['public_key'])
+            new HiddenString(
+                \Sodium\hex2bin($channel['public_key'])
+            )
         );
 
         foreach ($channel['urls'] as $url) {
