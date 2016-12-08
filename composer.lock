@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c4cd457db501c576aa2ff76f338b1987",
-    "content-hash": "764dda99ca3673de6996b4f7b09347df",
+    "hash": "bfa7bb13ee42fef7e61a247f09835c00",
+    "content-hash": "a4a4511831e2e2a223bba451de372984",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -696,16 +696,16 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v3.1.1",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "1c1b999ce9e4e81af324567c142783d7394062ba"
+                "reference": "199ebe7cd3d0ae8435bad1feabe610789d1d239e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/1c1b999ce9e4e81af324567c142783d7394062ba",
-                "reference": "1c1b999ce9e4e81af324567c142783d7394062ba",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/199ebe7cd3d0ae8435bad1feabe610789d1d239e",
+                "reference": "199ebe7cd3d0ae8435bad1feabe610789d1d239e",
                 "shasum": ""
             },
             "require": {
@@ -730,7 +730,7 @@
                 }
             ],
             "description": "High-level cryptography interface powered by libsodium",
-            "time": "2016-10-26 23:10:43"
+            "time": "2016-12-08 22:56:52"
         },
         {
             "name": "paragonie/hpkp-builder",
@@ -2992,7 +2992,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.0",
+        "php": "^7",
         "ext-gd": "*",
         "ext-openssl": "*",
         "ext-libsodium": "^1.0.6",

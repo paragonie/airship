@@ -89,8 +89,13 @@ class Authentication
         $this->key = $key;
         
         // 504 bits of entropy; good luck
-        $dummy = Base64::encode(\random_bytes(63));
-        $this->dummyHash = Password::hash($dummy, $this->key);
+        $dummy = new HiddenString(
+            Base64::encode(\random_bytes(63))
+        );
+        $this->dummyHash = Password::hash(
+            $dummy,
+            $this->key
+        );
 
         $this->db = $db ?? \Airship\get_database();
         $this->registerMigrations();
@@ -296,7 +301,7 @@ class Authentication
                 $table,
                 [
                     'password' => Password::hash(
-                        $password->getString(),
+                        $password,
                         $this->key
                     ),
                     'migration' =>

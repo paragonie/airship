@@ -66,14 +66,26 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function log($level, $message, array $context = [])
     {
         $context = $this->defaultContext() + $context;
+        $json = \json_encode($context);
+        if (!\is_string($json)) {
+            $state = State::instance();
+            if ($state->universal['debug']) {
+                \header('Content-type: text/plain');
+                var_dump($context);
+                exit;
+                throw new \TypeError('Unable to serialize context');
+            }
+            $json = '{"error":"unabled to serialize context"}';
+        }
         return $this->storage->store(
             $level,
             $message,
-            \json_encode($context)
+            $json
         );
     }
 
