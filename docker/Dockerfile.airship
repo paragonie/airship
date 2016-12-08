@@ -2,11 +2,11 @@ FROM ubuntu:16.04
 
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get -y install wget git composer postgresql php7.0 php7.0-cli \
-                       php7.0-fpm php7.0-json php7.0-pgsql php7.0-curl \
-                       php7.0-xml php7.0-dev php7.0-zip php7.0-mbstring \
-                       composer apache2 php-pear libapache2-mod-php7.0 \
-                       php7.0-gd
+RUN apt-get -y install wget git composer postgresql php7.2 php7.1-cli \
+                       php7.1-fpm php7.1-json php7.1-pgsql php7.1-curl \
+                       php7.1-xml php7.1-dev php7.1-zip php7.1-mbstring \
+                       composer apache2 php-pear libapache2-mod-php7.1 \
+                       php7.1-gd
 
 RUN rm -f /etc/apache2/sites-enabled/000-default.conf
 RUN a2enmod rewrite
@@ -25,7 +25,7 @@ RUN ./configure && make distcheck
 RUN make install
 
 RUN pecl install libsodium
-RUN echo "extension=libsodium.so" > /etc/php/7.0/mods-available/libsodium.ini
+RUN echo "extension=libsodium.so" > /etc/php/7.1/mods-available/libsodium.ini
 RUN phpenmod libsodium
 
 RUN a2enmod rewrite
