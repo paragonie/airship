@@ -904,13 +904,12 @@ class Account extends LandingGear
         $secret = $this->acct->getTwoFactorSecret($userID);
         if (empty($secret)) {
             if (!$this->acct->resetTwoFactorSecret($userID)) {
-                \Airship\json_response(['test2']);
                 \Airship\redirect($this->airship_cabin_prefix);
             }
             $secret = $this->acct->getTwoFactorSecret($userID);
         }
         return new GoogleAuth(
-            $secret,
+            $secret->getString(),
             new TOTP(
                 0,
                 (int) ($this->config('two-factor.period') ?? 30),

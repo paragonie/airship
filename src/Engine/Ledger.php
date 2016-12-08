@@ -75,6 +75,9 @@ class Ledger implements LoggerInterface
         if (!\is_string($json)) {
             $state = State::instance();
             if ($state->universal['debug']) {
+                \header('Content-type: text/plain');
+                var_dump($context);
+                exit;
                 throw new \TypeError('Unable to serialize context');
             }
             $json = '{"error":"unabled to serialize context"}';

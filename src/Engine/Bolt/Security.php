@@ -19,6 +19,7 @@ use ParagonIE\Cookie\{
     Cookie,
     Session
 };
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use Psr\Log\LogLevel;
 
@@ -164,7 +165,7 @@ trait Security
     /**
      * Let's do an automatic login
      *
-     * @param string $token
+     * @param HiddenString $token
      * @param string $uid_idx
      * @param string $token_idx
      * @return bool
@@ -172,7 +173,7 @@ trait Security
      * @throws \TypeError
      */
     protected function doAutoLogin(
-        string $token,
+        HiddenString $token,
         string $uid_idx,
         string $token_idx
     ): bool {
@@ -182,7 +183,7 @@ trait Security
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
-            \Sodium\memzero($token);
+            unset($token);
 
             if (!$this->verifySessionCanary($userId, false)) {
                 return false;
@@ -205,7 +206,9 @@ trait Security
             Cookie::setcookie(
                 $token_idx,
                 Symmetric::encrypt(
-                    $this->airship_auth->rotateToken($token, $userId),
+                    new HiddenString(
+                        $this->airship_auth->rotateToken($token, $userId)
+                    ),
                     $state->keyring['cookie.encrypt_key']
                 ),
                 \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),

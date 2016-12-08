@@ -9,7 +9,10 @@ use Airship\Engine\{
     Security\Util,
     State
 };
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary
+};
 use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
 use Psr\Log\LogLevel;
@@ -576,7 +579,7 @@ class UserAccounts extends BlueprintGear
      * @param int $userID
      * @return string
      */
-    public function getTwoFactorSecret(int $userID): string
+    public function getTwoFactorSecret(int $userID): HiddenString
     {
         $secret = $this->db->cell(
             'SELECT totp_secret FROM airship_users WHERE userid = ?',
@@ -586,6 +589,13 @@ class UserAccounts extends BlueprintGear
             return '';
         }
         $state = State::instance();
+        if (Binary::safeSubstr($secret, 0, 6) === '314202') {
+            return Symmetric::decrypt(
+                $secret,
+                $state->keyring['auth.password_key'],
+                false
+            );
+        }
         return Symmetric::decrypt(
             $secret,
             $state->keyring['auth.password_key']
@@ -863,7 +873,7 @@ class UserAccounts extends BlueprintGear
     {
         $state = State::instance();
         $this->db->beginTransaction();
-        $secret = \random_bytes(20);
+        $secret = new HiddenString(\random_bytes(20));
         $this->db->update(
             'airship_users',
             [

@@ -192,11 +192,11 @@ class Authentication
     /**
      * Authenticate a user by a long-term authentication token (e.g. a cookie).
      * 
-     * @param string $token
+     * @param HiddenString $token
      * @return mixed int
      * @throws LongTermAuthAlert
      */
-    public function loginByToken(string $token = ''): int
+    public function loginByToken(HiddenString $token): int
     {
         $table = $this->db->escapeIdentifier(
             $this->tableConfig['table']['longterm']
@@ -210,7 +210,7 @@ class Authentication
         ];
 
         try {
-            $decoded = Base64::decode($token);
+            $decoded = Base64::decode($token->getString());
         } catch (\RangeException $ex) {
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
@@ -225,7 +225,7 @@ class Authentication
                 \trk('errors.security.invalid_persistent_token')
             );
         }
-        \Sodium\memzero($token);
+        unset($token);
 
         $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
         $val = CryptoUtil::raw_hash(
