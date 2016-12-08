@@ -15,6 +15,7 @@ use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
 };
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class TreeUpdate
@@ -246,7 +247,9 @@ class TreeUpdate
     public function getPublicKeyObject(): SignaturePublicKey
     {
         return new SignaturePublicKey(
-            \Sodium\hex2bin($this->newPublicKey)
+            new HiddenString(
+                \Sodium\hex2bin($this->newPublicKey)
+            )
         );
     }
 
@@ -377,6 +380,7 @@ class TreeUpdate
      * @return void
      * @throws CouldNotUpdate
      * @throws NoSupplier
+     * @throws \TypeError
      */
     protected function unpackMessageUpdate(Channel $chan, array $updateData)
     {
@@ -423,8 +427,8 @@ class TreeUpdate
 
         foreach ($this->supplier->getSigningKeys() as $supKey) {
             // Yes, this is (in fact) a SignaturePublicKey:
-            if (IDE_HACKS) {
-                $supKey['key'] = new SignaturePublicKey();
+            if (!($supKey['key'] instanceof SignaturePublicKey)) {
+                throw new \TypeError('Expected a SignaturePublicKey');
             }
             if ($supKey['type'] !== 'master') {
                 continue;

@@ -350,8 +350,7 @@ class ChannelUpdates extends BlueprintGear
         $valid = [];
         if (!empty($data['no_updates'])) {
             // Verify signature of the "no updates" timestamp.
-            $sig = Base64UrlSafe::decode($data['signature']);
-            if (!AsymmetricCrypto::verify($data['no_updates'], $this->channelPublicKey, $sig, true)) {
+            if (!AsymmetricCrypto::verify($data['no_updates'], $this->channelPublicKey, $data['signature'])) {
                 throw new CouldNotUpdate(
                     \__('Invalid signature from channel')
                 );
@@ -368,8 +367,7 @@ class ChannelUpdates extends BlueprintGear
         // Verify the signature of each update.
         foreach ($data['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
-            $sig = Base64UrlSafe::decode($update['signature']);
-            if (AsymmetricCrypto::verify($data, $this->channelPublicKey, $sig, true)) {
+            if (AsymmetricCrypto::verify($data, $this->channelPublicKey, $update['signature'])) {
                 $dataInternal = \json_decode($data, true);
                 $valid[] = [
                     'id' => (int) $update['id'],

@@ -14,6 +14,7 @@ use ParagonIE\ConstantTime\{
     Binary
 };
 use ParagonIE\Halite\{
+    HiddenString,
     Password,
     Symmetric\EncryptionKey,
     Util as CryptoUtil
@@ -103,7 +104,7 @@ class Authentication
      */
     public function createHash(HiddenString $password): string
     {
-        return Password::hash($password->getString(), $this->key);
+        return Password::hash($password, $this->key);
     }
     
     /**
@@ -160,7 +161,7 @@ class Authentication
              * User not found. Use the dummy password to mitigate user
              * enumeration via timing side-channels.
              */
-            Password::verify($password->getString(), $this->dummyHash, $this->key);
+            Password::verify($password, $this->dummyHash, $this->key);
             
             // No matter what, return false here:
             return false;
@@ -176,7 +177,7 @@ class Authentication
                 }
             }
 
-            if (Password::verify($password->getString(), $user['password'], $this->key)) {
+            if (Password::verify($password, $user['password'], $this->key)) {
                 return (int) $user['userid'];
             }
         }

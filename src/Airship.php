@@ -483,12 +483,11 @@ function json_response($result, $signingKey = null)
         $message = \json_encode($result, JSON_PRETTY_PRINT);
         $signature = Crypto::sign(
             $message,
-            $signingKey,
-            true
+            $signingKey
         );
         unset($signingKey);
         die(
-            Base64UrlSafe::encode($signature) .
+            $signature .
             "\n" .
             $message
         );
@@ -659,7 +658,7 @@ function redirect(
 function queryString(
     string $index,
     array $params = [],
-    string $cabin = \CABIN_NAME,
+    string $cabin = CABIN_NAME,
     string $driver = ''
 ): string {
     static $_cache = [];

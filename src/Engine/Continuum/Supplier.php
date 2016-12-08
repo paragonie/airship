@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class Supplier
@@ -97,7 +98,9 @@ class Supplier
                 $keys[] = [
                     'type' => $sk['type'],
                     'key' => new SignaturePublicKey(
-                        \Sodium\hex2bin($sk['public_key'])
+                        new HiddenString(
+                            \Sodium\hex2bin($sk['public_key'])
+                        )
                     )
                 ];
             }

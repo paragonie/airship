@@ -7,12 +7,12 @@ use Airship\Engine\{
     Bolt\Common,
     Continuum\Version,
     Hail,
-    Security\HiddenString,
     State
 };
 use GuzzleHttp\Client;
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
+    HiddenString,
     Password
 };
 

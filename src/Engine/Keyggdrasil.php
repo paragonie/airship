@@ -137,12 +137,11 @@ class Keyggdrasil
             }
             // Decode then verify signature
             $message = Base64UrlSafe::decode($response['response']);
-            $signature = Base64UrlSafe::decode($response['signature']);
+            $signature = $response['signature'];
             $isValid = AsymmetricCrypto::verify(
                 $message,
                 $peer->getPublicKey(),
-                $signature,
-                true
+                $signature
             );
             if (!$isValid) {
                 $this->log(
@@ -382,12 +381,11 @@ class Keyggdrasil
         $TreeUpdateArray = [];
         foreach ($response['updates'] as $update) {
             $data = Base64UrlSafe::decode($update['data']);
-            $sig = Base64UrlSafe::decode($update['signature']);
+            $sig = $update['signature'];
             $signatureVerified = AsymmetricCrypto::verify(
                 $data,
                 $chan->getPublicKey(),
-                $sig,
-                true
+                $sig
             );
             if (!$signatureVerified) {
                 // Invalid signature

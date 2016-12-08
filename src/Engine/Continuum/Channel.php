@@ -10,6 +10,7 @@ use Airship\Engine\{
     State
 };
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class Channel
@@ -70,7 +71,9 @@ class Channel
         }
         // The channel should be signing responses at the application layer:
         $this->publicKey = new SignaturePublicKey(
-            \Sodium\hex2bin($config['publickey'])
+            new HiddenString(
+                \Sodium\hex2bin($config['publickey'])
+            )
         );
         $this->name = $name;
         foreach (\array_values($config['urls']) as $index => $url) {

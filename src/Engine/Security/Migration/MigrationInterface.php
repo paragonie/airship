@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security\Migration;
 
-use Airship\Engine\Security\HiddenString;
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 
 /**

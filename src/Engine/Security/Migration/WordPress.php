@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Engine\Security\Migration;
 
-use Airship\Engine\Security\HiddenString;
 use ParagonIE\ConstantTime\Binary;
 use ParagonIE\Halite\{
+    HiddenString,
     Password,
     Symmetric\EncryptionKey
 };
@@ -46,7 +46,7 @@ class WordPress implements MigrationInterface
             $passwordKey = $this->key;
         }
         return [
-            new HiddenString(Password::hash($oldHash, $passwordKey)),
+            new HiddenString(Password::hash(new HiddenString($oldHash), $passwordKey)),
             [
                 'type' => self::TYPE,
                 'salt' => Binary::safeSubstr($oldHash, 0, 12)

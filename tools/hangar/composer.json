@@ -20,6 +20,6 @@
   "require": {
     "php": "^7",
     "paragonie/constant_time_encoding": "^2",
-    "paragonie/halite": "^2.1"
+    "paragonie/halite": "^3"
   }
 }

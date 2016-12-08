@@ -20,7 +20,6 @@ use Airship\Engine\{
 };
 use Airship\Engine\Security\{
     AirBrake,
-    HiddenString,
     Util
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -32,6 +31,7 @@ use ParagonIE\GPGMailer\GPGMailer;
 use ParagonIE\Halite\{
     Alerts\InvalidMessage,
     Asymmetric\Crypto as Asymmetric,
+    HiddenString,
     Symmetric\Crypto as Symmetric
 };
 use ParagonIE\MultiFactor\OTP\TOTP;
@@ -620,12 +620,9 @@ class Account extends LandingGear
                     $message = '**Note: The password was correct; ' .
                         ' invalid 2FA token was provided.** ' .
                         (new \DateTime('now'))->format(\AIRSHIP_DATE_FORMAT);
-                    $signed = Base64UrlSafe::encode(
-                        Asymmetric::sign(
-                            $message,
-                            $state->keyring['notary.online_signing_key'],
-                            true
-                        )
+                    $signed = Asymmetric::sign(
+                        $message,
+                        $state->keyring['notary.online_signing_key']
                     );
                     $airBrake->registerLoginFailure(
                         $post['username'],

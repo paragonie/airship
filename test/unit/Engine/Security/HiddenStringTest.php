@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-use Airship\Engine\Security\HiddenString;
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**

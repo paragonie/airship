@@ -11,6 +11,7 @@ use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     EncryptionPublicKey
 };
+use ParagonIE\Halite\HiddenString;
 
 /**
  * Class AirBrake

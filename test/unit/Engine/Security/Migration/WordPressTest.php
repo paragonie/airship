@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 use Airship\Engine\Security\{
-    HiddenString,
     Migration\WordPress
 };
+use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 
 /**
