@@ -42,7 +42,7 @@ RUN echo "<VirtualHost *:80>" > $CONF && \
     echo "RewriteCond %{REQUEST_FILENAME} -f [OR]" >> $CONF && \
     echo "RewriteCond %{REQUEST_FILENAME} -d" >> $CONF && \
     echo "RewriteRule (.*) - [L,QSA]" >> $CONF && \
-    echo "RewriteRule (.*) /index.php?$1 [L,QSA]" >> $CONF && \
+    echo "RewriteRule (.*) /index.php?\$1 [L,QSA]" >> $CONF && \
     echo "</Directory>" >> $CONF && \
     echo "</VirtualHost>" >> $CONF
 
