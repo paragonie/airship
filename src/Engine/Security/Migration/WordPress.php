@@ -104,12 +104,12 @@ class WordPress implements MigrationInterface
      * @internal
      * @param HiddenString $password
      * @param string $setting
-     * @return string
+     * @return HiddenString
      */
     private function wordPressCryptPrivate(
         HiddenString $password,
         string $setting
-    ): string {
+    ): HiddenString {
         $output = '*0';
         if (Binary::safeSubstr($setting, 0, 2) === $output) {
             $output = '*1';
@@ -117,19 +117,19 @@ class WordPress implements MigrationInterface
         $id = Binary::safeSubstr($setting, 0, 3);
 
         if ($id !== '$P$' && $id !== '$H$') {
-            return $output;
+            return new HiddenString($output);
         }
 
         // This is a really weird way to encode iteration count.
         $count_log2 = \strpos($this->itoa64, $setting[3]);
         if ($count_log2 < 7 || $count_log2 > 30) {
-            return $output;
+            return new HiddenString($output);
         }
 
         $count = 1 << $count_log2;
         $salt = Binary::safeSubstr($setting, 4, 8);
         if (Binary::safeStrlen($salt) !== 8) {
-            return $output;
+            return new HiddenString($output);
         }
 
         // And now we do our (default 8192) rounds of MD5...
@@ -140,7 +140,7 @@ class WordPress implements MigrationInterface
 
         $output = Binary::safeSubstr($setting, 0, 12);
         $output .= $this->encode64($hash, 16);
-        return $output;
+        return new HiddenString($output);
     }
 
     /**
