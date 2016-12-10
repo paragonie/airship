@@ -320,14 +320,14 @@ class Authentication
     /**
      * Replace the existing long-term authentication cookie
      *
-     * @param string $token
+     * @param HiddenString $token
      * @param int $userId
      * @return mixed
      */
-    public function rotateToken(string $token, int $userId = 0)
+    public function rotateToken(HiddenString $token, int $userId = 0)
     {
         try {
-            $decoded = Base64::decode($token);
+            $decoded = Base64::decode($token->getString());
         } catch (\RangeException $ex) {
             return false;
         }

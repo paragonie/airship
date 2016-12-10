@@ -216,6 +216,7 @@ class Keyggdrasil
      * @param string $url
      * @param string $root Which Merkle root are we starting at?
      * @return TreeUpdate[]
+     * @throws \TypeError
      */
     protected function fetchTreeUpdates(
         Channel $chan,
@@ -232,8 +233,10 @@ class Keyggdrasil
             );
         } catch (SignatureFailed $ex) {
             $state = State::instance();
-            if (IDE_HACKS) {
-                $state->logger = new Ledger();
+            if (!($state->logger instanceof Ledger)) {
+                throw new \TypeError(
+                    \trk('errors.type.wrong_class', Ledger::class)
+                );
             }
             $state->logger->alert(
                 'Signature failed!',

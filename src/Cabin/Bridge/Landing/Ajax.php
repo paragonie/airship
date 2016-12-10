@@ -22,15 +22,16 @@ class Ajax extends LoggedInUsersOnly
 {
     /**
      * @route announcement/dismiss
+     * @throws \TypeError
      */
     public function dismissAnnouncement()
     {
         $announce_bp = $this->blueprint('Announcements');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $announce_bp = new Announcements($db);
+        if (!($announce_bp instanceof Announcements)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Announcements::class)
+            );
         }
-
         if (empty($_POST['dismiss'])) {
             \Airship\json_response([
                 'status' => 'ERROR',
@@ -55,15 +56,21 @@ class Ajax extends LoggedInUsersOnly
 
     /**
      * @route ajax/authors_get_photo
+     * @throws \TypeError
      */
     public function getAuthorsPhoto()
     {
         $auth_bp = $this->blueprint('Author');
+        if (!($auth_bp instanceof Author)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Author::class)
+            );
+        }
         $file_bp = $this->blueprint('Files');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $auth_bp = new Author($db);
-            $file_bp = new Files($db);
+        if (!($file_bp instanceof Files)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Files::class)
+            );
         }
         $authorId = (int) ($_POST['author'] ?? 0);
         if (!$this->isSuperUser()) {
@@ -107,13 +114,15 @@ class Ajax extends LoggedInUsersOnly
 
     /**
      * @route ajax/authors_photo_available
+     * @throws \TypeError
      */
     public function getAuthorsAvailablePhotos()
     {
         $auth_bp = $this->blueprint('Author');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $auth_bp = new Author($db);
+        if (!($auth_bp instanceof Author)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Author::class)
+            );
         }
 
         $authorId = (int) ($_POST['author'] ?? 0);
@@ -145,15 +154,21 @@ class Ajax extends LoggedInUsersOnly
 
     /**
      * @route ajax/authors_blog_posts
+     * @throws \TypeError
      */
     public function getBlogPostsForAuthor()
     {
         $auth_bp = $this->blueprint('Author');
+        if (!($auth_bp instanceof Author)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Author::class)
+            );
+        }
         $blog_bp = $this->blueprint('Blog');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $auth_bp = new Author($db);
-            $blog_bp = new Blog($db);
+        if (!($blog_bp instanceof Blog)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Blog::class)
+            );
         }
 
         if (empty($_POST['author'])) {
@@ -264,15 +279,21 @@ class Ajax extends LoggedInUsersOnly
 
     /**
      * @route ajax/authors_blog_series
+     * @throws \TypeError
      */
     public function getSeriesForAuthor()
     {
         $auth_bp = $this->blueprint('Author');
+        if (!($auth_bp instanceof Author)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Author::class)
+            );
+        }
         $blog_bp = $this->blueprint('Blog');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $auth_bp = new Author($db);
-            $blog_bp = new Blog($db);
+        if (!($blog_bp instanceof Blog)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Blog::class)
+            );
         }
 
         if (empty($_POST['author'])) {
@@ -419,13 +440,15 @@ class Ajax extends LoggedInUsersOnly
     /**
      * @param string $url
      * @param string $cabin
+     * @throws \TypeError
      */
     protected function getPermissionDataForURL(string $url, string $cabin)
     {
         $perm_bp = $this->blueprint('Permissions');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $perm_bp = new Permissions($db);
+        if (!($perm_bp instanceof Permissions)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Permissions::class)
+            );
         }
 
         $actions = $perm_bp->getActionNames($cabin);
@@ -463,15 +486,21 @@ class Ajax extends LoggedInUsersOnly
      * @param int $contextId
      * @param string $username
      * @param string $cabin
+     * @throws \TypeError
      */
     protected function getPermissionsDataForUser(int $contextId, string $username, string $cabin)
     {
         $perm_bp = $this->blueprint('Permissions');
+        if (!($perm_bp instanceof Permissions)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Permissions::class)
+            );
+        }
         $user_bp = $this->blueprint('UserAccounts');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $perm_bp = new Permissions($db);
-            $user_bp = new UserAccounts($db);
+        if (!($user_bp instanceof UserAccounts)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', UserAccounts::class)
+            );
         }
 
         $user = $user_bp->getUserByUsername($username, true);
@@ -507,9 +536,10 @@ class Ajax extends LoggedInUsersOnly
     public function saveAuthorsPhoto()
     {
         $auth_bp = $this->blueprint('Author');
-        if (IDE_HACKS) {
-            $db = \Airship\get_database();
-            $auth_bp = new Author($db);
+        if (!($auth_bp instanceof Author)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Author::class)
+            );
         }
         $authorId = (int) $_POST['author'];
         if (!$this->isSuperUser()) {

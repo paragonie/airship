@@ -566,8 +566,10 @@ class Skyport extends BlueprintGear
         string $pkg
     ): array {
         $state = State::instance();
-        if (IDE_HACKS) {
-            $state->hail = new Hail(new Client());
+        if (!($state->hail instanceof Hail)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Hail::class)
+            );
         }
 
         $channels = \Airship\loadJSON(ROOT . "/config/channels.json");

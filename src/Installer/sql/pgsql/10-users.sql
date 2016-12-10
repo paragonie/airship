@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS airship_users (
     userid BIGSERIAL PRIMARY KEY,
     username TEXT,
     password TEXT,
+    totp_offset BIGINT,
     totp_secret TEXT,
     enable_2factor BOOLEAN DEFAULT FALSE,
     session_canary TEXT,

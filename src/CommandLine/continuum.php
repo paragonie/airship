@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Airship\Engine\{
+    Continuum,
     Gears,
     Hail,
     State
@@ -20,9 +21,10 @@ require_once __DIR__.'/channel.php';
  * @var \Airship\Engine\Continuum
  */
 $autoUpdater = Gears::get('AutoUpdater', $hail);
-if (IDE_HACKS) {
-    // Just for the sake of auto-completion:
-    $autoUpdater = new \Airship\Engine\Continuum($hail);
+if (!($autoUpdater instanceof Continuum)) {
+    throw new \TypeError(
+        \trk('errors.type.wrong_class', Continuum::class)
+    );
 }
 
 $state->logger->info('Automatic update started');

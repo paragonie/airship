@@ -33,8 +33,10 @@ class IndexPage extends LandingGear
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $announce_bp = $this->blueprint('Announcements');
-        if (IDE_HACKS) {
-            $announce_bp = new Announcements();
+        if (!($announce_bp instanceof Announcements)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Announcements::class)
+            );
         }
 
         $post = $this->post(new AnnounceFilter());
@@ -63,16 +65,30 @@ class IndexPage extends LandingGear
     {
         if ($this->isLoggedIn())  {
             $this->storeLensVar('showmenu', true);
+
             $author_bp = $this->blueprint('Author');
+            if (!($author_bp instanceof Author)) {
+                throw new \TypeError(
+                    \trk('errors.type.wrong_class', Author::class)
+                );
+            }
             $announce_bp = $this->blueprint('Announcements');
+            if (!($announce_bp instanceof Announcements)) {
+                throw new \TypeError(
+                    \trk('errors.type.wrong_class', Announcements::class)
+                );
+            }
             $blog_bp = $this->blueprint('Blog');
+            if (!($blog_bp instanceof Blog)) {
+                throw new \TypeError(
+                    \trk('errors.type.wrong_class', Blog::class)
+                );
+            }
             $page_bp = $this->blueprint('CustomPages');
-            if (IDE_HACKS) {
-                $db = \Airship\get_database();
-                $author_bp = new Author($db);
-                $announce_bp = new Announcements($db);
-                $blog_bp = new Blog($db);
-                $page_bp = new CustomPages($db);
+            if (!($page_bp instanceof CustomPages)) {
+                throw new \TypeError(
+                    \trk('errors.type.wrong_class', CustomPages::class)
+                );
             }
 
             $this->lens('index',

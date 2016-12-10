@@ -45,7 +45,7 @@ class Skyport extends AdminOnly
         $this->skyport = $this->blueprint('Skyport');
         if (!($this->skyport instanceof SkyportBP)) {
             throw new \TypeError(
-                \__('Skyport Blueprint')
+                \trk('errors.type.wrong_class', SkyportBP::class)
             );
         }
         $this->storeLensVar('active_submenu', ['Admin', 'Extensions']);
@@ -142,10 +142,6 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetOutdatedPackages()
     {
-        if (IDE_HACKS) {
-            $this->skyport = new SkyportBP();
-        }
-
         $this->lens(
             'skyport/outdated',
             [

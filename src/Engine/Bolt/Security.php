@@ -183,9 +183,9 @@ trait Security
         $state = State::instance();
         try {
             $userId = $this->airship_auth->loginByToken($token);
-            unset($token);
 
             if (!$this->verifySessionCanary($userId, false)) {
+                unset($token);
                 return false;
             }
 
@@ -217,6 +217,7 @@ trait Security
                 $httpsOnly ?? false,
                 true
             );
+            unset($token);
             return true;
         } catch (LongTermAuthAlert $e) {
             $state = State::instance();

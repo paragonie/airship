@@ -151,8 +151,10 @@ class ChannelUpdates extends BlueprintGear
     protected function getChannelUpdates(string $root): array
     {
         $state = State::instance();
-        if (IDE_HACKS) {
-            $state->hail = new Hail(new Client());
+        if (!($state->hail instanceof Hail)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Hail::class)
+            );
         }
         foreach ($this->getChannelURLs() as $url) {
             $initiated = new \DateTime('now');
@@ -308,8 +310,10 @@ class ChannelUpdates extends BlueprintGear
     protected function notifyPeersOfNewUpdate()
     {
         $state = State::instance();
-        if (IDE_HACKS) {
-            $state->hail = new Hail(new Client());
+        if (!($state->hail instanceof Hail)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Hail::class)
+            );
         }
         $resp = [];
         $peers = \Airship\loadJSON(ROOT . '/config/channel_peers/' . $this->channel . '.json');

@@ -262,12 +262,15 @@ class Admin extends AdminOnly
      *
      * @param string $url
      * @return array
+     * @throws \TypeError
      */
     protected function notaryDiscovery(string $url): array
     {
         $state = State::instance();
-        if (IDE_HACKS) {
-            $state->hail = new Hail(new Client());
+        if (!($state->hail instanceof Hail)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Hail::class)
+            );
         }
         $body = $state->hail->getReturnBody($url);
         $pos = \strpos($body, '<meta name="airship-notary" content="');

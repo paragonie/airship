@@ -22,7 +22,6 @@ use Airship\Engine\Security\{
     AirBrake,
     Util
 };
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Cookie\{
     Cookie,
     Session
@@ -40,7 +39,7 @@ use Psr\Log\LogLevel;
 use Zend\Mail\{
     Exception\InvalidArgumentException,
     Message,
-    Transport\Sendmail
+    Transport\TransportInterface
 };
 use BaconQrCode\{
     Renderer\Image\Svg,
@@ -554,8 +553,10 @@ class Account extends LandingGear
         }
 
         $airBrake = Gears::get('AirBrake');
-        if (IDE_HACKS) {
-            $airBrake = new AirBrake();
+        if (!($airBrake instanceof AirBrake)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', AirBrake::class)
+            );
         }
         if ($airBrake->failFast($post['username'], $_SERVER['REMOTE_ADDR'])) {
             $this->lens('login', [
@@ -654,8 +655,10 @@ class Account extends LandingGear
 
             if (!empty($post['remember'])) {
                 $autoPilot = Gears::getName('AutoPilot');
-                if (IDE_HACKS) {
-                    $autoPilot = new AutoPilot();
+                if (!($autoPilot instanceof AutoPilot)) {
+                    throw new \TypeError(
+                        \trk('errors.type.wrong_class', AutoPilot::class)
+                    );
                 }
                 $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
                 
@@ -710,13 +713,16 @@ class Account extends LandingGear
      *
      * @param array $post
      * @return bool
+     * @throws \TypeError
      */
     protected function processRecoverAccount(array $post): bool
     {
         $username = $post['forgot_passphrase_for'];
         $airBrake = Gears::get('AirBrake');
-        if (IDE_HACKS) {
-            $airBrake = new AirBrake();
+        if (!($airBrake instanceof AirBrake)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', AirBrake::class)
+            );
         }
         $failFast = $airBrake->failFast(
             $username,
@@ -774,9 +780,15 @@ class Account extends LandingGear
         }
 
         $state = State::instance();
-        if (IDE_HACKS) {
-            $state->mailer = new Sendmail();
-            $state->gpgMailer = new GPGMailer($state->mailer);
+        if (!($state->mailer instanceof TransportInterface)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', TransportInterface::class)
+            );
+        }
+        if (!($state->gpgMailer instanceof GPGMailer)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', GPGMailer::class)
+            );
         }
 
         $message = (new Message())
@@ -894,7 +906,6 @@ class Account extends LandingGear
      *
      * @param int $userID
      * @return GoogleAuth
-     * @throws \Airship\Alerts\Security\UserNotLoggedIn
      */
     protected function twoFactorPreamble(int $userID = 0): GoogleAuth
     {
@@ -922,12 +933,12 @@ class Account extends LandingGear
      * Gets [offset, limit] based on configuration
      *
      * @param string $page
-     * @param int $per_page
+     * @param int|null $per_page
      * @return int[]
      */
-    protected function getOffsetAndLimit($page = null, int $per_page = 0)
+    protected function getOffsetAndLimit($page = null, ?int $per_page = null)
     {
-        if ($per_page === 0) {
+        if (!$per_page) {
             $per_page = $this->config('user-directory.per-page') ?? 20;
         }
         $page = (int) (

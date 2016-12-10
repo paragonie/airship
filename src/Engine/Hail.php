@@ -49,6 +49,7 @@ class Hail
     {
         $this->client = $client;
         if (IDE_HACKS) {
+            // This is just to fool IDEs.
             $this->client = new Client();
         }
     }

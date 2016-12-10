@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Airship\Engine\Bolt;
+use Airship\Engine\Database;
 
 /**
  * Trait Slug
@@ -24,8 +25,10 @@ trait Slug
         string $table,
         string $column = 'slug'
     ): string {
-        if (IDE_HACKS) {
-            $this->db = \Airship\get_database();
+        if (!($this->db instanceof Database)) {
+            throw new \TypeError(
+                \trk('errors.type.wrong_class', Database::class)
+            );
         }
         $query = 'SELECT count(*) FROM ' .
                 $this->db->escapeIdentifier($table) .

@@ -39,9 +39,6 @@ class Ajax extends LandingGear
      */
     public function blogCommentForm()
     {
-        if (IDE_HACKS) {
-            $this->blog = new Blog();
-        }
         $filter = new CommentForm();
         try {
             $post = $filter($_POST);
@@ -108,9 +105,6 @@ class Ajax extends LandingGear
      */
     public function loadComments()
     {
-        if (IDE_HACKS) {
-            $this->blog = new Blog();
-        }
         $cache = $this->blog->getCommentCache();
         $blog = (string) ($_POST['blogpost'] ?? '');
         if (empty($blog)) {
