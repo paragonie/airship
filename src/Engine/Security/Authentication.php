@@ -116,9 +116,9 @@ class Authentication
      * Create, store, and return a token for long-term authentication
      * 
      * @param int $userId
-     * @return string (to store in a cookie, for example)
+     * @return HiddenString (to store in a cookie, for example)
      */
-    public function createAuthToken(int $userId): string
+    public function createAuthToken(int $userId): HiddenString
     {
         $f = $this->tableConfig['fields']['longterm'];
         
@@ -133,7 +133,9 @@ class Authentication
                 $f['validator'] => CryptoUtil::hash($validator)
             ]
         );
-        return Base64::encode($selector . $validator);
+        return new HiddenString(
+            Base64::encode($selector . $validator)
+        );
     }
     
     /**

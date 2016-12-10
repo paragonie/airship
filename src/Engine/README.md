@@ -11,8 +11,9 @@ API.
 <?php
 declare(strict_types=1);
 namespace Airship\Gears\Nikic\FastRoute;
+use Airship\Engine\Gears;
 
-\Airship\Engine\Gears::extract('AutoPilot', 'AutoPilotShim', __NAMESPACE__);
+Gears::extract('AutoPilot', 'AutoPilotShim', __NAMESPACE__);
 
 class Simple extends AutoPilotShim
 {
@@ -25,6 +26,6 @@ class Simple extends AutoPilotShim
     }
 }
 
-\Airship\Engine\Gears::attach('AutoPilot', 'Simple', __NAMESPACE__);
+Gears::attach('AutoPilot', 'Simple', __NAMESPACE__);
 ```
 

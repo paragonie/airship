@@ -538,6 +538,7 @@ class Account extends LandingGear
      * Handle user authentication
      *
      * @param array $post
+     * @throws \TypeError
      */
     protected function processLogin(array $post = [])
     {
@@ -913,7 +914,7 @@ class Account extends LandingGear
             $userID = $this->getActiveUserId();
         }
         $secret = $this->acct->getTwoFactorSecret($userID);
-        if (empty($secret)) {
+        if (empty($secret->getString())) {
             if (!$this->acct->resetTwoFactorSecret($userID)) {
                 \Airship\redirect($this->airship_cabin_prefix);
             }

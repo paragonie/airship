@@ -19,7 +19,8 @@ use Airship\Engine\{
 use GuzzleHttp\Exception\TransferException;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\Halite\{
-    File, Halite, Util
+    File,
+    Util
 };
 use Psr\Log\LogLevel;
 
@@ -278,6 +279,8 @@ abstract class AutoUpdater
      * @param UpdateInfo $update
      * @param string $apiEndpoint
      * @return UpdateFile
+     *
+     * @throws \TypeError
      */
     public function downloadUpdateFile(
         UpdateInfo $update,

@@ -368,7 +368,7 @@ class AirBrake
             if ($numFailures >= $logAfter) {
                 // Encrypt the password guess with the admin's public key
                 $inserts['sealed_password'] = Asymmetric::seal(
-                    $password->getString(),
+                    $password,
                     $this->getLogPublicKey($publicKey)
                 );
             }

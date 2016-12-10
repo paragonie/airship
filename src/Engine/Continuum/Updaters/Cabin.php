@@ -69,7 +69,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      *
      * @return bool
      */
-    protected function isAirshipSpecialCabin(): bool
+    public function isAirshipSpecialCabin(): bool
     {
         $state = State::instance();
         return (

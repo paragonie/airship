@@ -577,7 +577,7 @@ class UserAccounts extends BlueprintGear
      * Get the user's two-factor authentication secret
      *
      * @param int $userID
-     * @return string
+     * @return HiddenString
      */
     public function getTwoFactorSecret(int $userID): HiddenString
     {
@@ -586,7 +586,7 @@ class UserAccounts extends BlueprintGear
             $userID
         );
         if (empty($secret)) {
-            return '';
+            return new HiddenString('');
         }
         $state = State::instance();
         if (Binary::safeSubstr($secret, 0, 6) === '314202') {

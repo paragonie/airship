@@ -12,10 +12,7 @@ use Airship\Engine\{
     Hail,
     State
 };
-use GuzzleHttp\{
-    Client,
-    Exception\TransferException
-};
+use GuzzleHttp\Exception\TransferException;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
@@ -147,6 +144,8 @@ class ChannelUpdates extends BlueprintGear
      *
      * @param string $root
      * @return array
+     *
+     * @throws \TypeError
      */
     protected function getChannelUpdates(string $root): array
     {
@@ -565,7 +564,9 @@ class ChannelUpdates extends BlueprintGear
             }
             if (\hash_equals($keyData['public_key'], $masterData['public_key'])) {
                 $publicKey = new SignaturePublicKey(
-                    \Sodium\hex2bin($masterData['public_key'])
+                    new HiddenString(
+                        \Sodium\hex2bin($masterData['public_key'])
+                    )
                 );
                 $message = \json_encode($keyData);
 

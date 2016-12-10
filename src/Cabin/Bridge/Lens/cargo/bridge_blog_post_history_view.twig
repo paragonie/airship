@@ -67,6 +67,7 @@
                      disabled="disabled"
                      readonly="readonly"
                      id="blog_post_published"
+                     title="{{ __("Date/Time Published")|e('html_attr') }}"
                      type="text"
                      name="published"
                      value="{{ blogpost.published|e('html_attr') }}"

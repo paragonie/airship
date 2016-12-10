@@ -9,7 +9,6 @@ use Airship\Engine\{
     Hail,
     State
 };
-use GuzzleHttp\Client;
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     HiddenString,
@@ -481,7 +480,7 @@ class Skyport extends BlueprintGear
     {
         $state = State::instance();
         return Password::verify(
-            $password->getString(),
+            $password,
             $this->installHash,
             $state->keyring['auth.password_key']
         );
@@ -559,6 +558,8 @@ class Skyport extends BlueprintGear
      * @param string $supplier
      * @param string $pkg
      * @return array
+     *
+     * @throws \TypeError
      */
     protected function getPackageMetadata(
         string $type,

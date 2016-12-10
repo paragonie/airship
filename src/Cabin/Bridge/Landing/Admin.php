@@ -14,7 +14,6 @@ use Airship\Engine\{
     Security\Util,
     State
 };
-use GuzzleHttp\Client;
 use Psr\Log\LogLevel;
 
 require_once __DIR__.'/init_gear.php';

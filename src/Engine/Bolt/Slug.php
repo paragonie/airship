@@ -19,6 +19,7 @@ trait Slug
      * @param string $table Which table to check for duplicates?
      * @param string $column Which column to check for duplicates?
      * @return string
+     * @throws \TypeError
      */
     protected function makeGenericSlug(
         string $title,
