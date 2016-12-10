@@ -15,7 +15,7 @@ use ParagonIE\Halite\{
  */
 class WordPress implements MigrationInterface
 {
-    const TYPE = 'wordpress';
+    public const TYPE = 'wordpress';
 
     /**
      * @var EncryptionKey

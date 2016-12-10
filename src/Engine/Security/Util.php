@@ -71,6 +71,8 @@ abstract class Util
     }
 
     /**
+     * Get the appropriate MIME Type for a file download.
+     *
      * @param string $mimeType
      * @param string $default
      * @param array $badSubstrings
@@ -150,7 +152,7 @@ abstract class Util
     public static function subString(
         string $str,
         int $start,
-        $length = null
+        ?int $length = null
     ): string {
         return Binary::safeSubstr($str, $start, $length);
     }

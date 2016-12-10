@@ -21,7 +21,7 @@ use Airship\Engine\{
  */
 class Permissions
 {
-    const MAX_RECURSE_DEPTH = 100;
+    public const MAX_RECURSE_DEPTH = 100;
 
     /**
      * @var Database
@@ -31,7 +31,7 @@ class Permissions
     /**
      * @param DBInterface $db
      */
-    public function __construct(DBInterface $db)
+    public function __construct(Database $db)
     {
         $this->db = $db;
     }
@@ -48,12 +48,12 @@ class Permissions
     public function can(
         string $action,
         string $context_path = '',
-        string $cabin = \CABIN_NAME,
+        string $cabin = CABIN_NAME,
         int $user_id = 0
     ): bool {
         $state = State::instance();
         if (empty($cabin)) {
-            $cabin = \CABIN_NAME;
+            $cabin = CABIN_NAME;
         }
         // If you don't specify the user ID to check, it will use the current
         // user ID instead, by default.
@@ -267,10 +267,10 @@ class Permissions
             )
         ];
 
-        if ($this->db->cell($statements['check_user'], $user_id) > 0) {
+        if ($this->db->exists($statements['check_user'], $user_id)) {
             return true;
         } elseif (!$ignore_groups) {
-            return $this->db->cell($statements['check_groups'], $user_id) > 0; 
+            return $this->db->exists($statements['check_groups'], $user_id);
         }
         return false;
     }

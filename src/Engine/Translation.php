@@ -33,7 +33,9 @@ class Translation
         ...$params
     ): string {
         if (!\array_key_exists($lang, $this->phrases)) {
-            $this->phrases[$lang] = \Airship\loadJSON(ROOT.'/lang/'.$lang.'.json');
+            $this->phrases[$lang] = \Airship\loadJSON(
+                ROOT . '/lang/' . $lang . '.json'
+            );
         }
         $split_key = \explode('.', $key);
         $v = $this->phrases[$lang];

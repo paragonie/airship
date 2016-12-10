@@ -34,12 +34,12 @@ use ParagonIE\Halite\{
 class Authentication
 {
     /**
-     * These values will be base64-encoded, so it's best to keep them a multiple
-     * of 3. Get the most entropy out of our encoded bytes. :)
+     * Fot strings that will be base64-encoded, so it's best to keep their lengths
+     * a multiple of 3. Get the most entropy out of our encoded bytes. :)
      */
-    const SELECTOR_BYTES = 12;
-    const VALIDATOR_BYTES = 33;
-    const LONG_TERM_AUTH_BYTES = 45;
+    public const SELECTOR_BYTES = 12;
+    public const VALIDATOR_BYTES = 33;
+    public const LONG_TERM_AUTH_BYTES = 45;
 
     /**
      * @var DBInterface
@@ -81,10 +81,16 @@ class Authentication
     /**
      * Authentication constructor.
      *
+     * This generates as passphrase of 63 random bytes then stores a dummy
+     * Argon2i hash in a protected property. When a user isn't found, the
+     * supplied password is evaluated against the dummy password. This makes
+     * it harder for an attacker to determine valid usernames from the amount
+     * of time it takes to return an error message.
+     *
      * @param EncryptionKey $key
      * @param DBInterface|null $db
      */
-    public function __construct(EncryptionKey $key, DBInterface $db = null)
+    public function __construct(EncryptionKey $key, ?DBInterface $db)
     {
         $this->key = $key;
         
@@ -122,8 +128,8 @@ class Authentication
     {
         $f = $this->tableConfig['fields']['longterm'];
         
-        $selector = \random_bytes(self::SELECTOR_BYTES);
-        $validator = \random_bytes(self::VALIDATOR_BYTES);
+        $selector = \random_bytes(static::SELECTOR_BYTES);
+        $validator = \random_bytes(static::VALIDATOR_BYTES);
         
         $this->db->insert(
             $this->tableConfig['table']['longterm'],
@@ -172,27 +178,31 @@ class Authentication
             
             // No matter what, return false here:
             return false;
-        } else {
-            if (!empty($user['migration'])) {
-                $success = $this->migrateImportedHash(
-                    $password,
-                    new HiddenString($user['password']),
-                    $user
-                );
-                if ($success) {
-                    return (int) $user['userid'];
-                }
-            }
-
-            if (Password::verify($password, $user['password'], $this->key)) {
+        }
+        if (!empty($user['migration'])) {
+            $success = $this->migrateImportedHash(
+                $password,
+                new HiddenString($user['password']),
+                $user
+            );
+            if ($success) {
                 return (int) $user['userid'];
             }
+        }
+
+        if (Password::verify($password, $user['password'], $this->key)) {
+            return (int) $user['userid'];
         }
         return false;
     }
     
     /**
      * Authenticate a user by a long-term authentication token (e.g. a cookie).
+     *
+     * We're using a split-token approach here. The first 12 bytes are used in
+     * the SELECT query. The remaining 33 bytes are hashed, then compared with
+     * the stored hash in constant-time. There is no useful timing leak, even
+     * if the database leaks like a sieve.
      * 
      * @param HiddenString $token
      * @return mixed int
@@ -218,6 +228,8 @@ class Authentication
                 \trk('errors.security.invalid_persistent_token')
             );
         }
+
+        // We need a raw binary string of the correct length
         if ($decoded === false) {
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
@@ -227,8 +239,9 @@ class Authentication
                 \trk('errors.security.invalid_persistent_token')
             );
         }
-        unset($token);
+        unset($token); // HiddenString uses memzero internally.
 
+        // Split the selector from the validator (which is then hashed)
         $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
         $val = CryptoUtil::raw_hash(
             Binary::safeSubstr($decoded, self::SELECTOR_BYTES)
@@ -259,6 +272,8 @@ class Authentication
         \Sodium\memzero($val);
 
         $userID = (int) $record[$f['userid']];
+
+        // Important: Set the session canary. Prevents login/logout cycles.
         $_SESSION['session_canary'] = $this->db->cell(
             'SELECT session_canary FROM airship_users WHERE userid = ?',
             $userID
@@ -403,8 +418,7 @@ class Authentication
         $this->tableConfig['field']['longterm']['validator'] = $field;
         return $this;
     }
-    
-    
+
     /**
      * Sets the column name used to reference the password hash stored in the
      * database, for SQL queries.
@@ -460,6 +474,6 @@ class Authentication
      */
     protected function registerMigrations()
     {
-       Gadgets::registerMigration(WordPress::TYPE, new WordPress());
+        Gadgets::registerMigration(WordPress::TYPE, new WordPress());
     }
 }
