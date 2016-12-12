@@ -11,6 +11,10 @@ use Airship\Engine\{
     Lens,
     State
 };
+use Airship\Engine\Networking\HTTP\{
+    Response,
+    ServerRequest
+};
 use ParagonIE\ConstantTime\Binary;
 use Psr\Log\LogLevel;
 
@@ -153,6 +157,10 @@ require ROOT . '/security.php';
 require ROOT . '/email.php';
 
 $state->autoPilot = $autoPilot;
+
+$state->autoPilot->setRequestObject(
+    ServerRequest::fromGlobals()
+);
 
 /**
  * Final step: Let's turn on the autopilot

@@ -10,6 +10,7 @@ use Airship\Alerts\Router\{
 use Airship\Engine\Contract\RouterInterface;
 use ParagonIE\ConstantTime\Binary;
 use ParagonIE\CSPBuilder\CSPBuilder;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Class AutoPilot
@@ -66,6 +67,11 @@ class AutoPilot implements RouterInterface
     protected $databases;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * AutoPilot constructor.
      *
      * @param array $cabin
@@ -102,6 +108,14 @@ class AutoPilot implements RouterInterface
                 self::$patternPrefix = Binary::safeSubstr($prefix, $start + 1);
             }
         }
+    }
+
+    /**
+     * @param RequestInterface $request
+     */
+    public function setRequestObject(RequestInterface $request)
+    {
+        $this->request = $request;
     }
 
     /**
