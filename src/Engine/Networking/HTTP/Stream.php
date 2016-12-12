@@ -196,6 +196,7 @@ class Stream implements StreamInterface
      *     offset bytes SEEK_CUR: Set position to current location plus offset
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws \RuntimeException on failure.
+     * @return Stream
      */
     public function seek($offset, $whence = SEEK_SET): self
     {
