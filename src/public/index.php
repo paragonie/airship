@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Airship\Alerts\Router\LandingComplete;
 use Airship\Engine\{
     AutoPilot,
     Database,
@@ -12,7 +13,6 @@ use Airship\Engine\{
     State
 };
 use Airship\Engine\Networking\HTTP\{
-    Response,
     ServerRequest
 };
 use ParagonIE\ConstantTime\Binary;
@@ -158,10 +158,6 @@ require ROOT . '/email.php';
 
 $state->autoPilot = $autoPilot;
 
-$state->autoPilot->setRequestObject(
-    ServerRequest::fromGlobals()
-);
-
 /**
  * Final step: Let's turn on the autopilot
  */
@@ -170,7 +166,11 @@ if (!empty($state->universal['debug'])) {
         \error_reporting(E_ALL);
         \ini_set('display_errors', 'On');
 
-        $autoPilot->route();
+        $autoPilot->serveResponse(
+            $autoPilot->route(ServerRequest::fromGlobals())
+        );
+    } catch (LandingComplete $ex) {
+            $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
             \header('Content-Type: text/plain;charset=UTF-8');
@@ -220,7 +220,11 @@ if (!empty($state->universal['debug'])) {
     echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';
 } else {
     try {
-        $autoPilot->route();
+        $autoPilot->serveResponse(
+            $autoPilot->route(ServerRequest::fromGlobals())
+        );
+    } catch (LandingComplete $ex) {
+        $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         $state->logger->log(
             LogLevel::ERROR,

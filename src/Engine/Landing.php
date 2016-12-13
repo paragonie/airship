@@ -4,6 +4,7 @@ namespace Airship\Engine;
 
 use Airship\Alerts\{
     GearNotFound,
+    Router\LandingComplete,
     Security\SecurityAlert
 };
 use Airship\Engine\Bolt\{
@@ -13,6 +14,11 @@ use Airship\Engine\Bolt\{
     Security as SecurityBolt
 };
 use Airship\Engine\Contract\DBInterface;
+use Airship\Engine\Networking\HTTP\{
+    ServerRequest,
+    Stream,
+    Uri
+};
 use Airship\Engine\Security\{
     CSRF,
     Filter\InputFilterContainer
@@ -23,6 +29,12 @@ use ParagonIE\Halite\{
     Util
 };
 use ParagonIE\HPKPBuilder\HPKPBuilder;
+use Psr\Http\Message\{
+    RequestInterface,
+    ResponseInterface,
+    ServerRequestInterface,
+    StreamInterface
+};
 use Psr\Log\LogLevel;
 
 /**
@@ -77,6 +89,16 @@ class Landing
     protected $airship_lens_override = [];
 
     /**
+     * @var ResponseInterface
+     */
+    protected $airship_response;
+
+    /**
+     * @var RequestInterface
+     */
+    protected $airship_request;
+
+    /**
      * @var array
      */
     protected $_cache = [
@@ -94,11 +116,13 @@ class Landing
      * @param Lens $lens
      * @param array $databases
      * @param string $urlPrefix
+     * @param ServerRequestInterface $request
      */
     final public function airshipEjectFromCockpit(
         Lens $lens,
         array $databases = [],
-        string $urlPrefix = ''
+        string $urlPrefix = '',
+        ServerRequestInterface $request = null
     ) {
         $this->airship_http_method = $_SERVER['REQUEST_METHOD'];
         $this->airship_lens_object = $lens;
@@ -109,6 +133,15 @@ class Landing
         if (\file_exists($file)) {
             $this->airship_config = \Airship\loadJSON($file);
         }
+        if (empty($request)) {
+            $reqGear = Gears::getName('ServerRequest');
+            if (IDE_HACKS) {
+                $reqGear = new ServerRequest('', new Uri(''));
+            }
+            $request = $reqGear::fromGlobals();
+        }
+        $this->airship_request = $request;
+        $this->airship_response = Gears::get('HTTPResponse');
         $this->airshipLand();
     }
     
@@ -268,6 +301,14 @@ class Landing
     }
 
     /**
+     * @return ResponseInterface
+     */
+    public function getResponseObject(): ResponseInterface
+    {
+        return $this->airship_response;
+    }
+
+    /**
      * Render a lens, return its contents, don't exit.
      *
      * @param string $name
@@ -297,8 +338,12 @@ class Landing
         if (isset($this->airship_lens_override[$name])) {
             $name = $this->airship_lens_override[$name];
         }
+        \ob_start();
         $this->airship_lens_object->display($name, ...$cArgs);
-        exit;
+        $this->airship_response = $this->setBodyAndStandardHeaders(
+            Stream::fromString(\ob_get_clean())
+        );
+        throw new LandingComplete();
     }
 
     /**
@@ -376,7 +421,7 @@ class Landing
      * @param string $name
      * @param array $cArgs Constructor arguments
      * @return bool
-     * @exit;
+     * @throws LandingComplete
      */
     protected function stasis(string $name, ...$cArgs): bool
     {
@@ -393,26 +438,46 @@ class Landing
         }
 
         $state = State::instance();
-        if (!\headers_sent()) {
-            \header('Content-Type: text/html;charset=UTF-8');
-            \header('Content-Language: ' . $state->lang);
-            \header('X-Content-Type-Options: nosniff');
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
-            $hpkp = $state->HPKP;
-            if ($hpkp instanceof HPKPBuilder) {
-                $hpkp->sendHPKPHeader();
-            }
-            $csp = $state->CSP;
-            if ($csp instanceof CSPBuilder) {
-                $csp->sendCSPHeader();
-                $this->airship_cspcache_object->set(
-                    $_SERVER['REQUEST_URI'],
-                    \json_encode($csp->getHeaderArray())
-                );
-            }
+        if ($state->CSP instanceof CSPBuilder) {
+            $this->airship_cspcache_object->set(
+                $_SERVER['REQUEST_URI'],
+                \json_encode($state->CSP->getHeaderArray())
+            );
         }
-        die($data);
+        $this->airship_response = $this->setBodyAndStandardHeaders(
+            Stream::fromString($data)
+        );
+        throw new LandingComplete();
+    }
+
+    /**
+     * @param StreamInterface $stream
+     * @return Landing
+     */
+    protected function setBodyAndStandardHeaders(StreamInterface $stream): self
+    {
+        $state = State::instance();
+        $this->airship_response = $this->airship_response
+            ->withHeader('Content-Type', 'text/html;charset=UTF-8')
+            ->withHeader('Content-Language', $state->lang)
+            ->withHeader('X-Content-Type-Options', 'nosniff')
+            ->withHeader('X-Frame-Options', 'SAMEORIGIN')
+            ->withHeader('X-XSS-Protection', '1; mode=block')
+            ->withBody($stream);
+        if ($state->CSP instanceof CSPBuilder) {
+            $this->airship_response = $state->CSP->injectCSPHeader(
+                $this->airship_response
+            );
+        }
+        if ($state->HPKP instanceof HPKPBuilder) {
+            list($hpkp_n, $hpkp_v) = \explode(':', $state->HPKP->getHeader());
+            $this->airship_response = $this->airship_response
+                ->withHeader(
+                    $hpkp_n,
+                    \trim($hpkp_v)
+                );
+        }
+        return $this;
     }
 
     /**

@@ -4,13 +4,14 @@ namespace Airship\Engine;
 
 use Airship\Alerts\GearNotFound;
 use Airship\Alerts\Router\{
-    EmulatePageNotFound,
-    FallbackLoop
+    EmulatePageNotFound, FallbackLoop, LandingComplete
 };
 use Airship\Engine\Contract\RouterInterface;
 use ParagonIE\ConstantTime\Binary;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class AutoPilot
@@ -55,6 +56,11 @@ class AutoPilot implements RouterInterface
      * @var array
      */
     protected $cabin = [];
+
+    /**
+     * @var ?Landing
+     */
+    protected $landing = null;
 
     /**
      * @var Lens
@@ -112,10 +118,12 @@ class AutoPilot implements RouterInterface
 
     /**
      * @param RequestInterface $request
+     * @return self
      */
-    public function setRequestObject(RequestInterface $request)
+    public function setRequestObject(RequestInterface $request): self
     {
         $this->request = $request;
+        return $this;
     }
 
     /**
@@ -262,8 +270,9 @@ class AutoPilot implements RouterInterface
     /**
      * Actually serve the HTTP request
      */
-    public function route()
+    public function route(ServerRequestInterface $request): ResponseInterface
     {
+        $this->request = $request;
         $this->loadInjectedRoutes();
         $args = [];
         foreach ($this->cabin['data']['routes'] as $path => $landing) {
@@ -380,11 +389,11 @@ class AutoPilot implements RouterInterface
      *
      * @param array $route
      * @param array $args
-     * @return mixed
+     * @return ResponseInterface
      * @throws FallbackLoop
      * @throws \Error
      */
-    protected function serve(array $route, array $args = [])
+    protected function serve(array $route, array $args = []): ResponseInterface
     {
         static $calledOnce = null;
         if (count($route) === 1) {
@@ -414,24 +423,24 @@ class AutoPilot implements RouterInterface
         }
         
         // Load our cabin-specific landing
-        $landing = new $class_name;
-        if (!($landing instanceof Landing)) {
+        $this->landing = new $class_name;
+        if (!($this->landing instanceof Landing)) {
             throw new \Error(
                 \__("%s is not a Landing", "default", $class_name)
             );
         }
         
         // Dependency injection with a twist
-        $landing->airshipEjectFromCockpit(
+        $this->landing->airshipEjectFromCockpit(
             $this->lens,
             $this->databases,
             self::$patternPrefix
         );
 
         // Tighten the Bolts!
-        \Airship\tightenBolts($landing);
+        \Airship\tightenBolts($this->landing);
 
-        if (!\method_exists($landing, $method)) {
+        if (!\method_exists($this->landing, $method)) {
             if ($calledOnce) {
                 throw new FallbackLoop(
                     \trk('errors.router.fallback_loop')
@@ -441,7 +450,41 @@ class AutoPilot implements RouterInterface
             return $this->serveFallback();
         }
 
-        return $landing->$method(...$args);
+        try {
+            $this->landing->$method(...$args);
+            return $this->landing->getResponseObject();
+        } catch (LandingComplete $ex) {
+            return $this->landing->getResponseObject();
+        }
+    }
+
+    /**
+     * @return Landing|null
+     */
+    public function getLanding(): ?Landing
+    {
+        return $this->landing;
+    }
+
+    /**
+     * @param null|ResponseInterface $response
+     * @return void
+     */
+    public function serveResponse(?ResponseInterface $response = null): void
+    {
+        if (empty($response)) {
+            $response = $this->getLanding()
+                ->getResponseObject();
+        }
+
+        // Send headers:
+        foreach ($response->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                \header(\sprintf('%s: %s', $name, $value), false);
+            }
+        }
+        echo $response->getBody();
+        exit(0);
     }
 
     /**
@@ -452,9 +495,10 @@ class AutoPilot implements RouterInterface
      * - Custom pages (if any exist), or
      * - Redirects
      *
-     * @return mixed
+     * @return ResponseInterface
+     * @throws FallbackLoop
      */
-    protected function serveFallback()
+    protected function serveFallback(): ResponseInterface
     {
         // If we're still here, let's try the fallback handler
         if (isset($this->cabin['data']['route_fallback'])) {
@@ -479,10 +523,7 @@ class AutoPilot implements RouterInterface
                 // We only catch this one
             }
         }
-
-        // If we don't have a fallback handler defined, just give a 404 status and kill the script.
-        \http_response_code(404);
-        exit(255);
+        throw new FallbackLoop('No fallback defined');
     }
 
     /**
@@ -496,7 +537,7 @@ class AutoPilot implements RouterInterface
         if (!self::isHTTPSConnection($scheme)) {
             // Should we redirect to an HTTPS endpoint?
             \Airship\redirect(
-                'https://'.$_SERVER['HTTP_HOST'].'/'.$_SERVER['REQUEST_URI'],
+                'https://' . $_SERVER['HTTP_HOST'] . '/' . $_SERVER['REQUEST_URI'],
                 $_GET ?? []
             );
         }

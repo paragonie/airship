@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 namespace Airship\Engine\Contract;
+use Psr\Http\Message\{
+    ResponseInterface,
+    ServerRequestInterface
+};
 
 /**
  * Interface RouterInterface
@@ -34,5 +38,5 @@ interface RouterInterface
     /**
      * This method should fly your guest to their designated landing.
      */
-    public function route();
+    public function route(ServerRequestInterface $request): ResponseInterface;
 }
