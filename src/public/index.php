@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Airship\Alerts\Router\LandingComplete;
 use Airship\Engine\{
-    AutoPilot,
     Database,
     Gears,
     Cache\File as FileCache,
@@ -10,6 +10,9 @@ use Airship\Engine\{
     Hail,
     Lens,
     State
+};
+use Airship\Engine\Networking\HTTP\{
+    ServerRequest
 };
 use ParagonIE\ConstantTime\Binary;
 use Psr\Log\LogLevel;
@@ -39,7 +42,6 @@ require_once \dirname(__DIR__) . '/preload.php';
 
 $start = \microtime(true);
 if (empty($_POST)) {
-
     /**
      * Let's get rid of trailing slashes in URLs without POST data
      */
@@ -121,38 +123,7 @@ if ($autoUpdater->needsUpdate()) {
     );
 }
 
-/**
- * Let's load the latest gear for our autoloader
- */
-define('CABIN_NAME', (string) $active['name']);
-define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
-
-// Turn all of this cabins' Landings and Blueprints into gears:
-require ROOT . '/cabin_gears.php';
-
-$lens->addGlobal('ACTIVE_CABIN', \CABIN_NAME);
-
-$autoPilot = Gears::get(
-    'AutoPilot',
-    $active,
-    $lens,
-    $dbPool
-);
-
-if ($autoPilot instanceof AutoPilot) {
-    $autoPilot->setActiveCabin(
-        $active,
-        $state->active_cabin
-    );
-}
-
-// Load everything else:
-require ROOT . '/symlinks.php';
-require ROOT . '/motifs.php';
-require ROOT . '/security.php';
-require ROOT . '/email.php';
-
-$state->autoPilot = $autoPilot;
+require_once ROOT . '/boot_final.php';
 
 /**
  * Final step: Let's turn on the autopilot
@@ -162,7 +133,11 @@ if (!empty($state->universal['debug'])) {
         \error_reporting(E_ALL);
         \ini_set('display_errors', 'On');
 
-        $autoPilot->route();
+        $autoPilot->serveResponse(
+            $autoPilot->route(ServerRequest::fromGlobals())
+        );
+    } catch (LandingComplete $ex) {
+            $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
             \header('Content-Type: text/plain;charset=UTF-8');
@@ -212,7 +187,11 @@ if (!empty($state->universal['debug'])) {
     echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s -->';
 } else {
     try {
-        $autoPilot->route();
+        $autoPilot->serveResponse(
+            $autoPilot->route(ServerRequest::fromGlobals())
+        );
+    } catch (LandingComplete $ex) {
+        $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         $state->logger->log(
             LogLevel::ERROR,

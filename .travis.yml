@@ -6,6 +6,9 @@ php:
 env:
 - DB=pgsql
 
+services:
+- postgresql
+
 before_install:
 - sudo apt-get update
 - sudo apt-get install make build-essential automake php5-dev php-pear
@@ -37,3 +40,6 @@ install:
 - chmod 0775 src/config/cabins.json
 - chmod 0775 src/config/databases.json
 - chmod 0775 src/config/universal.json
+- psql -c 'create database airship_test;' -U postgres
+- chmod +x src/CommandLine/travis-build.sh
+- src/CommandLine/travis-build.sh

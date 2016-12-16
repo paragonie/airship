@@ -27,6 +27,9 @@ declare(strict_types=1);
     
     'Hail' =>
         '\\Airship\\Engine\\Hail',
+
+    'HTTPResponse' =>
+        '\\Airship\\Engine\\Networking\\HTTP\\Response',
     
     'Landing' =>
         '\\Airship\\Engine\\Landing',
@@ -39,6 +42,9 @@ declare(strict_types=1);
     
     'Permissions' =>
         '\\Airship\\Engine\\Security\\Permissions',
+
+    'ServerRequest' =>
+        '\\Airship\\Engine\\Networking\\HTTP\\ServerRequest',
     
     'Translation' =>
         '\\Airship\\Engine\\Translation',

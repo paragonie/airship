@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="src/bootstrap.php"
+         bootstrap="src/testing-preamble.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -14,8 +14,11 @@
          syntaxCheck="true"
 >
     <testsuites>
-        <testsuite name="Airship Test Suite">
+        <testsuite name="Unit Tests">
             <directory suffix="Test.php">./test/unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory suffix="Test.php">./test/integration</directory>
         </testsuite>
     </testsuites>
     <filter>
