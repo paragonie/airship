@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine\Networking\HTTP;
 
 use ParagonIE\ConstantTime\Binary;
+use ParagonIE\Halite\HiddenString;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -80,6 +81,20 @@ class Stream implements StreamInterface
     {
         $resource = \fopen('php://memory', 'r+');
         \fwrite($resource, $data);
+        \rewind($resource);
+        return new static($resource);
+    }
+
+    /**
+     * Convert a string into a memory string.
+     *
+     * @param HiddenString $data
+     * @return Stream
+     */
+    public static function fromHiddenString(HiddenString $data): self
+    {
+        $resource = \fopen('php://memory', 'r+');
+        \fwrite($resource, $data->getString());
         \rewind($resource);
         return new static($resource);
     }
@@ -283,6 +298,18 @@ class Stream implements StreamInterface
     public function getContents(): string
     {
         return \stream_get_contents($this->stream);
+    }
+
+    /**
+     * Returns the remaining contents in a string
+     *
+     * @return HiddenString
+     * @throws \RuntimeException if unable to read or an error occurs while
+     *     reading.
+     */
+    public function getContentsAsHiddenString(): HiddenString
+    {
+        return new HiddenString(\stream_get_contents($this->stream));
     }
 
     /**
