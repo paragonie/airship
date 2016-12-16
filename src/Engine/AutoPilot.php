@@ -436,7 +436,8 @@ class AutoPilot implements RouterInterface
         $this->landing->airshipEjectFromCockpit(
             $this->lens,
             $this->databases,
-            self::$patternPrefix
+            self::$patternPrefix,
+            $this->request
         );
 
         // Tighten the Bolts!
@@ -480,9 +481,11 @@ class AutoPilot implements RouterInterface
         }
 
         // Send headers:
-        foreach ($response->getHeaders() as $name => $values) {
-            foreach ($values as $value) {
-                \header(\sprintf('%s: %s', $name, $value), false);
+        if (!\headers_sent()) {
+            foreach ($response->getHeaders() as $name => $values) {
+                foreach ($values as $value) {
+                    \header(\sprintf('%s: %s', $name, $value), false);
+                }
             }
         }
         echo $response->getBody();

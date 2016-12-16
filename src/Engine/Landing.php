@@ -122,9 +122,12 @@ class Landing
         Lens $lens,
         array $databases = [],
         string $urlPrefix = '',
-        ServerRequestInterface $request = null
+        ServerRequestInterface $request
     ) {
-        $this->airship_http_method = $_SERVER['REQUEST_METHOD'];
+        $this->airship_request = $request;
+        $this->airship_http_method = $_SERVER['REQUEST_METHOD']
+                ??
+            $this->airship_request->getServerParams()['REQUEST_METHOD'];
         $this->airship_lens_object = $lens;
         $this->airship_databases = $databases;
         $this->airship_csrf = Gears::get('CSRF');
@@ -140,7 +143,6 @@ class Landing
             }
             $request = $reqGear::fromGlobals();
         }
-        $this->airship_request = $request;
         $this->airship_response = Gears::get('HTTPResponse');
         $this->airshipLand();
     }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use Airship\Alerts\Router\LandingComplete;
 use Airship\Engine\{
-    AutoPilot,
     Database,
     Gears,
     Cache\File as FileCache,
@@ -43,7 +42,6 @@ require_once \dirname(__DIR__) . '/preload.php';
 
 $start = \microtime(true);
 if (empty($_POST)) {
-
     /**
      * Let's get rid of trailing slashes in URLs without POST data
      */
@@ -125,38 +123,7 @@ if ($autoUpdater->needsUpdate()) {
     );
 }
 
-/**
- * Let's load the latest gear for our autoloader
- */
-define('CABIN_NAME', (string) $active['name']);
-define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
-
-// Turn all of this cabins' Landings and Blueprints into gears:
-require ROOT . '/cabin_gears.php';
-
-$lens->addGlobal('ACTIVE_CABIN', \CABIN_NAME);
-
-$autoPilot = Gears::get(
-    'AutoPilot',
-    $active,
-    $lens,
-    $dbPool
-);
-
-if ($autoPilot instanceof AutoPilot) {
-    $autoPilot->setActiveCabin(
-        $active,
-        $state->active_cabin
-    );
-}
-
-// Load everything else:
-require ROOT . '/symlinks.php';
-require ROOT . '/motifs.php';
-require ROOT . '/security.php';
-require ROOT . '/email.php';
-
-$state->autoPilot = $autoPilot;
+require_once ROOT . '/boot_final.php';
 
 /**
  * Final step: Let's turn on the autopilot
