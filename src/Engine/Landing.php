@@ -340,7 +340,7 @@ class Landing
         }
         \ob_start();
         $this->airship_lens_object->display($name, ...$cArgs);
-        $this->airship_response = $this->setBodyAndStandardHeaders(
+        $this->setBodyAndStandardHeaders(
             Stream::fromString(\ob_get_clean())
         );
         throw new LandingComplete();
@@ -444,7 +444,7 @@ class Landing
                 \json_encode($state->CSP->getHeaderArray())
             );
         }
-        $this->airship_response = $this->setBodyAndStandardHeaders(
+        $this->setBodyAndStandardHeaders(
             Stream::fromString($data)
         );
         throw new LandingComplete();

@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\{
     Halite,
+    HiddenString,
     Password
 };
 use ParagonIE\ConstantTime\Base64;
@@ -279,7 +280,7 @@ class Install
         $this->data['admin'] = [
             'username' => $post['username'],
             'passphrase' => Password::hash(
-                $post['passphrase'],
+                new HiddenString($post['passphrase']),
                 $state->keyring['auth.password_key']
             )
         ];

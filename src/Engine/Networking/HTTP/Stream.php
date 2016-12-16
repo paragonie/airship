@@ -34,9 +34,14 @@ class Stream implements StreamInterface
 
     /**
      * Stream constructor.
+     *
+     * @param resource $stream
      */
-    public function __construct(resource $stream)
+    public function __construct($stream)
     {
+        if (!\is_resource($stream)) {
+            throw new \TypeError('Expected a resource. Got ' . \gettext($stream));
+        }
         $this->stream = $stream;
         $meta = \stream_get_meta_data($stream);
 
