@@ -161,7 +161,9 @@ if (!empty($state->universal['debug'])) {
                     echo "\n", \str_repeat('#', 80), "\n";
                     echo "PREVIOUS EXCEPTION (", $n, "): ", \get_class($e), "\n\n",
                     $e->getMessage(), "\n\n",
-                    $e->getCode(), "\n\n",
+                    'File: ', $e->getFile(), "\n",
+                    'Line: ', $e->getLine(), "\n",
+                    'Code: ', $e->getCode(), "\n\n",
                     $e->getTraceAsString();
                     ++$n;
                     if (!$e) {
@@ -171,7 +173,9 @@ if (!empty($state->universal['debug'])) {
                     echo "\n", \str_repeat('#', 80), "\n";
                     echo "PREVIOUS ERROR (", $n, "): ", \get_class($e), "\n\n",
                     $e->getMessage(), "\n\n",
-                    $e->getCode(), "\n\n",
+                    'File: ', $e->getFile(), "\n",
+                    'Line: ', $e->getLine(), "\n",
+                    'Code: ', $e->getCode(), "\n\n",
                     $e->getTraceAsString();
                     ++$n;
                     if (!$e) {
