@@ -18,20 +18,10 @@ class UpdateInfo
      */
     protected $channel;
 
-    /*
-     * @var array
-     */
-    protected $releaseInfo;
-
     /**
      * @var string
      */
     protected $checksum;
-
-    /**
-     * @var array
-     */
-    protected $response;
 
     /**
      * @var string
@@ -41,12 +31,22 @@ class UpdateInfo
     /**
      * @var string
      */
-    protected $supplierName;
+    protected $packageName;
+
+    /*
+     * @var array
+     */
+    protected $releaseInfo;
+
+    /**
+     * @var array
+     */
+    protected $response;
 
     /**
      * @var string
      */
-    protected $packageName;
+    protected $supplierName;
 
     /**
      * UpdateInfo constructor.
