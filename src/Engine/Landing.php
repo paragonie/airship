@@ -332,8 +332,7 @@ class Landing
      *
      * @param string $name
      * @param mixed[] ...$cArgs Constructor arguments
-     * @return void
-     * @exit
+     * @throws LandingComplete
      */
     protected function lens(string $name, ...$cArgs)
     {

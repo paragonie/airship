@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Airship\Alerts\Router\LandingComplete;
 use Airship\Engine\{
+    AutoPilot,
     Database,
     Gears,
     Cache\File as FileCache,
@@ -22,6 +23,7 @@ use Psr\Log\LogLevel;
  * @global Database[] $dbPool
  * @global State $state
  * @global Lens $lens
+ * @global AutoPilot $autopilot
  */
 
 // Are we still installing?
@@ -41,57 +43,7 @@ if (
 require_once \dirname(__DIR__) . '/preload.php';
 
 $start = \microtime(true);
-if (empty($_POST)) {
-    /**
-     * Let's get rid of trailing slashes in URLs without POST data
-     */
-    $sliceAt = Binary::safeStrlen($_SERVER['REQUEST_URI']) - 1;
-    if ($sliceAt > 0 && $_SERVER['REQUEST_URI'][$sliceAt] === '/') {
-        \Airship\redirect(
-            '/' . \trim($_SERVER['REQUEST_URI'], '/')
-        );
-    }
-
-    /**
-     * Let's handle static content caching
-     */
-    if (\extension_loaded('apcu')) {
-        $staticCache = (new MemoryCache())
-            ->personalize('staticPage:');
-        $cspCache = (new MemoryCache())
-            ->personalize('contentSecurityPolicy:');
-    } else {
-        if (!\is_dir(ROOT . '/tmp/cache/static')) {
-            require_once ROOT . '/tmp_dirs.php';
-        }
-        $staticCache = new FileCache(ROOT . '/tmp/cache/static');
-        $cspCache = new FileCache(ROOT . '/tmp/cache/csp_static');
-    }
-    $port = $_SERVER['HTTP_PORT'] ?? '';
-    $lookup = $_SERVER['HTTP_HOST'] . ':' . $port . '/' . $_SERVER['REQUEST_URI'];
-    $staticPage = $staticCache->get($lookup);
-    if (!empty($staticPage)) {
-        if (!\headers_sent()) {
-            \header('Content-Type: text/html;charset=UTF-8');
-            \header('Content-Language: ' . $state->lang);
-            \header('X-Content-Type-Options: nosniff');
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
-        }
-        $csp =  $cspCache->get($lookup);
-        if (!empty($csp)) {
-            foreach (\json_decode($csp, true) as $cspHeader) {
-                \header($cspHeader);
-            }
-        }
-
-        echo $staticPage;
-        // This is just for benchmarking purposes:
-        echo '<!-- Load time: ' . \round(\microtime(true) - $start, 5) . ' s (static page) -->';
-        exit;
-    }
-    unset($staticCache);
-}
+require_once ROOT . '/static-cache.php';
 
 // Load all of the prerequisites:
 require_once ROOT . '/bootstrap.php';
