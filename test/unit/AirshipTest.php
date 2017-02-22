@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Airship\UnitTests;
 use ParagonIE\ConstantTime\Binary;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AirshipTest
  * @package Airship\UnitTests
  */
-class AirshipTest extends \PHPUnit_Framework_TestCase
+class AirshipTest extends TestCase
 {
 
     /**
@@ -225,8 +226,8 @@ class AirshipTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'Airship\\UnitTests\\AirshipTest',
-                '\\PHPUnit_Framework_TestCase',
-                '\\PHPUnit_Framework_Assert'
+                '\\PHPUnit\\Framework\\TestCase',
+                '\\PHPUnit\\Framework\\Assert'
             ],
             \Airship\get_ancestors(\get_class($this))
         );

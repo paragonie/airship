@@ -30,7 +30,6 @@ use ParagonIE\Halite\{
 };
 use ParagonIE\HPKPBuilder\HPKPBuilder;
 use Psr\Http\Message\{
-    RequestInterface,
     ResponseInterface,
     ServerRequestInterface,
     StreamInterface
@@ -74,7 +73,7 @@ class Controller
     protected $airship_csrf;
 
     /**
-     * @var DBInterface[][]
+     * @var array<string, array<int, Database>>
      */
     protected $airship_databases;
 
@@ -94,7 +93,7 @@ class Controller
     protected $airship_response;
 
     /**
-     * @var RequestInterface
+     * @var ServerRequestInterface
      */
     protected $airship_request;
 
@@ -114,16 +113,27 @@ class Controller
      * this component.
      * 
      * @param View $lens
-     * @param array $databases
+     * @param array<string, array<int, Database>> $databases
      * @param string $urlPrefix
      * @param ServerRequestInterface $request
+     * @return void
      */
     final public function airshipEjectFromCockpit(
         View $lens,
         array $databases = [],
         string $urlPrefix = '',
-        ServerRequestInterface $request
+        ServerRequestInterface $request = null
     ) {
+        if (empty($request)) {
+            /**
+             * @var ServerRequest
+             */
+            $reqGear = Gears::getName('ServerRequest');
+            if (IDE_HACKS) {
+                $reqGear = new ServerRequest('', new Uri(''));
+            }
+            $request = $reqGear::fromGlobals();
+        }
         $this->airship_request = $request;
         $this->airship_http_method = $_SERVER['REQUEST_METHOD']
                 ??
@@ -136,13 +146,6 @@ class Controller
         if (\file_exists($file)) {
             $this->airship_config = \Airship\loadJSON($file);
         }
-        if (empty($request)) {
-            $reqGear = Gears::getName('ServerRequest');
-            if (IDE_HACKS) {
-                $reqGear = new ServerRequest('', new Uri(''));
-            }
-            $request = $reqGear::fromGlobals();
-        }
         $this->airship_response = Gears::get('HTTPResponse');
         $this->airshipLand();
     }
@@ -151,6 +154,7 @@ class Controller
      * Overloadable; invoked after airshipEjectFromCockpit()
      * 
      * This is typically what you want to overload in place of a constructor.
+     * @return void
      */
     public function airshipLand()
     {
@@ -179,10 +183,12 @@ class Controller
      *
      * @param string $name
      * @param callable $func
+     * @return self
      */
-    protected function addViewFilter(string $name, callable $func)
+    protected function addViewFilter(string $name, callable $func): self
     {
         $this->airship_view_object->filter($name, $func);
+        return $this;
     }
 
     /**
@@ -190,10 +196,12 @@ class Controller
      *
      * @param string $name
      * @param callable $func
+     * @return self
      */
-    protected function addViewFunction(string $name, callable $func)
+    protected function addViewFunction(string $name, callable $func): self
     {
         $this->airship_view_object->func($name, $func);
+        return $this;
     }
 
     /**
@@ -226,8 +234,11 @@ class Controller
 
         if (!isset($this->_cache['models'][$cache])) {
             // CACHE MISS. We need to build it, then!
+            /**
+             * @var Database
+             */
             $db = $this->airshipChooseDB();
-            if ($db instanceof DBInterface) {
+            if ($db instanceof Database) {
                 \array_unshift($cArgs, $db);
             }
 
@@ -324,7 +335,7 @@ class Controller
         }
         \ob_start();
         $this->airship_view_object->display($name, ...$cArgs);
-        return \ob_get_clean();
+        return (string) \ob_get_clean();
     }
 
     /**
@@ -333,8 +344,9 @@ class Controller
      * @param string $name
      * @param mixed[] ...$cArgs Constructor arguments
      * @throws ControllerComplete
+     * @return void
      */
-    protected function lens(string $name, ...$cArgs)
+    protected function lens(string $name, ...$cArgs): void
     {
         if (isset($this->airship_view_override[$name])) {
             $name = $this->airship_view_override[$name];
@@ -342,7 +354,7 @@ class Controller
         \ob_start();
         $this->airship_view_object->display($name, ...$cArgs);
         $this->setBodyAndStandardHeaders(
-            Stream::fromString(\ob_get_clean())
+            Stream::fromString((string) \ob_get_clean())
         );
         throw new ControllerComplete();
     }
@@ -352,10 +364,12 @@ class Controller
      *
      * @param string $oldView
      * @param string $newView
+     * @return self
      */
-    protected function overrideView(string $oldView, string $newView)
+    protected function overrideView(string $oldView, string $newView): self
     {
         $this->airship_view_override[$oldView] = $newView;
+        return $this;
     }
 
     /**
@@ -420,7 +434,7 @@ class Controller
      * Render lens content, cache it, then display it.
      *
      * @param string $name
-     * @param array $cArgs Constructor arguments
+     * @param array<int, mixed> $cArgs Constructor arguments
      * @return bool
      * @throws ControllerComplete
      */
@@ -453,7 +467,7 @@ class Controller
 
     /**
      * @param StreamInterface $stream
-     * @return Controller
+     * @return self
      */
     protected function setBodyAndStandardHeaders(StreamInterface $stream): self
     {
@@ -466,6 +480,9 @@ class Controller
             ->withHeader('X-XSS-Protection', '1; mode=block')
             ->withBody($stream);
         if ($state->CSP instanceof CSPBuilder) {
+            /**
+             * @var ResponseInterface
+             */
             $this->airship_response = $state->CSP->injectCSPHeader(
                 $this->airship_response
             );

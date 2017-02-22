@@ -1,10 +1,11 @@
 <?php
 use Airship\Engine\Security\Util;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals disabled
  */
-class UtilTest extends PHPUnit_Framework_TestCase
+class UtilTest extends TestCase
 {
     /**
      * @covers Util::randomString()

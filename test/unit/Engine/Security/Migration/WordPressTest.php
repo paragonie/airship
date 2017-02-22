@@ -6,12 +6,13 @@ use Airship\Engine\Security\{
 };
 use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals disabled
  * @covers HiddenString
  */
-class WordPressTest extends PHPUnit_Framework_TestCase
+class WordPressTest extends TestCase
 {
     public function testImport()
     {

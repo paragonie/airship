@@ -80,7 +80,7 @@ class Stream implements StreamInterface
      * Convert a string into a memory string.
      *
      * @param string $data
-     * @return Stream
+     * @return self
      */
     public static function fromString(string $data): self
     {
@@ -94,7 +94,7 @@ class Stream implements StreamInterface
      * Convert a string into a memory string.
      *
      * @param HiddenString $data
-     * @return Stream
+     * @return self
      */
     public static function fromHiddenString(HiddenString $data): self
     {
@@ -151,7 +151,7 @@ class Stream implements StreamInterface
      *
      * @return resource|null Underlying PHP stream, if any
      */
-    public function detach(): ?resource
+    public function detach()
     {
         return $this->stream;
     }
@@ -216,7 +216,7 @@ class Stream implements StreamInterface
      *     offset bytes SEEK_CUR: Set position to current location plus offset
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws \RuntimeException on failure.
-     * @return Stream
+     * @return self
      */
     public function seek($offset, $whence = SEEK_SET): self
     {

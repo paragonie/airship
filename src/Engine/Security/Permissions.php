@@ -29,7 +29,7 @@ class Permissions
     private $db;
     
     /**
-     * @param DBInterface $db
+     * @param Database $db
      */
     public function __construct(Database $db)
     {

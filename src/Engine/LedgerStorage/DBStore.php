@@ -78,7 +78,7 @@ class DBStore implements LedgerStorageInterface
      *
      * @param string $key
      * @param string $value
-     * @return DBStore ($this)
+     * @return self
      */
     public function setColumn(
         string $key,

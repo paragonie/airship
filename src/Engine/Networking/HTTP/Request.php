@@ -190,7 +190,7 @@ class Request extends Message implements RequestInterface
     }
 
     /**
-     * @return Request
+     * @return self
      */
     protected function updateHostFromUri(): self
     {

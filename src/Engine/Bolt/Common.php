@@ -20,14 +20,14 @@ trait Common
     /**
      * Get an array of the Cabin names
      *
-     * @return string[]
+     * @return array<int, string>
      */
     public function getCabinNames(): array
     {
         $state = State::instance();
         $cabins = [];
         foreach ($state->cabins as $cabin) {
-            $cabins []= $cabin['name'];
+            $cabins []= (string) $cabin['name'];
         }
         return $cabins;
     }

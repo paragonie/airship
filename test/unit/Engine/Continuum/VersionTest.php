@@ -1,11 +1,12 @@
 <?php
 
 use Airship\Engine\Continuum\Version;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals disabled
  */
-class VersionTest extends PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     /**
      * Just some versions

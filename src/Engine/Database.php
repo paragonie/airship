@@ -662,7 +662,7 @@ class Database implements DBInterface
      * PHP 5.6 variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @param mixed[] ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)

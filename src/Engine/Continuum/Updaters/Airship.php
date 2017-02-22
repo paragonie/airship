@@ -66,6 +66,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
      * 3. Verify the signature (via Halite).
      * 4. Verify the update is recorded in Keyggdrasil.
      * 5. If all is well, run the update script.
+     * @return void
      */
     public function autoUpdate()
     {
@@ -172,6 +173,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
+     * @return void
      * @throws CouldNotUpdate
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
@@ -215,7 +217,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
             $composerUpdated = false;
             foreach ($composers as $composer) {
                 if (\file_exists($composer)) {
-                    $dir = \getcwd();
+                    $dir = (string) \getcwd();
                     \chdir(\dirname(ROOT));
                     \shell_exec("{$composer} install");
                     \chdir($dir);

@@ -13,12 +13,13 @@ use ParagonIE\Halite\{
     HiddenString,
     Symmetric\AuthenticationKey
 };
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SharedMemoryTest
  * @backupGlobals disabled
  */
-class SharedMemoryTest extends PHPUnit_Framework_TestCase
+class SharedMemoryTest extends TestCase
 {
     /**
      * @covers SharedMemory::get()

@@ -29,6 +29,7 @@ trait Supplier
      * @return SupplierObject
      * @throws AccessDenied
      * @throws CouldNotCreateSupplier
+     * @throws \TypeError
      */
     public function createSupplier(string $channelName, array $data): SupplierObject
     {
@@ -38,6 +39,9 @@ trait Supplier
                 'File already exists: config/supplier_keys/' . $supplierName . '.json'
             );
         }
+        /**
+         * @var int
+         */
         $written = \file_put_contents(
             ROOT . '/config/supplier_keys/' . $supplierName . '.json',
             \json_encode(
@@ -50,13 +54,20 @@ trait Supplier
                 JSON_PRETTY_PRINT
             )
         );
-        if ($written === false) {
+        if (!\is_int($written)) {
             throw new AccessDenied(
                 \__('Could not save new key')
             );
         }
 
-        return $this->getSupplier($supplierName, true);
+        /**
+         * @var SupplierObject
+         */
+        $supplier = $this->getSupplier($supplierName, true);
+        if (!\is_object($supplier)) {
+            throw new \TypeError('Expected a single supplier, got multiple');
+        }
+        return $supplier;
     }
 
     /**
@@ -101,7 +112,7 @@ trait Supplier
      *
      * @param string $supplier
      * @param boolean $force_flush
-     * @return SupplierObject|SupplierObject[]
+     * @return SupplierObject|array<string, SupplierObject>
      * @throws NoSupplier
      */
     public function getSupplier(
@@ -111,6 +122,9 @@ trait Supplier
         if (empty($supplier)) {
             // Fetch all suppliers
             if ($force_flush || empty($this->supplierCache)) {
+                /**
+                 * @var array<string, SupplierObject>
+                 */
                 $supplierCache = [];
                 $allSuppliers = \Airship\list_all_files(
                     ROOT . '/config/supplier_keys',
@@ -166,5 +180,19 @@ trait Supplier
             return $this->supplierCache[$supplier];
         }
         throw new NoSupplier();
+    }
+
+
+    /**
+     * Get the last piece of a path
+     *
+     * @param string $fullPath
+     * @return string
+     */
+    public function getEndPiece(string $fullPath): string
+    {
+        $trimmedPath = \trim($fullPath. '/');
+        $arr = \explode('/', $trimmedPath);
+        return (string) \array_pop($arr);
     }
 }

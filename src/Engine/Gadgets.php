@@ -17,7 +17,8 @@ abstract class Gadgets
     /**
      * Set the base template
      *
-     * @param string
+     * @param string $path
+     * @return void
      */
     public static function setBaseTemplate(string $path)
     {

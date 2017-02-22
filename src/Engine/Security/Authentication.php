@@ -373,7 +373,7 @@ class Authentication
      * Sets the database handler.
      * 
      * @param DBInterface $db
-     * @return Authentication ($this)
+     * @return self
      */
     public function setDatabase(DBInterface $db): self
     {
@@ -385,7 +385,7 @@ class Authentication
      * Set the database of this authentication library to match this 
      * 
      * @param string $dbIndex
-     * @return Authentication ($this)
+     * @return self
      */
     public function setDatabaseByKey(string $dbIndex = ''): self
     {
@@ -398,7 +398,7 @@ class Authentication
      * long-term authentication token.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setLongTermSelectorField(string $field): self
     {
@@ -411,7 +411,7 @@ class Authentication
      * long-term authentication token.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setLongTermValidatorField(string $field): self
     {
@@ -424,7 +424,7 @@ class Authentication
      * database, for SQL queries.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setPasswordField(string $field): self
     {
@@ -436,7 +436,7 @@ class Authentication
      * Change the table used for 
      * 
      * @param string $table
-     * @return Authentication ($this)
+     * @return self
      */
     public function setTable(string $table): self
     {
@@ -448,7 +448,7 @@ class Authentication
      * Sets the column name used to reference the primary key (userid)
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setUserIdField(string $field): self
     {
@@ -461,7 +461,7 @@ class Authentication
      * queries.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setUsernameField(string $field): self
     {

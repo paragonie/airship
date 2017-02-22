@@ -134,6 +134,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param int $error
+     * @return self
      * @throws \InvalidArgumentException
      */
     private function setError(int $error): self
@@ -144,6 +145,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param int $size
+     * @return self
      */
     private function setSize(int $size): self
     {
@@ -153,7 +155,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param mixed $param
-     * @return boolean
+     * @return bool
      */
     protected function isStringOrNull($param)
     {
@@ -161,8 +163,8 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * @param mixed $param
-     * @return boolean
+     * @param string $param
+     * @return bool
      */
     private function isStringNotEmpty(string $param)
     {
@@ -171,6 +173,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param string|null $clientFilename
+     * @return self
      */
     private function setClientFilename(?string $clientFilename): self
     {
@@ -180,6 +183,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param string|null $clientMediaType
+     * @return self
      */
     private function setClientMediaType(?string $clientMediaType): self
     {
@@ -190,17 +194,17 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Return true if there is no upload error
      *
-     * @return boolean
+     * @return bool
      */
-    private function isOk()
+    private function isOk(): bool
     {
         return $this->error === UPLOAD_ERR_OK;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isMoved()
+    public function isMoved(): bool
     {
         return $this->moved;
     }
@@ -280,7 +284,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      *
-     * @return int|null The file size in bytes or null if unknown.
+     * @return int The file size in bytes or null if unknown.
      */
     public function getSize(): int
     {

@@ -87,6 +87,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      * 3. Verify the signature (via Halite).
      * 4. Verify the update is recorded in Keyggdrasil.
      * 5. If all is well, run the update script.
+     * @return void
      */
     public function autoUpdate()
     {
@@ -190,6 +191,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      * @param UpdateInfo $info
      * @param UpdateFile $file
      * @throws CouldNotUpdate
+     * @return void
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {
@@ -224,7 +226,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         $oldMetadata = \Airship\loadJSON(ROOT . '/Cabin/' . $ns . '/manifest.json');
 
         // Overwrite files
-        $updater->extractTo(ROOT . '/Cabin/' . $ns, null, true);
+        $updater->extractTo(ROOT . '/Cabin/' . $ns, [], true);
 
         // Run the update trigger.
         Sandbox::safeInclude('phar://' . $this->pharAlias . '/update_trigger.php', $oldMetadata);
@@ -292,6 +294,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      * After we finish our update, we should bring the cabin back online:
      *
      * @param string $name Cabin name
+     * @return void
      */
     protected function bringCabinBackUp(string $name = '')
     {
@@ -357,6 +360,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      * Let's bring the cabin down while we're upgrading:
      *
      * @param string $name Cabin name
+     * @return void
      */
     protected function bringCabinDown(string $name = '')
     {

@@ -6,6 +6,7 @@ use Airship\Engine\Cache\{
     File,
     SharedMemory
 };
+use Airship\Engine\Contract\CacheInterface;
 
 /**
  * Trait Cache
@@ -17,19 +18,21 @@ use Airship\Engine\Cache\{
 trait Cache
 {
     /**
-     * @var File
+     * @var CacheInterface
      */
     public $airship_filecache_object;
 
     /**
-     * @var File
+     * @var CacheInterface
      */
     public $airship_cspcache_object;
 
     /**
      * After loading the Cache bolt in place, configure it.
+     *
+     * @return void
      */
-    function tightenCacheBolt()
+    function tightenCacheBolt(): void
     {
         static $tightened = false;
         if ($tightened) {

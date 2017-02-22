@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<psalm
+    autoloader="src/testing-preamble.php"
+    stopOnFirstError="false"
+    useDocblockTypes="true"
+>
+    <projectFiles>
+        <directory name="src/Engine" />
+    </projectFiles>
+    <issueHandlers>
+        <FailedTypeResolution errorLevel="info" />
+        <ForbiddenCode errorLevel="info" />
+        <InvalidArrayAssignment errorLevel="info" />
+        <InvalidArgument errorLevel="info" />
+        <InvalidIterator errorLevel="info" />
+        <InvalidOperand errorLevel="info" />
+        <InvalidPropertyAssignment errorLevel="info" />
+        <InvalidReturnType errorLevel="info" />
+        <InvalidScalarArgument errorLevel="info" />
+        <MissingConstructor errorLevel="info" /><!-- Because traits -->
+        <MissingPropertyDeclaration errorLevel="info" />
+        <MissingReturnType errorLevel="info" />
+        <MoreSpecificReturnType errorLevel="info" />
+        <NonStaticSelfCall errorLevel="info" />
+        <PossiblyNullArgument errorLevel="info" />
+        <PossiblyUndefinedVariable errorLevel="info" />
+        <PropertyNotSetInConstructor errorLevel="info" />
+        <TooFewArguments errorLevel="info" />
+        <TooManyArguments errorLevel="info" />
+        <TypeDoesNotContainType errorLevel="info" />
+        <UndefinedMethod errorLevel="info" />
+        <UndefinedThisPropertyAssignment errorLevel="info" />
+        <UndefinedThisPropertyFetch errorLevel="info" />
+    </issueHandlers>
+</psalm>

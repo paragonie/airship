@@ -26,7 +26,7 @@ use ParagonIE\Halite\{
 class SharedMemory implements CacheInterface
 {
     /**
-     * @var Key
+     * @var AuthenticationKey
      */
     protected $authKey;
 
@@ -158,7 +158,7 @@ class SharedMemory implements CacheInterface
      * Add a prefix to the hash function input
      *
      * @param string $string
-     * @return SharedMemory
+     * @return self
      */
     public function personalize(string $string): self
     {

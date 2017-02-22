@@ -10,7 +10,6 @@ use Airship\Alerts\Router\{
 };
 use Airship\Engine\Contract\RouterInterface;
 use ParagonIE\ConstantTime\Binary;
-use ParagonIE\CSPBuilder\CSPBuilder;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,19 +49,14 @@ class AutoPilot implements RouterInterface
     public static $cabinIndex;
 
     /**
-     * @var CSPBuilder
-     */
-    protected $CSPBuilder;
-
-    /**
      * @var array
      */
     protected $cabin = [];
 
     /**
-     * @var ?Controller
+     * @var Controller
      */
-    protected $landing = null;
+    protected $landing;
 
     /**
      * @var View
@@ -87,8 +81,8 @@ class AutoPilot implements RouterInterface
      * @param Database[] $databases (optional)
      */
     public function __construct(
-        array $cabin = [],
-        View $lens = null,
+        array $cabin,
+        View $lens,
         array $databases = []
     ) {
         $this->cabin = $cabin;
@@ -101,8 +95,9 @@ class AutoPilot implements RouterInterface
      * 
      * @param array $cabin
      * @param string $prefix
+     * @return self
      */
-    public function setActiveCabin(array $cabin, string $prefix)
+    public function setActiveCabin(array $cabin, string $prefix): self
     {
         self::$active_cabin = $cabin['namespace'] ?? $cabin['name'];
         self::$cabinIndex = $prefix;
@@ -116,6 +111,7 @@ class AutoPilot implements RouterInterface
                 self::$patternPrefix = Binary::safeSubstr($prefix, $start + 1);
             }
         }
+        return $this;
     }
 
     /**
@@ -370,7 +366,7 @@ class AutoPilot implements RouterInterface
      * This loads all of the routes injected by the Gadgets into the current
      * Cabin
      *
-     * @return AutoPilot
+     * @return self
      */
     protected function loadInjectedRoutes(): self
     {
@@ -462,9 +458,9 @@ class AutoPilot implements RouterInterface
     }
 
     /**
-     * @return Controller|null
+     * @return Controller
      */
-    public function getController(): ?Controller
+    public function getController(): Controller
     {
         return $this->landing;
     }
@@ -488,7 +484,7 @@ class AutoPilot implements RouterInterface
                 }
             }
         }
-        echo $response->getBody();
+        echo (string) $response->getBody();
         exit(0);
     }
 

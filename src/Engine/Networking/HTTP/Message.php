@@ -287,7 +287,7 @@ class Message implements MessageInterface
      *
      * @param string $key
      * @param $value
-     * @return Message
+     * @return self
      */
     public function mutate(string $key, $value): self
     {

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 use Airship\Engine\Security\AirBrake;
+use PHPUnit\Framework\TestCase;
 
 require_once \dirname(__DIR__).'/MockDatabase.php';
 
@@ -8,7 +9,7 @@ require_once \dirname(__DIR__).'/MockDatabase.php';
  * @backupGlobals disabled
  * @covers AirBrake
  */
-class AirBrakeTest extends PHPUnit_Framework_TestCase
+class AirBrakeTest extends TestCase
 {
     public function testCutoff()
     {

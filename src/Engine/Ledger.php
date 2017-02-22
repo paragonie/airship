@@ -17,6 +17,9 @@ use Psr\Log\{
  */
 class Ledger implements LoggerInterface
 {
+    /**
+     * @var LedgerStorageInterface
+     */
     protected $storage;
 
     /**

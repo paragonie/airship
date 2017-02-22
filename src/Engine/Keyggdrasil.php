@@ -66,12 +66,12 @@ class Keyggdrasil
     protected $hail;
 
     /**
-     * @var Supplier[]
+     * @var array<string, Supplier>
      */
     protected $supplierCache;
 
     /**
-     * @var Channel[]
+     * @var array<int, Channel>
      */
     protected $channelCache;
 
@@ -198,8 +198,10 @@ class Keyggdrasil
      * Launch the update process.
      *
      * This updates our keys for each channel.
+     *
+     * @return void
      */
-    public function doUpdate()
+    public function doUpdate(): void
     {
         if (empty($this->channelCache)) {
             return;
@@ -299,7 +301,7 @@ class Keyggdrasil
              ORDER BY
                  treeupdateid ASC
             ',
-            $chan->getName()
+            (string) $chan->getName()
         );
         foreach ($nodes as $node) {
             $nodeList []= new Node($node['data']);
@@ -318,8 +320,9 @@ class Keyggdrasil
      *
      * @param Channel $chan
      * @param TreeUpdate $update
+     * @return void
      */
-    protected function insertKey(Channel $chan, TreeUpdate $update)
+    protected function insertKey(Channel $chan, TreeUpdate $update): void
     {
         $supplier = $update->getSupplier();
         $name = $supplier->getName();
@@ -417,8 +420,8 @@ class Keyggdrasil
      *
      * Dear future security auditors: This is important.
      *
-     * @param Channel $chan)
-     * @param TreeUpdate[] $updates
+     * @param Channel $chan
+     * @param array<int, TreeUpdate> $updates
      * @return bool
      */
     protected function processTreeUpdates(
@@ -522,8 +525,9 @@ class Keyggdrasil
      *    2. Add/remove the supplier's key.
      *
      * @param Channel $chan
+     * @return void
      */
-    protected function updateChannel(Channel $chan)
+    protected function updateChannel(Channel $chan): void
     {
         // The original Merkle Tree (and root) from the last-known-good state.
         $originalTree = $this->getMerkleTree($chan);
@@ -649,8 +653,9 @@ class Keyggdrasil
      *
      * @param TreeUpdate $update
      * @param int $treeUpdateID
+     * @return void
      */
-    protected function updatePackageQueue(TreeUpdate $update, int $treeUpdateID)
+    protected function updatePackageQueue(TreeUpdate $update, int $treeUpdateID): void
     {
         $packageId = $this->db->cell(
             'SELECT
@@ -710,7 +715,7 @@ class Keyggdrasil
      *
      * @param Channel $channel
      * @param MerkleTree $originalTree
-     * @param TreeUpdate[] ...$updates
+     * @param array<int, TreeUpdate> $updates
      * @return bool
      * @throws CouldNotUpdate
      */

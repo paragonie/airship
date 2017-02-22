@@ -267,17 +267,4 @@ class Continuum
         }
         return $meta;
     }
-
-    /**
-     * Get the last piece of a path
-     *
-     * @param string $fullPath
-     * @return string
-     */
-    private function getEndPiece(string $fullPath): string
-    {
-        $trimmedPath = \trim($fullPath. '/');
-        $arr = \explode('/', $trimmedPath);
-        return \array_pop($arr);
-    }
 }

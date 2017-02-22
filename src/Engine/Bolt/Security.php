@@ -8,12 +8,7 @@ use Airship\Alerts\{
     Security\UserNotLoggedIn
 };
 use Airship\Engine\{
-    AutoPilot,
-    Gears,
-    Controller,
-    Security\Authentication,
-    Security\Permissions,
-    State
+    AutoPilot, Gears, Controller, Security\Authentication, Security\Permissions, State, View
 };
 use ParagonIE\Cookie\{
     Cookie,
@@ -44,8 +39,10 @@ trait Security
 
     /**
      * After loading the Security bolt in place, configure it.
+     *
+     * @return void
      */
-    public function tightenSecurityBolt()
+    public function tightenSecurityBolt(): void
     {
         static $tightened = false;
         if ($tightened) {
@@ -195,10 +192,13 @@ trait Security
             // Set session variable
             $_SESSION[$uid_idx] = $userId;
 
+            /**
+             * @var AutoPilot
+             */
             $autoPilot = Gears::getName('AutoPilot');
             if (IDE_HACKS) {
                 // We're using getName(), this is just to fool IDEs.
-                $autoPilot = new AutoPilot();
+                $autoPilot = new AutoPilot([], new View(new \Twig_Environment()));
             }
             $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 

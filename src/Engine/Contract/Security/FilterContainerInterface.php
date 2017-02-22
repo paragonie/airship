@@ -11,7 +11,7 @@ interface FilterContainerInterface
     /**
      * @param string $path
      * @param FilterInterface $filter
-     * @return FilterContainerInterface
+     * @return self
      */
     public function addFilter(string $path, FilterInterface $filter): self;
 

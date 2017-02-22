@@ -3,11 +3,12 @@
 use Airship\Engine\Database;
 use Airship\Alerts\Database\DBException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals disabled
  */
-class PostgresqlTest extends PHPUnit_Framework_TestCase
+class PostgresqlTest extends TestCase
 {
     const DRIVER = 'pgsql';
 

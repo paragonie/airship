@@ -64,7 +64,7 @@ class File implements CacheInterface
         /** @noinspection PhpUsageOfSilenceOperatorInspection */
         if (@\is_readable($path)) {
             return \json_decode(
-                \file_get_contents($path),
+                (string) \file_get_contents($path),
                 true
             );
         }
@@ -166,7 +166,7 @@ class File implements CacheInterface
     {
         return $this->baseDir .
             DIRECTORY_SEPARATOR .
-            self::getRelativeHash(
+            (string) self::getRelativeHash(
                 $this->baseDir . DIRECTORY_SEPARATOR . $key,
                 true
             );

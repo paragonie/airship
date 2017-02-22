@@ -25,7 +25,7 @@ interface MigrationInterface
 
     /**
      * @param EncryptionKey $passwordKey
-     * @return MigrationInterface
+     * @return self
      */
     public function setPasswordKey(EncryptionKey $passwordKey): self;
 

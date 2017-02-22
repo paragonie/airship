@@ -109,6 +109,7 @@ abstract class AutoUpdater
     protected function autoRunScript(array $autoRun)
     {
         $ret = null;
+        $script = '';
         // Get a unique temporary file
         do {
             $script = \tempnam(ROOT . DIRECTORY_SEPARATOR . 'tmp', 'update-script-');
@@ -150,6 +151,7 @@ abstract class AutoUpdater
 
     /**
      * After we finish our update, we should bring the site back online:
+     * @return void
      */
     protected function bringSiteBackUp()
     {
@@ -159,6 +161,7 @@ abstract class AutoUpdater
 
     /**
      * Let's bring the site down while we're upgrading:
+     * @return void
      */
     protected function bringSiteDown()
     {
@@ -174,7 +177,7 @@ abstract class AutoUpdater
      * never be invoked automatically.
      *
      * @param bool $set
-     * @return AutoUpdater
+     * @return self
      */
     public function bypassSecurityAndJustInstall(bool $set = false): self
     {
@@ -302,6 +305,9 @@ abstract class AutoUpdater
                 ]
             );
             $outFile = \Airship\tempnam('airship-', $this->ext);
+            /**
+             * @var int|bool
+             */
             $saved = \file_put_contents($outFile, $body);
             if ($saved !== false) {
                 // To prevent TOCTOU issues down the line
@@ -481,8 +487,8 @@ abstract class AutoUpdater
     /**
      * Sort updates by version (newest to latest)
      *
-     * @param UpdateInfo[] ...$updates
-     * @return UpdateInfo[]
+     * @param UpdateInfo ...$updates
+     * @return array<int, UpdateInfo>
      */
     protected function sortUpdatesByVersion(UpdateInfo ...$updates): array
     {
@@ -641,7 +647,7 @@ abstract class AutoUpdater
      *
      * @param string $path
      * @param string $version
-     * @return AutoUpdater
+     * @return self
      * @throws FileNotFound
      */
     public function useLocalUpdateFile(

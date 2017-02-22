@@ -9,6 +9,7 @@ use Airship\Engine\{
     Keyggdrasil\Peer,
     State
 };
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\HiddenString;
 
@@ -72,7 +73,7 @@ class Channel
         // The channel should be signing responses at the application layer:
         $this->publicKey = new SignaturePublicKey(
             new HiddenString(
-                \Sodium\hex2bin($config['publickey'])
+                Hex::decode($config['publickey'])
             )
         );
         $this->name = $name;
@@ -116,12 +117,16 @@ class Channel
     /**
      * Get all suppliers for a particular channel
      *
-     * @return Supplier[]
+     * @return array<string, Supplier>
      * @throws
      */
     public function getAllSuppliers(): array
     {
-        return $this->parent->getSupplier();
+        /**
+         * @var array<string, Supplier>
+         */
+        $suppliers = $this->parent->getSupplier();
+        return $suppliers;
     }
 
     /**

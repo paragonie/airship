@@ -13,7 +13,7 @@ $state = State::instance();
 
 foreach ($state->cabins as $cabin) {
     $cabinName = (string) ($cabin['namespace'] ?? $cabin['name']);
-    foreach (\glob(ROOT . '/Cabin/' . $cabinName . '/Lens/motif/*') as $f) {
+    foreach (\glob(ROOT . '/Cabin/' . $cabinName . '/View/motif/*') as $f) {
         $endPiece = \Airship\path_to_filename($f);
         if (\is_link($f)) {
             \unlink($f);

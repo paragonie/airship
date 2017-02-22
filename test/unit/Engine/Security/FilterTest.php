@@ -12,11 +12,12 @@ use Airship\Engine\Security\Filter\{
     StringArrayFilter,
     WhiteList
 };
+use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals disabled
  */
-class FilterTest extends PHPUnit_Framework_TestCase
+class FilterTest extends TestCase
 {
     /**
      * @covers BoolFilter
