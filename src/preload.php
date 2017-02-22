@@ -100,7 +100,7 @@ require_once ROOT.'/gear_init.php';
  * 6. Load the global functions
  */
 require_once ROOT.'/global_functions.php';
-require_once ROOT.'/lens_functions.php';
+require_once ROOT.'/view_functions.php';
 
 /**
  * 7. Load all of the cryptography keys

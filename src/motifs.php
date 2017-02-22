@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 use Airship\Engine\{
-    Lens,
+    View,
     State
 };
 
 /**
- * @global Lens $lens
+ * @global View $lens
  * @global array $_settings
  * @global array $active
  * @global State $state
@@ -22,10 +22,10 @@ if (\defined('CABIN_DIR')) {
         $state->motifs = $motifs;
     } else {
         // Let's make sure our directories exist:
-        if (!\is_dir(CABIN_DIR . '/Lens/motif')) {
-            \mkdir(CABIN_DIR . '/Lens/motif', 0775);
+        if (!\is_dir(CABIN_DIR . '/View/motif')) {
+            \mkdir(CABIN_DIR . '/View/motif', 0775);
         } else {
-            @\chmod(CABIN_DIR . '/Lens/motif', 0775);
+            @\chmod(CABIN_DIR . '/View/motif', 0775);
         }
         if (!\is_dir(CABIN_DIR . '/public/motif')) {
             \mkdir(CABIN_DIR . '/public/motif', 0775);
@@ -35,7 +35,7 @@ if (\defined('CABIN_DIR')) {
 
         // Parse the Cabin's Motifs configuration file:
         $motifsJSONFile = ROOT . '/Cabin/' . CABIN_NAME . '/config/motifs.json';
-        if (\is_dir(CABIN_DIR . '/Lens/motif') && \is_readable($motifsJSONFile)) {
+        if (\is_dir(CABIN_DIR . '/View/motif') && \is_readable($motifsJSONFile)) {
             $motifs = [];
             $motifsJSONData = \Airship\loadJSON($motifsJSONFile);
 
@@ -45,11 +45,11 @@ if (\defined('CABIN_DIR')) {
                     continue;
                 }
                 if (isset($motifConfig['path'])) {
-                    $motifStart = CABIN_DIR . '/Lens/motif/' . $motif;
+                    $motifStart = CABIN_DIR . '/View/motif/' . $motif;
                     $motifEnd = ROOT . '/Motifs/' . $motifConfig['path'];
 
                     // If the Motif is malicious, alert.
-                    if (\strpos($motifStart, CABIN_DIR . '/Lens/motif') === false) {
+                    if (\strpos($motifStart, CABIN_DIR . '/View/motif') === false) {
                         $state->logger->alert(
                             'Potential directory traversal in Motif config.',
                             [
@@ -105,7 +105,7 @@ if (\defined('CABIN_DIR')) {
     }
 }
 
-$userMotif = \Airship\LensFunctions\user_motif();
+$userMotif = \Airship\ViewFunctions\user_motif();
 if (!empty($userMotif)) {
     $activeMotif = $userMotif['name'];
 } elseif (isset($_settings['active-motif'])) {

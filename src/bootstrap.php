@@ -96,7 +96,7 @@ require_once ROOT . '/session.php';
 
 // This loads templates for the template engine
 $twigLoader = new \Twig_Loader_Filesystem(
-    ROOT . '/Cabin/' . $active['name'] . '/Lens'
+    ROOT . '/Cabin/' . $active['name'] . '/View'
 );
 
 $lensLoad = [];
@@ -118,9 +118,9 @@ $twigEnv = new \Twig_Environment($twigLoader, $twigOpts);
 if ($state->universal['debug']) {
     $twigEnv->addExtension(new \Twig_Extension_Debug());
 }
-$lens = Gears::get('Lens', $twigEnv);
+$lens = Gears::get('View', $twigEnv);
 
-// Load the Lens configuration
+// Load the View configuration
 include ROOT . '/config/lens.php';
 
 // Load the Cabin-specific filters etc, if applicable:

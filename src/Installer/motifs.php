@@ -11,10 +11,10 @@ use Airship\Engine\State;
 foreach (['Hull', 'Bridge'] as $cabinName) {
     $cabinDir = ROOT . '/Cabin/' . $cabinName;
     // Let's make sure our directories exist:
-    if (!\is_dir($cabinDir.'/Lens/motif')) {
-        \mkdir($cabinDir.'/Lens/motif', 0775);
+    if (!\is_dir($cabinDir.'/View/motif')) {
+        \mkdir($cabinDir.'/View/motif', 0775);
     } else {
-        \chmod($cabinDir.'/Lens/motif', 0775);
+        \chmod($cabinDir.'/View/motif', 0775);
     }
     if (!\is_dir($cabinDir.'/public/motif')) {
         \mkdir($cabinDir.'/public/motif', 0775);
@@ -24,16 +24,16 @@ foreach (['Hull', 'Bridge'] as $cabinName) {
 
     // Now let's set up our Motifs:
     $motifsJSONFile = ROOT . '/config/Cabin/' . $cabinName . '/motifs.json';
-    if (\is_dir($cabinDir.'/Lens/motif') && \is_readable($motifsJSONFile)) {
+    if (\is_dir($cabinDir.'/View/motif') && \is_readable($motifsJSONFile)) {
         $motifs = [];
         $motifsJSONData = \Airship\loadJSON($motifsJSONFile);
 
         foreach ($motifsJSONData as $motif => $motifConfig) {
             if (isset($motifConfig['path'])) {
-                $motifStart = $cabinDir.'/Lens/motif/'.$motif;
+                $motifStart = $cabinDir.'/View/motif/'.$motif;
                 $motifEnd = ROOT.'/Motifs/'.$motifConfig['path'];
 
-                if (\strpos($motifStart, $cabinDir.'/Lens/motif') === false) {
+                if (\strpos($motifStart, $cabinDir.'/View/motif') === false) {
                     $state->logger->alert(
                         'Potential directory traversal in Motif config.',
                         [

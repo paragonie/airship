@@ -92,7 +92,7 @@ class Motif extends BaseInstaller
             // to:
             ROOT . '/Motifs/' . $config[$index]['path'] . '/lens',
             // from:
-            ROOT . '/Cabin/' . $cabin . '/Lens/motif/ ' . $index
+            ROOT . '/Cabin/' . $cabin . '/View/motif/ ' . $index
         );
 
         return $res;

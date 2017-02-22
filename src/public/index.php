@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Airship\Alerts\Router\LandingComplete;
+use Airship\Alerts\Router\ControllerComplete;
 use Airship\Engine\{
     AutoPilot,
     Database,
@@ -9,7 +9,7 @@ use Airship\Engine\{
     Cache\File as FileCache,
     Cache\SharedMemory as MemoryCache,
     Hail,
-    Lens,
+    View,
     State
 };
 use Airship\Engine\Networking\HTTP\{
@@ -22,7 +22,7 @@ use Psr\Log\LogLevel;
  * @global array $active
  * @global Database[] $dbPool
  * @global State $state
- * @global Lens $lens
+ * @global View $lens
  * @global AutoPilot $autopilot
  */
 
@@ -88,7 +88,7 @@ if (!empty($state->universal['debug'])) {
         $autoPilot->serveResponse(
             $autoPilot->route(ServerRequest::fromGlobals())
         );
-    } catch (LandingComplete $ex) {
+    } catch (ControllerComplete $ex) {
             $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
@@ -146,7 +146,7 @@ if (!empty($state->universal['debug'])) {
         $autoPilot->serveResponse(
             $autoPilot->route(ServerRequest::fromGlobals())
         );
-    } catch (LandingComplete $ex) {
+    } catch (ControllerComplete $ex) {
         $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         $state->logger->log(

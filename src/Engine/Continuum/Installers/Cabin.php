@@ -172,8 +172,8 @@ class Cabin extends BaseInstaller
                 return false;
             }
         }
-        if (!\is_dir(ROOT . '/Cabin/' . $nameSpace . '/Lens/motif')) {
-            \mkdir(ROOT . '/Cabin/' . $nameSpace . '/Lens/motif', 0775);
+        if (!\is_dir(ROOT . '/Cabin/' . $nameSpace . '/View/motif')) {
+            \mkdir(ROOT . '/Cabin/' . $nameSpace . '/View/motif', 0775);
         }
         return true;
     }

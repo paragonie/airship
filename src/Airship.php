@@ -227,7 +227,7 @@ function configWriter(string $rootDir): \Twig_Environment
         new \Twig_SimpleFilter(
             'je',
             function ($data, int $indents = 0) {
-                \Airship\LensFunctions\je(
+                \Airship\ViewFunctions\je(
                     $data,
                     $indents
                 );

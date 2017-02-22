@@ -28,7 +28,7 @@ interface RouterInterface
      * @param bool $needsPrep
      * @return bool
      */
-    public static function testLanding(
+    public static function testController(
         string $path,
         string $uri,
         array &$args = [],

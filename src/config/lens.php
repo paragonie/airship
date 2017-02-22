@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use Airship\Engine\Lens;
+use Airship\Engine\View;
 
 /**
  * GLOBAL LENS MODIFICATIONS GO HERE
  * 
  * We can add filters, functions, etc. to the current lens if we want
  *
- * @global Lens $lens
+ * @global View $lens
  */
 
 // Expose PHP's built-in functions as a filter
@@ -24,7 +24,7 @@ $lens->filter('ucfirst', 'ucfirst');
  *
  * Usage: {{ "/path/to/file"|cachebust }}
  */
-$lens->filter('cachebust', '\\Airship\\LensFunctions\\cachebust');
+$lens->filter('cachebust', '\\Airship\\ViewFunctions\\cachebust');
 /**
  * @filter gravatar
  * Get a gravatar URL
@@ -40,14 +40,14 @@ $lens->filter('gravatar', '\\Airship\\get_gravatar_url');
  *
  * Usage: {{ someString|CleanMarkdown }}
  */
-$lens->filter('CleanMarkdown', '\\Airship\\LensFunctions\\render_purified_markdown');
+$lens->filter('CleanMarkdown', '\\Airship\\ViewFunctions\\render_purified_markdown');
 /**
  * @filter Markdown
  * Caching, Markdown parser wrapper
  * 
  * Usage: {{ someString|Markdown }}
  */
-$lens->filter('Markdown', '\\Airship\\LensFunctions\\render_markdown');
+$lens->filter('Markdown', '\\Airship\\ViewFunctions\\render_markdown');
 
 
 /**
@@ -56,7 +56,7 @@ $lens->filter('Markdown', '\\Airship\\LensFunctions\\render_markdown');
  *
  * Usage: {{ someString|CleanRST }}
  */
-$lens->filter('CleanRST', '\\Airship\\LensFunctions\\render_purified_rest');
+$lens->filter('CleanRST', '\\Airship\\ViewFunctions\\render_purified_rest');
 
 /**
  * @filter RST
@@ -64,7 +64,7 @@ $lens->filter('CleanRST', '\\Airship\\LensFunctions\\render_purified_rest');
  * 
  * Usage: {{ someString|RST }}
  */
-$lens->filter('RST', '\\Airship\\LensFunctions\\render_rest');
+$lens->filter('RST', '\\Airship\\ViewFunctions\\render_rest');
 
 /**
  * @filter purify
@@ -72,7 +72,7 @@ $lens->filter('RST', '\\Airship\\LensFunctions\\render_rest');
  * 
  * Usage: {{ someString|Markdown }}
  */
-$lens->filter('purify', '\\Airship\\LensFunctions\\purify');
+$lens->filter('purify', '\\Airship\\ViewFunctions\\purify');
 
 # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ 
 
@@ -119,7 +119,7 @@ $lens->func('user_motif');
 $lens->func('user_name');
 $lens->func('user_unique_id');
 
-$lens_edited = true;
+$view_edited = true;
 
 /**
  * Permissions functions -- looks at the default database
@@ -129,14 +129,14 @@ $lens->func(
     'can_create',
     function(...$args) {
         /** @noinspection PhpStrictTypeCheckingInspection */
-        return \Airship\LensFunctions\can('create', ...$args);
+        return \Airship\ViewFunctions\can('create', ...$args);
     }
 );
 $lens->func(
     'can_read',
     function(...$args) {
         /** @noinspection PhpStrictTypeCheckingInspection */
-        return \Airship\LensFunctions\can('read', ...$args);
+        return \Airship\ViewFunctions\can('read', ...$args);
     }
 );
 
@@ -144,13 +144,13 @@ $lens->func(
     'can_update',
     function(...$args) {
         /** @noinspection PhpStrictTypeCheckingInspection */
-        return \Airship\LensFunctions\can('update', ...$args);
+        return \Airship\ViewFunctions\can('update', ...$args);
     }
 );
 $lens->func(
     'can_delete',
     function(...$args) {
         /** @noinspection PhpStrictTypeCheckingInspection */
-        return \Airship\LensFunctions\can('delete', ...$args);
+        return \Airship\ViewFunctions\can('delete', ...$args);
     }
 );

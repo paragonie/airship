@@ -6,7 +6,7 @@ use Airship\Alerts\GearNotFound;
 use Airship\Alerts\Router\{
     EmulatePageNotFound,
     FallbackLoop,
-    LandingComplete
+    ControllerComplete
 };
 use Airship\Engine\Contract\RouterInterface;
 use ParagonIE\ConstantTime\Binary;
@@ -60,12 +60,12 @@ class AutoPilot implements RouterInterface
     protected $cabin = [];
 
     /**
-     * @var ?Landing
+     * @var ?Controller
      */
     protected $landing = null;
 
     /**
-     * @var Lens
+     * @var View
      */
     protected $lens;
 
@@ -83,12 +83,12 @@ class AutoPilot implements RouterInterface
      * AutoPilot constructor.
      *
      * @param array $cabin
-     * @param Lens $lens (optional)
+     * @param View $lens (optional)
      * @param Database[] $databases (optional)
      */
     public function __construct(
         array $cabin = [],
-        Lens $lens = null,
+        View $lens = null,
         array $databases = []
     ) {
         $this->cabin = $cabin;
@@ -279,7 +279,7 @@ class AutoPilot implements RouterInterface
         $args = [];
         foreach ($this->cabin['data']['routes'] as $path => $landing) {
             $path = self::makePath($path);
-            if (self::testLanding($path, $_SERVER['REQUEST_URI'], $args)) {
+            if (self::testController($path, $_SERVER['REQUEST_URI'], $args)) {
                 self::$mypath = $path;
                 self::$path = Binary::safeSubstr(
                     $_SERVER['REQUEST_URI'],
@@ -307,7 +307,7 @@ class AutoPilot implements RouterInterface
      * @param bool $needsPrep
      * @return bool
      */
-    public static function testLanding(
+    public static function testController(
         string $path,
         string $uri,
         array &$args = [],
@@ -403,16 +403,16 @@ class AutoPilot implements RouterInterface
         }
 
         try {
-            $class_name = Gears::getName('Landing__' . $route[0]);
+            $class_name = Gears::getName('Controller__' . $route[0]);
         } catch (GearNotFound $ex) {
-            $class_name = '\\Airship\\Cabin\\' . self::$active_cabin . '\\Landing\\' . $route[0];
+            $class_name = '\\Airship\\Cabin\\' . self::$active_cabin . '\\Controller\\' . $route[0];
         }
         $method = $route[1];
 
         if (!\class_exists($class_name)) {
             $state = State::instance();
             $state->logger->error(
-                'Landing Error: Class not found when invoked from router',
+                'Controller Error: Class not found when invoked from router',
                 [
                     'route' => [
                         'class' => $class_name,
@@ -426,9 +426,9 @@ class AutoPilot implements RouterInterface
         
         // Load our cabin-specific landing
         $this->landing = new $class_name;
-        if (!($this->landing instanceof Landing)) {
+        if (!($this->landing instanceof Controller)) {
             throw new \Error(
-                \__("%s is not a Landing", "default", $class_name)
+                \__("%s is not a Controller", "default", $class_name)
             );
         }
         
@@ -456,15 +456,15 @@ class AutoPilot implements RouterInterface
         try {
             $this->landing->$method(...$args);
             return $this->landing->getResponseObject();
-        } catch (LandingComplete $ex) {
+        } catch (ControllerComplete $ex) {
             return $this->landing->getResponseObject();
         }
     }
 
     /**
-     * @return Landing|null
+     * @return Controller|null
      */
-    public function getLanding(): ?Landing
+    public function getController(): ?Controller
     {
         return $this->landing;
     }
@@ -476,7 +476,7 @@ class AutoPilot implements RouterInterface
     public function serveResponse(?ResponseInterface $response = null): void
     {
         if (empty($response)) {
-            $response = $this->getLanding()
+            $response = $this->getController()
                 ->getResponseObject();
         }
 

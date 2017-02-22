@@ -5,7 +5,7 @@ namespace Airship\Alerts\Router;
 /**
  * Class EmulatePageNotFound
  *
- * If you throw this from a Landing, it will initiate the route fallback process:
+ * If you throw this from a Controller, it will initiate the route fallback process:
  *
  * 1. Check for custom pages.
  * 2. Check for redirects.

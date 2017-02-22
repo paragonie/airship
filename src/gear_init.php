@@ -16,8 +16,8 @@ declare(strict_types=1);
     'Authentication' =>
         '\\Airship\\Engine\\Security\\Authentication',
     
-    'Blueprint' =>
-        '\\Airship\\Engine\\Blueprint',
+    'Model' =>
+        '\\Airship\\Engine\\Model',
     
     'Database' =>
         '\\Airship\\Engine\\Database',
@@ -31,14 +31,14 @@ declare(strict_types=1);
     'HTTPResponse' =>
         '\\Airship\\Engine\\Networking\\HTTP\\Response',
     
-    'Landing' =>
-        '\\Airship\\Engine\\Landing',
+    'Controller' =>
+        '\\Airship\\Engine\\Controller',
     
     'Ledger' =>
         '\\Airship\\Engine\\Ledger',
     
-    'Lens' =>
-        '\\Airship\\Engine\\Lens',
+    'View' =>
+        '\\Airship\\Engine\\View',
     
     'Permissions' =>
         '\\Airship\\Engine\\Security\\Permissions',

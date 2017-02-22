@@ -34,14 +34,14 @@ if (\is_dir(CABIN_DIR . '/public')) {
 }
 
 // Let's load the default cargo modules
-if (\is_dir(CABIN_DIR.'/Lens/cargo')) {
+if (\is_dir(CABIN_DIR.'/View/cargo')) {
     $cargoCacheFile = ROOT.'/tmp/cache/cargo-'.$active['name'].'.cache.json';
     if (\file_exists($cargoCacheFile)) {
         $data = Airship\loadJSON($cargoCacheFile);
         $state->cargo = $data;
     } else {
         $dir = \getcwd();
-        \chdir(CABIN_DIR . '/Lens');
+        \chdir(CABIN_DIR . '/View');
         foreach (\Airship\list_all_files('cargo', 'twig') as $cargo) {
             $idx = \str_replace(
                 ['__', '/'],

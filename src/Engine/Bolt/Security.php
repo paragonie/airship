@@ -10,7 +10,7 @@ use Airship\Alerts\{
 use Airship\Engine\{
     AutoPilot,
     Gears,
-    Landing,
+    Controller,
     Security\Authentication,
     Security\Permissions,
     State
@@ -143,7 +143,7 @@ trait Security
         $state = State::instance();
         if (!empty($_SESSION['userid'])) {
             // We're logged in!
-            if ($this instanceof Landing && $this->config('password-reset.logout')) {
+            if ($this instanceof Controller && $this->config('password-reset.logout')) {
                 return $this->verifySessionCanary($_SESSION['userid']);
             }
             return true;

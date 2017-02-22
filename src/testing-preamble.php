@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Airship\Engine\{
     Database,
-    Lens,
+    View,
     State
 };
 
@@ -11,7 +11,7 @@ use Airship\Engine\{
  * @global array $active
  * @global Database[] $dbPool
  * @global State $state
- * @global Lens $lens
+ * @global View $lens
  */
 
 require_once __DIR__ . '/preload.php';

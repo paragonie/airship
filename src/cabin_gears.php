@@ -6,11 +6,11 @@ use Airship\Engine\Gears;
 /**
  * Let's gearify the current cabin:
  *
- * e.g. Landing__IndexPage => \Airship\Cabin\Hull\Landing\IndexPage
+ * e.g. Controller__IndexPage => \Airship\Cabin\Hull\Controller\IndexPage
  *
  */
 $cabinGearsClosure = function() {
-    foreach (['Landing', 'Blueprint'] as $dir) {
+    foreach (['Controller', 'Model'] as $dir) {
         foreach (\glob(CABIN_DIR . '/' . $dir . '/*.php') as $landing) {
             $filename = \Airship\path_to_filename($landing, true);
             if ($filename === 'init_gear') {

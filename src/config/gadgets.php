@@ -35,7 +35,7 @@ foreach ($globalGadgets as $i => $gadgetConfig) {
             '_',
             $gadgetConfig['supplier'] . '__' . $gadgetConfig['name']
         );
-    $twigLoader->addPath('phar://' . $phar . '/Lens/', $namespace);
+    $twigLoader->addPath('phar://' . $phar . '/View/', $namespace);
     // phar:///path/to/foo.phar/autoload.php
     if (\file_exists('phar://' . $phar . '/autoload.php')) {
         include 'phar://' . $phar . '/autoload.php';
@@ -80,7 +80,7 @@ foreach ($cabinsGadgets as $i => $gadgetConfig) {
                 $gadgetConfig['supplier'] . '__' . $gadgetConfig['name']
             )
         );
-    $twigLoader->addPath('phar://' . $phar . '/Lens/', $namespace);
+    $twigLoader->addPath('phar://' . $phar . '/View/', $namespace);
     // phar:///path/to/foo.phar/autoload.php
     if (\file_exists('phar://' . $phar . '/autoload.php')) {
         include 'phar://' . $phar . '/autoload.php';

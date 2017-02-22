@@ -114,7 +114,7 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
                     ROOT,
                     'Cabin',
                     $cabinName,
-                    'Lens',
+                    'View',
                     'common'
                 ]
             );

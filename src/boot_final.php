@@ -18,7 +18,7 @@ use Airship\Engine\{
 define('CABIN_NAME', (string) $active['name']);
 define('CABIN_DIR', ROOT . '/Cabin/' . $active['name']);
 
-// Turn all of this cabins' Landings and Blueprints into gears:
+// Turn all of this cabins' Controllers and Models into gears:
 require ROOT . '/cabin_gears.php';
 
 $lens->addGlobal('ACTIVE_CABIN', \CABIN_NAME);
