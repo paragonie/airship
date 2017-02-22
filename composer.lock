@@ -1218,12 +1218,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b809da53b92844354dda4423ed1d393e279b64ca"
+                "reference": "8b674956ac0ca9b4c90a98197f244cf81079e084"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b809da53b92844354dda4423ed1d393e279b64ca",
-                "reference": "b809da53b92844354dda4423ed1d393e279b64ca",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/8b674956ac0ca9b4c90a98197f244cf81079e084",
+                "reference": "8b674956ac0ca9b4c90a98197f244cf81079e084",
                 "shasum": ""
             },
             "conflict": {
@@ -1264,7 +1264,7 @@
                 "namshi/jose": "<2.2",
                 "oro/crm": ">=1.7,<1.7.4",
                 "oro/platform": ">=1.7,<1.7.4",
-                "phpmailer/phpmailer": ">=5,<5.2.20",
+                "phpmailer/phpmailer": ">=5,<5.2.22",
                 "pusher/pusher-php-server": "<2.2.1",
                 "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
                 "shopware/shopware": "<4.3.7|>=5,<5.1.5",
@@ -1341,20 +1341,20 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2016-12-29 12:33:36"
+            "time": "2017-01-09 15:59:17"
         },
         {
             "name": "twig/twig",
-            "version": "v1.30.0",
+            "version": "v1.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c6ff71094fde15d12398eaba029434b013dc5e59"
+                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c6ff71094fde15d12398eaba029434b013dc5e59",
-                "reference": "c6ff71094fde15d12398eaba029434b013dc5e59",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
+                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
                 "shasum": ""
             },
             "require": {
@@ -1362,12 +1362,12 @@
             },
             "require-dev": {
                 "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~3.2@dev"
+                "symfony/phpunit-bridge": "~3.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.30-dev"
+                    "dev-master": "1.31-dev"
                 }
             },
             "autoload": {
@@ -1402,7 +1402,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-23 11:06:22"
+            "time": "2017-01-11 19:36:15"
         },
         {
             "name": "zendframework/zend-loader",
@@ -1510,16 +1510,16 @@
         },
         {
             "name": "zendframework/zend-mime",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-mime.git",
-                "reference": "340769c3d962ac4d9d3cf9da7e75419368e56fcc"
+                "reference": "9e53a97a3c190d45cc5d584daaaf487d509a9285"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-mime/zipball/340769c3d962ac4d9d3cf9da7e75419368e56fcc",
-                "reference": "340769c3d962ac4d9d3cf9da7e75419368e56fcc",
+                "url": "https://api.github.com/repos/zendframework/zend-mime/zipball/9e53a97a3c190d45cc5d584daaaf487d509a9285",
+                "reference": "9e53a97a3c190d45cc5d584daaaf487d509a9285",
                 "shasum": ""
             },
             "require": {
@@ -1527,8 +1527,8 @@
                 "zendframework/zend-stdlib": "^2.7 || ^3.0"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "^4.7 || ^5.7",
+                "zendframework/zend-coding-standard": "~1.0.0",
                 "zendframework/zend-mail": "^2.6"
             },
             "suggest": {
@@ -1555,7 +1555,7 @@
                 "mime",
                 "zf2"
             ],
-            "time": "2016-04-20 21:02:01"
+            "time": "2017-01-16 16:43:38"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -2880,16 +2880,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.1",
+            "version": "v3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "a7095af4b97a0955f85c8989106c249fa649011f"
+                "reference": "50eadbd7926e31842893c957eca362b21592a97d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/a7095af4b97a0955f85c8989106c249fa649011f",
-                "reference": "a7095af4b97a0955f85c8989106c249fa649011f",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/50eadbd7926e31842893c957eca362b21592a97d",
+                "reference": "50eadbd7926e31842893c957eca362b21592a97d",
                 "shasum": ""
             },
             "require": {
@@ -2931,7 +2931,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-12-10 10:07:06"
+            "time": "2017-01-03 13:51:32"
         },
         {
             "name": "webmozart/assert",

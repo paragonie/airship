@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS airship_package_versions (
     version TEXT,
     checksum TEXT,
     commithash TEXT,
+    additional_data JSONB,
     date_released TIMESTAMP,
     treeupdateid BIGINT REFERENCES airship_tree_updates(treeupdateid),
     created TIMESTAMP DEFAULT NOW(),
