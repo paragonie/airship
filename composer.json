@@ -39,6 +39,7 @@
   },
   "require": {
     "php": "^7.1",
+    "ext-curl": "*",
     "ext-gd": "*",
     "ext-openssl": "*",
     "ext-libsodium": "^1.0.6",

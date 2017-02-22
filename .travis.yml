@@ -15,7 +15,7 @@ services:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install make build-essential automake php5-dev php-pear
+  - sudo apt-get install make build-essential automake php7.0-dev php-pear php7.0-curl
   - git clone git://github.com/jedisct1/libsodium.git
   - cd libsodium
   - git checkout 1.0.11
