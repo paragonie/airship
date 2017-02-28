@@ -6,8 +6,10 @@ use Airship\Alerts\Security\{
     LongTermAuthAlert,
     SecurityAlert
 };
-use Airship\Engine\Contract\DBInterface;
-use Airship\Engine\Gadgets;
+use Airship\Engine\{
+    Database,
+    Gadgets
+};
 use Airship\Engine\Security\Migration\WordPress;
 use ParagonIE\ConstantTime\{
     Base64,
@@ -42,7 +44,7 @@ class Authentication
     public const LONG_TERM_AUTH_BYTES = 45;
 
     /**
-     * @var DBInterface
+     * @var Database
      */
     protected $db;
 
@@ -50,6 +52,11 @@ class Authentication
      * @var string
      */
     protected $dummyHash;
+
+    /**
+     * @var EncryptionKey
+     */
+    protected $key;
 
     /**
      * $this->tableConfig contains all of the selectors (table/column names)
@@ -88,9 +95,9 @@ class Authentication
      * of time it takes to return an error message.
      *
      * @param EncryptionKey $key
-     * @param DBInterface|null $db
+     * @param Database|null $db
      */
-    public function __construct(EncryptionKey $key, ?DBInterface $db)
+    public function __construct(EncryptionKey $key, ?Database $db)
     {
         $this->key = $key;
         
@@ -222,6 +229,9 @@ class Authentication
         ];
 
         try {
+            /**
+             * @var string
+             */
             $decoded = Base64::decode($token->getString());
         } catch (\RangeException $ex) {
             throw new LongTermAuthAlert(
@@ -230,7 +240,7 @@ class Authentication
         }
 
         // We need a raw binary string of the correct length
-        if ($decoded === false) {
+        if (!\is_string($decoded)) {
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
             );
@@ -344,11 +354,14 @@ class Authentication
     public function rotateToken(HiddenString $token, int $userId = 0)
     {
         try {
+            /**
+             * @var string
+             */
             $decoded = Base64::decode($token->getString());
         } catch (\RangeException $ex) {
             return false;
         }
-        if ($decoded === false) {
+        if (!\is_string($decoded)) {
             return false;
         } elseif (Binary::safeStrlen($decoded) !== self::LONG_TERM_AUTH_BYTES) {
             return false;
@@ -372,10 +385,10 @@ class Authentication
     /**
      * Sets the database handler.
      * 
-     * @param DBInterface $db
-     * @return Authentication ($this)
+     * @param Database $db
+     * @return self
      */
-    public function setDatabase(DBInterface $db): self
+    public function setDatabase(Database $db): self
     {
         $this->db = $db;
         return $this;
@@ -385,7 +398,7 @@ class Authentication
      * Set the database of this authentication library to match this 
      * 
      * @param string $dbIndex
-     * @return Authentication ($this)
+     * @return self
      */
     public function setDatabaseByKey(string $dbIndex = ''): self
     {
@@ -398,7 +411,7 @@ class Authentication
      * long-term authentication token.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setLongTermSelectorField(string $field): self
     {
@@ -411,7 +424,7 @@ class Authentication
      * long-term authentication token.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setLongTermValidatorField(string $field): self
     {
@@ -424,7 +437,7 @@ class Authentication
      * database, for SQL queries.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setPasswordField(string $field): self
     {
@@ -436,7 +449,7 @@ class Authentication
      * Change the table used for 
      * 
      * @param string $table
-     * @return Authentication ($this)
+     * @return self
      */
     public function setTable(string $table): self
     {
@@ -448,7 +461,7 @@ class Authentication
      * Sets the column name used to reference the primary key (userid)
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setUserIdField(string $field): self
     {
@@ -461,7 +474,7 @@ class Authentication
      * queries.
      * 
      * @param string $field
-     * @return Authentication ($this)
+     * @return self
      */
     public function setUsernameField(string $field): self
     {
@@ -471,8 +484,10 @@ class Authentication
 
     /**
      * Overloadable.
+     *
+     * @return void
      */
-    protected function registerMigrations()
+    protected function registerMigrations(): void
     {
         Gadgets::registerMigration(WordPress::TYPE, new WordPress());
     }

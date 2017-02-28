@@ -4,12 +4,13 @@ namespace Airship\IntegrationTests\Cabin\Hull;
 
 use Airship\Engine\State;
 use Airship\IntegrationTests\IntegrationHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class IndexPage
  * @package Airship\IntegrationTests\Cabin\Hull
  */
-class IndexPageTest extends \PHPUnit_Framework_TestCase
+class IndexPageTest extends TestCase
 {
     /**
      * @var bool

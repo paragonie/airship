@@ -3,12 +3,13 @@ declare(strict_types=1);
 namespace Airship\UnitTests\Cabin\Hull;
 
 use Airship\Cabin\Hull\ConfigFilter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ConfigFilterTest
  * @package Airship\UnitTests\Cabin\Hull
  */
-class ConfigFilterTest extends \PHPUnit_Framework_TestCase
+class ConfigFilterTest extends TestCase
 {
     public function testHappyPath()
     {

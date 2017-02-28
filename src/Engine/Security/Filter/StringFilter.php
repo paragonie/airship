@@ -43,7 +43,7 @@ class StringFilter extends InputFilter
      * must match.
      *
      * @param string $pattern
-     * @return StringFilter
+     * @return self
      */
     public function setPattern(string $pattern = ''): self
     {

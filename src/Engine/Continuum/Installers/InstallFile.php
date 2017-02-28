@@ -30,6 +30,11 @@ class InstallFile
     protected $releaseInfo;
 
     /**
+     * @var string
+     */
+    protected $root;
+
+    /**
      * @var int
      */
     protected $size;

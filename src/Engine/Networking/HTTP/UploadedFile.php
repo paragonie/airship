@@ -134,6 +134,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param int $error
+     * @return self
      * @throws \InvalidArgumentException
      */
     private function setError(int $error): self
@@ -144,6 +145,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param int $size
+     * @return self
      */
     private function setSize(int $size): self
     {
@@ -153,7 +155,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param mixed $param
-     * @return boolean
+     * @return bool
      */
     protected function isStringOrNull($param)
     {
@@ -161,8 +163,8 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * @param mixed $param
-     * @return boolean
+     * @param string $param
+     * @return bool
      */
     private function isStringNotEmpty(string $param)
     {
@@ -171,44 +173,47 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @param string|null $clientFilename
+     * @return self
      */
     private function setClientFilename(?string $clientFilename): self
     {
-        $this->clientFilename = $clientFilename;
+        $this->clientFilename = (string) $clientFilename;
         return $this;
     }
 
     /**
      * @param string|null $clientMediaType
+     * @return self
      */
     private function setClientMediaType(?string $clientMediaType): self
     {
-        $this->clientMediaType = $clientMediaType;
+        $this->clientMediaType = (string) $clientMediaType;
         return $this;
     }
 
     /**
      * Return true if there is no upload error
      *
-     * @return boolean
+     * @return bool
      */
-    private function isOk()
+    private function isOk(): bool
     {
         return $this->error === UPLOAD_ERR_OK;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isMoved()
+    public function isMoved(): bool
     {
         return $this->moved;
     }
 
     /**
      * @throws \RuntimeException if is moved or not ok
+     * @return void
      */
-    private function validateActive()
+    private function validateActive(): void
     {
         if (!$this->isOk()) {
             throw new \RuntimeException('Cannot retrieve stream due to upload error');
@@ -229,6 +234,10 @@ class UploadedFile implements UploadedFileInterface
 
         if ($this->stream instanceof StreamInterface) {
             return $this->stream;
+        }
+
+        if (\is_null($this->file)) {
+            throw new RuntimeException('Could not open temporary file to create stream');
         }
 
         return new Stream(\fopen($this->file, 'r+'));
@@ -280,7 +289,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      *
-     * @return int|null The file size in bytes or null if unknown.
+     * @return int The file size in bytes or null if unknown.
      */
     public function getSize(): int
     {

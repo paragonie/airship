@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<psalm
+    autoloader="src/testing-preamble.php"
+    stopOnFirstError="false"
+    useDocblockTypes="true"
+>
+    <projectFiles>
+        <directory name="src/Engine" />
+    </projectFiles>
+    <issueHandlers>
+        <ForbiddenCode errorLevel="info" />
+        <!-- We disable the above inspection because we do use shell_exec() in a few places. -->
+        <InvalidArgument errorLevel="info" />
+        <!-- Overly pedantic array annotation expectations -->
+        <InvalidScalarArgument errorLevel="info" />
+        <!-- To silence the result of a bug in Psalm itself -->
+        <MissingConstructor errorLevel="info" />
+        <!-- Because traits -->
+        <MoreSpecificReturnType errorLevel="info" />
+        <PropertyNotSetInConstructor errorLevel="info" />
+        <!-- We don't always set things in the constructor -->
+        <TooFewArguments errorLevel="info" />
+        <!-- Psalm doesn't recognize this correctly -->
+        <TooManyArguments errorLevel="info" />
+        <!-- Psalm doesn't recognize this correctly -->
+        <UndefinedConstant errorLevel="info" />
+        <!-- Psalm was unable to interpret the cURL extension constants -->
+    </issueHandlers>
+</psalm>

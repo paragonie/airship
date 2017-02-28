@@ -69,7 +69,10 @@ class Continuum
         );
         if (\is_readable($path)) {
             $last = \file_get_contents($path);
-            return (time() - $last) > $config->universal['auto-update']['check'];
+            if (!\is_string($last)) {
+                return true;
+            }
+            return (time() - (int) $last) > (int) $config->universal['auto-update']['check'];
         }
         return true;
     }
@@ -78,8 +81,9 @@ class Continuum
      * Do we need to do an update check? If so, start the update check process.
      * 
      * @param bool $force Force start the update check?
+     * @return void
      */
-    public function checkForUpdates(bool $force = false)
+    public function checkForUpdates(bool $force = false): void
     {
         $update = $force || $this->needsUpdate();
         
@@ -98,24 +102,38 @@ class Continuum
      * 1. Update all cabins
      * 2. Update all gadgets
      * 3. Update the core
+     *
+     * @return void
      */
-    public function doUpdateCheck()
+    public function doUpdateCheck(): void
     {
         $config = State::instance();
         // First, update each cabin
-        foreach ($this->getCabins() as $cabin) {
+        foreach ($this->getCabins() as $_cabin) {
+            /**
+             * @var CabinUpdater
+             */
+            $cabin = $_cabin;
             if ($cabin instanceof CabinUpdater) {
                 $cabin->autoUpdate();
             }
         }
         // Next, update each gadget
-        foreach ($this->getGadgets() as $gadget) {
+        foreach ($this->getGadgets() as $_gadget) {
+            /**
+             * @var GadgetUpdater
+             */
+            $gadget = $_gadget;
             if ($gadget instanceof GadgetUpdater) {
                 $gadget->autoUpdate();
             }
         }
         // Also, motifs:
-        foreach ($this->getMotifs() as $motif) {
+        foreach ($this->getMotifs() as $_motif) {
+            /**
+             * @var MotifUpdater
+             */
+            $motif = $_motif;
             if ($motif instanceof MotifUpdater) {
                 $motif->autoUpdate();
             }
@@ -134,7 +152,7 @@ class Continuum
     /**
      * Get an array of CabinUpdater objects
      * 
-     * @return CabinUpdater[]
+     * @return array<string, CabinUpdater>
      */
     public function getCabins(): array
     {
@@ -266,18 +284,5 @@ class Continuum
             return [];
         }
         return $meta;
-    }
-
-    /**
-     * Get the last piece of a path
-     *
-     * @param string $fullPath
-     * @return string
-     */
-    private function getEndPiece(string $fullPath): string
-    {
-        $trimmedPath = \trim($fullPath. '/');
-        $arr = \explode('/', $trimmedPath);
-        return \array_pop($arr);
     }
 }

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum\Updaters;
 
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 
 /**
@@ -33,7 +34,12 @@ class UpdateInfo
      */
     protected $packageName;
 
-    /*
+    /**
+     * @var SignaturePublicKey
+     */
+    protected $publicKey;
+
+    /**
      * @var array
      */
     protected $releaseInfo;
@@ -47,6 +53,11 @@ class UpdateInfo
      * @var string
      */
     protected $supplierName;
+
+    /**
+     * @var string
+     */
+    protected $version;
 
     /**
      * UpdateInfo constructor.
@@ -113,7 +124,7 @@ class UpdateInfo
     public function getMerkleRoot(bool $raw = false): string
     {
         if ($raw) {
-            return \Sodium\hex2bin($this->merkleRoot);
+            return Hex::decode($this->merkleRoot);
         }
         return $this->merkleRoot;
     }
@@ -138,7 +149,7 @@ class UpdateInfo
     {
         $signature = $this->releaseInfo['signature'];
         if (!$hex) {
-            return \Sodium\hex2bin($signature);
+            return Hex::decode($signature);
         }
         return $signature;
     }

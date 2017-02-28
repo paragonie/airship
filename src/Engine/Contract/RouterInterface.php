@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Airship\Engine\Contract;
+use Airship\Engine\Database;
+use Airship\Engine\View;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface
@@ -13,11 +15,17 @@ use Psr\Http\Message\{
 interface RouterInterface
 {
     /**
-     * You should be able to pass cabin configurations here
-     * 
-     * @param array $cabins
+     * AutoPilot constructor.
+     *
+     * @param array $cabin
+     * @param View $lens (optional)
+     * @param Database[] $databases (optional)
      */
-    public function __construct(array $cabins = []);
+    public function __construct(
+        array $cabin,
+        View $lens,
+        array $databases = []
+    );
 
     /**
      * Test a path against a URI

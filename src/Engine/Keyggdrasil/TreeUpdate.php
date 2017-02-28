@@ -11,6 +11,7 @@ use Airship\Engine\Continuum\{
     Supplier
 };
 use Airship\Engine\State;
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
@@ -33,6 +34,11 @@ class TreeUpdate
 
     const KEY_TYPE_MASTER = 'master';
     const KEY_TYPE_SIGNING = 'sub';
+
+    /**
+     * @var string
+     */
+    protected $action;
 
     /**
      * @var int
@@ -72,7 +78,7 @@ class TreeUpdate
     /**
      * @var string
      */
-    protected $newPublicKey = null;
+    protected $newPublicKey = '';
 
     /**
      * @var array
@@ -83,6 +89,11 @@ class TreeUpdate
      * @var array
      */
     protected $stored;
+
+    /**
+     * @var string
+     */
+    protected $packageName;
 
     /**
      * @var string
@@ -248,7 +259,7 @@ class TreeUpdate
     {
         return new SignaturePublicKey(
             new HiddenString(
-                \Sodium\hex2bin($this->newPublicKey)
+                Hex::decode($this->newPublicKey)
             )
         );
     }
@@ -426,21 +437,24 @@ class TreeUpdate
         $master = \json_decode($updateData['master'], true);
 
         foreach ($this->supplier->getSigningKeys() as $supKey) {
-            // Yes, this is (in fact) a SignaturePublicKey:
-            if (!($supKey['key'] instanceof SignaturePublicKey)) {
+            /**
+             * @var SignaturePublicKey
+             */
+            $supKeyKey = $supKey['key'];
+            if (!($supKeyKey instanceof SignaturePublicKey)) {
                 throw new \TypeError('Expected a SignaturePublicKey');
             }
             if ($supKey['type'] !== 'master') {
                 continue;
             }
             $pub = \Sodium\bin2hex(
-                $supKey['key']->getRawKeyMaterial()
+                $supKeyKey->getRawKeyMaterial()
             );
 
             // Is this the key we're looking for?
             if (\hash_equals($pub, $master['public_key'])) {
                 // Store the public key
-                $this->supplierMasterKeyUsed = $supKey['key'];
+                $this->supplierMasterKeyUsed = $supKeyKey;
                 break;
             }
         }

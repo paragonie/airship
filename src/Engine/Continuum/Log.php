@@ -16,6 +16,11 @@ class Log
     protected $component;
 
     /**
+     * @var Database
+     */
+    protected $db;
+
+    /**
      * ContinuumLog constructor.
      * @param Database|null $db
      * @param string $component
@@ -23,6 +28,9 @@ class Log
     public function __construct(Database $db = null, string $component = 'continuum')
     {
         if (!$db) {
+            /**
+             * @var Database
+             */
             $db = \Airship\get_database();
         }
         $this->db = $db;

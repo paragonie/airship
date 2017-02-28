@@ -24,7 +24,7 @@ class WhiteList extends InputFilter
 
     /**
      * @param array ...$values
-     * @return $this
+     * @return self
      */
     protected function addToWhiteList(...$values)
     {

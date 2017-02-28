@@ -62,7 +62,7 @@ class Database implements DBInterface
     /**
      * Create a new Database object based on PDO constructors
      * 
-     * @param string $dsn
+     * @param string|array $dsn
      * @param string $username
      * @param string $password
      * @param array $options
@@ -223,8 +223,11 @@ class Database implements DBInterface
     {
         try {
             if (empty($params)) {
+                /**
+                 * @var \PDOStatement|bool
+                 */
                 $stmt = $this->pdo->query($statement, \PDO::FETCH_COLUMN, $offset);
-                if ($stmt !== false) {
+                if ($stmt instanceof \PDOStatement) {
                     return $stmt->fetchAll(\PDO::FETCH_NUM);
                 }
                 return false;
@@ -647,8 +650,11 @@ class Database implements DBInterface
     public function row(string $statement, ...$params)
     {
         if (empty($params)) {
+            /**
+             * @var \PDOStatement|bool
+             */
             $stmt = $this->pdo->query($statement);
-            if ($stmt !== false) {
+            if ($stmt instanceof \PDOStatement) {
                 return $stmt->fetch(\PDO::FETCH_ASSOC);
             }
             return false;
@@ -662,7 +668,7 @@ class Database implements DBInterface
      * PHP 5.6 variadic shorthand for $this->safeQuery()
      *
      * @param string $statement SQL query without user data
-     * @param mixed[] ...$params Parameters
+     * @param mixed ...$params Parameters
      * @return mixed - If successful, a 2D array
      */
     public function run(string $statement, ...$params)
@@ -686,14 +692,20 @@ class Database implements DBInterface
         int $fetch_style = \PDO::FETCH_ASSOC
     ) {
         if (empty($params)) {
+            /**
+             * @var \PDOStatement|bool
+             */
             $stmt = $this->pdo->query($statement);
-            if ($stmt !== false) {
+            if ($stmt instanceof \PDOStatement) {
                 return $stmt->fetchAll($fetch_style);
             }
             return false;
         }
+        /**
+         * @var \PDOStatement|bool
+         */
         $stmt = $this->pdo->prepare($statement);
-        if ($stmt === false) {
+        if (!($stmt instanceof \PDOStatement)) {
             throw new DBAlert\QueryError(
                 $this->errorInfo()[2] ?? \json_encode([$statement, $params]),
                 (int) $this->errorInfo()[1]

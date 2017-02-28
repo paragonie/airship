@@ -42,6 +42,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
      * @param array $manifest
      * @param Supplier|null $supplier
      * @param string $filePath
+     * @throws \Error
      */
     public function __construct(
         Hail $hail,
@@ -52,6 +53,9 @@ class Motif extends AutoUpdater implements ContinuumInterface
         $this->hail = $hail;
         $this->name = $manifest['name'];
         $this->manifest = $manifest;
+        if ($supplier === null) {
+            throw new \Error('Unknown supplier');
+        }
         $this->supplier = $supplier;
         $this->filePath = $filePath;
         $this->type = self::TYPE_MOTIF;
@@ -68,6 +72,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
      * 3. Verify the signature (via Halite).
      * 4. Verify the update is recorded in Keyggdrasil.
      * 5. If all is well, run the update script.
+     * @return void
      */
     public function autoUpdate()
     {
@@ -166,6 +171,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info (part of definition but not used here)
      * @param UpdateFile $file
+     * @return void
      * @throws CouldNotUpdate
      * @throws MotifZipFailed
      */
@@ -217,7 +223,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
      *
      * @param string $supplier
      * @param string $name
-     * @return Motif
+     * @return self
      */
     public function setCabin(string $supplier, string $name): self
     {

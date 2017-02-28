@@ -53,6 +53,9 @@ class Gadget extends AutoUpdater implements ContinuumInterface
         $this->hail = $hail;
         $this->name = $manifest['name'];
         $this->manifest = $manifest;
+        if ($supplier === null) {
+            throw new \Error('Unknown supplier');
+        }
         $this->supplier = $supplier;
         $this->filePath = $filePath;
         $this->type = self::TYPE_GADGET;
@@ -69,6 +72,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      * 3. Verify the signature (via Halite).
      * 4. Verify the update is recorded in Keyggdrasil.
      * 5. If all is well, run the update script.
+     * @return void
      */
     public function autoUpdate()
     {
@@ -166,6 +170,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param UpdateFile $file
+     * @return void
      * @throws CouldNotUpdate
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
@@ -244,7 +249,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      *
      * @param string $supplier
      * @param string $name
-     * @return Gadget
+     * @return self
      */
     public function setCabin(string $supplier, string $name): self
     {
@@ -257,6 +262,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      *
      * @param UpdateInfo $info
      * @param array $metaData
+     * @return void
      */
     public function updateJSON(UpdateInfo $info, array $metaData = [])
     {

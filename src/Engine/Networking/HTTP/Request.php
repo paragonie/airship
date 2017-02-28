@@ -34,7 +34,7 @@ class Request extends Message implements RequestInterface
      * @param string $method
      * @param UriInterface $uri
      * @param array $headers
-     * @param null $body
+     * @param string|StreamInterface $body
      * @param string $version
      */
     public function __construct(
@@ -46,7 +46,7 @@ class Request extends Message implements RequestInterface
     ) {
         $this->method = $method;
         $this->uri = $uri;
-        if ($body instanceof StreamInterface) {
+        if ($body instanceof Stream) {
             $this->body = $body;
         } elseif (is_string($body)) {
             $this->body = Stream::fromString($body);
@@ -190,7 +190,7 @@ class Request extends Message implements RequestInterface
     }
 
     /**
-     * @return Request
+     * @return self
      */
     protected function updateHostFromUri(): self
     {

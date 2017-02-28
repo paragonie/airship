@@ -17,7 +17,6 @@ use Airship\Engine\Bolt\{
 class Model
 {
     use LogBolt;
-    use SecurityBolt;
 
     /**
      * @var Database

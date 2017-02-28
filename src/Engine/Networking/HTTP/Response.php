@@ -92,20 +92,20 @@ class Response extends Message implements ResponseInterface
      *
      * @param int $statusCode
      * @param array $headers
-     * @param null $body
+     * @param string|StreamInterface $body
      * @param string $version
      */
     public function __construct(
         int $statusCode = 200,
         array $headers = [],
-        $body = null,
+        $body = '',
         string $version = '1.1'
     ) {
         $this->statusCode = $statusCode;
         $this->reason = static::REASONS[$statusCode];
         if ($body instanceof StreamInterface) {
             $this->body = $body;
-        } elseif (is_string($body)) {
+        } elseif (\is_string($body)) {
             $this->body = Stream::fromString($body);
         }
         $this->headers = $this->preProcessHeaders($headers);

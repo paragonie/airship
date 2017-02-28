@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine\Continuum;
 
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\HiddenString;
 
@@ -25,7 +26,7 @@ class Supplier
     private $channels;
 
     /**
-     * @var SignaturePublicKey[]
+     * @var array<int, array<string, mixed>>
      */
     private $signing_keys = [];
 
@@ -62,7 +63,7 @@ class Supplier
     /**
      * Get an array SignaturePublicKey objects
      *
-     * @return SignaturePublicKey[]
+     * @var array<int, array<string, mixed>>
      */
     public function getSigningKeys(): array
     {
@@ -83,7 +84,7 @@ class Supplier
      * Reload the signing keys
      *
      * @param array $data
-     * @return Supplier
+     * @return self
      */
     public function reloadSigningKeys(array $data = []): self
     {
@@ -93,13 +94,16 @@ class Supplier
             );
         }
         if (isset($data['signing_keys'])) {
+            /**
+             * @var array<int, array<string, mixed>>
+             */
             $keys = [];
             foreach ($data['signing_keys'] as $sk) {
                 $keys[] = [
                     'type' => $sk['type'],
                     'key' => new SignaturePublicKey(
                         new HiddenString(
-                            \Sodium\hex2bin($sk['public_key'])
+                            Hex::decode($sk['public_key'])
                         )
                     )
                 ];

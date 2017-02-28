@@ -188,7 +188,7 @@ abstract class Gears
      * its constructor)
      * 
      * @param string $name - Gear identifier
-     * @param mixed[] $args - constructor parameters
+     * @param array<int, mixed> $args - constructor parameters
      * @return mixed
      */
     public static function get(string $name, ...$args)
@@ -219,8 +219,9 @@ abstract class Gears
      * Set up initial classes
      * 
      * @param array $gears
+     * @return void
      */
-    public static function init(array $gears = [])
+    public static function init(array $gears = []): void
     {
         foreach ($gears as $index => $type) {
             self::forge($index, $type);
@@ -253,7 +254,7 @@ abstract class Gears
      * @param string $file
      * @return bool
      */
-    protected function sandboxRequire(string $file): bool
+    protected static function sandboxRequire(string $file): bool
     {
         return (require $file) === 1;
     }

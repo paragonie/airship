@@ -19,7 +19,7 @@ class Message implements MessageInterface
     protected $protocolVersion = '';
 
     /**
-     * @var string[][]
+     * @var array
      */
     protected $headers;
 
@@ -29,7 +29,7 @@ class Message implements MessageInterface
     protected $headerNames = [];
 
     /**
-     * @var Stream
+     * @var StreamInterface
      */
     protected $body;
 
@@ -287,7 +287,7 @@ class Message implements MessageInterface
      *
      * @param string $key
      * @param $value
-     * @return Message
+     * @return self
      */
     public function mutate(string $key, $value): self
     {

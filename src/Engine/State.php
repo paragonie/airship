@@ -14,14 +14,14 @@ namespace Airship\Engine;
 class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
     /**
-     * @var State
+     * @var ?State
      */
     private static $instance = null;
 
     /**
      * @var \ArrayObject
      */
-    private $engine_state_registry = null;
+    private $engine_state_registry;
 
     /**
      * How many things are in the registry?
@@ -41,7 +41,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      */
     public function get($key = null)
     {
-        return self::__get($key);
+        return $this->__get($key);
     }
     
     /**
@@ -79,8 +79,9 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
     /**
      * Store an object in the registry
      * 
-     * @param string $key
+     * @param ?string $key
      * @param mixed $value
+     * @return void
      */
     public function offsetSet($key, $value)
     {
@@ -95,6 +96,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * Delete an entry from the registry
      * 
      * @param mixed $key
+     * @return void
      */
     public function offsetUnset($key)
     {
@@ -121,10 +123,11 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      *
      * @param mixed $key
      * @param mixed $value
+     * @return void
      */
     public function set($key = null, $value = null)
     {
-        self::__set($key, $value);
+        $this->__set($key, $value);
     }
     
     /**

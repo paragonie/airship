@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use Airship\Engine\Contract\LedgerStorageInterface;
+use Airship\Engine\LedgerStorage\FileStore;
+use ParagonIE\ConstantTime\Binary;
 use Psr\Log\{
     LoggerInterface,
     LogLevel
@@ -17,6 +19,9 @@ use Psr\Log\{
  */
 class Ledger implements LoggerInterface
 {
+    /**
+     * @var LedgerStorageInterface
+     */
     protected $storage;
 
     /**
@@ -26,6 +31,23 @@ class Ledger implements LoggerInterface
      */
     public function __construct(LedgerStorageInterface $storage = null, ...$args)
     {
+        if (\is_null($storage)) {
+            $state = State::instance();
+            $path = $state->universal['ledger']['path'];
+            if (Binary::safeStrlen($path) >= 2) {
+                if ($path[0] === '~' && $path[1] === '/') {
+                    $path = ROOT . '/' . Binary::safeSubstr($path, 2);
+                }
+            }
+            /**
+             * @var FileStore
+             */
+            $storage = new FileStore(
+                $path,
+                $state->universal['ledger']['file-format'] ?? FileStore::FILE_FORMAT,
+                $state->universal['ledger']['time-format'] ?? FileStore::TIME_FORMAT
+            );
+        }
         $this->storage = $storage;
 
         // We don't use $args, but a Gear can.
@@ -71,6 +93,9 @@ class Ledger implements LoggerInterface
     public function log($level, $message, array $context = [])
     {
         $context = $this->defaultContext() + $context;
+        /**
+         * @var string|bool
+         */
         $json = \json_encode($context);
         if (!\is_string($json)) {
             $state = State::instance();

@@ -1,45 +1,55 @@
 language: php
 
-php:
-- 7.1
-
-env:
-- DB=pgsql
+matrix:
+  fast_finish: true
+  include:
+    - php: "7.1"
+      env: DB=pgsql
+    - php: "nightly"
+      env: DB=pgsql
+  allow_failures:
+    - php: "nightly"
 
 services:
-- postgresql
+  - postgresql
 
 before_install:
-- sudo apt-get update
-- sudo apt-get install make build-essential automake php5-dev php-pear
-- git clone git://github.com/jedisct1/libsodium.git
-- cd libsodium
-- git checkout 1.0.11
-- ./autogen.sh
-- ./configure > /dev/null
-- echo "Installing libsodium..."
-- sudo make install > /dev/null
-- cd ..
-- echo "Installing ext/sodium..."
-- pecl install libsodium > /dev/null
+  - sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+  - sudo apt-get -y update
+  - sudo apt-get install make build-essential automake php7.1-dev php-pear php7.1-curl
+  - git clone git://github.com/jedisct1/libsodium.git
+  - cd libsodium
+  - git checkout 1.0.11
+  - ./autogen.sh
+  - ./configure > /dev/null
+  - echo "Installing libsodium..."
+  - sudo make install > /dev/null
+  - cd ..
+  - echo "Installing ext/sodium..."
+  - pecl install libsodium > /dev/null
 
 install:
+  - composer update
+  - echo "[]" > src/config/gears.json
+  - echo "[]" > src/config/gadgets.json
+  - echo "[]" > src/Cabin/Bridge/config/gadgets.json
+  - echo "[]" > src/Cabin/Hull/config/gadgets.json
+  - cp src/config/cabins.json.dist src/config/cabins.json
+  - cp src/config/databases.json.dist src/config/databases.json
+  - cp src/config/universal.json.dist src/config/universal.json
+  - chmod 0775 src/config/gears.json
+  - chmod 0775 src/config/gadgets.json
+  - chmod 0775 src/Cabin/Bridge/config/gadgets.json
+  - chmod 0775 src/Cabin/Hull/config/gadgets.json
+  - chmod 0775 src/config/cabins.json
+  - chmod 0775 src/config/databases.json
+  - chmod 0775 src/config/universal.json
+  - psql -c 'create database airship_test;' -U postgres
+  - chmod +x src/CommandLine/travis-build.sh
+  - src/CommandLine/travis-build.sh
 
-- composer update
-- echo "[]" > src/config/gears.json
-- echo "[]" > src/config/gadgets.json
-- echo "[]" > src/Cabin/Bridge/config/gadgets.json
-- echo "[]" > src/Cabin/Hull/config/gadgets.json
-- cp src/config/cabins.json.dist src/config/cabins.json
-- cp src/config/databases.json.dist src/config/databases.json
-- cp src/config/universal.json.dist src/config/universal.json
-- chmod 0775 src/config/gears.json
-- chmod 0775 src/config/gadgets.json
-- chmod 0775 src/Cabin/Bridge/config/gadgets.json
-- chmod 0775 src/Cabin/Hull/config/gadgets.json
-- chmod 0775 src/config/cabins.json
-- chmod 0775 src/config/databases.json
-- chmod 0775 src/config/universal.json
-- psql -c 'create database airship_test;' -U postgres
-- chmod +x src/CommandLine/travis-build.sh
-- src/CommandLine/travis-build.sh
+script:
+  - vendor/bin/phpunit
+  - php -dmbstring.func_overload=7 vendor/bin/phpunit
+  - vendor/bin/psalm
+

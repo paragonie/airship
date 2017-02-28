@@ -101,7 +101,6 @@ class WordPress implements MigrationInterface
      * WordPress's internal password hashing algorithm. Only used for migrations.
      * The actual security of CMS Airship doesn't depend on this algorithm.
      *
-     * @internal
      * @param HiddenString $password
      * @param string $setting
      * @return HiddenString

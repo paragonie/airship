@@ -137,7 +137,7 @@ class View
      *
      * @param string $key Index
      * @param mixed $val Value
-     * @return View
+     * @return self
      */
     public function store(string $key, $val): self
     {
@@ -150,7 +150,7 @@ class View
      *
      * @param string $key Index
      * @param mixed $val Value
-     * @return View
+     * @return self
      */
     public function append(string $key, $val): self
     {
@@ -169,7 +169,7 @@ class View
      *
      * @param string $key Index
      * @param mixed $val Value
-     * @return View
+     * @return self
      */
     public function prepend(string $key, $val): self
     {
@@ -189,7 +189,7 @@ class View
      * @param string $name - Name to access in Twig
      * @param callable $func - function definition
      * @param array $is_safe
-     * @return View
+     * @return self
      */
     public function func(
         string $name,
@@ -213,8 +213,8 @@ class View
      * Register an array or object as a Twig global.
      *
      * @param string $name Name to access in Twig (by ref)
-     * @param &array $value Reference to the value
-     * @return View
+     * @param mixed &$value Reference to the value
+     * @return self
      */
     public function registerGlobal(
         string $name,
@@ -229,7 +229,7 @@ class View
      *
      * @param string $name - Name to access n Twig
      * @param callable $func - function to apply
-     * @return View
+     * @return self
      */
     public function filter(
         string $name,
@@ -248,8 +248,8 @@ class View
      * Add a global variable to Twig
      * 
      * @param string $key
-     * @param &mixed $value
-     * @return View
+     * @param mixed $value
+     * @return self
      */
     public function addGlobal(
         string $key,
@@ -262,17 +262,23 @@ class View
     /**
      * Get all filters
      * 
-     * @return \Twig_FilterInterface[]
+     * @return array<int, string>
      */
     public function listFilters(): array
     {
         /**
          * If Twig gives us a way to read this information, we'll use that
          * instead.
+         *
+         * @var array<string, callable>
          */
         /** @noinspection PhpInternalEntityUsedInspection */
         $filters = $this->twigEnv->getFilters();
-        return \array_keys($filters);
+        /**
+         * @var array<int, string>
+         */
+        $keys = \array_keys($filters);
+        return $keys;
     }
 
     /**
@@ -350,7 +356,7 @@ class View
     /**
      * Reset the base template
      *
-     * @return View
+     * @return self
      */
     public function resetBaseTemplate(): self
     {
@@ -378,7 +384,6 @@ class View
                 '/' .
                 $state->motifs[$name]['config']['base_template'] .
                 '.twig';
-            \var_dump($state->base_template);
         }
         return $this;
     }

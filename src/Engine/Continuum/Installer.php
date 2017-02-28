@@ -69,6 +69,11 @@ abstract class Installer
     protected $supplier;
 
     /**
+     * @var array<string, Supplier>
+     */
+    protected $supplierCache;
+
+    /**
      * @var string
      */
     protected $type;
@@ -105,7 +110,7 @@ abstract class Installer
      * never be invoked automatically.
      *
      * @param bool $set
-     * @return Installer
+     * @return self
      */
     public function bypassSecurityAndJustInstall(bool $set = false): self
     {
@@ -210,8 +215,10 @@ abstract class Installer
             ]
         );
         $outFile = \Airship\tempnam('airship-', $this->ext);
+        /**
+         * @var int|bool
+         */
         $saved = \file_put_contents($outFile, $body);
-
         if ($saved === false) {
             throw new TransferException();
         }
@@ -500,7 +507,7 @@ abstract class Installer
      *
      * @param string $path
      * @param string $version
-     * @return Installer
+     * @return self
      * @throws FileNotFound
      */
     public function useLocalInstallFile(

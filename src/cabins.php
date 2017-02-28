@@ -26,8 +26,8 @@ if (IDE_HACKS) {
 $cabinDisabled = false;
 if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
     // Load the cabins from cache
-    $config = \Airship\loadJSON(ROOT . '/tmp/cache/cabin_data.json');
-    foreach ($config['cabins'] as $key => $cabin) {
+    $cabinConfig = \Airship\loadJSON(ROOT . '/tmp/cache/cabin_data.json');
+    foreach ($cabinConfig['cabins'] as $key => $cabin) {
         if ($ap::isActiveCabinKey($key, !empty($cabin['https']))) {
             $state->active_cabin = $key;
             if ($cabin['enabled']) {
@@ -36,7 +36,7 @@ if (\file_exists(ROOT . '/tmp/cache/cabin_data.json')) {
             break;
         }
     }
-    $state->cabins = $config['cabins'];
+    $state->cabins = $cabinConfig['cabins'];
 } else {
     // Load the cabins, rebuild the cache
     $cabins = \Airship\loadJSON(ROOT . '/config/cabins.json');

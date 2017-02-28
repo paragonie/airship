@@ -80,7 +80,7 @@ class Stream implements StreamInterface
      * Convert a string into a memory string.
      *
      * @param string $data
-     * @return Stream
+     * @return self
      */
     public static function fromString(string $data): self
     {
@@ -94,7 +94,7 @@ class Stream implements StreamInterface
      * Convert a string into a memory string.
      *
      * @param HiddenString $data
-     * @return Stream
+     * @return self
      */
     public static function fromHiddenString(HiddenString $data): self
     {
@@ -151,7 +151,7 @@ class Stream implements StreamInterface
      *
      * @return resource|null Underlying PHP stream, if any
      */
-    public function detach(): ?resource
+    public function detach()
     {
         return $this->stream;
     }
@@ -178,8 +178,11 @@ class Stream implements StreamInterface
         if (!$this->isSeekable()) {
             return 0;
         }
+        /**
+         * @var int|bool
+         */
         $told = \ftell($this->stream);
-        if ($told === false) {
+        if (!\is_int($told)) {
             throw new \RuntimeException('ftell() failed');
         }
         return $told;
@@ -216,7 +219,7 @@ class Stream implements StreamInterface
      *     offset bytes SEEK_CUR: Set position to current location plus offset
      *     SEEK_END: Set position to end-of-stream plus offset.
      * @throws \RuntimeException on failure.
-     * @return Stream
+     * @return self
      */
     public function seek($offset, $whence = SEEK_SET): self
     {
@@ -261,8 +264,11 @@ class Stream implements StreamInterface
      */
     public function write($string): int
     {
+        /**
+         * @var int|bool
+         */
         $ret = \fwrite($this->stream, $string);
-        if ($ret === false) {
+        if (!\is_int($ret)) {
             throw new \RuntimeException('Could not write to stream');
         }
         return $ret;
@@ -384,6 +390,7 @@ class Stream implements StreamInterface
      * @param StreamInterface $dest   Stream to write to
      * @param int             $maxLen Maximum number of bytes to read. Pass -1
      *                                to read the entire stream.
+     * @return void
      *
      * @throws \RuntimeException on error.
      */
@@ -391,7 +398,7 @@ class Stream implements StreamInterface
         StreamInterface $source,
         StreamInterface $dest,
         int $maxLen = -1
-    ) {
+    ): void {
         $bufferSize = 8192;
         if ($maxLen === -1) {
             while (!$source->eof()) {

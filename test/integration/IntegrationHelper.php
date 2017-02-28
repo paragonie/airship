@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Airship\IntegrationTests;
 
-use Airship\Alerts\Router\LandingComplete;
+use Airship\Alerts\Router\ControllerComplete;
 use Airship\Engine\AutoPilot;
 use Airship\Engine\Networking\HTTP\ServerRequest;
 use Airship\Engine\Networking\HTTP\Uri;
@@ -91,7 +91,7 @@ class IntegrationHelper
         }
         try {
             return $autoPilot->route($request);
-        } catch (LandingComplete $ex) {
+        } catch (ControllerComplete $ex) {
             return $autoPilot->getLanding()->getResponseObject();
         }
     }
