@@ -71,7 +71,7 @@ class Permissions
         $failed_one = false;
         
         // Get all applicable contexts
-        $contexts = self::getOverlap($context_path, $cabin);
+        $contexts = $this->getOverlap($context_path, $cabin);
         if (empty($contexts)) {
             // Sane default: In the absence of permissions, return false
             return false;
@@ -80,8 +80,9 @@ class Permissions
             // You need to be allowed in every relevant context.
             foreach ($contexts as $c_id) {
                 if (
-                    self::checkUser($action, $c_id, $user_id) ||
-                    self::checkUsersGroups($action, $c_id, $user_id)
+                    $this->checkUser($action, $c_id, $user_id)
+                        ||
+                    $this->checkUsersGroups($action, $c_id, $user_id)
                 ) {
                     $allowed = true;
                 } else {
@@ -96,7 +97,7 @@ class Permissions
             foreach ($contexts as $c_id) {
                 $ctx_res = false;
                 foreach ($state->universal['guest_groups'] as $grp) {
-                    if (self::checkGroup($action, $c_id, $grp)) {
+                    if ($this->checkGroup($action, $c_id, $grp)) {
                         $ctx_res = true;
                     }
                 }
@@ -147,16 +148,16 @@ class Permissions
      * Ignores group-based access controls.
      *
      * @param string $action
-     * @param int|null $context_id
-     * @param int|null $user_id
+     * @param int $context_id
+     * @param int $user_id
      * @param bool $ignore_superuser
      * @return bool
      * @throws NotImplementedException
      */
     public function checkUser(
         string $action,
-        int $context_id = null,
-        int $user_id = null,
+        int $context_id = 0,
+        int $user_id = 0,
         bool $ignore_superuser = false
     ): bool {
         if (!$ignore_superuser) {
@@ -182,15 +183,15 @@ class Permissions
      * Check that any of the users' groups has the permission bit
      *
      * @param string $action
-     * @param int|null $context_id
-     * @param int|null $user_id
+     * @param int $context_id
+     * @param int $user_id
      * @param bool $ignore_superuser
      * @return bool
      */
     public function checkUsersGroups(
         string $action = '',
-        int $context_id = null,
-        int $user_id = null,
+        int $context_id = 0,
+        int $user_id = 0,
         bool $ignore_superuser = false
     ): bool {
         if (!$ignore_superuser) {

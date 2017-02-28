@@ -43,9 +43,9 @@ class Hail
     protected $supplierCache;
     
     /**
-     * @param \GuzzleHttp\ClientInterface $client
+     * @param Client $client
      */
-    public function __construct(ClientInterface $client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
         if (IDE_HACKS) {

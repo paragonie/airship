@@ -70,8 +70,11 @@ class FileStore implements LedgerStorageInterface
         $filename = $now->format($this->fileFormat);
         
         \touch($this->basedir . DIRECTORY_SEPARATOR . $filename);
+        /**
+         * @var string|bool
+         */
         $file = \realpath($this->basedir . DIRECTORY_SEPARATOR . $filename);
-        if ($file === false) {
+        if (!\is_string($file)) {
             throw new FileNotFound(
                 \trk('errors.file.cannot_write_file')
             );

@@ -18,7 +18,7 @@ use Airship\Engine\Contract\Security\{
 abstract class InputFilterContainer implements FilterContainerInterface
 {
     /**
-     * @var InputFilter[]
+     * @var array<mixed, mixed>
      */
     protected $filterMap = [];
 

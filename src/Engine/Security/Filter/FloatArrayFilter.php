@@ -41,6 +41,7 @@ class FloatArrayFilter extends ArrayFilter
                     \sprintf('Expected a 1-dimensional array (%s).', $this->index)
                 );
             }
+            $data = (array) $data;
             foreach ($data as $key => $val) {
                 if (\is_array($val)) {
                     throw new \TypeError(

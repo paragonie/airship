@@ -177,7 +177,7 @@ class UploadedFile implements UploadedFileInterface
      */
     private function setClientFilename(?string $clientFilename): self
     {
-        $this->clientFilename = $clientFilename;
+        $this->clientFilename = (string) $clientFilename;
         return $this;
     }
 
@@ -187,7 +187,7 @@ class UploadedFile implements UploadedFileInterface
      */
     private function setClientMediaType(?string $clientMediaType): self
     {
-        $this->clientMediaType = $clientMediaType;
+        $this->clientMediaType = (string) $clientMediaType;
         return $this;
     }
 
@@ -211,8 +211,9 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * @throws \RuntimeException if is moved or not ok
+     * @return void
      */
-    private function validateActive()
+    private function validateActive(): void
     {
         if (!$this->isOk()) {
             throw new \RuntimeException('Cannot retrieve stream due to upload error');
@@ -233,6 +234,10 @@ class UploadedFile implements UploadedFileInterface
 
         if ($this->stream instanceof StreamInterface) {
             return $this->stream;
+        }
+
+        if (\is_null($this->file)) {
+            throw new RuntimeException('Could not open temporary file to create stream');
         }
 
         return new Stream(\fopen($this->file, 'r+'));

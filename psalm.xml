@@ -8,28 +8,21 @@
         <directory name="src/Engine" />
     </projectFiles>
     <issueHandlers>
-        <FailedTypeResolution errorLevel="info" />
+        <!-- Psalm ironcally pukes about e.g. is_string() calls which exist to enforce types. -->
         <ForbiddenCode errorLevel="info" />
-        <InvalidArrayAssignment errorLevel="info" />
+        <!-- We disable the above inspection because we do use shell_exec() in a few places. -->
         <InvalidArgument errorLevel="info" />
-        <InvalidIterator errorLevel="info" />
-        <InvalidOperand errorLevel="info" />
-        <InvalidPropertyAssignment errorLevel="info" />
-        <InvalidReturnType errorLevel="info" />
+        <!-- Overly pedantic array annotation expectations -->
         <InvalidScalarArgument errorLevel="info" />
-        <MissingConstructor errorLevel="info" /><!-- Because traits -->
-        <MissingPropertyDeclaration errorLevel="info" />
-        <MissingReturnType errorLevel="info" />
+        <!-- To silence the result of a bug in Psalm itself -->
+        <MissingConstructor errorLevel="info" />
+        <!-- Because traits -->
         <MoreSpecificReturnType errorLevel="info" />
-        <NonStaticSelfCall errorLevel="info" />
-        <PossiblyNullArgument errorLevel="info" />
-        <PossiblyUndefinedVariable errorLevel="info" />
         <PropertyNotSetInConstructor errorLevel="info" />
+        <!-- We don't always set things in the constructor -->
         <TooFewArguments errorLevel="info" />
+        <!-- Psalm doesn't recognize this correctly -->
         <TooManyArguments errorLevel="info" />
-        <TypeDoesNotContainType errorLevel="info" />
-        <UndefinedMethod errorLevel="info" />
-        <UndefinedThisPropertyAssignment errorLevel="info" />
-        <UndefinedThisPropertyFetch errorLevel="info" />
+        <!-- Psalm doesn't recognize this correctly -->
     </issueHandlers>
 </psalm>

@@ -36,14 +36,18 @@ class BoolArrayFilter extends ArrayFilter
                     \sprintf('Expected a 1-dimensional array (%s).', $this->index)
                 );
             }
+            /**
+             * @var array<mixed, array<mixed, mixed>>
+             */
+            $data = (array) $data;
             foreach ($data as $key => $val) {
                 if (\is_array($val)) {
                     throw new \TypeError(
                         \sprintf('Unexpected array at index %s (%s).', $key, $this->index)
                     );
                 }
-                if (\is_null($data) || $data === '') {
-                    $data[$key] = null;
+                if (!\is_array($data)) {
+                    $data = [$key => null];
                 } else {
                     $data[$key] = !empty($val);
                 }

@@ -139,7 +139,11 @@ class Channel
      */
     public function getSupplier(string $name, bool $flush = false): Supplier
     {
-        return $this->parent->getSupplier($name, $flush);
+        $sup = $this->parent->getSupplier($name, $flush);
+        if (is_array($sup)) {
+            throw new NoSupplier('Invalid result');
+        }
+        return $sup;
     }
 
     /**

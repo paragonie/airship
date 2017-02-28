@@ -178,8 +178,9 @@ class CSRF
      *
      * @param array $options
      * @throws InvalidConfig
+     * @return void
      */
-    public function reconfigure(array $options = [])
+    public function reconfigure(array $options = []): void
     {
         foreach ($options as $opt => $val) {
             switch ($opt) {
@@ -205,6 +206,7 @@ class CSRF
      */
     protected function generateToken(string $lockTo = ''): array
     {
+        $index = '';
         // Create a distinct index:
         do {
             $index = Base64UrlSafe::encode(
@@ -236,8 +238,10 @@ class CSRF
     /**
      * Enforce an upper limit on the number of tokens stored in session state
      * by removing the oldest tokens first.
+     *
+     * @return void
      */
-    protected function recycleTokens()
+    protected function recycleTokens(): void
     {
         if (!$this->expireOld) {
             // This is turned off.

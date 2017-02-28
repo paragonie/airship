@@ -71,7 +71,7 @@ class Keyggdrasil
     protected $supplierCache;
 
     /**
-     * @var array<int, Channel>
+     * @var array<mixed, Channel>
      */
     protected $channelCache;
 

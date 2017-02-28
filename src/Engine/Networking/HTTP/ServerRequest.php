@@ -448,7 +448,9 @@ class ServerRequest extends Request implements ServerRequestInterface
             if ($value instanceof UploadedFileInterface) {
                 $normalized[$key] = $value;
             } elseif (is_array($value) && isset($value['tmp_name'])) {
-                $normalized[$key] = self::createUploadedFileFromSpec($value);
+                $normalized[$key] = \is_array($value['tmp_name'])
+                    ? self::createUploadedFileFromSpec($value)
+                    : self::normalizeNestedFileSpec($value);
             } elseif (is_array($value)) {
                 $normalized[$key] = self::normalizeFiles($value);
                 continue;
@@ -472,7 +474,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     private static function createUploadedFileFromSpec(array $value): UploadedFileInterface
     {
         if (is_array($value['tmp_name'])) {
-            return self::normalizeNestedFileSpec($value);
+            throw new \Error('Wrong subroutine accessed');
         }
 
         return new UploadedFile(

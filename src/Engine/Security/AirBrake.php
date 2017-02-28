@@ -353,6 +353,9 @@ class AirBrake
         if (!\is_null($logAfter)) {
             $logAfter = (int) $logAfter;
         }
+        if (\is_null($password)) {
+            throw new \Error('Empty password provided');
+        }
         $publicKey = (string) ($this->config['log-public-key'] ?? '');
 
         $this->db->beginTransaction();

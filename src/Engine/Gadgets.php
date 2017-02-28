@@ -30,8 +30,9 @@ abstract class Gadgets
      * Inject one or more routes to the current Cabin's autopilot route list
      *
      * @param array $injected
+     * @return void
      */
-    public static function injectRoutes(array $injected = [])
+    public static function injectRoutes(array $injected = []): void
     {
         $state = State::instance();
         $merged = \array_merge(
@@ -46,8 +47,9 @@ abstract class Gadgets
      * 
      * @param string $name
      * @param string $source File path (can be within phar://)
+     * @return void
      */
-    public static function loadCargo(string $name, string $source)
+    public static function loadCargo(string $name, string $source): void
     {
         $state = State::instance();
         $cargo = isset($state->cargo)
@@ -76,8 +78,9 @@ abstract class Gadgets
      *
      * @param string $key
      * @param MigrationInterface $migration
+     * @return void
      */
-    public static function registerMigration(string $key, MigrationInterface $migration)
+    public static function registerMigration(string $key, MigrationInterface $migration): void
     {
         $state = State::instance();
         $registry = $state->migrations ?? [];
@@ -93,6 +96,7 @@ abstract class Gadgets
      * @param string $key
      * @return MigrationInterface
      * @throws SecurityAlert
+     * @return void
      */
     public static function loadMigration(string $key): MigrationInterface
     {
@@ -112,7 +116,7 @@ abstract class Gadgets
      * @param string $name
      * @return array
      */
-    public static function unloadNextCargo(string $name)
+    public static function unloadNextCargo(string $name): array
     {
         $state = State::instance();
         $iterate = $state->cargoIterator;
@@ -133,7 +137,7 @@ abstract class Gadgets
      * @param int $offset
      * @return array
      */
-    public static function unloadCargo(string $name, int $offset = 0)
+    public static function unloadCargo(string $name, int $offset = 0): array
     {
         $state = State::instance();
         if (isset($state->cargo[$name])) {

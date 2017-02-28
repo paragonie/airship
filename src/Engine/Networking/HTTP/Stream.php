@@ -178,8 +178,11 @@ class Stream implements StreamInterface
         if (!$this->isSeekable()) {
             return 0;
         }
+        /**
+         * @var int|bool
+         */
         $told = \ftell($this->stream);
-        if ($told === false) {
+        if (!\is_int($told)) {
             throw new \RuntimeException('ftell() failed');
         }
         return $told;
@@ -261,8 +264,11 @@ class Stream implements StreamInterface
      */
     public function write($string): int
     {
+        /**
+         * @var int|bool
+         */
         $ret = \fwrite($this->stream, $string);
-        if ($ret === false) {
+        if (!\is_int($ret)) {
             throw new \RuntimeException('Could not write to stream');
         }
         return $ret;
@@ -384,6 +390,7 @@ class Stream implements StreamInterface
      * @param StreamInterface $dest   Stream to write to
      * @param int             $maxLen Maximum number of bytes to read. Pass -1
      *                                to read the entire stream.
+     * @return void
      *
      * @throws \RuntimeException on error.
      */
@@ -391,7 +398,7 @@ class Stream implements StreamInterface
         StreamInterface $source,
         StreamInterface $dest,
         int $maxLen = -1
-    ) {
+    ): void {
         $bufferSize = 8192;
         if ($maxLen === -1) {
             while (!$source->eof()) {

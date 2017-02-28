@@ -130,7 +130,7 @@ use Airship\Engine\{
          * Translation (lookup table based on a key)
          * 
          * @param string $key
-         * @param mixed ...$params
+         * @param array ...$params
          * @return string
          */
         function trk(string $key, ...$params): string
