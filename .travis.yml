@@ -16,7 +16,7 @@ services:
 before_install:
   - sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
   - sudo apt-get -y update
-  - sudo apt-get -y dist-upgrade
+  - sudo apt-get -y upgrade
   - sudo apt-get install make build-essential automake php7.1-dev php-pear php7.1-curl libsodium-dev php-libsodium
 
 install:
