@@ -8,7 +8,6 @@
         <directory name="src/Engine" />
     </projectFiles>
     <issueHandlers>
-        <!-- Psalm ironcally pukes about e.g. is_string() calls which exist to enforce types. -->
         <ForbiddenCode errorLevel="info" />
         <!-- We disable the above inspection because we do use shell_exec() in a few places. -->
         <InvalidArgument errorLevel="info" />
@@ -24,5 +23,7 @@
         <!-- Psalm doesn't recognize this correctly -->
         <TooManyArguments errorLevel="info" />
         <!-- Psalm doesn't recognize this correctly -->
+        <UndefinedConstant errorLevel="info" />
+        <!-- Psalm was unable to interpret the cURL extension constants -->
     </issueHandlers>
 </psalm>
