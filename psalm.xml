@@ -10,12 +10,6 @@
     <issueHandlers>
         <ForbiddenCode errorLevel="info" />
         <!-- We disable the above inspection because we do use shell_exec() in a few places. -->
-        <InvalidScalarArgument errorLevel="info" />
-        <!-- To silence the result of a bug in Psalm itself -->
-        <MissingConstructor errorLevel="info" />
-        <!-- Because traits -->
-        <PropertyNotSetInConstructor errorLevel="info" />
-        <!-- We don't always set things in the constructor -->
         <TooFewArguments errorLevel="info" />
         <!-- Psalm doesn't recognize this correctly -->
         <TooManyArguments errorLevel="info" />

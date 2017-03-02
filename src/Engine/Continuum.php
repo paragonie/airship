@@ -44,10 +44,9 @@ class Continuum
     {
         $config = State::instance();
         if (empty($hail)) {
-            $this->hail = $config->hail;
-        } else {
-            $this->hail = $hail;
+            $hail = $config->hail;
         }
+        $this->hail = $hail;
     }
     
     /**

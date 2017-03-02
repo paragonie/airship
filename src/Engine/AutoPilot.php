@@ -54,9 +54,9 @@ class AutoPilot implements RouterInterface
     protected $cabin = [];
 
     /**
-     * @var Controller
+     * @var Controller|null
      */
-    protected $landing;
+    protected $landing = null;
 
     /**
      * @var View
@@ -421,6 +421,9 @@ class AutoPilot implements RouterInterface
         }
         
         // Load our cabin-specific landing
+        /**
+         * @var Controller
+         */
         $this->landing = new $class_name;
         if (!($this->landing instanceof Controller)) {
             throw new \Error(
@@ -459,9 +462,13 @@ class AutoPilot implements RouterInterface
 
     /**
      * @return Controller
+     * @throws \TypeError
      */
     public function getController(): Controller
     {
+        if (!($this->landing instanceof Controller)) {
+            throw new \TypeError('Invalid type');
+        }
         return $this->landing;
     }
 

@@ -78,7 +78,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
     {
         $debugArgs = [
             'supplier' =>
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
             'name' =>
                 $this->name
         ];
@@ -87,7 +87,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
              * @var UpdateInfo[]
              */
             $updateInfoArray = $this->updateCheck(
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
                 $this->name,
                 $this->manifest['version']
             );
@@ -153,7 +153,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
                 [
                     'action' => 'UPDATE',
                     'name' => $this->name,
-                    'supplier' => $this->supplier->getName(),
+                    'supplier' => $this->getSupplier()->getName(),
                     'type' => $this->type
                 ]
             );
@@ -199,7 +199,7 @@ class Motif extends AutoUpdater implements ContinuumInterface
             [
                 ROOT,
                 'Motifs',
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
                 $this->name
             ]
         );

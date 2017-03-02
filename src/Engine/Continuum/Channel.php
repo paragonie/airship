@@ -28,7 +28,7 @@ class Channel
     protected $name = '';
 
     /**
-     * @var Continuum|Keyggdrasil
+     * @var object
      */
     protected $parent;
 
@@ -62,9 +62,7 @@ class Channel
      */
     public function __construct($parent, string $name, array $config = [])
     {
-        if ($parent instanceof Keyggdrasil || $parent instanceof Continuum) {
-            $this->parent = $parent;
-        }
+        $this->parent = $parent;
         if (!\is1DArray($config['urls'])) {
             throw new \TypeError(
                 \trk('errors.type.expected_1d_array')

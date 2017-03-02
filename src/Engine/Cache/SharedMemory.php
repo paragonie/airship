@@ -26,9 +26,9 @@ use ParagonIE\Halite\{
 class SharedMemory implements CacheInterface
 {
     /**
-     * @var AuthenticationKey
+     * @var AuthenticationKey|null
      */
-    protected $authKey;
+    protected $authKey = null;
 
     /**
      * @var string

@@ -8,7 +8,7 @@ use Airship\Alerts\{
     Security\UserNotLoggedIn
 };
 use Airship\Engine\{
-    AutoPilot, Gears, Controller, Model, Security\Authentication, Security\Permissions, State, View
+    AutoPilot, Database, Gears, Controller, Model, Security\Authentication, Security\Permissions, State, View
 };
 use ParagonIE\Cookie\{
     Cookie,
@@ -30,12 +30,12 @@ trait Security
     /**
      * @var Authentication
      */
-    public $airship_auth;
+    public $airship_auth = null;
 
     /**
      * @var Permissions
      */
-    public $airship_perms;
+    public $airship_perms = null;
 
     /**
      * After loading the Security bolt in place, configure it.

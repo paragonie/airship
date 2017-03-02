@@ -19,12 +19,12 @@ class InputFilter implements FilterInterface
     /**
      * @var string
      */
-    protected $type;
+    protected $type = '';
 
     /**
      * @var string (for debugging purposes)
      */
-    protected $index;
+    protected $index = '';
 
     /**
      * @var callable[]

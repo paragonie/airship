@@ -16,6 +16,7 @@ use Airship\Engine\{
     Hail,
     State
 };
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\Halite\{
@@ -66,14 +67,14 @@ abstract class AutoUpdater
     protected $filePath = '';
 
     /**
-     * @var Hail
+     * @var Hail|null
      */
-    protected $hail;
+    protected $hail = null;
 
     /**
-     * @var UpdateFile
+     * @var UpdateFile|null
      */
-    protected $localUpdateFile;
+    protected $localUpdateFile = null;
 
     /**
      * @var array
@@ -88,12 +89,12 @@ abstract class AutoUpdater
     /**
      * @var string
      */
-    protected $pharAlias;
+    protected $pharAlias = '';
 
     /**
-     * @var Supplier
+     * @var Supplier|null
      */
-    protected $supplier;
+    protected $supplier = null;
 
     /**
      * @var string
@@ -110,6 +111,7 @@ abstract class AutoUpdater
     {
         $ret = null;
         $script = '';
+
         // Get a unique temporary file
         do {
             $script = \tempnam(ROOT . DIRECTORY_SEPARATOR . 'tmp', 'update-script-');
@@ -293,6 +295,9 @@ abstract class AutoUpdater
             $this->log('Local update file used', LogLevel::DEBUG);
             return $this->localUpdateFile;
         }
+        if (!($this->hail instanceof Hail)) {
+            $this->hail = new Hail(new Client());
+        }
         try {
             $version = $update->getVersion();
             $body = $this->hail->postReturnBody(
@@ -362,6 +367,18 @@ abstract class AutoUpdater
     }
 
     /**
+     * @return Supplier
+     * @throws \TypeError
+     */
+    protected function getSupplier(): Supplier
+    {
+        if (!$this->supplier instanceof Supplier) {
+            throw new \TypeError('Supplier cannot be null');
+        }
+        return $this->supplier;
+    }
+
+    /**
      * Get information for logging purposes
      *
      * @param UpdateInfo $updateInfo
@@ -375,7 +392,7 @@ abstract class AutoUpdater
         return [
             'action' => 'UPDATE',
             'name' => $this->name,
-            'supplier' => $this->supplier->getName(),
+            'supplier' => $this->getSupplier()->getName(),
             'type' => $this->type,
             'updateFile' => [
                 'checksum' => $updateFile->getHash(),
@@ -417,7 +434,7 @@ abstract class AutoUpdater
     {
         $debugArgs = [
             'supplier' =>
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
             'name' =>
                 $this->name,
             'version' =>
@@ -437,7 +454,7 @@ abstract class AutoUpdater
              * @var UpdateInfo[]
              */
             $updates = $this->updateCheck(
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
                 $this->name,
                 $this->manifest['version']
             );
@@ -521,9 +538,12 @@ abstract class AutoUpdater
         string $apiEndpoint = 'version'
     ): array {
         if (empty($supplier)) {
-            $supplier = $this->supplier->getName();
+            $supplier = $this->getSupplier()->getName();
         }
-        $channelsConfigured = $this->supplier->getChannels();
+        if (!($this->hail instanceof Hail)) {
+            $this->hail = new Hail(new Client());
+        }
+        $channelsConfigured = $this->getSupplier()->getChannels();
         if (empty($channelsConfigured)) {
             throw new NoAPIResponse(
                 \trk('errors.hail.no_channel_configured')
@@ -691,7 +711,7 @@ abstract class AutoUpdater
         ];
         $this->log('Checking update signature...', LogLevel::DEBUG, $debugArgs);
         $ret = false;
-        foreach ($this->supplier->getSigningKeys() as $key) {
+        foreach ($this->getSupplier()->getSigningKeys() as $key) {
             if ($key['type'] !== 'signing') {
                 continue;
             }

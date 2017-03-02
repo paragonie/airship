@@ -94,10 +94,9 @@ abstract class Installer
     {
         $config = State::instance();
         if (empty($hail)) {
-            $this->hail = $config->hail;
-        } else {
-            $this->hail = $hail;
+            $hail = $config->hail;
         }
+        $this->hail = $hail;
         $this->supplier = $this->getSupplierDontCache($supplier);
         $this->package = $package;
         if (!self::$continuumLogger) {

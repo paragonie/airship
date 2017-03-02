@@ -36,37 +36,37 @@ class Uri implements UriInterface
     /**
      * @var string
      */
-    protected $scheme;
+    protected $scheme = '';
 
     /**
      * @var string
      */
-    protected $userInfo;
+    protected $userInfo = '';
 
     /**
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * @var int|null
      */
-    protected $port;
+    protected $port = null;
 
     /**
      * @var string
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * @var string
      */
-    protected $query;
+    protected $query = '';
 
     /**
      * @var string
      */
-    protected $fragment;
+    protected $fragment = '';
 
     /**
      * Uri constructor.

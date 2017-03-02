@@ -54,12 +54,12 @@ class UploadedFile implements UploadedFileInterface
     /**
      * @var string
      */
-    protected $clientFilename;
+    protected $clientFilename = '';
 
     /**
      * @var string
      */
-    protected $clientMediaType;
+    protected $clientMediaType = '';
 
     /**
      * @var int

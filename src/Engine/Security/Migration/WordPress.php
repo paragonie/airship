@@ -28,6 +28,16 @@ class WordPress implements MigrationInterface
     protected $itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
     /**
+     * WordPress constructor.
+     *
+     * @param EncryptionKey $key
+     */
+    public function __construct(EncryptionKey $key)
+    {
+        $this->key = $key;
+    }
+
+    /**
      * Use during imports to populate a table with metadata and a rehashed hash.
      *
      * @param string $oldHash

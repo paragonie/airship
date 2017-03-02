@@ -20,12 +20,12 @@ trait Cache
     /**
      * @var CacheInterface
      */
-    public $airship_filecache_object;
+    public $airship_filecache_object = null;
 
     /**
      * @var CacheInterface
      */
-    public $airship_cspcache_object;
+    public $airship_cspcache_object = null;
 
     /**
      * After loading the Cache bolt in place, configure it.

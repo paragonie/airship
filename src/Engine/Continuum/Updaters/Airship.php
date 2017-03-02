@@ -154,7 +154,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
                 [
                     'action' => 'UPDATE',
                     'name' => $this->name,
-                    'supplier' => $this->supplier->getName(),
+                    'supplier' => $this->getSupplier()->getName(),
                     'type' => $this->type
                 ]
             );

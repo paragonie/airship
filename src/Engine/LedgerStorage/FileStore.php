@@ -43,10 +43,9 @@ class FileStore implements LedgerStorageInterface
         string $timeFormat = self::TIME_FORMAT
     ) {
         if (Binary::safeStrlen($baseDirectory) < 2) {
-            $this->basedir = ROOT . '/tmp/logs/';
-        } else {
-            $this->basedir = $baseDirectory;
+            $baseDirectory = ROOT . '/tmp/logs/';
         }
+        $this->basedir = $baseDirectory;
         if (!\is_dir($this->basedir)) {
             \mkdir($this->basedir, 0775);
         }

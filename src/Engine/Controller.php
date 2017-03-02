@@ -15,9 +15,7 @@ use Airship\Engine\Bolt\{
 };
 use Airship\Engine\Contract\DBInterface;
 use Airship\Engine\Networking\HTTP\{
-    ServerRequest,
-    Stream,
-    Uri
+    Response, ServerRequest, Stream, Uri
 };
 use Airship\Engine\Security\{
     CSRF,
@@ -53,27 +51,27 @@ class Controller
     /**
      * @var string
      */
-    protected $airship_http_method;
+    protected $airship_http_method = '';
 
     /**
      * @var string
      */
-    protected $airship_cabin_prefix;
+    protected $airship_cabin_prefix = '';
 
     /**
-     * @var CSRF
+     * @var CSRF|null
      */
-    protected $airship_csrf;
+    protected $airship_csrf = null;
 
     /**
      * @var array<string, array<int, Database>>
      */
-    protected $airship_databases;
+    protected $airship_databases = [];
 
     /**
-     * @var View
+     * @var View|null
      */
-    protected $airship_view_object;
+    protected $airship_view_object = null;
 
     /**
      * @var array
@@ -81,14 +79,14 @@ class Controller
     protected $airship_view_override = [];
 
     /**
-     * @var ResponseInterface
+     * @var ResponseInterface|null
      */
-    protected $airship_response;
+    protected $airship_response = null;
 
     /**
-     * @var ServerRequestInterface
+     * @var ServerRequestInterface|null
      */
-    protected $airship_request;
+    protected $airship_request = null;
 
     /**
      * @var array
@@ -159,7 +157,7 @@ class Controller
      */
     public function resetBaseTemplate()
     {
-        return $this->airship_view_object->resetBaseTemplate();
+        return $this->getAirshipViewObject()->resetBaseTemplate();
     }
 
     /**
@@ -168,7 +166,7 @@ class Controller
      */
     public function setBaseTemplate(string $name)
     {
-        return $this->airship_view_object->setBaseTemplate($name);
+        return $this->getAirshipViewObject()->setBaseTemplate($name);
     }
 
     /**
@@ -180,7 +178,7 @@ class Controller
      */
     protected function addViewFilter(string $name, callable $func): self
     {
-        $this->airship_view_object->filter($name, $func);
+        $this->getAirshipViewObject()->filter($name, $func);
         return $this;
     }
 
@@ -193,7 +191,7 @@ class Controller
      */
     protected function addViewFunction(string $name, callable $func): self
     {
-        $this->airship_view_object->func($name, $func);
+        $this->getAirshipViewObject()->func($name, $func);
         return $this;
     }
 
@@ -269,7 +267,7 @@ class Controller
      */
     protected function getViewAsText(string $name, ...$cArgs): string
     {
-        return $this->airship_view_object->render($name, ...$cArgs);
+        return $this->getAirshipViewObject()->render($name, ...$cArgs);
     }
 
     /**
@@ -289,6 +287,9 @@ class Controller
      */
     public function getResponseObject(): ResponseInterface
     {
+        if (!$this->airship_response instanceof ResponseInterface) {
+            $this->airship_response = new Response();
+        }
         return $this->airship_response;
     }
 
@@ -305,7 +306,7 @@ class Controller
             $name = $this->airship_view_override[$name];
         }
         \ob_start();
-        $this->airship_view_object->display($name, ...$cArgs);
+        $this->getAirshipViewObject()->display($name, ...$cArgs);
         return (string) \ob_get_clean();
     }
 
@@ -323,7 +324,7 @@ class Controller
             $name = $this->airship_view_override[$name];
         }
         \ob_start();
-        $this->airship_view_object->display($name, ...$cArgs);
+        $this->getAirshipViewObject()->display($name, ...$cArgs);
         $this->setBodyAndStandardHeaders(
             Stream::fromString((string) \ob_get_clean())
         );
@@ -375,6 +376,10 @@ class Controller
             return $_POST;
         }
 
+        if (!($this->airship_csrf instanceof CSRF)) {
+            return false;
+        }
+
         if ($this->airship_csrf->check()) {
             if ($filterContainer) {
                 try {
@@ -414,7 +419,7 @@ class Controller
         // We don't want to cache anything tied to a session.
         $oldSession = $_SESSION;
         $_SESSION = [];
-        $data = $this->airship_view_object->render($name, ...$cArgs);
+        $data = $this->getAirshipViewObject()->render($name, ...$cArgs);
         $_SESSION = $oldSession;
 
         $port = $_SERVER['HTTP_PORT'] ?? '';
@@ -443,7 +448,10 @@ class Controller
     protected function setBodyAndStandardHeaders(StreamInterface $stream): self
     {
         $state = State::instance();
-        $this->airship_response = $this->airship_response
+        /**
+         * @var ResponseInterface
+         */
+        $this->airship_response = $this->getResponseObject()
             ->withHeader('Content-Type', 'text/html;charset=UTF-8')
             ->withHeader('Content-Language', $state->lang)
             ->withHeader('X-Content-Type-Options', 'nosniff')
@@ -478,7 +486,7 @@ class Controller
      */
     protected function storeViewVar(string $name, $value): View
     {
-        return $this->airship_view_object->store($name, $value);
+        return $this->getAirshipViewObject()->store($name, $value);
     }
 
     /**
@@ -487,6 +495,18 @@ class Controller
      */
     protected function setActiveMotif(string $name): bool
     {
-        return $this->airship_view_object->setActiveMotif($name);
+        return $this->getAirshipViewObject()->setActiveMotif($name);
+    }
+
+    /**
+     * @return View
+     * @throws \TypeError
+     */
+    protected function getAirshipViewObject(): View
+    {
+        if ($this->airship_view_object instanceof View) {
+            return $this->airship_view_object;
+        }
+        throw new \TypeError('View object not defined');
     }
 }

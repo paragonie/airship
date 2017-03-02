@@ -21,7 +21,7 @@ class Message implements MessageInterface
     /**
      * @var array<mixed, array<mixed, mixed>>
      */
-    protected $headers;
+    protected $headers = [];
 
     /**
      * @var array Map of lowercase header name => original name at registration
@@ -29,9 +29,9 @@ class Message implements MessageInterface
     protected $headerNames = [];
 
     /**
-     * @var Stream
+     * @var Stream|null
      */
-    protected $body;
+    protected $body = null;
 
     /**
      * Retrieves the HTTP protocol version as a string.
@@ -260,6 +260,9 @@ class Message implements MessageInterface
      */
     public function getBody(): Stream
     {
+        if (!$this->body instanceof Stream) {
+            $this->body = Stream::fromString('');
+        }
         return $this->body;
     }
 

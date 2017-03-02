@@ -73,7 +73,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     {
         $state = State::instance();
         return (
-            $this->supplier->getName() === $state->universal['airship']['trusted-supplier']
+            $this->getSupplier()->getName() === $state->universal['airship']['trusted-supplier']
                 &&
             \in_array($this->name, self::AIRSHIP_SPECIAL_CABINS)
         );
@@ -93,7 +93,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
     {
         $debugArgs = [
             'supplier' =>
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
             'name' =>
                 $this->name
         ];
@@ -107,7 +107,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
              * @var UpdateInfo[]
              */
             $updates = $this->updateCheck(
-                $this->supplier->getName(),
+                $this->getSupplier()->getName(),
                 $this->name,
                 $this->manifest['version']
             );
@@ -172,7 +172,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
                 [
                     'action' => 'UPDATE',
                     'name' => $this->name,
-                    'supplier' => $this->supplier->getName(),
+                    'supplier' => $this->getSupplier()->getName(),
                     'type' => $this->type
                 ]
             );
@@ -269,7 +269,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
      */
     protected function replaceFile(string $filename)
     {
-        $supplier = $this->supplier->getName();
+        $supplier = $this->getSupplier()->getName();
         $pieces = [
             ROOT,
             'Cabin',
