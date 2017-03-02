@@ -672,7 +672,7 @@ class Account extends ControllerGear
                     \time() + (
                         $state->universal['long-term-auth-expire']
                             ??
-                        self::DEFAULT_LONGTERMAUTH_EXPIRE
+                        2592000
                     ),
                     '/',
                     $state->universal['session_config']['cookie_domain'] ?? '',

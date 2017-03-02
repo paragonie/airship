@@ -50,8 +50,6 @@ class Controller
     use LogBolt;
     use SecurityBolt;
 
-    const DEFAULT_LONGTERMAUTH_EXPIRE = 2592000; // 30 days
-
     /**
      * @var string
      */

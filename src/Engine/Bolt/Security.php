@@ -211,7 +211,7 @@ trait Security
                     ),
                     $state->keyring['cookie.encrypt_key']
                 ),
-                \time() + ($state->universal['long-term-auth-expire'] ?? self::DEFAULT_LONGTERMAUTH_EXPIRE),
+                \time() + ($state->universal['long-term-auth-expire'] ?? 2592000),
                 '/',
                 '',
                 $httpsOnly ?? false,

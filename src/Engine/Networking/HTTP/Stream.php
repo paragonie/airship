@@ -36,6 +36,7 @@ class Stream implements StreamInterface
      * Stream constructor.
      *
      * @param resource $stream
+     * @throws \TypeError
      */
     public function __construct($stream)
     {
@@ -149,7 +150,7 @@ class Stream implements StreamInterface
      *
      * After the stream has been detached, the stream is in an unusable state.
      *
-     * @return resource|null Underlying PHP stream, if any
+     * @return resource Underlying PHP stream, if any
      */
     public function detach()
     {

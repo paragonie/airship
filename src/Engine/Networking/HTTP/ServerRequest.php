@@ -48,7 +48,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $cookieParams = [];
 
     /**
-     * @var null|array|object
+     * @var mixed
      */
     protected $parsedBody;
 
@@ -73,7 +73,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param string $method
      * @param UriInterface $uri
      * @param array $headers
-     * @param null $body
+     * @param mixed $body
      * @param string $version
      * @param array $serverParams
      */
@@ -304,7 +304,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * potential types MUST be arrays or objects only. A null value indicates
      * the absence of body content.
      *
-     * @return null|array|object The deserialized body parameters, if any.
+     * @return mixed The deserialized body parameters, if any.
      *     These will typically be an array or object.
      */
     public function getParsedBody()

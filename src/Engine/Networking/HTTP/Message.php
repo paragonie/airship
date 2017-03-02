@@ -19,7 +19,7 @@ class Message implements MessageInterface
     protected $protocolVersion = '';
 
     /**
-     * @var array
+     * @var array<mixed, array<mixed, mixed>>
      */
     protected $headers;
 
@@ -29,7 +29,7 @@ class Message implements MessageInterface
     protected $headerNames = [];
 
     /**
-     * @var StreamInterface
+     * @var Stream
      */
     protected $body;
 
@@ -85,9 +85,9 @@ class Message implements MessageInterface
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return string[][] Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     * @return array<mixed, array<mixed, mixed>> Returns an associative array of
+     *     the message's headers. Each key MUST be a header name, and each value
+     *     MUST be an array of strings for that header.
      */
     public function getHeaders(): array
     {
@@ -117,9 +117,9 @@ class Message implements MessageInterface
      * empty array.
      *
      * @param string $name Case-insensitive header field name.
-     * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     * @return array<mixed, mixed> Returns an associative array of
+     *     the message's headers. Each key MUST be a header name, and each value
+     *     MUST be an array of strings for that header.
      */
     public function getHeader($name): array
     {
@@ -278,6 +278,9 @@ class Message implements MessageInterface
      */
     public function withBody(StreamInterface $body): self
     {
+        if (!$body instanceof Stream) {
+            $body = Stream::fromString((string) $body);
+        }
         $this->body = $body;
         return $this;
     }
@@ -299,13 +302,16 @@ class Message implements MessageInterface
      * Make sure we're working with a 2D array.
      *
      * @param array $headers
-     * @return array
+     * @return array<mixed, array<mixed, mixed>>
      */
     protected function preProcessHeaders(array $headers): array
     {
         if (empty($headers)) {
             return [];
         }
+        /**
+         * @var array<mixed, array<mixed, mixed>>
+         */
         $return = [];
         foreach ($headers as $key => $value) {
             if (is_array($value)) {

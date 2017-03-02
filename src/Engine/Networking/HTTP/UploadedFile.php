@@ -310,10 +310,10 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      *
-     * @return string|null The filename sent by the client or null if none
+     * @return string The filename sent by the client or null if none
      *     was provided.
      */
-    public function getClientFilename(): ?string
+    public function getClientFilename(): string
     {
         return $this->clientFilename;
     }
@@ -321,7 +321,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      */
-    public function getClientMediaType(): ?string
+    public function getClientMediaType(): string
     {
         return $this->clientMediaType;
     }

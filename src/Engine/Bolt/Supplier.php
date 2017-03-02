@@ -112,7 +112,7 @@ trait Supplier
      *
      * @param string $supplier
      * @param boolean $force_flush
-     * @return SupplierObject|array<string, SupplierObject>
+     * @return SupplierObject|array<mixed, SupplierObject>
      * @throws NoSupplier
      */
     public function getSupplier(

@@ -57,7 +57,7 @@ use Airship\Engine\{
 /**
  * II. TRANSLATION FUNCTIONS
  */
-    if (!function_exists('__')) {
+    if (!\function_exists('__')) {
         /**
          * Translate this string.
          *
@@ -82,7 +82,7 @@ use Airship\Engine\{
         }
     }
 
-    if (!function_exists('_e')) {
+    if (!\function_exists('_e')) {
         /**
          * Translate and echo a string of text
          * 
@@ -100,7 +100,7 @@ use Airship\Engine\{
         }
     }
 
-    if (!function_exists('_n')) {
+    if (!\function_exists('_n')) {
         /**
          * Print a number (great for handling plurals)
          * 
@@ -125,12 +125,12 @@ use Airship\Engine\{
         }
     }
 
-    if (!function_exists('trk')) {
+    if (!\function_exists('trk')) {
         /**
          * Translation (lookup table based on a key)
-         * 
+         *
          * @param string $key
-         * @param array ...$params
+         * @param array<int, string> ...$params
          * @return string
          */
         function trk(string $key, ...$params): string

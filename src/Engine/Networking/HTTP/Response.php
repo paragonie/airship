@@ -103,7 +103,7 @@ class Response extends Message implements ResponseInterface
     ) {
         $this->statusCode = $statusCode;
         $this->reason = static::REASONS[$statusCode];
-        if ($body instanceof StreamInterface) {
+        if ($body instanceof Stream) {
             $this->body = $body;
         } elseif (\is_string($body)) {
             $this->body = Stream::fromString($body);

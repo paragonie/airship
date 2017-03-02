@@ -141,9 +141,13 @@ class Continuum
         // Finally, let's update the core
         $s = $config->universal['airship']['trusted-supplier'];
         if (!empty($s)) {
+            /**
+             * @var Supplier
+             */
+            $supplierObj = $this->getSupplier($s);
             $ha = new AirshipUpdater(
                 $this->hail,
-                $this->getSupplier($s)
+                $supplierObj
             );
             $ha->autoUpdate();
         }
@@ -168,10 +172,14 @@ class Continuum
                 $manifest = \Airship\loadJSON($file.'/manifest.json');
                 $dirName = \preg_replace('#^.+?/([^\/]+)$#', '$1', $file);
                 if (!empty($manifest['supplier'])) {
+                    /**
+                     * @var Supplier
+                     */
+                    $supplierObj = $this->getSupplier($manifest['supplier']);
                     $cabins[$dirName] = new CabinUpdater(
                         $this->hail,
                         $manifest,
-                        $this->getSupplier($manifest['supplier'])
+                        $supplierObj
                     );
                 }
             }
@@ -205,10 +213,14 @@ class Continuum
                 foreach (\Airship\list_all_files($dir.'/Gadgets/', 'phar') as $file) {
                     $manifest = $this->getPharManifest($file);
                     $name = \preg_replace('#^.+?/([^\/]+)\.phar$#', '$1', $file);
+                    /**
+                     * @var Supplier
+                     */
+                    $supplier = $this->getSupplier($manifest['supplier']);
                     $gadgets[$name] = new GadgetUpdater(
                         $this->hail,
                         $manifest,
-                        $this->getSupplier($manifest['supplier']),
+                        $supplier,
                         $file
                     );
                     $gadgets[$name]->setCabin(
@@ -228,10 +240,14 @@ class Continuum
                 $i = isset($i) ? ++$i : 2;
                 $name = $orig . '-' . $i;
             }
+            /**
+             * @var Supplier
+             */
+            $supplierObj = $this->getSupplier($manifest['supplier']);
             $gadgets[$name] = new GadgetUpdater(
                 $this->hail,
                 $manifest,
-                $this->getSupplier($manifest['supplier']),
+                $supplierObj,
                 $file
             );
         }
@@ -259,10 +275,14 @@ class Continuum
                 $motifName = $this->getEndPiece($motifDir);
                 $manifest = \Airship\loadJSON($motifDir . '/motif.json');
                 $name = $supplier . '.' . $motifName;
+                /**
+                 * @var Supplier
+                 */
+                $supplierObj = $this->getSupplier($manifest['supplier']);
                 $motifs[$name] = new MotifUpdater(
                     $this->hail,
                     $manifest,
-                    $this->getSupplier($manifest['supplier'])
+                    $supplierObj
                 );
             }
         }
