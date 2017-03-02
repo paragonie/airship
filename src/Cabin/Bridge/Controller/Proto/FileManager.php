@@ -97,7 +97,7 @@ class FileManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('files/delete_dir', [
+        $this->view('files/delete_dir', [
             'cabins' => $this->getCabinNamespaces(),
             'root_dir' => $this->root_dir,
             'dir_contents' => $contents,
@@ -138,7 +138,7 @@ class FileManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('files/delete', [
+        $this->view('files/delete', [
             'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
@@ -165,7 +165,7 @@ class FileManager extends LoggedInUsersOnly
             $fileInfo = $this->files->getFileInfo($cabin, $root, $file);
         }
 
-        $this->lens('files/info', [
+        $this->view('files/info', [
             'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
@@ -215,7 +215,7 @@ class FileManager extends LoggedInUsersOnly
         }
         $ignore = $path . '/';
 
-        $this->lens('files/move_dir', [
+        $this->view('files/move_dir', [
             'cabins' => $this->getCabinNamespaces(),
             'root_dir' => $this->root_dir,
             'dir_contents' => $contents,
@@ -263,7 +263,7 @@ class FileManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('files/move', [
+        $this->view('files/move', [
             'cabins' => $this->getCabinNamespaces(),
             'file' => $fileInfo,
             'root_dir' => $this->root_dir,
@@ -311,7 +311,7 @@ class FileManager extends LoggedInUsersOnly
             $this->storeViewVar('form_status', $status);
         }
 
-        $this->lens('files/index', [
+        $this->view('files/index', [
             'cabins' => $this->getCabinNamespaces(),
             'subdirs' => $this->files->getChildrenOf($root, $cabin),
             'files' => $this->files->getFilesInDirectory($root, $cabin),
@@ -330,7 +330,7 @@ class FileManager extends LoggedInUsersOnly
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->lens('files', [
+        $this->view('files', [
             'cabins' => $this->getCabinNamespaces()
         ]);
     }

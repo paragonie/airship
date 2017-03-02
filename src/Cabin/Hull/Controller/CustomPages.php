@@ -92,7 +92,7 @@ class CustomPages extends ControllerGear
 
         \http_response_code(404);
         // Finally: Return a 4o4
-        $this->lens('404');
+        $this->view('404');
         return;
     }
 
@@ -156,7 +156,7 @@ class CustomPages extends ControllerGear
         if ($page['cache']) {
             $this->stasis('custom', $vars);
         } else {
-            $this->lens('custom', $vars);
+            $this->view('custom', $vars);
         }
         return true;
     }

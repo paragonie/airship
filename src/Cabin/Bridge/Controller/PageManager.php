@@ -85,7 +85,7 @@ class PageManager extends LoggedInUsersOnly
         }
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
-            $this->lens('pages/bad_config');
+            $this->view('pages/bad_config');
         }
 
         $post = $this->post(new DeleteDirFilter());
@@ -120,7 +120,7 @@ class PageManager extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('pages/dir_delete', [
+        $this->view('pages/dir_delete', [
             'cabins' => $cabins,
             'custom_dir_tree' => $this->pg->getCustomDirTree(
                 $cabins,
@@ -173,7 +173,7 @@ class PageManager extends LoggedInUsersOnly
 
         $secretKey = $this->config('recaptcha.secret-key');
         if (empty($secretKey)) {
-            $this->lens('pages/bad_config');
+            $this->view('pages/bad_config');
         }
         $post = $this->post(new DeletePageFilter());
         if (!empty($post)) {
@@ -195,7 +195,7 @@ class PageManager extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('pages/page_delete', [
+        $this->view('pages/page_delete', [
             'cabins' => $cabins,
             'pageinfo' => $page,
             'config' => $this->config(),
@@ -252,7 +252,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/page_edit', [
+        $this->view('pages/page_edit', [
             'cabins' => $cabins,
             'pageinfo' => $page,
             'latest' => $latest,
@@ -295,7 +295,7 @@ class PageManager extends LoggedInUsersOnly
             $pages = [];
         }
         $this->setTemplateExtraData($cabin);
-        $this->lens('pages_list', [
+        $this->view('pages_list', [
             'cabins' => $cabins,
             'dirs' => $dirs,
             'pages' => $pages,
@@ -314,7 +314,7 @@ class PageManager extends LoggedInUsersOnly
     public function index()
     {
         $this->storeViewVar('active_submenu', ['Cabins']);
-        $this->lens('pages', [
+        $this->view('pages', [
             'cabins' => $this->getCabinNamespaces()
         ]);
     }
@@ -346,7 +346,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/dir_new', [
+        $this->view('pages/dir_new', [
             'cabins' => $cabins,
             // UNTRUSTED, PROVIDED BY THE USER:
             'dir' => $path,
@@ -382,7 +382,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/page_new',
+        $this->view('pages/page_new',
             [
                 'cabins' => $cabins,
                 // UNTRUSTED, PROVIDED BY THE USER:
@@ -448,7 +448,7 @@ class PageManager extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'pages/dir_move',
             [
                 'cabins' => $cabins,
@@ -519,7 +519,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/page_move', [
+        $this->view('pages/page_move', [
             'cabins' => $cabins,
             'pageinfo' => $page,
             // UNTRUSTED, PROVIDED BY THE USER:
@@ -565,7 +565,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
 
-        $this->lens('pages/page_history', [
+        $this->view('pages/page_history', [
             'cabins' => $cabins,
             'pageinfo' => $page,
             'history' => $history,
@@ -608,7 +608,7 @@ class PageManager extends LoggedInUsersOnly
             return;
         }
         $this->setTemplateExtraData($cabin);
-        $this->lens('pages/page_history_diff', [
+        $this->view('pages/page_history_diff', [
             'left' => $left,
             'right' => $right
         ]);
@@ -662,7 +662,7 @@ class PageManager extends LoggedInUsersOnly
             (int) $version['page']
         );
 
-        $this->lens('pages/page_history_view', [
+        $this->view('pages/page_history_view', [
             'cabins' => $cabins,
             'pageinfo' => $page,
             'version' => $version,

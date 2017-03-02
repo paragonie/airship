@@ -157,7 +157,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/all', $args)
-            : $this->lens('blog/all', $args);
+            : $this->view('blog/all', $args);
     }
 
     /**
@@ -208,7 +208,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/author', $args)
-            : $this->lens('blog/author', $args);
+            : $this->view('blog/author', $args);
     }
 
     /**
@@ -264,7 +264,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/category', $args)
-            : $this->lens('blog/category', $args);
+            : $this->view('blog/category', $args);
     }
 
     /**
@@ -295,7 +295,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/series', $args)
-            : $this->lens('blog/series', $args);
+            : $this->view('blog/series', $args);
     }
 
     /**
@@ -331,7 +331,7 @@ class BlogPosts extends ControllerGear
 
         $this->config('blog.cachelists')
             ? $this->stasis('blog/series', $args)
-            : $this->lens('blog/series', $args);
+            : $this->view('blog/series', $args);
     }
 
     /**
@@ -378,7 +378,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/tag', $args)
-            : $this->lens('blog/tag', $args);
+            : $this->view('blog/tag', $args);
     }
 
     /**
@@ -431,7 +431,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/list', $args)
-            : $this->lens('blog/list', $args);
+            : $this->view('blog/list', $args);
     }
 
     /**
@@ -478,7 +478,7 @@ class BlogPosts extends ControllerGear
 
         $this->config('blog.cachelists')
             ? $this->stasis('blog/list', $args)
-            : $this->lens('blog/list', $args);
+            : $this->view('blog/list', $args);
     }
 
     /**
@@ -507,7 +507,7 @@ class BlogPosts extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('blog/index', $args)
-            : $this->lens('blog/index', $args);
+            : $this->view('blog/index', $args);
     }
 
     /**
@@ -553,7 +553,7 @@ class BlogPosts extends ControllerGear
                 (int) $blogPost['postid']
             );
             $args['comments'] = $comments;
-            $this->lens('blog/read', $args);
+            $this->view('blog/read', $args);
         }
     }
 

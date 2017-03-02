@@ -58,7 +58,7 @@ class Author extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('author/new');
+        $this->view('author/new');
     }
 
 
@@ -99,7 +99,7 @@ class Author extends LoggedInUsersOnly
             $authors = $this->author->getForUser($this->getActiveUserId());
         }
 
-        $this->lens(
+        $this->view(
             'author/delete',
             [
                 'author' =>
@@ -141,7 +141,7 @@ class Author extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('author/edit', [
+        $this->view('author/edit', [
             'author' => $this->author->getById($authorId),
         ]);
     }
@@ -202,7 +202,7 @@ class Author extends LoggedInUsersOnly
                 break;
         }
 
-        $this->lens(
+        $this->view(
             'author/index',
             [
                 'authors' => $authors,
@@ -233,7 +233,7 @@ class Author extends LoggedInUsersOnly
         $contexts = $this->author->getPhotoContexts();
         $cabins = $this->getCabinNames();
 
-        $this->lens(
+        $this->view(
             'author/photos',
             [
                 'author' =>
@@ -280,7 +280,7 @@ class Author extends LoggedInUsersOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'author/users',
             [
                 'author' => $this->author->getById($authorId),

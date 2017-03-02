@@ -47,7 +47,7 @@ class Crew extends AdminOnly
      */
     public function index()
     {
-        $this->lens('crew');
+        $this->view('crew');
     }
 
     /**
@@ -66,7 +66,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens('crew/group_new', [
+        $this->view('crew/group_new', [
             'active_link' =>
                 'bridge-link-admin-crew-groups',
             'groups' =>
@@ -108,7 +108,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'crew/user_new',
             [
                 'active_link' =>
@@ -138,7 +138,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens('crew/group_delete', [
+        $this->view('crew/group_delete', [
             'active_link' =>
                 'bridge-link-admin-crew-groups',
             'group' =>
@@ -165,7 +165,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'crew/user_delete',
             [
                 'active_link' =>
@@ -194,7 +194,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'crew/group_edit',
             [
                 'active_link' =>
@@ -226,7 +226,7 @@ class Crew extends AdminOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'crew/user_edit',
             [
                 'active_link' =>
@@ -246,7 +246,7 @@ class Crew extends AdminOnly
      */
     public function groups()
     {
-        $this->lens(
+        $this->view(
             'crew/group_list',
             [
                 'active_link' =>
@@ -292,7 +292,7 @@ class Crew extends AdminOnly
             $users = $this->account->listUsers($offset, $limit);
         }
 
-        $this->lens('crew/user_list', [
+        $this->view('crew/user_list', [
             'active_link' =>
                 'bridge-link-admin-crew-users',
             'users' => $users,

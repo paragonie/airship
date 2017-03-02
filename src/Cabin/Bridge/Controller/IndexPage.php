@@ -47,7 +47,7 @@ class IndexPage extends ControllerGear
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'announce',
             [
                 'active_link' =>
@@ -91,7 +91,7 @@ class IndexPage extends ControllerGear
                 );
             }
 
-            $this->lens('index',
+            $this->view('index',
                 [
                     'announcements' =>
                         $announce_bp->getForUser(
@@ -112,7 +112,7 @@ class IndexPage extends ControllerGear
             );
         } else {
             $this->storeViewVar('showmenu', false);
-            $this->lens('login');
+            $this->view('login');
         }
     }
 
@@ -129,7 +129,7 @@ class IndexPage extends ControllerGear
         }
         switch ($_GET['error']) {
             case '403 Forbidden':
-                $this->lens(
+                $this->view(
                     'error',
                     [
                         'error' =>
@@ -250,7 +250,7 @@ class IndexPage extends ControllerGear
                 ];
             }
 
-            $this->lens(
+            $this->view(
                 'help',
                 [
                     'active_link' => 'bridge-link-help',
@@ -270,6 +270,6 @@ class IndexPage extends ControllerGear
      */
     public function motifExtra()
     {
-        $this->lens('motif_extra', [], 'text/css; charset=UTF-8');
+        $this->view('motif_extra', [], 'text/css; charset=UTF-8');
     }
 }

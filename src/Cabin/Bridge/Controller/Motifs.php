@@ -90,7 +90,7 @@ class Motifs extends AdminOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'motif_configure',
             [
                 'cabin_name' => $motifName,
@@ -109,7 +109,7 @@ class Motifs extends AdminOnly
      */
     public function index()
     {
-        $this->lens(
+        $this->view(
             'motifs',
             [
                 'cabins' => $this->getCabinNames(),
@@ -145,7 +145,7 @@ class Motifs extends AdminOnly
             }
         }
         
-        $this->lens(
+        $this->view(
             'motif_manage',
             [
                 'cabin_name' => $cabinName,

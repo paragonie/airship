@@ -465,7 +465,7 @@ class Ajax extends LoggedInUsersOnly
             $actions
         );
 
-        $this->lens(
+        $this->view(
             'perms/test',
             [
                 'cabin' =>
@@ -519,7 +519,7 @@ class Ajax extends LoggedInUsersOnly
 
         \Airship\json_response([
             'status' => 'OK',
-            'message' => $this->lensRender(
+            'message' => $this->viewRender(
                 'perms/user',
                 [
                     'user' =>  $user,

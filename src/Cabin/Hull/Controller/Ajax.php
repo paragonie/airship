@@ -65,7 +65,7 @@ class Ajax extends ControllerGear
                 '/'
             );
 
-        $this->lens(
+        $this->view(
             'blog/comment_form',
             [
                 'form_action' => $formAction,
@@ -128,7 +128,7 @@ class Ajax extends ControllerGear
     {
         $blog = $this->blog->getBlogPostByUniqueId($uniqueID);
         $comments = $this->blog->getCommentTree((int) $blog['postid']);
-        $contents = $this->lensRender(
+        $contents = $this->viewRender(
             'blog/comments',
             [
                 'blogpost' => $blog,

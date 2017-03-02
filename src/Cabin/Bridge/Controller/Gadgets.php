@@ -29,7 +29,7 @@ class Gadgets extends LoggedInUsersOnly
      */
     public function index()
     {
-        $this->lens(
+        $this->view(
             'gadgets',
             [
                 'cabins' => $this->getCabinNamespaces()
@@ -63,7 +63,7 @@ class Gadgets extends LoggedInUsersOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'gadget_manage',
             [
                 'cabins' => $cabins,
@@ -93,7 +93,7 @@ class Gadgets extends LoggedInUsersOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'gadget_manage',
             [
                 'cabins' => $cabins,

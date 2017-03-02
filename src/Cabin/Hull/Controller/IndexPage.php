@@ -52,7 +52,7 @@ class IndexPage extends ControllerGear
         ];
         $this->config('blog.cachelists')
             ? $this->stasis('index', $args)
-            : $this->lens('index', $args);
+            : $this->view('index', $args);
     }
 
     /**
@@ -61,6 +61,6 @@ class IndexPage extends ControllerGear
      */
     public function motifExtra()
     {
-        $this->lens('motif_extra', [], 'text/css; charset=UTF-8');
+        $this->view('motif_extra', [], 'text/css; charset=UTF-8');
     }
 }

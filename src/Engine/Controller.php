@@ -207,6 +207,53 @@ class Controller
     }
 
     /**
+     * @return View
+     * @throws \TypeError
+     */
+    protected function getAirshipViewObject(): View
+    {
+        if ($this->airship_view_object instanceof View) {
+            return $this->airship_view_object;
+        }
+        throw new \TypeError('View object not defined');
+    }
+
+    /**
+     * Render a View as text, return a string
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @return string
+     */
+    protected function getViewAsText(string $name, ...$cArgs): string
+    {
+        return $this->getAirshipViewObject()->render($name, ...$cArgs);
+    }
+
+    /**
+     * Get the name of the current namespace
+     *
+     * @return string
+     */
+    protected function getNamespace(): string
+    {
+        $current = \get_class($this);
+        $reflect = new \ReflectionClass($current);
+        return $reflect->getNamespaceName();
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getResponseObject(): ResponseInterface
+    {
+        if (!$this->airship_response instanceof ResponseInterface) {
+            $this->airship_response = new Response();
+        }
+        return $this->airship_response;
+    }
+
+    /**
      * Grab a model
      *
      * @param string $name
@@ -256,79 +303,6 @@ class Controller
             \Airship\tightenBolts($this->_cache['models'][$cache]);
         }
         return $this->_cache['models'][$cache];
-    }
-
-    /**
-     * Render a View as text, return a string
-     *
-     * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
-     * @return string
-     */
-    protected function getViewAsText(string $name, ...$cArgs): string
-    {
-        return $this->getAirshipViewObject()->render($name, ...$cArgs);
-    }
-
-    /**
-     * Get the name of the current namespace
-     *
-     * @return string
-     */
-    protected function getNamespace(): string
-    {
-        $current = \get_class($this);
-        $reflect = new \ReflectionClass($current);
-        return $reflect->getNamespaceName();
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function getResponseObject(): ResponseInterface
-    {
-        if (!$this->airship_response instanceof ResponseInterface) {
-            $this->airship_response = new Response();
-        }
-        return $this->airship_response;
-    }
-
-    /**
-     * Render a lens, return its contents, don't exit.
-     *
-     * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
-     * @return string
-     */
-    protected function lensRender(string $name, ...$cArgs): string
-    {
-        if (isset($this->airship_view_override[$name])) {
-            $name = $this->airship_view_override[$name];
-        }
-        \ob_start();
-        $this->getAirshipViewObject()->display($name, ...$cArgs);
-        return (string) \ob_get_clean();
-    }
-
-    /**
-     * Render a template and terminate execution. Do not cache.
-     *
-     * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
-     * @throws ControllerComplete
-     * @return void
-     */
-    protected function lens(string $name, ...$cArgs): void
-    {
-        if (isset($this->airship_view_override[$name])) {
-            $name = $this->airship_view_override[$name];
-        }
-        \ob_start();
-        $this->getAirshipViewObject()->display($name, ...$cArgs);
-        $this->setBodyAndStandardHeaders(
-            Stream::fromString((string) \ob_get_clean())
-        );
-        throw new ControllerComplete();
     }
 
     /**
@@ -498,15 +472,42 @@ class Controller
         return $this->getAirshipViewObject()->setActiveMotif($name);
     }
 
+
     /**
-     * @return View
-     * @throws \TypeError
+     * Render a lens, return its contents, don't exit.
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @return string
      */
-    protected function getAirshipViewObject(): View
+    protected function viewRender(string $name, ...$cArgs): string
     {
-        if ($this->airship_view_object instanceof View) {
-            return $this->airship_view_object;
+        if (isset($this->airship_view_override[$name])) {
+            $name = $this->airship_view_override[$name];
         }
-        throw new \TypeError('View object not defined');
+        \ob_start();
+        $this->getAirshipViewObject()->display($name, ...$cArgs);
+        return (string) \ob_get_clean();
+    }
+
+    /**
+     * Render a template and terminate execution. Do not cache.
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @throws ControllerComplete
+     * @return void
+     */
+    protected function view(string $name, ...$cArgs): void
+    {
+        if (isset($this->airship_view_override[$name])) {
+            $name = $this->airship_view_override[$name];
+        }
+        \ob_start();
+        $this->getAirshipViewObject()->display($name, ...$cArgs);
+        $this->setBodyAndStandardHeaders(
+            Stream::fromString((string) \ob_get_clean())
+        );
+        throw new ControllerComplete();
     }
 }

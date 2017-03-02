@@ -49,7 +49,7 @@ class Cabins extends LoggedInUsersOnly
             // Cabin not found
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        $this->lens('cabins_menu', [
+        $this->view('cabins_menu', [
             'name' => $cabinName,
             'config' => $settings
         ]);
@@ -64,7 +64,7 @@ class Cabins extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->storeViewVar('active_submenu', ['Cabins']);
-        $this->lens('cabins', [
+        $this->view('cabins', [
             'cabins' => $this->getCabinNamespaces()
         ]);
     }
@@ -151,7 +151,7 @@ class Cabins extends LoggedInUsersOnly
             DIRECTORY_SEPARATOR . 'twig_vars.json'
         );
 
-        $this->lens('cabin_manage', [
+        $this->view('cabin_manage', [
             'name' => $cabinName,
             'config' => $settings
         ]);

@@ -61,7 +61,7 @@ class AutoPilot implements RouterInterface
     /**
      * @var View
      */
-    protected $lens;
+    protected $view;
 
     /**
      * @var Database[]
@@ -86,7 +86,7 @@ class AutoPilot implements RouterInterface
         array $databases = []
     ) {
         $this->cabin = $cabin;
-        $this->lens = $lens;
+        $this->view = $lens;
         $this->databases = $databases;
     }
     
@@ -433,7 +433,7 @@ class AutoPilot implements RouterInterface
         
         // Dependency injection with a twist
         $this->landing->airshipEjectFromCockpit(
-            $this->lens,
+            $this->view,
             $this->databases,
             self::$patternPrefix,
             $this->request

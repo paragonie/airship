@@ -59,7 +59,7 @@ class Blog extends LoggedInUsersOnly
      */
     public function index()
     {
-        $this->lens('blog/index');
+        $this->view('blog/index');
     }
 
     /**
@@ -82,7 +82,7 @@ class Blog extends LoggedInUsersOnly
         }
         $category = $this->blog->getCategoryInfo($id);
 
-        $this->lens(
+        $this->view(
             'blog/category_delete',
             [
                 'active_link' => 'bridge-link-blog-category',
@@ -143,7 +143,7 @@ class Blog extends LoggedInUsersOnly
             }
             $this->storeViewVar('form_error', \__('An error has occurred.'));
         }
-        $this->lens(
+        $this->view(
             'blog/posts_delete',
             [
                 'active_link' => 'bridge-link-blog-posts',
@@ -170,7 +170,7 @@ class Blog extends LoggedInUsersOnly
             }
         }
         $series = $this->blog->getSeries($id);
-        $this->lens(
+        $this->view(
             'blog/series_delete',
             [
                 'active_link' =>
@@ -200,7 +200,7 @@ class Blog extends LoggedInUsersOnly
         }
         $category = $this->blog->getCategoryInfo($id);
 
-        $this->lens(
+        $this->view(
             'blog/category_edit',
             [
                 'active_link' => 'bridge-link-blog-category',
@@ -257,7 +257,7 @@ class Blog extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'blog/posts_edit',
             [
                 'active_link' => 'bridge-link-blog-posts',
@@ -328,7 +328,7 @@ class Blog extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'blog/series_edit',
             [
                 'active_link' => 'bridge-link-blog-series',
@@ -365,7 +365,7 @@ class Blog extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'blog/tags_edit',
             [
                 'active_link' => 'bridge-link-blog-tags',
@@ -384,7 +384,7 @@ class Blog extends LoggedInUsersOnly
      */
     public function listCategories()
     {
-        $this->lens(
+        $this->view(
             'blog/category',
             [
                 'active_link' => 'bridge-link-blog-category',
@@ -404,7 +404,7 @@ class Blog extends LoggedInUsersOnly
         }
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
-        $this->lens(
+        $this->view(
             'blog/comments',
             [
                 'active_link' => 'bridge-link-blog-comments',
@@ -430,7 +430,7 @@ class Blog extends LoggedInUsersOnly
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
-        $this->lens(
+        $this->view(
             'blog/posts',
             [
                 'active_link' => 'bridge-link-blog-posts',
@@ -479,7 +479,7 @@ class Blog extends LoggedInUsersOnly
             $series[$i]['author_data'] = $authors[$s['author']];
             $series[$i]['num_items'] = $this->blog->numItemsInSeries($s['seriesid']);
         }
-        $this->lens(
+        $this->view(
             'blog/series',
             [
                 'active_link' => 'bridge-link-blog-series',
@@ -514,7 +514,7 @@ class Blog extends LoggedInUsersOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'blog/tags',
             [
                 'active_link' => 'bridge-link-blog-tags',
@@ -557,7 +557,7 @@ class Blog extends LoggedInUsersOnly
             }
         }
 
-        $this->lens('blog/category_new', [
+        $this->view('blog/category_new', [
             'active_link' => 'bridge-link-blog-category',
             'categories' => $this->blog->getCategoryTree()
         ]);
@@ -596,7 +596,7 @@ class Blog extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'blog/posts_new', [
                 'current_time' => (new \DateTime())
                     ->format(\AIRSHIP_DATE_FORMAT),
@@ -639,7 +639,7 @@ class Blog extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'blog/series_new', [
                 'active_link' => 'bridge-link-blog-series',
                 'authors' => $authors
@@ -662,7 +662,7 @@ class Blog extends LoggedInUsersOnly
                 $this->airship_cabin_prefix . '/blog/post'
             );
         }
-        $this->lens(
+        $this->view(
             'blog/post_history',
             [
                 'active_link' =>
@@ -706,7 +706,7 @@ class Blog extends LoggedInUsersOnly
             );
         }
 
-        $this->lens(
+        $this->view(
             'blog/post_history_diff',
             [
                 'active_link' =>
@@ -757,7 +757,7 @@ class Blog extends LoggedInUsersOnly
         $categories = $this->blog->getCategoryTree();
         $tags = $this->blog->getTags();
 
-        $this->lens(
+        $this->view(
             'blog/post_history_view',
             [
                 'active_link' =>
@@ -819,7 +819,7 @@ class Blog extends LoggedInUsersOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'blog/comments_view', [
                 'active_link' => 'bridge-link-blog-comments',
                 'comment' => $this->blog->getCommentById((int) $commentId)

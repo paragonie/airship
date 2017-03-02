@@ -64,7 +64,7 @@ class Redirects extends LoggedInUsersOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'redirect/delete',
             [
                 'cabin' => $cabin,
@@ -108,7 +108,7 @@ class Redirects extends LoggedInUsersOnly
                 }
             }
         }
-        $this->lens(
+        $this->view(
             'redirect/edit',
             [
                 'cabin' => $cabin,
@@ -130,7 +130,7 @@ class Redirects extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
-        $this->lens(
+        $this->view(
             'redirect/for_cabin',
             [
                 'cabin' => $cabin,
@@ -146,7 +146,7 @@ class Redirects extends LoggedInUsersOnly
      */
     public function index()
     {
-        $this->lens(
+        $this->view(
             'redirect',
             [
                 'cabins' => $this->getCabinNamespaces()
@@ -192,7 +192,7 @@ class Redirects extends LoggedInUsersOnly
                 }
             }
         }
-        $this->lens(
+        $this->view(
             'redirect/new',
             [
                 'cabin' => $cabin

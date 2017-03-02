@@ -121,7 +121,7 @@ class Account extends ControllerGear
                 return;
             }
         }
-        $this->lens('board', [
+        $this->view('board', [
             'config' => $this->config(),
             'title' => 'All Aboard!'
         ]);
@@ -144,7 +144,7 @@ class Account extends ControllerGear
             $this->processLogin($post);
             return;
         }
-        $this->lens('login');
+        $this->view('login');
     }
 
     /**
@@ -184,7 +184,7 @@ class Account extends ControllerGear
             $this->processAccountUpdate($post, $account, $gpg_public_key);
             return;
         }
-        $this->lens(
+        $this->view(
             'my_account',
             [
                 'active_link' => 'bridge-link-my-account',
@@ -237,7 +237,7 @@ class Account extends ControllerGear
             }
         }
 
-        $this->lens('preferences', [
+        $this->view('preferences', [
             'prefs' =>
                 $prefs,
             'motifs' =>
@@ -255,7 +255,7 @@ class Account extends ControllerGear
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
         $directory = $this->acct->getDirectory($offset, $limit);
-        $this->lens(
+        $this->view(
             'user_directory',
             [
                 'directory' => $directory,
@@ -301,7 +301,7 @@ class Account extends ControllerGear
         if (!empty($token)) {
             $this->processRecoveryToken($token);
         }
-        $this->lens('recover_account');
+        $this->view('recover_account');
     }
 
     /**
@@ -356,7 +356,7 @@ class Account extends ControllerGear
         }
         $user = $this->acct->getUserAccount($userID);
         
-        $this->lens(
+        $this->view(
             'two_factor',
             [
                 'active_link' => 'bridge-link-two-factor',
@@ -423,7 +423,7 @@ class Account extends ControllerGear
             // Lazy hack
             $post['username'] = $account['username'];
             if ($this->acct->isPasswordWeak($post)) {
-                $this->lens(
+                $this->view(
                     'my_account',
                     [
                         'account' => $account,
@@ -460,7 +460,7 @@ class Account extends ControllerGear
             // Refresh:
             $account = $this->acct->getUserAccount($this->getActiveUserId());
             $gpg_public_key = $this->getGPGPublicKey($account['gpg_public_key']);
-            $this->lens(
+            $this->view(
                 'my_account',
                 [
                     'account' => $account,
@@ -472,7 +472,7 @@ class Account extends ControllerGear
                 ]
             );
         }
-        $this->lens(
+        $this->view(
             'my_account',
             [
                 'account' => $post,
@@ -493,7 +493,7 @@ class Account extends ControllerGear
     protected function processBoard(array $post = [])
     {
         if (empty($post['username']) || empty($post['passphrase'])) {
-            $this->lens(
+            $this->view(
                 'board',
                 [
                     'post_response' => [
@@ -505,7 +505,7 @@ class Account extends ControllerGear
         }
 
         if ($this->acct->isUsernameTaken($post['username'])) {
-            $this->lens(
+            $this->view(
                 'board',
                 [
                     'post_response' => [
@@ -517,7 +517,7 @@ class Account extends ControllerGear
         }
 
         if ($this->acct->isPasswordWeak($post)) {
-            $this->lens(
+            $this->view(
                 'board',
                 [
                     'post_response' => [
@@ -545,7 +545,7 @@ class Account extends ControllerGear
         $state = State::instance();
 
         if (empty($post['username']) || empty($post['passphrase'])) {
-            $this->lens('login', [
+            $this->view('login', [
                 'post_response' => [
                     'message' => \__('Please fill out the form entirely'),
                     'status' => 'error'
@@ -560,7 +560,7 @@ class Account extends ControllerGear
             );
         }
         if ($airBrake->failFast($post['username'], $_SERVER['REMOTE_ADDR'])) {
-            $this->lens('login', [
+            $this->view('login', [
                 'post_response' => [
                     'message' => \__('You are doing that too fast. Please wait a few seconds and try again.'),
                     'status' => 'error'
@@ -586,7 +586,7 @@ class Account extends ControllerGear
                     'exception' => \Airship\throwableToArray($e)
                 ]
             );
-            $this->lens('login', [
+            $this->view('login', [
                 'post_response' => [
                     'message' => \__('Incorrect username or passphrase. Please try again.'),
                     'status' => 'error'
@@ -632,7 +632,7 @@ class Account extends ControllerGear
                         $fails,
                         new HiddenString($signed . $message)
                     );
-                    $this->lens(
+                    $this->view(
                         'login',
                         [
                             'post_response' => [
@@ -697,7 +697,7 @@ class Account extends ControllerGear
                 $fails,
                 new HiddenString($post['passphrase'])
             );
-            $this->lens(
+            $this->view(
                 'login',
                 [
                     'post_response' => [
@@ -731,7 +731,7 @@ class Account extends ControllerGear
             $airBrake::ACTION_RECOVER
         );
         if ($failFast) {
-            $this->lens(
+            $this->view(
                 'recover_account',
                 [
                     'form_message' =>

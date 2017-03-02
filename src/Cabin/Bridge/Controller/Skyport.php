@@ -80,7 +80,7 @@ class Skyport extends AdminOnly
         $numAvailable = $this->skyport->countAvailable($type);
         list($page, $offset) = $this->getPaginated($numAvailable);
 
-        $this->lens(
+        $this->view(
             'skyport/list',
             [
                 'headline' => $headline,
@@ -106,7 +106,7 @@ class Skyport extends AdminOnly
     {
         $numInstalled = $this->skyport->countInstalled();
         list($page, $offset) = $this->getPaginated($numInstalled);
-        $this->lens(
+        $this->view(
             'skyport/list',
             [
                 'headline' => 'Installed Extensions',
@@ -129,7 +129,7 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetLeftMenu()
     {
-        $this->lens(
+        $this->view(
             'skyport/left',
             [
                 'left' => $this->skyport->getLeftMenu()
@@ -142,7 +142,7 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetOutdatedPackages()
     {
-        $this->lens(
+        $this->view(
             'skyport/outdated',
             [
                 'headline' => 'Outdated Extensions',
@@ -190,7 +190,7 @@ class Skyport extends AdminOnly
             $_POST['package']
         );
 
-        $this->lens(
+        $this->view(
             'skyport/view',
             [
                 'package' => $this->skyport->getDetails(
@@ -223,7 +223,7 @@ class Skyport extends AdminOnly
             return;
         }
 
-        $this->lens(
+        $this->view(
             'skyport/view',
             [
                 'package' => $this->skyport->getDetails(
@@ -245,7 +245,7 @@ class Skyport extends AdminOnly
      */
     public function index()
     {
-        $this->lens(
+        $this->view(
             'skyport',
             [
                 'left' => $this->skyport->getLeftMenu()
@@ -481,7 +481,7 @@ class Skyport extends AdminOnly
     public function viewLog()
     {
         /** @todo allow a more granular window of logged events to be viewed */
-        $this->lens(
+        $this->view(
             'skyport/log',
             [
                 'active_link' =>

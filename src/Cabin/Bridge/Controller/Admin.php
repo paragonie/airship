@@ -132,7 +132,7 @@ class Admin extends AdminOnly
      */
     public function index()
     {
-        $this->lens('admin');
+        $this->view('admin');
     }
 
     /**
@@ -154,7 +154,7 @@ class Admin extends AdminOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'admin_databases',
             [
                 'active_link' => 'bridge-link-admin-databases',
@@ -170,7 +170,7 @@ class Admin extends AdminOnly
      */
     public function manageExtensions()
     {
-        $this->lens('admin_extensions');
+        $this->view('admin_extensions');
     }
 
     /**
@@ -199,7 +199,7 @@ class Admin extends AdminOnly
                 $this->airship_cabin_prefix . '/admin/notaries'
             );
         }
-        $this->lens('admin_notaries', [
+        $this->view('admin_notaries', [
             'active_link' => 'bridge-link-admin-ext-notaries',
             'channels' => $channels
         ]);
@@ -246,7 +246,7 @@ class Admin extends AdminOnly
             $settings['suppliers'][$name] = \Airship\loadJSON($supplier);
         }
 
-        $this->lens(
+        $this->view(
             'admin_settings',
             [
                 'active_link' => 'bridge-link-admin-settings',

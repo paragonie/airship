@@ -58,7 +58,7 @@ class Permissions extends AdminOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'perms/cabin_submenu',
             [
                 'cabin' =>
@@ -99,7 +99,7 @@ class Permissions extends AdminOnly
                 );
             }
         }
-        $this->lens(
+        $this->view(
             'perms/action',
             [
                 'action' =>
@@ -177,7 +177,7 @@ class Permissions extends AdminOnly
             }
         }
 
-        $this->lens(
+        $this->view(
             'perms/context',
             [
                 'actions' =>
@@ -202,7 +202,7 @@ class Permissions extends AdminOnly
      */
     public function index()
     {
-        $this->lens(
+        $this->view(
             'perms/index',
             [
                 'cabins' =>

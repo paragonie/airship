@@ -106,7 +106,7 @@ class PublicFiles extends ControllerGear
         } catch (FileNotFound $ex) {
             // When all else fails, 404 not found
             \http_response_code(404);
-            $this->lens('404');
+            $this->view('404');
             exit(1);
         }
     }
