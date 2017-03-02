@@ -34,7 +34,6 @@ class Commands
             \json_encode(['step' => 0], JSON_PRETTY_PRINT)
         );
         \chmod(ROOT.'/tmp/installing.json', 0777);
-        \chown(ROOT.'/tmp/installing.json', 'www-data');
 
         if (\is_link(ROOT.'/public/launch.php')) {
             if (\realpath(ROOT.'/public/launch.php') === ROOT.'/Installer/launch.php') {
