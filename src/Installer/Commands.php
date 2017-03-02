@@ -35,7 +35,18 @@ class Commands
         );
         \chmod(ROOT.'/tmp/installing.json', 0777);
         \chown(ROOT.'/tmp/installing.json', 'www-data');
-        
+
+        if (\is_link(ROOT.'/public/launch.php')) {
+            if (\realpath(ROOT.'/public/launch.php') === ROOT.'/Installer/launch.php') {
+                return;
+            }
+        }
+
+        if (\file_exists(ROOT.'/public/launch.php')) {
+            \unlink(ROOT.'/public/launch.php');
+            \clearstatcache();
+        }
+
         \symlink(
             ROOT.'/Installer/launch.php',
             ROOT.'/public/launch.php'
