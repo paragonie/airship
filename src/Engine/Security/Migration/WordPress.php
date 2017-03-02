@@ -30,10 +30,13 @@ class WordPress implements MigrationInterface
     /**
      * WordPress constructor.
      *
-     * @param EncryptionKey $key
+     * @param EncryptionKey $key|null
      */
-    public function __construct(EncryptionKey $key)
+    public function __construct(EncryptionKey $key = null)
     {
+        if ($key === null) {
+            return;
+        }
         $this->key = $key;
     }
 
