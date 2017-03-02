@@ -8,7 +8,7 @@ use Airship\Alerts\{
     Security\UserNotLoggedIn
 };
 use Airship\Engine\{
-    AutoPilot, Gears, Controller, Security\Authentication, Security\Permissions, State, View
+    AutoPilot, Gears, Controller, Model, Security\Authentication, Security\Permissions, State, View
 };
 use ParagonIE\Cookie\{
     Cookie,
@@ -140,7 +140,7 @@ trait Security
         $state = State::instance();
         if (!empty($_SESSION['userid'])) {
             // We're logged in!
-            if ($this instanceof Controller && $this->config('password-reset.logout')) {
+            if ($this->config('password-reset.logout')) {
                 return $this->verifySessionCanary($_SESSION['userid']);
             }
             return true;

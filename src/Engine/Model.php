@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use Airship\Engine\Bolt\{
+    Common as CommonBolt,
     Log as LogBolt,
     Security as SecurityBolt
 };
@@ -16,7 +17,9 @@ use Airship\Engine\Bolt\{
  */
 class Model
 {
+    use CommonBolt;
     use LogBolt;
+    use SecurityBolt;
 
     /**
      * @var Database

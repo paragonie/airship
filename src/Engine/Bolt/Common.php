@@ -17,6 +17,35 @@ use Airship\Engine\{
  */
 trait Common
 {
+
+    /**
+     * @var array
+     */
+    protected $airship_config = [];
+
+    /**
+     * Get configuration settings
+     *
+     * @param string $search
+     * @return mixed
+     */
+    public function config(string $search = '')
+    {
+        if (empty($search)) {
+            return $this->airship_config;
+        }
+        $search = \explode('.', $search);
+        $config = $this->airship_config;
+        foreach ($search as $k) {
+            if (isset($config[$k])) {
+                $config = $config[$k];
+            } else {
+                return null;
+            }
+        }
+        return $config;
+    }
+
     /**
      * Get an array of the Cabin names
      *

@@ -58,11 +58,6 @@ class Controller
     protected $airship_http_method;
 
     /**
-     * @var array
-     */
-    protected $airship_config = [];
-
-    /**
      * @var string
      */
     protected $airship_cabin_prefix;
@@ -267,28 +262,6 @@ class Controller
         return $this->_cache['models'][$cache];
     }
 
-    /**
-     * Get configuration settings
-     *
-     * @param string $search
-     * @return mixed
-     */
-    public function config(string $search = '')
-    {
-        if (empty($search)) {
-            return $this->airship_config;
-        }
-        $search = \explode('.', $search);
-        $config = $this->airship_config;
-        foreach ($search as $k) {
-            if (isset($config[$k])) {
-                $config = $config[$k];
-            } else {
-                return null;
-            }
-        }
-        return $config;
-    }
     /**
      * Render a View as text, return a string
      *
