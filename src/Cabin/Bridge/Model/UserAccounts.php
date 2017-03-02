@@ -5,7 +5,6 @@ namespace Airship\Cabin\Bridge\Model;
 use Airship\Alerts\Database\QueryError;
 use Airship\Alerts\Security\UserNotFound;
 use Airship\Engine\{
-    Bolt\Security as SecurityBolt,
     Security\Util,
     State
 };
@@ -29,8 +28,6 @@ require_once __DIR__.'/init_gear.php';
  */
 class UserAccounts extends ModelGear
 {
-    use SecurityBolt;
-
     const DEFAULT_MIN_SCORE = 3; // for Zxcvbn
     const RECOVERY_SELECTOR_BYTES = 24;
     const RECOVERY_TOKEN_BYTES = 33;
