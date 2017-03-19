@@ -152,6 +152,7 @@ class Channel
      *
      * @param bool $doNotShuffle
      * @return string[]
+     * @psalm-suppress MoreSpecificReturnType because of \Airship\secure_shuffle byref var
      */
     public function getAllURLs(bool $doNotShuffle = false): array
     {

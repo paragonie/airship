@@ -108,34 +108,16 @@ class Continuum
     {
         $config = State::instance();
         // First, update each cabin
-        foreach ($this->getCabins() as $_cabin) {
-            /**
-             * @var CabinUpdater
-             */
-            $cabin = $_cabin;
-            if ($cabin instanceof CabinUpdater) {
-                $cabin->autoUpdate();
-            }
+        foreach ($this->getCabins() as $cabin) {
+            $cabin->autoUpdate();
         }
         // Next, update each gadget
-        foreach ($this->getGadgets() as $_gadget) {
-            /**
-             * @var GadgetUpdater
-             */
-            $gadget = $_gadget;
-            if ($gadget instanceof GadgetUpdater) {
-                $gadget->autoUpdate();
-            }
+        foreach ($this->getGadgets() as $gadget) {
+            $gadget->autoUpdate();
         }
         // Also, motifs:
-        foreach ($this->getMotifs() as $_motif) {
-            /**
-             * @var MotifUpdater
-             */
-            $motif = $_motif;
-            if ($motif instanceof MotifUpdater) {
-                $motif->autoUpdate();
-            }
+        foreach ($this->getMotifs() as $motif) {
+            $motif->autoUpdate();
         }
         // Finally, let's update the core
         $s = $config->universal['airship']['trusted-supplier'];
@@ -154,7 +136,7 @@ class Continuum
     
     /**
      * Get an array of CabinUpdater objects
-     * 
+     *
      * @return array<string, CabinUpdater>
      */
     public function getCabins(): array

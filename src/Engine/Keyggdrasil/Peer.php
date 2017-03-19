@@ -73,6 +73,7 @@ class Peer
      * @param string $suffix
      * @param bool $doNotShuffle
      * @return string[]
+     * @psalm-suppress MoreSpecificReturnType because of \Airship\secure_shuffle byref var
      */
     public function getAllURLs(string $suffix = '', bool $doNotShuffle = false): array
     {

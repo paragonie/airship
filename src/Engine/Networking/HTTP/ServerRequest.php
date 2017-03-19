@@ -138,6 +138,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * $_SERVER
      *
      * @return ServerRequestInterface
+     * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
     public static function fromGlobals(): ServerRequestInterface
     {
