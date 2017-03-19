@@ -46,11 +46,7 @@ class BoolArrayFilter extends ArrayFilter
                         \sprintf('Unexpected array at index %s (%s).', $key, $this->index)
                     );
                 }
-                if (!\is_array($data)) {
-                    $data = [$key => null];
-                } else {
-                    $data[$key] = !empty($val);
-                }
+                $data[$key] = !empty($val);
             }
             return parent::applyCallbacks($data, 0);
         }
