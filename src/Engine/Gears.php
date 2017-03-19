@@ -22,9 +22,10 @@ abstract class Gears
     /**
      * Attach a plugin to overload the base class
      * 
-     * @param string $index    Index
-     * @param string $new_type New type
-     * @param string $namespace       Namespace
+     * @param string $index         Index
+     * @param string $new_type      New type
+     * @param string $namespace     Namespace
+     * @param bool   $replaceParent We're replacing the parent class entirely.
      * @return bool
      * @throws GearNotFound
      * @throws GearWrongType
@@ -32,10 +33,12 @@ abstract class Gears
     public static function attach(
         string $index,
         string $new_type,
-        string $namespace = ''
+        string $namespace = '',
+        bool   $replaceParent = false
     ): bool {
         $state = State::instance();
         $gears = $state->gears;
+        $contracts = $state->gearContracts;
         
         $type = empty($namespace)
             ? $new_type
@@ -49,14 +52,28 @@ abstract class Gears
         }
         
         $reflector = new \ReflectionClass($type);
-        if (!$reflector->isSubclassOf($gears[$index])) {
-            throw new GearWrongType(
-                \__(
-                    '%s does not inherit from %s', 'default',
-                    $type,
-                    $gears[$index]
-                )
-            );
+        if (!$replaceParent) {
+            if (!$reflector->isSubclassOf($gears[$index])) {
+                throw new GearWrongType(
+                    \__(
+                        '%s does not inherit from %s', 'default',
+                        $type,
+                        $gears[$index]
+                    )
+                );
+            }
+        }
+        if (!empty($contracts[$index])) {
+            $reflector = new \ReflectionClass($type);
+            if (!$reflector->implementsInterface($contracts[$index])) {
+                throw new GearWrongType(
+                    \__(
+                        '%s does not implement %s', 'default',
+                        $type,
+                        $gears[$index]
+                    )
+                );
+            }
         }
         $gears[$index] = $type;
         $state->gears = $gears;
@@ -112,6 +129,27 @@ abstract class Gears
         } else {
             return eval($code);
         }
+    }
+
+    /**
+     * Require all new gears adhere to the contract given within
+     *
+     * @param string $index
+     * @param string $type
+     * @return bool
+     */
+    public static function bind(string $index, string $type): bool
+    {
+        $state = State::instance();
+        if (!isset($state->gearContracts[$index])) {
+            $contracts = $state->gearContracts;
+            if (\interface_exists($type)) {
+                $contracts[$index] = $type;
+                $state->gearContracts = $contracts;
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -220,11 +258,21 @@ abstract class Gears
      * 
      * @param array $gears
      * @return void
+     * @throws \TypeError
      */
     public static function init(array $gears = []): void
     {
         foreach ($gears as $index => $type) {
-            self::forge($index, $type);
+            if (\is_array($type)) {
+                if (\count($type) !== 2) {
+                    throw new \TypeError('Must be an array of two elements.');
+                }
+                $type = \array_values($type);
+                self::forge($index, (string) $type[0]);
+                self::bind($index, (string) $type[1]);
+            } else {
+                self::forge($index, $type);
+            }
         }
     }
 
@@ -233,15 +281,21 @@ abstract class Gears
      *
      * @param string $index
      * @param string $type
+     * @param string|null $bind
      * @return bool
      */
-    public static function lazyForge(string $index, string $type): bool
+    public static function lazyForge(string $index, string $type, ?string $bind = null): bool
     {
         $state = State::instance();
         if (!isset($state->gears[$index])) {
             $gears = $state->gears;
             $gears[$index] = $type;
             $state->gears = $gears;
+            if ($bind !== null) {
+                $contracts            = $state->gearContracts;
+                $contracts[$index]    = $bind;
+                $state->gearContracts = $contracts;
+            }
             return true;
         }
         return false;

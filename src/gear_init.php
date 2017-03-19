@@ -11,19 +11,25 @@ declare(strict_types=1);
         '\\Airship\\Engine\\AutoPilot',
     
     'AutoUpdater' =>
-        '\\Airship\\Engine\\Continuum',
+        [
+            '\\Airship\\Engine\\Continuum',
+            '\\Airship\\Engine\\Contract\\ContinuumInterface'
+        ],
     
     'Authentication' =>
         '\\Airship\\Engine\\Security\\Authentication',
-    
-    'Model' =>
-        '\\Airship\\Engine\\Model',
-    
-    'Database' =>
-        '\\Airship\\Engine\\Database',
-    
+
+    'Controller' =>
+        '\\Airship\\Engine\\Controller',
+
     'CSRF' =>
         '\\Airship\\Engine\\Security\\CSRF',
+    
+    'Database' =>
+        [
+            '\\Airship\\Engine\\Database',
+            '\\Airship\\Engine\\Contract\\DBInterface'
+        ],
     
     'Hail' =>
         '\\Airship\\Engine\\Hail',
@@ -31,11 +37,11 @@ declare(strict_types=1);
     'HTTPResponse' =>
         '\\Airship\\Engine\\Networking\\HTTP\\Response',
     
-    'Controller' =>
-        '\\Airship\\Engine\\Controller',
-    
     'Ledger' =>
         '\\Airship\\Engine\\Ledger',
+
+    'Model' =>
+        '\\Airship\\Engine\\Model',
     
     'Permissions' =>
         '\\Airship\\Engine\\Security\\Permissions',
