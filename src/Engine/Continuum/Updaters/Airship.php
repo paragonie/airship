@@ -175,6 +175,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
      * @param UpdateFile $file
      * @return void
      * @throws CouldNotUpdate
+     * @psalm-suppress ForbiddenCode because we're hooking into composer to trigger an update
      */
     protected function install(UpdateInfo $info, UpdateFile $file)
     {

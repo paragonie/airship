@@ -238,6 +238,7 @@ class Cabin extends BaseInstaller
      *
      * @param InstallFile $fileInfo
      * @return bool
+     * @psalm-suppress ForbiddenCode because we're invoking the update trigger
      */
     public function install(InstallFile $fileInfo): bool
     {

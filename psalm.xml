@@ -8,8 +8,6 @@
         <directory name="src/Engine" />
     </projectFiles>
     <issueHandlers>
-        <ForbiddenCode errorLevel="info" />
-        <!-- We disable the above inspection because we do use shell_exec() in a few places. -->
         <TooFewArguments errorLevel="info" />
         <!-- Psalm doesn't recognize this correctly -->
         <TooManyArguments errorLevel="info" />

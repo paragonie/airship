@@ -106,6 +106,7 @@ abstract class AutoUpdater
      *
      * @param array $autoRun
      * @return mixed
+     * @psalm-suppress ForbiddenCode because we're running shell scripts to self-update
      */
     protected function autoRunScript(array $autoRun)
     {
