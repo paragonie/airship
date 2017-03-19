@@ -10,6 +10,7 @@ use Airship\Engine\Continuum\{
     Channel,
     Supplier
 };
+use Airship\Engine\Security\Util;
 use Airship\Engine\State;
 use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Asymmetric\{
@@ -351,11 +352,7 @@ class TreeUpdate
     protected function loadSupplier(Channel $chan, array $updateData): Supplier
     {
         // No invalid names:
-        $this->supplierName = \preg_replace(
-            '#[^A-Za-z0-9\-_]#',
-            '',
-            $updateData['supplier']
-        );
+        $this->supplierName = Util::charWhitelist($updateData['supplier'], Util::BASE64_URLSAFE);
         try {
             if (!\file_exists(ROOT . '/config/supplier_keys/' . $this->supplierName . '.json')) {
                 throw new NoSupplier($this->supplierName);

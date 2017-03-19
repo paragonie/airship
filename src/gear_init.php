@@ -37,9 +37,6 @@ declare(strict_types=1);
     'Ledger' =>
         '\\Airship\\Engine\\Ledger',
     
-    'View' =>
-        '\\Airship\\Engine\\View',
-    
     'Permissions' =>
         '\\Airship\\Engine\\Security\\Permissions',
 
@@ -50,5 +47,12 @@ declare(strict_types=1);
         '\\Airship\\Engine\\Translation',
     
     'TreeUpdater' =>
-        '\\Airship\\Engine\\Keyggdrasil'
+        '\\Airship\\Engine\\Keyggdrasil',
+
+    'View' =>
+        '\\Airship\\Engine\\View',
+
+    'ViewCache' =>
+        '\\Airship\\Engine\\Cache\\ViewCache'
+
 ]);

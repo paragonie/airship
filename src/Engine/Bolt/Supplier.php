@@ -9,6 +9,7 @@ use Airship\Alerts\{
     FileSystem\FileNotFound
 };
 use Airship\Engine\Continuum\Supplier as SupplierObject;
+use Airship\Engine\Security\Util;
 use ParagonIE\ConstantTime\Binary;
 
 /**
@@ -76,11 +77,7 @@ trait Supplier
      */
     public function escapeSupplierName(string $supplier): string
     {
-        return \preg_replace(
-            '#[^A-Za-z0-9\-\_]#',
-            '',
-            $supplier
-        );
+        return Util::charWhitelist($supplier, Util::BASE64_URLSAFE);
     }
 
     /**

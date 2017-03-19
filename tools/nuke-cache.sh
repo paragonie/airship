@@ -6,4 +6,4 @@ rm -r ../src/tmp/cache/csp_hash/*
 rm ../src/tmp/cache/markdown/*/*/*.txt
 rm -r ../src/tmp/cache/static/*
 
-php -r "apcu_clear_cache();" > /dev/null
+php -r "if (is_callable('apcu_clear_cache')) { apcu_clear_cache(); }" > /dev/null

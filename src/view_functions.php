@@ -3,19 +3,17 @@ declare(strict_types=1);
 namespace Airship\ViewFunctions;
 
 use Airship\Engine\{
+    Cache\ViewCache,
     Gadgets,
     Gears,
     Security\Util,
     State
 };
 use Airship\Engine\Security\Permissions;
-use Gregwar\RST\Parser as RSTParser;
-use League\CommonMark\CommonMarkConverter;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use ParagonIE\ConstantTime\{
     Base64,
-    Base64UrlSafe,
-    Binary
+    Base64UrlSafe
 };
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
@@ -184,25 +182,15 @@ function csp_hash(
 ): string {
     $state = State::instance();
     if (isset($state->CSP)) {
-        $checksum = CryptoUtil::hash(
-            'Content Security Policy Hash:' . $file
-        );
-        $h1 = Binary::safeSubstr($checksum, 0, 2);
-        $h2 = Binary::safeSubstr($checksum, 2, 2);
-        $fhash = Binary::safeSubstr($checksum, 4);
 
-        $fileName = \implode(
-            '/',
-            [
-                ROOT,
-                'tmp',
-                'cache',
-                'csp_hash',
-                $h1,
-                $h2,
-                $fhash . '.txt'
-            ]
+        list ($dirName, $lastPiece) = ViewCache::getFile(
+            'Content Security Policy Hash:',
+            'csp_hash',
+            $file
         );
+
+        $fileName = $dirName . '/' . $lastPiece;
+
         if (\file_exists($fileName)) {
             if ($state->CSP instanceof CSPBuilder) {
                 $prehash = \file_get_contents($fileName);
@@ -231,6 +219,7 @@ function csp_hash(
                 return $file;
             }
         }
+
         if ($state->CSP instanceof CSPBuilder) {
             $contents = \file_get_contents($absolute);
             if (!\is_string($contents)) {
@@ -242,23 +231,12 @@ function csp_hash(
             );
             $state->CSP->preHash($dir, $preHash, $algo);
 
-            $dirName = \implode(
-                '/',
-                [
-                    ROOT,
-                    'tmp',
-                    'cache',
-                    'csp_hash',
-                    $h1,
-                    $h2
-                ]
-            );
             if (!\is_dir($dirName)) {
                 \mkdir($dirName, 0775, true);
             }
 
             \file_put_contents(
-                $dirName . '/' . $fhash . '.txt',
+                $fileName,
                 $preHash
             );
             return $file;
@@ -461,53 +439,31 @@ function get_avatar(int $authorId, string $which): string
  *
  * @param $string
  * @return string
+ * @throws \TypeError
  */
 function get_purified(string $string = '')
 {
-    static $state = null;
-    if ($state === null) {
-        $state = State::instance();
-    }
-    $checksum = CryptoUtil::hash(
-        'HTML Purifier' . $string
-    );
+    $gear = get_viewcache_obj();
+    return $gear::purify($string);
+}
 
-    $h1 = Binary::safeSubstr($checksum, 0, 2);
-    $h2 = Binary::safeSubstr($checksum, 2, 2);
-    $hash = Binary::safeSubstr($checksum, 4);
-
-    $cacheDir = \implode(
-        '/',
-        [
-            ROOT,
-            'tmp',
-            'cache',
-            'html_purifier',
-            $h1,
-            $h2
-        ]
-    );
-
-    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
-        $output = \file_get_contents(
-            $cacheDir . '/' . $hash . '.txt'
-        );
-    } else {
-        if (!\is_dir($cacheDir)) {
-            \mkdir($cacheDir, 0775, true);
+/**
+ * @return ViewCache
+ * @throws \TypeError
+ */
+function get_viewcache_obj(): ViewCache
+{
+    static $gear = null;
+    if (!$gear) {
+        /**
+         * @var ViewCache
+         */
+        $gear = Gears::get('ViewCache');
+        if (!$gear instanceof ViewCache) {
+            throw new \TypeError();
         }
-        $output = $state->HTMLPurifier->purify($string);
-        // Cache for later
-        \file_put_contents(
-            $cacheDir . '/' . $hash . '.txt',
-            $output
-        );
-        \chmod(
-            $cacheDir . '/' . $hash . '.txt',
-            0664
-        );
     }
-    return $output;
+    return $gear;
 }
 
 /**
@@ -632,53 +588,8 @@ function next_cargo(string $cargoName)
  */
 function render_markdown(string $string = '', bool $return = false): string
 {
-    static $md = null;
-    if (empty($md)) {
-        $md = new CommonMarkConverter();
-    }
-
-    $checksum = CryptoUtil::hash('Markdown' . $string);
-
-    $h1 = Binary::safeSubstr($checksum, 0, 2);
-    $h2 = Binary::safeSubstr($checksum, 2, 2);
-    $hash = Binary::safeSubstr($checksum, 4);
-
-    $cacheDir = \implode(
-        '/',
-        [
-            ROOT,
-            'tmp',
-            'cache',
-            'markdown',
-            $h1,
-            $h2
-        ]
-    );
-
-    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
-        $output = \file_get_contents(
-            $cacheDir . '/' . $hash . '.txt'
-        );
-    } else {
-        if (!\is_dir($cacheDir)) {
-            \mkdir($cacheDir, 0775, true);
-        }
-        $output = $md->convertToHtml($string);
-        // Cache for later
-        \file_put_contents(
-            $cacheDir . '/' . $hash . '.txt',
-            $output
-        );
-        \chmod(
-            $cacheDir . '/' . $hash . '.txt',
-            0664
-        );
-    }
-    if ($return) {
-        return (string) $output;
-    }
-    echo $output;
-    return '';
+    $gear = get_viewcache_obj();
+    return $gear::markdown($string, $return);
 }
 
 /**
@@ -691,55 +602,8 @@ function render_markdown(string $string = '', bool $return = false): string
  */
 function render_rst(string $string = '', bool $return = false): string
 {
-    static $rst = null;
-    if (empty($rst)) {
-        $rst = (new RSTParser())
-            ->setIncludePolicy(false);
-    }
-
-    $checksum = CryptoUtil::hash('ReStructuredText' . $string);
-
-    $h1 = Binary::safeSubstr($checksum, 0, 2);
-    $h2 = Binary::safeSubstr($checksum, 2, 2);
-    $hash = Binary::safeSubstr($checksum, 4);
-
-    $cacheDir = \implode(
-        '/',
-        [
-            ROOT,
-            'tmp',
-            'cache',
-            'rst',
-            $h1,
-            $h2
-        ]
-    );
-
-    if (\file_exists($cacheDir . '/' . $hash . '.txt')) {
-        $output = \file_get_contents(
-            $cacheDir . '/' . $hash . '.txt'
-        );
-    } else {
-        if (!\is_dir($cacheDir)) {
-            \mkdir($cacheDir, 0775, true);
-        }
-        $output = (string) $rst->parse($string);
-
-        // Cache for later
-        \file_put_contents(
-            $cacheDir . '/' . $hash . '.txt',
-            $output
-        );
-        \chmod(
-            $cacheDir . '/' . $hash . '.txt',
-            0664
-        );
-    }
-    if ($return) {
-        return $output;
-    }
-    echo $output;
-    return '';
+    $gear = get_viewcache_obj();
+    return $gear::rst($string, $return);
 }
 
 /**
