@@ -76,8 +76,6 @@ class Database implements DBInterface
         string $password = '',
         $options = []
     ): Database {
-
-        $post_query = null;
         $dbEngine = '';
         if (\is_array($dsn)) {
             list ($dsn, $dbEngine, $username, $password) = self::flattenDSN(
