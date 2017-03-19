@@ -227,6 +227,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      * @throws RuntimeException if the upload was not successful.
+     * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
     public function getStream()
     {
@@ -253,6 +254,8 @@ class UploadedFile implements UploadedFileInterface
      * @throws \InvalidArgumentException if the $path specified is invalid.
      * @throws RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
+     *
+     * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
     public function moveTo($targetPath): self
     {

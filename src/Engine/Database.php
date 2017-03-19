@@ -119,10 +119,6 @@ class Database implements DBInterface
         // Let's turn off emulated prepares
         $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        if (!empty($post_query)) {
-            $pdo->exec($post_query);
-        }
         
         return new Database($pdo, $dbEngine);
     }
