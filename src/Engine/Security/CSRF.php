@@ -179,6 +179,7 @@ class CSRF
      * @param array $options
      * @throws InvalidConfig
      * @return void
+     * @psalm-suppress TooManyArguments Because it's variadic...
      */
     public function reconfigure(array $options = []): void
     {

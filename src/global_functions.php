@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 use Airship\Engine\{
     Gears,
-    State
+    State,
+    Translation
 };
 /**
  * These functions are defined in the global scope.
@@ -132,12 +133,16 @@ use Airship\Engine\{
          * @param string $key
          * @param array<int, string> ...$params
          * @return string
+         * @throws TypeError
          */
         function trk(string $key, ...$params): string
         {
             static $gear = null;
             if ($gear === null) {
                 $gear = Gears::get('Translation');
+            }
+            if (!$gear instanceof Translation) {
+                throw new TypeError('Translation object is the wrong type');
             }
             if (!empty($params)) {
                 \array_walk($params, '\\Airship\ViewFunctions\\get_purified');

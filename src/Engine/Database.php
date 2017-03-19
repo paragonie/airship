@@ -518,6 +518,7 @@ class Database implements DBInterface
      *
      * @throws DBAlert\DBException
      * @throws \TypeError
+     * @psalm-suppress TooManyArguments Because it's variadic...
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -908,6 +909,7 @@ class Database implements DBInterface
      * @param int $mode
      * @param mixed $arg3
      * @return \PDOStatement|bool
+     * @psalm-suppress TooManyArguments
      */
     public function query(
         string $statement,
