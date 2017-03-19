@@ -518,7 +518,6 @@ class Database implements DBInterface
      *
      * @throws DBAlert\DBException
      * @throws \TypeError
-     * @psalm-suppress TooManyArguments Because it's variadic...
      */
     public function insertGet(string $table, array $map, string $field)
     {

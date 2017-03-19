@@ -59,7 +59,6 @@ class Channel
      * @param string $name
      * @param array $config
      * @throws \TypeError
-     * @psalm-suppress TooManyArguments Because it's variadic...
      */
     public function __construct($parent, string $name, array $config = [])
     {
