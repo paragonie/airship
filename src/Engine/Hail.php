@@ -192,6 +192,7 @@ class Hail
      * @param string $url (used for decision-making)
      *
      * @return array
+     * @psalm-suppress UndefinedConstant
      */
     public function params(
         array $params = [],

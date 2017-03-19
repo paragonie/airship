@@ -10,8 +10,4 @@
     <stubs>
         <file name="vendor/paragonie/halite/stub/Sodium.stub.php" />
     </stubs>
-    <issueHandlers>
-        <UndefinedConstant errorLevel="info" />
-        <!-- Psalm was unable to interpret the cURL extension constants -->
-    </issueHandlers>
 </psalm>
