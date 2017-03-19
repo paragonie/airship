@@ -1,6 +1,7 @@
 /.idea/
 /nbproject/
 /files/
+/src/Cabin/*/View/common
 /src/Cabin/*/Lens/motif/
 /src/Cabin/*/public/motif/
 /src/public/static/Bridge
@@ -10,6 +11,7 @@
 /src/Cabin/*/config/config.json
 /src/Cabin/*/config/gadgets.json
 /src/Cabin/*/config/twig_vars.json
+/src/config/Cabin/*
 /src/config/cabins.json
 /src/config/gadgets.json
 /src/config/databases.json
@@ -17,6 +19,7 @@
 /src/config/keyring/*.keypair
 /src/config/universal.json
 /src/config/motifs/*.json
+/src/config/template/Cabin/*
 /src/tmp/cache/*.json
 /src/tmp/installing.json
 /src/tmp/last_update_check.txt
