@@ -7,9 +7,10 @@
     <projectFiles>
         <directory name="src/Engine" />
     </projectFiles>
+    <stubs>
+        <file name="vendor/paragonie/halite/stub/Sodium.stub.php" />
+    </stubs>
     <issueHandlers>
-        <TooFewArguments errorLevel="info" />
-        <!-- Psalm doesn't recognize this correctly -->
         <TooManyArguments errorLevel="info" />
         <!-- Psalm doesn't recognize this correctly -->
         <UndefinedConstant errorLevel="info" />
