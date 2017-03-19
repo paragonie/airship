@@ -11,8 +11,6 @@
         <file name="vendor/paragonie/halite/stub/Sodium.stub.php" />
     </stubs>
     <issueHandlers>
-        <TooManyArguments errorLevel="info" />
-        <!-- Psalm doesn't recognize this correctly -->
         <UndefinedConstant errorLevel="info" />
         <!-- Psalm was unable to interpret the cURL extension constants -->
     </issueHandlers>
