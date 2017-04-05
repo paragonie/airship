@@ -83,11 +83,11 @@ class Database implements DBInterface
                 $username,
                 $password
             );
-        } elseif (!\is_string($dsn)) {
+        } elseif (\gettype($dsn) !== 'string') {
             throw new \TypeError(
                 \__('DSN must be string or array')
             );
-        } elseif (\strpos($dsn, ':') !== false) {
+        } elseif (\strpos((string) $dsn, ':') !== false) {
             $dbEngine = \explode(':', $dsn)[0];
         }
 
