@@ -1,0 +1,37 @@
+{
+  "name": "airship",
+  "version": "1.0.0",
+  "description": "CMS Airship is a **secure-by-default** content management system, blog engine, and application development framework written for PHP 7.",
+  "main": "index.php",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0",
+    "gulp-uglifycss": "^1.0.6",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.11.5",
+    "babel-preset-es2015": "^6.14.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-sass": "^2.3.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paragonie/airship.git"
+  },
+  "author": "Paragon Initiative Enterprises <info@paragonie.com>",
+  "license": "GPLV3",
+  "bugs": {
+    "url": "https://github.com/paragonie/airship/issues"
+  },
+  "homepage": "https://github.com/paragonie/airship#readme"
+}

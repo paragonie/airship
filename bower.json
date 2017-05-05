@@ -1,0 +1,20 @@
+{
+  "name": "airship",
+  "main": "index.php",
+  "description": "CMS Airship is a **secure-by-default** content management system, blog engine, and application development framework written for PHP 7.",
+  "authors": [
+    "Paragon Initiative Enterprises <info@paragonie.com>"
+  ],
+  "license": "GPLV3",
+  "homepage": "https://github.com/paragonie/airship",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}
