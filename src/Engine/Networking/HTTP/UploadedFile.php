@@ -254,9 +254,9 @@ class UploadedFile implements UploadedFileInterface
      * @see http://php.net/is_uploaded_file
      * @see http://php.net/move_uploaded_file
      * @param string $targetPath Path to which to move the uploaded file.
-     * @throws RuntimeException if the upload was not successful.
+     * @throws \RuntimeException if the upload was not successful.
      * @throws \InvalidArgumentException if the $path specified is invalid.
-     * @throws RuntimeException on any error during the move operation, or on
+     * @throws \RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      *
      * @psalm-suppress InvalidArgument as fopen can theoretically return false
@@ -278,8 +278,7 @@ class UploadedFile implements UploadedFileInterface
                     : \move_uploaded_file($this->file, $targetPath)
             );
         } else {
-
-            $resource = \fopen($this->file, 'w');
+            $resource = \fopen($targetPath, 'w');
             if (!\is_resource($resource)) {
                 throw new \RuntimeException('Could not open output file for writing');
             }
