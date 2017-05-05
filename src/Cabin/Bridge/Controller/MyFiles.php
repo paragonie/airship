@@ -70,6 +70,7 @@ class MyFiles extends FileManager
     /**
      * @route my/files/{string}/info
      * @param string $cabin
+     * @throws \TypeError
      */
     public function getFileInfo(string $cabin = '')
     {
@@ -83,6 +84,10 @@ class MyFiles extends FileManager
                 ]
             );
         }
+        if (!\is_string($_GET['file'])) {
+            throw new \TypeError('String expected');
+        }
+        $fileName = $_GET['file'];
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -91,12 +96,12 @@ class MyFiles extends FileManager
             \__(
                 '%s', 'default',
                 Util::noHTML(!empty($dir)
-                    ? $dir . '/' . $_GET['file']
-                    : $_GET['file']
+                    ? $dir . '/' . $fileName
+                    : $fileName
                 )
             )
         );
-        $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
+        $this->commonGetFileInfo($fileName, $dir, $cabin);
     }
 
     /**

@@ -74,12 +74,22 @@ class AuthorFiles extends FileManager
      * @route author/files/{id}/{string}/info
      * @param string $authorId
      * @param string $cabin
+     * @throws \TypeError
      */
     public function getFileInfo(string $authorId, string $cabin = '')
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
         $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
+        if (empty($_GET['file'])) {
+            \Airship\redirect(
+                $this->airship_cabin_prefix . '/author/files/' . $this->authorId . '/' . \urlencode($cabin)
+            );
+        }
+        if (!\is_string($_GET['file'])) {
+            throw new \TypeError('String expected');
+        }
+        $fileName = $_GET['file'];
 
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -90,13 +100,13 @@ class AuthorFiles extends FileManager
             \__(
                 '%s (Author: %s)', 'default',
                 Util::noHTML(!empty($dir)
-                    ? $dir . '/' . $_GET['file']
-                    : $_GET['file']
+                    ? $dir . '/' . $fileName
+                    : $fileName
                 ),
                 $this->authorName
             )
         );
-        return $this->commonGetFileInfo($_GET['file'], $dir, $cabin);
+        return $this->commonGetFileInfo($fileName, $dir, $cabin);
     }
 
     /**
