@@ -747,7 +747,7 @@ function user_display_name(int $userId = null): string
     if (empty($displayName)) {
         return '';
     }
-    return $displayName;
+    return get_purified($displayName);
 }
 
 /**
@@ -829,9 +829,11 @@ function user_name(int $userId = null): string
         $userId = \Airship\ViewFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->cell(
-        'SELECT username FROM airship_users WHERE userid = ?',
-        $userId
+    return get_purified(
+        $db->cell(
+            'SELECT username FROM airship_users WHERE userid = ?',
+            $userId
+        )
     );
 }
 
@@ -848,8 +850,10 @@ function user_unique_id(int $userId = null): string
         $userId = \Airship\ViewFunctions\userid();
     }
     $db = \Airship\get_database();
-    return $db->cell(
-        'SELECT uniqueid FROM airship_users WHERE userid = ?',
-        $userId
+    return get_purified(
+        $db->cell(
+            'SELECT uniqueid FROM airship_users WHERE userid = ?',
+            $userId
+        )
     );
 }

@@ -57,6 +57,7 @@ class CustomPages extends ControllerGear
             );
         }
         $dirs = $args;
+        /** @var string $file */
         $file = \array_pop($dirs);
 
         // First: Do we have a custom page at this endpoint?
