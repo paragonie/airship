@@ -9,7 +9,7 @@
     /></a>
     <div id="bridge_greeting_right">
     {% if showmenu and userid() > 0 %}
-        {{ __("Hello, %s.", "default", user_display_name()) }}
+        {{ __("Hello, %s.", "default", user_display_name()|e('html')) }}
     {% elseif cabin_custom_config()['board']['enabled'] %}
         {{ __("Please create an account or log in.") }}
     {% else %}
