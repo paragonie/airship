@@ -6,7 +6,6 @@ use Psr\Http\Message\{
     StreamInterface,
     UploadedFileInterface
 };
-use RuntimeException;
 
 /**
  * Class UploadedFile
@@ -114,6 +113,7 @@ class UploadedFile implements UploadedFileInterface
      * Depending on the value set file or stream variable
      *
      * @param mixed $streamOrFile
+     * @return self
      * @throws \InvalidArgumentException
      */
     private function setStreamOrFile($streamOrFile): self
@@ -157,16 +157,16 @@ class UploadedFile implements UploadedFileInterface
      * @param mixed $param
      * @return bool
      */
-    protected function isStringOrNull($param)
+    protected function isStringOrNull($param): bool
     {
-        return in_array(gettype($param), ['string', 'NULL']);
+        return \in_array(\gettype($param), ['string', 'NULL']);
     }
 
     /**
      * @param string $param
      * @return bool
      */
-    private function isStringNotEmpty(string $param)
+    private function isStringNotEmpty(string $param): bool
     {
         return !empty($param);
     }
@@ -226,7 +226,7 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * {@inheritdoc}
-     * @throws RuntimeException if the upload was not successful.
+     * @throws \RuntimeException if the upload was not successful.
      * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
     public function getStream()
@@ -238,10 +238,14 @@ class UploadedFile implements UploadedFileInterface
         }
 
         if (\is_null($this->file)) {
-            throw new RuntimeException('Could not open temporary file to create stream');
+            throw new \RuntimeException('Could not open temporary file to create stream');
         }
 
-        return new Stream(\fopen($this->file, 'r+'));
+        $resource = \fopen($this->file, 'r+');
+        if (!\is_resource($resource)) {
+            throw new \RuntimeException('Could not open temporary file to create stream');
+        }
+        return new Stream($resource);
     }
 
     /**
@@ -274,15 +278,20 @@ class UploadedFile implements UploadedFileInterface
                     : \move_uploaded_file($this->file, $targetPath)
             );
         } else {
+
+            $resource = \fopen($this->file, 'w');
+            if (!\is_resource($resource)) {
+                throw new \RuntimeException('Could not open output file for writing');
+            }
             Stream::copyToStream(
                 $this->getStream(),
-                new Stream(\fopen($targetPath, 'w'))
+                new Stream($resource)
             );
             $this->moved = true;
         }
 
         if (!$this->moved) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 sprintf('Uploaded file could not be moved to %s', $targetPath)
             );
         }

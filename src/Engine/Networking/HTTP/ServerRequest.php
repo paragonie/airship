@@ -138,6 +138,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * $_SERVER
      *
      * @return ServerRequestInterface
+     * @throws \RuntimeException
      * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
     public static function fromGlobals(): ServerRequestInterface
@@ -145,7 +146,11 @@ class ServerRequest extends Request implements ServerRequestInterface
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $headers = function_exists('getallheaders') ? getallheaders() : [];
         $uri = self::getUriFromGlobals();
-        $body = new Stream(\fopen('php://input', 'r+'));
+        $inputStream = \fopen('php://input', 'r+');
+        if (!\is_resource($inputStream)) {
+            throw new \RuntimeException('Could not read php://input');
+        }
+        $body = new Stream($inputStream);
         $protocol = isset($_SERVER['SERVER_PROTOCOL'])
             ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL'])
             : '1.1';
