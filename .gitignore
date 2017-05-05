@@ -4,6 +4,7 @@
 /src/Cabin/*/View/common
 /src/Cabin/*/Lens/motif/
 /src/Cabin/*/public/motif/
+/src/public/static/libs/
 /src/public/static/Bridge
 /src/public/static/Hull
 /src/public/launch.php
@@ -26,3 +27,8 @@
 /test/phpunit.phar
 /test/phpunit.phar.asc
 /vendor/
+/node_modules/
+/src/Cabin/Bridge/public/css
+/src/Cabin/Bridge/public/js
+/src/Cabin/Hull/public/css
+/src/Cabin/Hull/public/js
