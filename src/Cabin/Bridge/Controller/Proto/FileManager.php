@@ -158,6 +158,7 @@ class FileManager extends LoggedInUsersOnly
      */
     protected function commonGetFileInfo(string $file, string $path, string $cabin)
     {
+        $file = \rtrim($file, '/');
         list($publicPath, $root) = $this->loadCommonData($path, $cabin);
         if (empty($root)) {
             $fileInfo = $this->files->getFileInfo($cabin, null, $file);
