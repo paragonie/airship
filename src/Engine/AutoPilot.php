@@ -9,6 +9,7 @@ use Airship\Alerts\Router\{
     ControllerComplete
 };
 use Airship\Engine\Contract\RouterInterface;
+use Airship\Engine\Security\Util;
 use ParagonIE\ConstantTime\Binary;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,6 +48,11 @@ class AutoPilot implements RouterInterface
      * @var string
      */
     public static $cabinIndex;
+
+    /**
+     * @var string Escaped
+     */
+    protected static $httpHost = '';
 
     /**
      * @var array
@@ -197,7 +203,26 @@ class AutoPilot implements RouterInterface
             $string
         );
     }
-    
+
+    /**
+     * @return string
+     */
+    public static function getHttpHost(): string
+    {
+        return self::$httpHost;
+    }
+
+    /**
+     * @param string $value
+     */
+    public static function setHttpHost(string $value): void
+    {
+        self::$httpHost = Util::charWhitelist(
+            $value,
+            Util::ALPHANUMERIC . '.-'
+        );
+    }
+
     /**
      * Does a given cabin key match the current HTTP host, port, and path?
      * 
@@ -231,6 +256,7 @@ class AutoPilot implements RouterInterface
                 // */some_dir/
                 $pattern = \preg_quote(Binary::safeSubstr($cabinKey, 2), '#');
                 if (\preg_match('#^/'.$pattern.'#', $uri) === 1) {
+                    self::setHTTPHost($_SERVER['HTTP_HOST'] ?? 'localhost');
                     return $https_only
                         ? self::forceHTTPS()
                         : true;
@@ -242,10 +268,12 @@ class AutoPilot implements RouterInterface
             }
             $pos = \strpos($cabinKey, '/');
             if ($pos === false && \preg_match('#^'.\preg_quote($cabinKey, '#').'#', $uri)) {
+                self::setHTTPHost($activeHost);
                 return $https_only
                     ? self::forceHTTPS($scheme)
                     : true;
             } elseif ($pos !== false) {
+                self::setHTTPHost($activeHost);
                 $sub = Binary::safeSubstr($cabinKey, $pos);
                 $host = Binary::safeSubstr($cabinKey, 0, $pos);
                 if (
@@ -257,6 +285,7 @@ class AutoPilot implements RouterInterface
                         : true;
                 }
             } elseif (\strtolower($activeHost) === \strtolower($cabinKey)) {
+                self::setHTTPHost($activeHost);
                 return $https_only
                     ? self::forceHTTPS($scheme)
                     : true;

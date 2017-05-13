@@ -672,10 +672,11 @@ class Install
                     'patch' => !empty($this->data['config']['auto-update']['patch']),
                     'test' => false // Unsure if we'll ever allow this
                 ],
-                'ledger' => $this->data['config']['ledger'],
                 'default-groups' => [ 2 ],
+                'email' => $this->data['config']['email'],
                 'guest_groups' => [ 1 ],
                 'guzzle' => [],
+                'ledger' => $this->data['config']['ledger'],
                 'notary' => [
                     'channel' => 'paragonie',
                     'enabled' => false,
@@ -690,7 +691,8 @@ class Install
                     'log-after' => 3,
                     'max-delay' => 30
                 ],
-                'tor-only' => !empty($this->data['config']['tor-only'])
+                'tor-only' => !empty($this->data['config']['tor-only']),
+                'twig-cache' => !empty($this->data['config']['twig-cache'])
             ]
         ]);
     }

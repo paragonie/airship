@@ -38,6 +38,7 @@ use ParagonIE\MultiFactor\Vendor\GoogleAuth;
 use Psr\Log\LogLevel;
 use Zend\Mail\{
     Exception\InvalidArgumentException,
+    Exception\RuntimeException,
     Message,
     Transport\TransportInterface
 };
@@ -798,7 +799,11 @@ class Account extends ControllerGear
         $message = (new Message())
             ->addTo($recoverInfo['email'], $username)
             ->setSubject('Password Reset')
-            ->setFrom($state->universal['email']['from'] ?? 'no-reply@' . $_SERVER['HTTP_HOST'])
+            ->setFrom(
+                $state->universal['email']['from']
+                    ??
+                'no-reply@' . AutoPilot::getHttpHost()
+            )
             ->setBody($this->recoveryMessage($token));
 
         try {
@@ -809,7 +814,11 @@ class Account extends ControllerGear
                 // This will be sent as-is:
                 $state->mailer->send($message);
             }
+        } catch (RuntimeException $ex) {
+            // Error sending email
+            return false;
         } catch (InvalidArgumentException $ex) {
+            // Invalid argument supplied
             return false;
         }
         return true;
