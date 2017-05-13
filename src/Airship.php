@@ -615,12 +615,57 @@ function path_to_filename(string $fullPath, bool $trimExtension = false): string
 {
     $pieces = \Airship\chunk($fullPath);
     $lastPiece = \array_pop($pieces);
+    if (!\is_string($lastPiece)) {
+        throw new \Error('Invalid file name');
+    }
     if ($trimExtension) {
         $parts = \Airship\chunk($lastPiece, '.');
         \array_pop($parts);
         return \implode('.', $parts);
     }
     return $lastPiece;
+}
+
+/**
+ * Get an object's real type.
+ *
+ * @param mixed $mixed    The variable being evaluated. Can be a scalar type or
+ *                        an object.
+ * @param bool $ancestors Also include information about this object's parent
+ *                        classes?
+ *
+ * @return string
+ */
+function get_var_type($mixed = null, bool $ancestors = false): string
+{
+    if (\func_num_args() === 0) {
+        return 'void';
+    }
+    $type = \strtolower(\gettype($mixed));
+    if ($type === 'integer') {
+        return 'int';
+    }
+    if ($type === 'boolean') {
+        return 'bool';
+    }
+    if ($type === 'double') {
+        return 'float';
+    }
+    if ($type === 'object') {
+        $class = \get_class($mixed);
+        if ($ancestors) {
+            $lineage = get_ancestors($class);
+            \array_shift($lineage);
+            if (empty($lineage)) {
+                $type .= ' (' . $class . ', -- no parents --)';
+            } else {
+                $type .= ' (' . $class . ', ' . \json_encode($lineage) . ')';
+            }
+        } else {
+            $type .= ' (' . $class . ')';
+        }
+    }
+    return $type;
 }
 
 /**

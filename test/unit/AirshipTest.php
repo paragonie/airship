@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 namespace Airship\UnitTests;
+use Airship\Engine\Hail;
+use function Airship\get_var_type;
+use GuzzleHttp\Client;
 use ParagonIE\ConstantTime\Binary;
 use PHPUnit\Framework\TestCase;
 
@@ -242,6 +245,27 @@ class AirshipTest extends TestCase
             __NAMESPACE__,
             \Airship\get_caller_namespace()
         );
+    }
+
+    /**
+     * @covers \Airship\get_var_type()
+     */
+    public function testGetVarType()
+    {
+        $this->assertSame('void', get_var_type());
+        $this->assertSame('null', get_var_type(null));
+        $this->assertSame('bool', get_var_type(true));
+        $this->assertSame('string', get_var_type('test'));
+        $this->assertSame('int', get_var_type(PHP_INT_MAX));
+        $this->assertSame('float', get_var_type(PHP_INT_MAX * 2));
+        $this->assertSame('object (' . self::class . ')', get_var_type($this));
+        $this->assertSame(
+            'object (' . self::class . ', ["\\\\PHPUnit\\\\Framework\\\\TestCase","\\\\PHPUnit\\\\Framework\\\\Assert"])',
+            get_var_type($this, true)
+        );
+        $hail = new Hail(new Client());
+        $this->assertSame('object (Airship\Engine\Hail)', get_var_type($hail));
+        $this->assertSame('object (Airship\Engine\Hail, -- no parents --)', get_var_type($hail, true));
     }
 
     /**

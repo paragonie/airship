@@ -48,10 +48,6 @@ class Hail
     public function __construct(Client $client)
     {
         $this->client = $client;
-        if (IDE_HACKS) {
-            // This is just to fool IDEs.
-            $this->client = new Client();
-        }
     }
 
     /**
@@ -74,6 +70,7 @@ class Hail
      *
      * @return ResponseInterface
      * @throws FilesystemAlert
+     * @throws \TypeError
      */
     public function downloadFile(
         string $url,
@@ -90,6 +87,15 @@ class Hail
         $opts[\CURLOPT_FILE] = $fp;
 
         $result = $this->client->post($url, $opts);
+        if (!($result instanceof ResponseInterface)) {
+            throw new \TypeError(
+                \sprintf(
+                    'Expected %s, got %s' ,
+                    'object (ResponseInterface)',
+                    \Airship\get_var_type($result, true)
+                )
+            );
+        }
 
         \fclose($fp);
         return $result;
@@ -116,16 +122,26 @@ class Hail
      * @param string $url
      * @param array $params
      * @return ResponseInterface
+     * @throws \TypeError
      */
     public function getAsync(
         string $url,
         array $params = []
     ): ResponseInterface {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->client->getAsync(
+        $response = $this->client->getAsync(
             $url,
             $this->params($params, $url)
         );
+        if (!($response instanceof ResponseInterface)) {
+            throw new \TypeError(
+                \sprintf(
+                    'Expected %s, got %s' ,
+                    'object (ResponseInterface)',
+                    \Airship\get_var_type($response, true)
+                )
+            );
+        }
+        return $response;
     }
 
     /**
