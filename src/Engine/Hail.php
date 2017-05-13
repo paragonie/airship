@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\FilesystemAlert;
 use Airship\Alerts\Hail\SignatureFailed;
 use Airship\Engine\Continuum\Supplier;
 use GuzzleHttp\{
     Client,
-    ClientInterface,
     Exception\TransferException,
     Psr7\Response
 };
@@ -73,6 +73,7 @@ class Hail
      * @param array $params
      *
      * @return ResponseInterface
+     * @throws FilesystemAlert
      */
     public function downloadFile(
         string $url,
@@ -80,6 +81,9 @@ class Hail
         array $params = []
     ): ResponseInterface {
         $fp = \fopen($filename, 'wb');
+        if (!\is_resource($fp)) {
+            throw new FilesystemAlert('Could not open output file for writing');
+        }
         $opts = $this->params($params, $url);
 
         $opts[\CURLOPT_FOLLOWLOCATION] = true;
