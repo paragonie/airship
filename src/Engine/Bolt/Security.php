@@ -203,20 +203,21 @@ trait Security
             $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
 
             // Rotate the authentication token:
-            Cookie::setcookie(
-                $token_idx,
-                Symmetric::encrypt(
-                    new HiddenString(
-                        $this->airship_auth->rotateToken($token, $userId)
+            $hiddenString = $this->airship_auth->rotateToken($token, $userId);
+            if ($hiddenString instanceof HiddenString) {
+                Cookie::setcookie(
+                    $token_idx,
+                    Symmetric::encrypt(
+                        $hiddenString,
+                        $state->keyring['cookie.encrypt_key']
                     ),
-                    $state->keyring['cookie.encrypt_key']
-                ),
-                \time() + ($state->universal['long-term-auth-expire'] ?? 2592000),
-                '/',
-                '',
-                $httpsOnly ?? false,
-                true
-            );
+                    \time() + ($state->universal['long-term-auth-expire'] ?? 2592000),
+                    '/',
+                    '',
+                    $httpsOnly ?? false,
+                    true
+                );
+            }
             unset($token);
             return true;
         } catch (LongTermAuthAlert $e) {

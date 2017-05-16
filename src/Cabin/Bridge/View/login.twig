@@ -53,18 +53,25 @@
                     
                     {% include cargo("form_after_login") ignore missing %}
 
-                    <div>
-                        <button type="submit" class="pure-button pure-button-primary">
-                            <i class="fa fa-key"></i>
-                            {{ __("Log In") }}
-                        </button>
-                        {% if cabin_custom_config()['password-reset']['enabled'] %}
-                        <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary float-right">
-                            <i class="fa fa-undo"></i>
-                            {{ __("I Forgot My Passphrase") }}
-                        </a>
-                        {% endif %}
-                    </div>
+                    {% if cabin_custom_config()['password-reset']['enabled'] %}
+                        <div>
+                            <button type="submit" class="pure-button pure-button-primary float-right">
+                                <i class="fa fa-key"></i>
+                                {{ __("Log In") }}
+                            </button>
+                            <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary">
+                                <i class="fa fa-undo"></i>
+                                {{ __("I Forgot My Passphrase") }}
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-right">
+                            <button type="submit" class="pure-button pure-button-primary">
+                                <i class="fa fa-key"></i>
+                                {{ __("Log In") }}
+                            </button>
+                        </div>
+                    {% endif %}
                 </form>
             </fieldset>
             {% if cabin_custom_config()['board']['enabled'] %}

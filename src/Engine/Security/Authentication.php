@@ -349,7 +349,7 @@ class Authentication
      *
      * @param HiddenString $token
      * @param int $userId
-     * @return mixed
+     * @return bool|HiddenString
      */
     public function rotateToken(HiddenString $token, int $userId = 0)
     {
