@@ -461,12 +461,28 @@ a.pure-button-tertiary:visited,
     background-color: #A8B5EF;
     color: #081022;
 }
+a.pure-button-prompt,
+a.pure-button-prompt:visited,
+.pure-button-prompt {
+    background-color: #222232;
+    color: #ffff66 !important;
+    box-shadow: #fff 0 0 2px, #ff0 0 0 0.34ex, #fc0 0 0 0.5ex, #f90 0 0 0.7ex;
+    font-weight: bold;
+    text-shadow: #000 0 0 2px;
+    margin-top: 0.4ex !important;
+    margin-bottom: 0.4ex !important;
+}
 .pure-button-secondary .fa {
     color: #ffffff !important;
     text-shadow: #000 0 0 2px;
 }
 .pure-button-primary .fa {
     color: #ffffff !important;
+    text-shadow: #000 0 0 2px;
+}
+.pure-button-prompt .fa {
+    color: #ffa034 !important;
+    font-weight: normal;
     text-shadow: #000 0 0 2px;
 }
 .pure-button-tertiary .fa {
@@ -486,6 +502,12 @@ a.pure-button-tertiary:hover,
 .pure-button-tertiary a:hover {
     color: #1F2C4A !important;
 }
+a.pure-button-prompt:active,
+a.pure-button-prompt:hover,
+.pure-button-prompt a:active,
+.pure-button-prompt a:hover {
+    color: #FFF !important;
+}
 .pure-button-primary:hover .fa,
 .pure-button-primary a:hover .fa {
     text-shadow: #000 0 0 4px;
@@ -497,6 +519,10 @@ a.pure-button-tertiary:hover,
 .pure-button-tertiary:hover .fa,
 .pure-button-tertiary a:hover .fa {
     text-shadow: #fff 0 0 4px;
+}
+.pure-button-prompt:hover .fa,
+.pure-button-prompt a:hover .fa {
+    text-shadow: #000 0 0 4px;
 }
 .error_header {
     color: #c00000;
@@ -604,6 +630,7 @@ a:hover .bridge-icon {
             rgba(255, 255, 255, 0.75) 0%,
             rgba(255, 255, 255, 0.5) 100%
     );
+    border: 2px solid rgba(0, 0, 0, 0.4);
     box-shadow: rgba(0, 0, 0, 0.33) 0 1ex 1ex;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -2086,23 +2113,55 @@ h2#comments {
     cursor: pointer;
 }
 #announcements {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-image: -webkit-linear-gradient(
+            top,
+            rgb(102, 102, 102) 0%,
+            rgb(153, 153, 153) 100%
+    );
+    background-image: -moz-linear-gradient(
+            top,
+            rgb(102, 102, 102) 0%,
+            rgb(153, 153, 153) 100%
+    );
+    background-image: -ms-linear-gradient(
+            top,
+            rgb(102, 102, 102) 0%,
+            rgb(153, 153, 153) 100%
+    );
+    background-image: -o-linear-gradient(
+            top,
+            rgb(102, 102, 102) 0%,
+            rgb(153, 153, 153) 100%
+    );
+    background-image: linear-gradient(
+            top,
+            rgb(102, 102, 102) 0%,
+            rgb(153, 153, 153) 100%
+    );
     border: 1px solid #000;
     margin: 0 1ex 1ex 1ex;
-    padding: 0.5ex;
+    padding: 0.34ex;
+}
+.announcement {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.85);
 }
 .announcement + .announcement {
-    margin-top: 1em;
+    margin-top: 0.34ex;
 }
 .announcement h3 {
     background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.5);
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    padding: 0.5ex;
 }
 .announcement h3 a {
     font-size: 12pt;
+    padding-left: 1ex;
 }
 .announce-body {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding: 1ex;
 }
 .log-textarea {
     background-color: rgba(255, 255, 255, 0.25);
@@ -2237,4 +2296,43 @@ a.bridge-left-active:hover .bridge-icon {
 }
 .icon-1px-right {
     margin-right: 1px;
+}
+#remember-me-checkbox-container {
+    padding-bottom: 1ex;
+}
+#remember-me-checkbox-container input[type=checkbox] {
+    vertical-align: middle;
+    margin-top: -5px;
+}
+#remember-me-checkbox-container label {
+    padding-left: 0.25ex;
+}
+.login-form-wrapper label {
+    font-size: 120%;
+}
+.login-form-wrapper input + label {
+    margin-top: 1rem;
+}
+#bridge-home-greeting {
+    margin-bottom: 1ex;
+    padding: 0 1rem;
+}
+#bridge-home-stats {
+    padding-left: 1rem;
+}
+.bridge-home-stat {
+    font-family: monospace;
+    font-size: 12pt;
+    padding-left: 1rem;
+}
+.bridge-list-actions {
+    list-style: none;
+    padding-left: 1rem;
+}
+.bridge-list-actions li + li {
+    padding-top: 0.25rem;
+}
+.bridge-home-header {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
 }

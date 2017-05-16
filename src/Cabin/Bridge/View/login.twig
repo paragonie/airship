@@ -3,13 +3,11 @@
 
 {% block content %}
     <div class="width50 center">
-        <h2>CMS Airship &mdash; Bridge</h2>
         {%  if post_response %}
             <div class="post {{ post_response.status|e('html_attr') }}">{{ post_response.message }}</div>
         {% endif %}
         <div class="login-form-wrapper">
             <fieldset>
-                <legend>{{ __("Please Log In") }}</legend>
                 <form
                     id="login"
                     class="login-form pure-form pure-form-stacked"
@@ -17,7 +15,7 @@
                     method="post"
                 >{{ form_token(get_path_url(cabin_url()) ~ "login") }}
                     {% include cargo("form_before_login") ignore missing %}
-                    <h3>{{ __("Please Log In") }}</h3>
+                    <h3>{{ __("Please Log In to CMS Airship") }}</h3>
                     <label for="username">{{ __("Username") }}:</label>
                     <input
                         type="text"
@@ -48,9 +46,9 @@
 
                     {% include cargo("form_login_extra_fields") ignore missing %}
                     
-                    <div>
-                        <input class="inblock" type="checkbox" name="remember" id="rememberMe" value="1" />
-                        <label for="rememberMe" class="inblock">{{ __("Remember Me") }}</label>
+                    <div id="remember-me-checkbox-container">
+                        <input class="inblock large_checkbox" type="checkbox" name="remember" id="rememberMe" value="1" />
+                        <label for="rememberMe" class="inblock remember-me-label">{{ __("Remember me on this computer") }}</label>
                     </div>
                     
                     {% include cargo("form_after_login") ignore missing %}

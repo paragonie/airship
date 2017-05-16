@@ -1,6 +1,35 @@
-{% if can_create("blog/posts") %}
-    <a href="{{ cabin_url() }}blog/post/new">
-        <i class="fa fa-pencil-square-o"></i>{#
-        #}{{ __("Create a New Blog Post") }}
-    </a>
-{% endif %}
+<ul class="bridge-list-actions">
+    {% if user_author_ids()|length < 1 %}
+        <li>
+            <a
+                class="pure-button pure-button-prompt"
+                href="{{ cabin_url() }}author/new"
+                title="{{ __("You must have an author profile before you can create a blog post.")|e('html_attr') }}"
+            >
+                <i class="fa fa-user-secret"></i> {{ __("Create an Author Profile") }}
+            </a>
+        </li>
+    {% endif %}
+    {% if can_create("blog/posts") %}
+        <li>
+            <a class="pure-button-primary pure-button" href="{{ cabin_url() }}blog/post/new">
+                <i class="fa fa-pencil-square-o"></i> {{ __("Create a New Blog Post") }}
+            </a>
+        </li>
+    {% endif %}
+    {% if user_author_ids()|length > 0 %}
+        <li>
+            <a
+                    class="pure-button pure-button-primary"
+                    href="{{ cabin_url() }}author"
+            >
+                <i class="fa fa-user-secret"></i> {{ __("View/Manage Author Profiles") }}
+            </a>
+        </li>
+    {% endif %}
+    <li>
+        <a class="pure-button-primary pure-button" href="{{ cabin_url() }}blog/post/new">
+            <i class="fa fa-gear"></i> {{ __("Update My Account") }}
+        </a>
+    </li>
+</ul>

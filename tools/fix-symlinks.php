@@ -21,4 +21,3 @@ foreach (\glob(ROOT . '/Cabin/*') as $cabinName) {
     }
     \symlink(ROOT . '/common', $cabinName . '/View/common');
 }
-

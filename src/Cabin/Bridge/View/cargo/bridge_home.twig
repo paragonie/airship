@@ -1,35 +1,23 @@
 <h2>{{ __("Airship - Bridge") }}</h2>
 
-<div class="text-center">
-{{ __("Welcome, %s%s", "default",
-    "<a href=\"" ~ cabin_url() ~ "my/account\" title=\"" ~ __("Change Display Name")|e('html_attr') ~ "\">" ~
-        "<i class=\"fa fa-pencil-square\"></i>" ~
-        "</a> ",
-    (
-        "<strong title=\"Public ID: " ~
-            user_unique_id()|e('html_attr') ~
-        "\">" ~
-            user_display_name()|e('html_attr') ~
-        "</strong>"
-    )|raw
-) }}
-    (<code title="{{ __("This is your public ID.")|e('html_attr') }}" id="my-public-id"><i class="fa fa-street-view"></i>{{ user_unique_id() }}</code>).
+<div id="bridge-home-greeting">
+    {{ __("Welcome, %s.", "default", user_display_name()) }}
 </div>
-<div class="table full-width table-pad-1">
+<div class="table full-width">
     <div class="table-row">
         <div class="table-cell">
-            <strong>{{ __("Airship Statistics") }}</strong>:
+            <h2 class="bridge-home-header">{{ __("Actions") }}</h2>
         </div>
-        <div class="table-cell">
-            <strong>{{ __("Actions") }}</strong>:
+        <div class="table-cell table-min-width">
+            <h2 class="bridge-home-header">{{ __("Statistics") }}</h2>
         </div>
     </div>
     <div class="table-row">
-        <div class="table-cell table-min-width cell-pad-right">
-            {% include cargo("bridge_home_stats") %}
-        </div>
-        <div class="table-cell">
+        <div class="table-cell bottom-extra-pad" id="bridge-home-actions">
             {% include cargo("bridge_home_actions") %}
+        </div>
+        <div class="table-cell table-min-width cell-pad-right bottom-extra-pad" id="bridge-home-stats">
+            {% include cargo("bridge_home_stats") %}
         </div>
     </div>
 </div>
