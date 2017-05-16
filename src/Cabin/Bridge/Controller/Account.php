@@ -690,7 +690,7 @@ class Account extends ControllerGear
 
             if (!empty($post['remember'])) {
                 /** @var AutoPilot $autoPilot */
-                $autoPilot = Gears::getName('AutoPilot');
+                $autoPilot = $state->autoPilot;
                 if(!\in_array(AutoPilot::class, \Airship\get_ancestors(\get_class($autoPilot)))) {
                     throw new \TypeError(
                         \trk('errors.type.wrong_class', AutoPilot::class)
