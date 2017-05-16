@@ -8,7 +8,15 @@ use Airship\Alerts\{
     Security\UserNotLoggedIn
 };
 use Airship\Engine\{
-    AutoPilot, Database, Gears, Controller, Model, Security\Authentication, Security\Permissions, State, View
+    AutoPilot,
+    Database,
+    Gears,
+    Controller,
+    Model,
+    Security\Authentication,
+    Security\Permissions,
+    State,
+    View
 };
 use ParagonIE\Cookie\{
     Cookie,
@@ -195,12 +203,7 @@ trait Security
             /**
              * @var AutoPilot
              */
-            $autoPilot = Gears::getName('AutoPilot');
-            if (IDE_HACKS) {
-                // We're using getName(), this is just to fool IDEs.
-                $autoPilot = new AutoPilot([], new View(new \Twig_Environment()));
-            }
-            $httpsOnly = (bool) $autoPilot::isHTTPSConnection();
+            $autoPilot = $state->autoPilot;
 
             // Rotate the authentication token:
             $hiddenString = $this->airship_auth->rotateToken($token, $userId);
@@ -214,7 +217,7 @@ trait Security
                     \time() + ($state->universal['long-term-auth-expire'] ?? 2592000),
                     '/',
                     '',
-                    $httpsOnly ?? false,
+                    $autoPilot::isHTTPSConnection(),
                     true
                 );
             }
@@ -271,8 +274,34 @@ trait Security
             $this->tightenSecurityBolt();
         }
         $_SESSION = [];
-        Cookie::setcookie('airship_token', null);
+        $state = State::instance();
+        if (isset($_COOKIE['airship_token'])) {
+            $this->airship_auth->removeToken(
+                Symmetric::decrypt(
+                    $_COOKIE['airship_token'],
+                    $state->keyring['cookie.encrypt_key']
+                )
+            );
+        }
+        /**
+         * @var AutoPilot
+         */
+        $autoPilot = $state->autoPilot;
+        if ($autoPilot instanceof AutoPilot) {
+            $httpsOnly = $autoPilot::isHTTPSConnection();
+        }
+
         Session::regenerate(true);
+        Cookie::setcookie(
+            'airship_token',
+            null,
+            \time() + ($state->universal['long-term-auth-expire'] ?? 2592000),
+            '/',
+            $state->universal['session_config']['cookie_domain'] ?? '',
+            $httpsOnly ?? false,
+            true
+        );
+        unset($_COOKIE['airship_token']);
         return true;
     }
 

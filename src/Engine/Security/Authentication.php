@@ -344,14 +344,14 @@ class Authentication
         return false;
     }
 
+
     /**
-     * Replace the existing long-term authentication cookie
+     * Remove an authentication token
      *
      * @param HiddenString $token
-     * @param int $userId
-     * @return bool|HiddenString
+     * @return bool
      */
-    public function rotateToken(HiddenString $token, int $userId = 0)
+    public function removeToken(HiddenString $token): bool
     {
         try {
             /**
@@ -370,6 +370,7 @@ class Authentication
         \Sodium\memzero($decoded);
 
         // Delete the old token
+        $this->db->beginTransaction();
         $this->db->delete(
             $this->tableConfig['table']['longterm'],
             [
@@ -377,9 +378,24 @@ class Authentication
                     Base64::encode($sel)
             ]
         );
+        return $this->db->commit();
+    }
 
-        // Let's get a new token
-        return $this->createAuthToken($userId);
+    /**
+     * Replace the existing long-term authentication cookie
+     * @param HiddenString $token
+     * @param int $userId
+     *
+     * @return HiddenString
+     * @throws SecurityAlert
+     */
+    public function rotateToken(HiddenString $token, int $userId = 0): HiddenString
+    {
+        if ($this->removeToken($token)) {
+            // Let's get a new token
+            return $this->createAuthToken($userId);
+        }
+        throw new SecurityAlert('Could not revoke the old token');
     }
     
     /**

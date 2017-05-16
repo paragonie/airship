@@ -52,35 +52,31 @@
                     </div>
                     
                     {% include cargo("form_after_login") ignore missing %}
-
-                    {% if cabin_custom_config()['password-reset']['enabled'] %}
-                        <div>
-                            <button type="submit" class="pure-button pure-button-primary float-right">
-                                <i class="fa fa-key"></i>
-                                {{ __("Log In") }}
-                            </button>
-                            <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary">
-                                <i class="fa fa-undo"></i>
-                                {{ __("I Forgot My Passphrase") }}
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="text-right">
-                            <button type="submit" class="pure-button pure-button-primary">
-                                <i class="fa fa-key"></i>
-                                {{ __("Log In") }}
-                            </button>
-                        </div>
-                    {% endif %}
+                    <div class="text-right">
+                        <button type="submit" class="pure-button pure-button-primary">
+                            <i class="fa fa-key"></i>
+                            {{ __("Log In") }}
+                        </button>
+                    </div>
                 </form>
             </fieldset>
+
             {% if cabin_custom_config()['board']['enabled'] %}
-                <hr />
                 <a href="{{ cabin_url('Bridge')|e('html_attr') }}board" class="pure-button pure-button-secondary">
                     <i class="fa fa-user-plus"></i>
                     {{ __("Register for a New Account") }}
                 </a>
             {% endif %}
+
+            {% if cabin_custom_config()['password-reset']['enabled'] %}
+                <div>
+                    <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary">
+                        <i class="fa fa-undo"></i>
+                        {{ __("I Forgot My Passphrase") }}
+                    </a>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 {% endblock %}
