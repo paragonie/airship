@@ -460,6 +460,22 @@ class Account extends ControllerGear
             unset($post['username'], $post['passphrase']);
         }
 
+        if (isset($post['email'])) {
+            if (!Util::isValidEmail($post['email'])) {
+                $this->view(
+                    'my_account',
+                    [
+                        'account' => $account,
+                        'gpg_public_key' => $gpg_public_key,
+                        'post_response' => [
+                            'message' => \__('The email address you provided is invalid.'),
+                            'status' => 'error'
+                        ]
+                    ]
+                );
+            }
+        }
+
         if ($this->acct->updateAccountInfo($post, $account)) {
             // Refresh:
             $account = $this->acct->getUserAccount($this->getActiveUserId());
@@ -518,6 +534,20 @@ class Account extends ControllerGear
                     ]
                 ]
             );
+        }
+
+        if (isset($post['email'])) {
+            if (!Util::isValidEmail($post['email'])) {
+                $this->view(
+                    'board',
+                    [
+                        'post_response' => [
+                            'message' => \__('The email address you provided is invalid.'),
+                            'status' => 'error'
+                        ]
+                    ]
+                );
+            }
         }
 
         if ($this->acct->isPasswordWeak($post)) {
@@ -796,14 +826,18 @@ class Account extends ControllerGear
             );
         }
 
+        // Get a valid email address.
+        $from = $state->universal['email']['from']
+            ??
+        'no-reply@' . AutoPilot::getHttpHost();
+        if (!Util::isValidEmail($from)) {
+            $from = 'no-reply@[' . \long2ip(\ip2long($_SERVER['SERVER_ADDR'])) . ']';
+        }
+
         $message = (new Message())
             ->addTo($recoverInfo['email'], $username)
             ->setSubject('Password Reset')
-            ->setFrom(
-                $state->universal['email']['from']
-                    ??
-                'no-reply@' . AutoPilot::getHttpHost()
-            )
+            ->setFrom($from)
             ->setBody($this->recoveryMessage($token));
 
         try {

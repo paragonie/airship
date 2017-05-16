@@ -124,6 +124,16 @@ abstract class Util
             self::MIME_CHARS
         );
     }
+
+    /**
+     * @param string $address
+     *
+     * @return bool
+     */
+    public static function isValidEmail(string $address): bool
+    {
+        return \filter_var($address, FILTER_VALIDATE_EMAIL) !== false;
+    }
     
     /**
      * Don't allow any HTML tags or attributes to be inserted into the DOM.
