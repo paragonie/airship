@@ -689,8 +689,9 @@ class Account extends ControllerGear
             $_SESSION['userid'] = (int) $userID;
 
             if (!empty($post['remember'])) {
+                /** @var AutoPilot $autoPilot */
                 $autoPilot = Gears::getName('AutoPilot');
-                if (!($autoPilot instanceof AutoPilot)) {
+                if(!\in_array(AutoPilot::class, \Airship\get_ancestors(\get_class($autoPilot)))) {
                     throw new \TypeError(
                         \trk('errors.type.wrong_class', AutoPilot::class)
                     );
