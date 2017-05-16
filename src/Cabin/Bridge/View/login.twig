@@ -61,6 +61,7 @@
                 </form>
             </fieldset>
 
+            <div>
             {% if cabin_custom_config()['board']['enabled'] %}
                 <a href="{{ cabin_url('Bridge')|e('html_attr') }}board" class="pure-button pure-button-secondary">
                     <i class="fa fa-user-plus"></i>
@@ -69,13 +70,14 @@
             {% endif %}
 
             {% if cabin_custom_config()['password-reset']['enabled'] %}
-                <div>
-                    <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary">
-                        <i class="fa fa-undo"></i>
-                        {{ __("I Forgot My Passphrase") }}
-                    </a>
-                </div>
+                <a href="{{ cabin_url('Bridge')|e('html_attr') }}forgot-password" class="pure-button pure-button-tertiary{#
+                    #}{% if cabin_custom_config()['board']['enabled'] %} float-right{% endif %}{#
+                #}">
+                    <i class="fa fa-undo"></i>
+                    {{ __("I Forgot My Passphrase") }}
+                </a>
             {% endif %}
+            </div>
 
         </div>
     </div>
