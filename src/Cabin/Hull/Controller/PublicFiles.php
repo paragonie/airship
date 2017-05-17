@@ -84,9 +84,6 @@ class PublicFiles extends ControllerGear
                 \header('Pragma: cache');
             }
 
-            // Serve the file
-            \header('Content-Type: ' . $fileData['type']);
-
             /**
              * The following headers are necessary because Microsoft Internet
              * Explorer has a documented design flaw that, left unhandled, can
@@ -98,8 +95,6 @@ class PublicFiles extends ControllerGear
                 \header('Content-Disposition: attachment; filename="' . \urlencode($fileData['filename']) . '"');
                 \header('X-Download-Options: noopen');
             }
-            \header('X-Content-Type-Options: nosniff');
-
             $this->includeStandardHeaders($fileData['type']);
             \readfile($realPath);
             exit;

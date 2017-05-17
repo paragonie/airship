@@ -461,12 +461,11 @@ class Controller
 
         $state = State::instance();
 
-        $this->airship_response = $this->getResponseObject()
-             ->withHeader('Content-Type', $mimeType)
-             ->withHeader('Content-Language', $state->lang)
-             ->withHeader('X-Content-Type-Options', 'nosniff')
-             ->withHeader('X-Frame-Options', 'SAMEORIGIN')
-             ->withHeader('X-XSS-Protection', '1; mode=block');
+        $response = $this->getResponseObject();
+        foreach (\Airship\get_standard_headers($mimeType) as $left => $right) {
+            $response = $response->withAddedHeader($left, $right);
+        };
+        $this->airship_response = $response;
 
         if (!$secHeaders) {
             if ($state->CSP instanceof CSPBuilder) {

@@ -22,9 +22,6 @@ if (!Session::id()) {
     $session_config = [
         // Prevent uninitialized sessions from being accepted
         'use_strict_mode' => true,
-        // We don't need to specify entropy_file; it defaults to /dev/urandom
-        // 32 bytes = 256 bits, which mean a 50% chance of 1 collision after 2^128 sessions
-        'entropy_length' => 32,
         // The session ID cookie should be inaccessible to JavaScript
         'cookie_httponly' => true,
         // If we're over HTTPS, enforce secure=1
@@ -37,10 +34,6 @@ if (!Session::id()) {
                 unset($session_config['cookie_domain']);
             }
         }
-    }
-    if (\PHP_VERSION_ID >= 70100) {
-        // Forward compatibility.
-        unset($session_config['entropy_length']);
     }
 
     Session::start(

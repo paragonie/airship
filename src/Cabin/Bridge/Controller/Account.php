@@ -322,7 +322,7 @@ class Account extends ControllerGear
         $user = $this->acct->getUserAccount($this->getActiveUserId());
 
         if (\extension_loaded('gd')) {
-            \header('Content-Type: image/png');
+            $this->sendStandardHeaders('image/png');
             $writer = null;
         } else {
             $renderer = new Svg();

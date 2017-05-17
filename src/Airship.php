@@ -427,6 +427,23 @@ function getReCaptcha(string $secretKey, array $opts = []): ReCaptcha
 }
 
 /**
+ * @param string $mimeType
+ *
+ * @return array<string, string>
+ */
+function get_standard_headers(string $mimeType = 'text/html;charset=UTF-8'): array
+{
+    $state = State::instance();
+    return [
+        'Content-Type' => $mimeType,
+        'Content-Language' => $state->lang,
+        'X-Content-Type-Options' => 'nosniff',
+        'X-Frame-Options' => 'SAMEORIGIN',
+        'X-XSS-Protection' => '1; mode=block'
+    ];
+}
+
+/**
  * Is a particular function disabled?
  *
  * @param string $function
@@ -469,11 +486,10 @@ function isOnionUrl(string $url): bool
 function json_response($result, $signingKey = null)
 {
     if (!\headers_sent()) {
-        \header("Content-Type: application/json");
-        \header('X-Content-Type-Options: nosniff');
+        foreach (get_standard_headers('application/json') as $left => $right) {
+            \header($left . ': ' . $right);
+        }
         \header('X-Download-Options: noopen');
-        \header('X-Frame-Options: SAMEORIGIN');
-        \header('X-XSS-Protection: 1; mode=block');
     }
     if ($signingKey instanceof SignatureSecretKey || $signingKey instanceof SignatureKeyPair) {
         if ($signingKey instanceof SignatureKeyPair) {

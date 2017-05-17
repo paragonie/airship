@@ -92,8 +92,9 @@ if (!empty($state->universal['debug'])) {
             $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
-            \header('Content-Type: text/plain;charset=UTF-8');
-            \header('X-Content-Type-Options: nosniff');
+            foreach (\Airship\get_standard_headers('text/plain;charset=UTF-8') as $left => $right) {
+                \header($left . ': ' . $right);
+            }
         }
         $state->logger->log(
             LogLevel::ERROR,

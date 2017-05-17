@@ -38,11 +38,9 @@ if (empty($_POST)) {
     $staticPage = $staticCache->get($lookup);
     if (!empty($staticPage)) {
         if (!\headers_sent()) {
-            \header('Content-Type: text/html;charset=UTF-8');
-            \header('Content-Language: ' . $state->lang);
-            \header('X-Content-Type-Options: nosniff');
-            \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-            \header('X-XSS-Protection: 1; mode=block');
+            foreach (\Airship\get_standard_headers('text/plain;charset=UTF-8') as $left => $right) {
+                \header($left . ': ' . $right);
+            }
         }
         $csp =  $cspCache->get($lookup);
         if (!empty($csp)) {
