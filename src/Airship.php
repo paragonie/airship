@@ -626,6 +626,7 @@ function parseJSON(
  * @param string $fullPath
  * @param bool $trimExtension
  * @return string
+ * @throws \Error
  */
 function path_to_filename(string $fullPath, bool $trimExtension = false): string
 {

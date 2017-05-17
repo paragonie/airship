@@ -17,7 +17,8 @@ $ap = Gears::getName('AutoPilot');
 
 // Needed for IDE code completion:
 if (IDE_HACKS) {
-    $ap = new AutoPilot();
+    /** @var AutoPilot $ap */
+    $ap = $state->autoPilot;
 }
 
 /**

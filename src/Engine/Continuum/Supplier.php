@@ -63,7 +63,7 @@ class Supplier
     /**
      * Get an array SignaturePublicKey objects
      *
-     * @var array<int, array<string, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     public function getSigningKeys(): array
     {

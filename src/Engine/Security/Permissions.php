@@ -6,8 +6,7 @@ use Airship\Alerts\Database\NotImplementedException;
 use Airship\Engine\{
     AutoPilot,
     Database,
-    State,
-    Contract\DBInterface
+    State
 };
 
 /**

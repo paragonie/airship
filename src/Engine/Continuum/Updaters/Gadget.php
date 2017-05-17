@@ -43,6 +43,7 @@ class Gadget extends AutoUpdater implements ContinuumInterface
      * @param array $manifest
      * @param Supplier|null $supplier
      * @param string $filePath
+     * @throws \Error
      */
     public function __construct(
         Hail $hail,

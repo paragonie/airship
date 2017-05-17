@@ -17,8 +17,7 @@ use Airship\Engine\{
 use Airship\Engine\Continuum\{
     API,
     Channel,
-    Log,
-    Supplier
+    Log
 };
 use Airship\Engine\Keyggdrasil\{
     Peer,
@@ -66,7 +65,7 @@ class Keyggdrasil
     protected $hail;
 
     /**
-     * @var array<string, Supplier>
+     * @var array<string, \Airship\Engine\Continuum\Supplier>
      */
     protected $supplierCache;
 

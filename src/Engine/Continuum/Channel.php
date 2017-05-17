@@ -4,8 +4,6 @@ namespace Airship\Engine\Continuum;
 
 use Airship\Alerts\Continuum\NoSupplier;
 use Airship\Engine\{
-    Continuum,
-    Keyggdrasil,
     Keyggdrasil\Peer,
     State
 };

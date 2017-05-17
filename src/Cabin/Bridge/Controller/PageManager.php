@@ -72,6 +72,7 @@ class PageManager extends LoggedInUsersOnly
 
         // Split this up
         $pieces = \explode('/', $path);
+        /** @var string $dir */
         $dir = \array_shift($pieces);
         $path = \implode('/', $pieces);
 
@@ -418,6 +419,7 @@ class PageManager extends LoggedInUsersOnly
 
         // Split this up
         $pieces = \explode('/', $path);
+        /** @var string $dir */
         $dir = \array_shift($pieces);
         $path = \implode('/', $pieces);
 
@@ -1050,7 +1052,7 @@ class PageManager extends LoggedInUsersOnly
         }
         $nop = [];
         foreach ($state->cabins as $pattern => $cab) {
-            if ($cab === $cabin) {
+            if ($cab['name'] === $cabin) {
                 // Let's check each existing route in the current cabin for a collision
                 foreach ($cab['data']['routes'] as $route => $landing) {
                     $test = $ap::testController(

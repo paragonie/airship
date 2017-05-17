@@ -342,6 +342,7 @@ class AirBrake
      * @param int $numFailures
      * @param HiddenString|null $password
      * @return bool
+     * @throws \Error
      */
     public function registerLoginFailure(
         string $username,
