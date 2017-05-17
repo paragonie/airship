@@ -476,6 +476,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @param array $value $_FILES struct
      * @return UploadedFileInterface
+     * @throws \Error
      */
     private static function createUploadedFileFromSpec(array $value): UploadedFileInterface
     {

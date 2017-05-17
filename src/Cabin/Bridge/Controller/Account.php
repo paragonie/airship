@@ -322,14 +322,14 @@ class Account extends ControllerGear
         $user = $this->acct->getUserAccount($this->getActiveUserId());
 
         if (\extension_loaded('gd')) {
-            $this->sendStandardHeaders('image/png');
+            $this->includeStandardHeaders('image/png');
             $writer = null;
         } else {
             $renderer = new Svg();
             $renderer->setHeight(384);
             $renderer->setWidth(384);
             $writer = new QRCodeWriter($renderer);
-            $this->sendStandardHeaders('image/svg+xml');
+            $this->includeStandardHeaders('image/svg+xml');
         }
         $gauth->makeQRCode(
             $writer,

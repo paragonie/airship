@@ -463,7 +463,7 @@ class Controller
 
         $response = $this->getResponseObject();
         foreach (\Airship\get_standard_headers($mimeType) as $left => $right) {
-            $response = $response->withAddedHeader($left, $right);
+            $response = $response->withHeader($left, $right);
         };
         $this->airship_response = $response;
 
