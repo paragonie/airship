@@ -103,14 +103,14 @@ class Controller
      * This is final so nobody changes it in a Gear. Please don't mess with 
      * this component.
      * 
-     * @param View $lens
+     * @param View $view
      * @param array<string, array<int, Database>> $databases
      * @param string $urlPrefix
      * @param ServerRequestInterface $request
      * @return void
      */
     final public function airshipEjectFromCockpit(
-        View $lens,
+        View $view,
         array $databases = [],
         string $urlPrefix = '',
         ServerRequestInterface $request = null
@@ -129,7 +129,7 @@ class Controller
         $this->airship_http_method = $_SERVER['REQUEST_METHOD']
                 ??
             $this->airship_request->getServerParams()['REQUEST_METHOD'];
-        $this->airship_view_object = $lens;
+        $this->airship_view_object = $view;
         $this->airship_databases = $databases;
         $this->airship_csrf = Gears::get('CSRF');
         $this->airship_cabin_prefix = \rtrim('/' . $urlPrefix, '/');
@@ -138,6 +138,7 @@ class Controller
             $this->airship_config = \Airship\loadJSON($file);
         }
         $this->airship_response = Gears::get('HTTPResponse');
+        $this->includeStandardHeaders();
         $this->airshipLand();
     }
     
@@ -251,6 +252,17 @@ class Controller
             $this->airship_response = new Response();
         }
         return $this->airship_response;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return Controller
+     */
+    public function replaceResponseObject(ResponseInterface $response): self
+    {
+        $this->airship_response = $response;
+        return $this;
     }
 
     /**
@@ -388,12 +400,12 @@ class Controller
      * @return bool
      * @throws ControllerComplete
      */
-    protected function stasis(string $name, ...$cArgs): bool
+    protected function stasis(string $name, array $params = [], string $mimeType = 'text/html;charset=UTF-8'): bool
     {
         // We don't want to cache anything tied to a session.
         $oldSession = $_SESSION;
         $_SESSION = [];
-        $data = $this->getAirshipViewObject()->render($name, ...$cArgs);
+        $data = $this->getAirshipViewObject()->render($name, $params);
         $_SESSION = $oldSession;
 
         $port = $_SERVER['HTTP_PORT'] ?? '';
@@ -410,45 +422,70 @@ class Controller
             );
         }
         $this->setBodyAndStandardHeaders(
-            Stream::fromString($data)
+            Stream::fromString($data),
+            $mimeType
         );
         throw new ControllerComplete();
     }
 
     /**
      * @param StreamInterface $stream
-     * @return self
+     * @param string $mimeType
+     *
+     * @return Controller
      */
-    protected function setBodyAndStandardHeaders(StreamInterface $stream): self
-    {
-        $state = State::instance();
+    protected function setBodyAndStandardHeaders(
+        StreamInterface $stream,
+        string $mimeType = 'text/html;charset=UTF-8'
+    ): self {
         /**
          * @var ResponseInterface
          */
-        $this->airship_response = $this->getResponseObject()
-            ->withHeader('Content-Type', 'text/html;charset=UTF-8')
-            ->withHeader('Content-Language', $state->lang)
-            ->withHeader('X-Content-Type-Options', 'nosniff')
-            ->withHeader('X-Frame-Options', 'SAMEORIGIN')
-            ->withHeader('X-XSS-Protection', '1; mode=block')
+
+        $this->airship_response = $this
+            ->includeStandardHeaders($mimeType)
             ->withBody($stream);
-        if ($state->CSP instanceof CSPBuilder) {
-            /**
-             * @var ResponseInterface
-             */
-            $this->airship_response = $state->CSP->injectCSPHeader(
-                $this->airship_response
-            );
-        }
-        if ($state->HPKP instanceof HPKPBuilder) {
-            list($hpkp_n, $hpkp_v) = \explode(':', $state->HPKP->getHeader());
-            $this->airship_response = $this->airship_response
-                ->withHeader(
-                    $hpkp_n,
-                    \trim($hpkp_v)
-                );
-        }
         return $this;
+    }
+
+    /**
+     * @param string $mimeType
+     *
+     * @return ResponseInterface
+     */
+    protected function includeStandardHeaders(string $mimeType = 'text/html;charset=UTF-8'): ResponseInterface
+    {
+        static $secHeaders = false;
+
+        $state = State::instance();
+
+        $this->airship_response = $this->getResponseObject()
+             ->withHeader('Content-Type', $mimeType)
+             ->withHeader('Content-Language', $state->lang)
+             ->withHeader('X-Content-Type-Options', 'nosniff')
+             ->withHeader('X-Frame-Options', 'SAMEORIGIN')
+             ->withHeader('X-XSS-Protection', '1; mode=block');
+
+        if (!$secHeaders) {
+            if ($state->CSP instanceof CSPBuilder) {
+                /**
+                 * @var ResponseInterface
+                 */
+                $this->airship_response = $state->CSP->injectCSPHeader(
+                    $this->airship_response
+                );
+            }
+            if ($state->HPKP instanceof HPKPBuilder) {
+                list($hpkp_n, $hpkp_v) = \explode(':', $state->HPKP->getHeader());
+                $this->airship_response = $this->airship_response
+                    ->withHeader(
+                        $hpkp_n,
+                        \trim($hpkp_v)
+                    );
+            }
+            $secHeaders = true;
+        }
+        return $this->airship_response;
     }
 
     /**
@@ -494,19 +531,22 @@ class Controller
      * Render a template and terminate execution. Do not cache.
      *
      * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
+     * @param array $params
+     * @param string $mimeType
+     *
      * @throws ControllerComplete
      * @return void
      */
-    protected function view(string $name, ...$cArgs): void
+    protected function view(string $name, array $params = [], string $mimeType = 'text/html;charset=UTF-8'): void
     {
         if (isset($this->airship_view_override[$name])) {
             $name = $this->airship_view_override[$name];
         }
         \ob_start();
-        $this->getAirshipViewObject()->display($name, ...$cArgs);
+        $this->getAirshipViewObject()->display($name, $params);
         $this->setBodyAndStandardHeaders(
-            Stream::fromString((string) \ob_get_clean())
+            Stream::fromString((string) \ob_get_clean()),
+            $mimeType
         );
         throw new ControllerComplete();
     }

@@ -11,6 +11,8 @@ use Airship\Alerts\Router\{
 use Airship\Engine\Contract\RouterInterface;
 use Airship\Engine\Security\Util;
 use ParagonIE\ConstantTime\Binary;
+use ParagonIE\CSPBuilder\CSPBuilder;
+use ParagonIE\HPKPBuilder\HPKPBuilder;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -513,11 +515,9 @@ class AutoPilot implements RouterInterface
         }
 
         // Send headers:
-        if (!\headers_sent()) {
-            foreach ($response->getHeaders() as $name => $values) {
-                foreach ($values as $value) {
-                    \header(\sprintf('%s: %s', $name, $value), false);
-                }
+        foreach ($response->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                \header(\sprintf('%s: %s', $name, $value), false);
             }
         }
         echo (string) $response->getBody();

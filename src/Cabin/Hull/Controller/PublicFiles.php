@@ -100,7 +100,7 @@ class PublicFiles extends ControllerGear
             }
             \header('X-Content-Type-Options: nosniff');
 
-            $this->airship_view_object->sendStandardHeaders($fileData['type']);
+            $this->includeStandardHeaders($fileData['type']);
             \readfile($realPath);
             exit;
         } catch (FileNotFound $ex) {

@@ -237,3 +237,4 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
         return $this->serialize();
     }
 }
+

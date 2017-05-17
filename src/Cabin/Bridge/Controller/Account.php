@@ -329,7 +329,7 @@ class Account extends ControllerGear
             $renderer->setHeight(384);
             $renderer->setWidth(384);
             $writer = new QRCodeWriter($renderer);
-            $this->airship_view_object->sendStandardHeaders('image/svg+xml');
+            $this->sendStandardHeaders('image/svg+xml');
         }
         $gauth->makeQRCode(
             $writer,

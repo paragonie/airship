@@ -3,8 +3,11 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use Airship\Engine\Bolt\Log as LogBolt;
+use Airship\Engine\Networking\HTTP\Response;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use ParagonIE\HPKPBuilder\HPKPBuilder;
+use PHPUnit\Runner\Exception;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class View
@@ -46,20 +49,8 @@ class View
      */
     public function display(
         string $base, 
-        array $params = [], 
-        string $mime = 'text/html;charset=UTF-8'
+        array $params = []
     ): bool {
-        if (!\headers_sent()) {
-            \ob_start();
-            // We need to render this to make sure our CSP headers send!
-            echo $this->twigEnv->render(
-                $base . '.twig',
-                \array_merge($this->stored, $params)
-            );
-            $this->sendStandardHeaders($mime);
-            \ob_end_flush();
-            return true;
-        }
         echo $this->twigEnv->render(
             $base . '.twig',
             \array_merge($this->stored, $params)
@@ -77,20 +68,8 @@ class View
      */
     public function unsafeDisplay(
         string $file,
-        array $params = [],
-        string $mime = 'text/html;charset=UTF-8'
+        array $params = []
     ): bool {
-        if (!\headers_sent()) {
-            $this->sendStandardHeaders($mime);
-            \ob_start();
-            // We need to render this to make sure our CSP headers send!
-            echo $this->twigEnv->render(
-                $file,
-                $params
-            );
-            \ob_end_flush();
-            return true;
-        }
         echo $this->twigEnv->render(
             $file,
             $params
@@ -389,24 +368,13 @@ class View
     }
 
     /**
-     * Send HTTP headers
+     * @param ResponseInterface $response
      *
-     * @param string $mimeType
-     * @return void
+     * @return View
      */
-    public function sendStandardHeaders(string $mimeType)
+    public function setResponseObject(ResponseInterface $response): self
     {
-        $state = State::instance();
-        \header('Content-Type: ' . $mimeType);
-        \header('Content-Language: ' . $state->lang);
-        \header('X-Content-Type-Options: nosniff');
-        \header('X-Frame-Options: SAMEORIGIN'); // Maybe make this configurable down the line?
-        \header('X-XSS-Protection: 1; mode=block');
-        if (isset($state->HPKP) && $state->HPKP instanceof HPKPBuilder) {
-            $state->HPKP->sendHPKPHeader();
-        }
-        if (isset($state->CSP) && $state->CSP instanceof CSPBuilder) {
-            $state->CSP->sendCSPHeader();
-        }
+        $this->response = $response;
+        return $this;
     }
 }
