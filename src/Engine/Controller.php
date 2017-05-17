@@ -257,7 +257,7 @@ class Controller
     /**
      * @param ResponseInterface $response
      *
-     * @return Controller
+     * @return self
      */
     public function replaceResponseObject(ResponseInterface $response): self
     {
@@ -396,7 +396,9 @@ class Controller
      * Render lens content, cache it, then display it.
      *
      * @param string $name
-     * @param array<int, mixed> $cArgs Constructor arguments
+     * @param array $params
+     * @param string $mimeType
+     *
      * @return bool
      * @throws ControllerComplete
      */
@@ -432,7 +434,7 @@ class Controller
      * @param StreamInterface $stream
      * @param string $mimeType
      *
-     * @return Controller
+     * @return self
      */
     protected function setBodyAndStandardHeaders(
         StreamInterface $stream,

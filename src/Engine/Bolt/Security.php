@@ -206,6 +206,7 @@ trait Security
             $autoPilot = $state->autoPilot;
 
             // Rotate the authentication token:
+            /** @var HiddenString $hiddenString */
             $hiddenString = $this->airship_auth->rotateToken($token, $userId);
             if ($hiddenString instanceof HiddenString) {
                 Cookie::setcookie(

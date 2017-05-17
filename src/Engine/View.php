@@ -3,11 +3,6 @@ declare(strict_types=1);
 namespace Airship\Engine;
 
 use Airship\Engine\Bolt\Log as LogBolt;
-use Airship\Engine\Networking\HTTP\Response;
-use ParagonIE\CSPBuilder\CSPBuilder;
-use ParagonIE\HPKPBuilder\HPKPBuilder;
-use PHPUnit\Runner\Exception;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class View
@@ -44,7 +39,6 @@ class View
      *
      * @param string $base  Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
-     * @param string $mime  MIME type header to transmit
      * @return bool
      */
     public function display(
@@ -63,7 +57,6 @@ class View
      *
      * @param string $file Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
-     * @param string $mime MIME type
      * @return bool
      */
     public function unsafeDisplay(
@@ -364,17 +357,6 @@ class View
                 $state->motifs[$name]['config']['base_template'] .
                 '.twig';
         }
-        return $this;
-    }
-
-    /**
-     * @param ResponseInterface $response
-     *
-     * @return View
-     */
-    public function setResponseObject(ResponseInterface $response): self
-    {
-        $this->response = $response;
         return $this;
     }
 }
