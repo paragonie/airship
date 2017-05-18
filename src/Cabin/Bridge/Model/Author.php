@@ -158,6 +158,42 @@ class Author extends ModelGear
     }
 
     /**
+     * Get all authors, but put mine first.
+     *
+     * @param int $userId
+     * @param string $sortby
+     * @param string $dir
+     *
+     * @return array
+     */
+    public function getAllPreferMine(int $userId, string $sortby = 'name', string $dir = 'ASC'): array
+    {
+        $mine = $this->db->run('
+            SELECT 
+                a.*
+            FROM
+                hull_blog_authors a
+            LEFT JOIN hull_blog_author_owners o ON
+                o.authorid = a.authorid
+            WHERE
+                o.userid = ?
+            GROUP BY a.authorid
+            ' . $this->orderBy($sortby, $dir, ['name', 'created']),
+            $userId
+        );
+        $ids = [];
+        foreach ($mine as $m) {
+            $ids[] = (int) $m['authorid'];
+        }
+        $notMine = $this->db->run(
+            'SELECT * FROM hull_blog_authors WHERE authorid NOT IN ' .
+                $this->db->escapeValueSet($ids, 'int') .
+                ' ' . $this->orderBy($sortby, $dir, ['name', 'created'])
+        );
+        return [$mine, $notMine];
+    }
+
+    /**
      * Get all of the authors available for this user to post under
      *
      * @param int $userid
