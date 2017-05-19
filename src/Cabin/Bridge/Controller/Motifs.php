@@ -197,6 +197,7 @@ class Motifs extends AdminOnly
      */
     protected function getConfigFilter(string $path): InputFilterContainer
     {
+        /** @noinspection PhpIncludeInspection */
         include $path;
 
         if (!isset($motifInputFilter)) {

@@ -94,7 +94,7 @@ class Author extends LoggedInUsersOnly
         }
 
         if ($this->isSuperUser()) {
-            $authors = $this->author->getAll();
+            $authors = $this->author->getAllPreferMine($this->getActiveUserId());
         } else {
             $authors = $this->author->getForUser($this->getActiveUserId());
         }

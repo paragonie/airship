@@ -71,7 +71,7 @@ window.populate_blogposts_select = function(authorId) {
 /**
  * Update the <select> dropdown for #existing_series
  *
- * @param int authorId
+ * @param authorId
  */
 window.populate_series_select = function(authorId) {
     window.existing_series = get_items('series');

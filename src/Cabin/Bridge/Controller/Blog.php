@@ -112,7 +112,7 @@ class Blog extends LoggedInUsersOnly
         $latestVersion = $this->blog->getBlogPostLatestVersion($id);
 
         if ($this->isSuperUser()) {
-            $authors = $this->author->getAll();
+            $authors = $this->author->getAllPreferMine($this->getActiveUserId());
         } else {
             $authors = $this->author->getForUser(
                 $this->getActiveUserId()
@@ -228,7 +228,7 @@ class Blog extends LoggedInUsersOnly
         $latestVersion = $this->blog->getBlogPostLatestVersion($id);
 
         if ($this->isSuperUser()) {
-            $authors = $this->author->getAll();
+            $authors = $this->author->getAllPreferMine($this->getActiveUserId());
         } else {
             $authors = $this->author->getForUser(
                 $this->getActiveUserId()
@@ -298,6 +298,7 @@ class Blog extends LoggedInUsersOnly
                 $authorsAllowed[] = (int) $a['authorid'];
                 if ($a['authorid'] === $series['author']) {
                     $author = $a;
+                    break;
                 }
             }
         } else {
@@ -308,6 +309,7 @@ class Blog extends LoggedInUsersOnly
                 $authorsAllowed[] = (int) $a['authorid'];
                 if ($a['authorid'] === $series['author']) {
                     $author = $a;
+                    break;
                 }
             }
             if (!\in_array((int) $series['author'], $authorsAllowed)) {
@@ -622,7 +624,7 @@ class Blog extends LoggedInUsersOnly
         }
         // Load Data
         if ($this->isSuperUser()) {
-            $authors = $this->author->getAll();
+            $authors = $this->author->getAllPreferMine($this->getActiveUserId());
         } else {
             $authors = $this->author->getForUser(
                 $this->getActiveUserId()
@@ -750,7 +752,7 @@ class Blog extends LoggedInUsersOnly
             );
         }
         if ($this->isSuperUser()) {
-            $authors = $this->author->getAll();
+            $authors = $this->author->getAllPreferMine($this->getActiveUserId());
         } else {
             $authors = $this->author->getForUser(
                 $this->getActiveUserId()
