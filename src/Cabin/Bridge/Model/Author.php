@@ -190,7 +190,7 @@ class Author extends ModelGear
                 $this->db->escapeValueSet($ids, 'int') .
                 ' ' . $this->orderBy($sortby, $dir, ['name', 'created'])
         );
-        return [$mine, $notMine];
+        return \array_merge($mine, $notMine);
     }
 
     /**
