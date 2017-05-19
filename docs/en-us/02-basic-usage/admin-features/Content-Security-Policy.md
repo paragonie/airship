@@ -43,6 +43,11 @@ you wish your users' browsers to permit third party resources be loaded from
 without any additional checks. This is recommended for third-party APIs such
 as ReCAPTCHA or CDNs.
 
+## Why is Google whitelisted by default?
+
+* Google Web Fonts (for the default Motif)
+* ReCAPTCHA support (if enabled)
+
 ## Cabin-Specific Content Security Policies
 
 Cabins have one additional option: **Include, and extend, the Universal CSP
