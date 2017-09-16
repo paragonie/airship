@@ -307,7 +307,7 @@ class Keyggdrasil
         }
         return (new MerkleTree(...$nodeList))
             ->setHashSize(
-                \Sodium\CRYPTO_GENERICHASH_BYTES_MAX
+                \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
             )
             ->setPersonalizationString(
                 \AIRSHIP_BLAKE2B_PERSONALIZATION

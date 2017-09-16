@@ -8,6 +8,7 @@ use Airship\Engine\{
     Security\Util,
     State
 };
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Key;
 
 /**
@@ -139,16 +140,16 @@ class File implements CacheInterface
 
         // We use a keyed hash, with a distinct key per Airship deployment to
         // make collisions unlikely,
-        $hash = \Sodium\crypto_generichash(
+        $hash = \sodium_crypto_generichash(
             $preHash,
             $cacheKey->getRawKeyMaterial(),
             self::HASH_SIZE
         );
 
         $relHash = [
-            \Sodium\bin2hex($hash[0]),
-            \Sodium\bin2hex($hash[1]),
-            \Sodium\bin2hex(Util::subString($hash, 2)),
+            Hex::encode($hash[0]),
+            Hex::encode($hash[1]),
+            Hex::encode(Util::subString($hash, 2)),
         ];
         if ($asString) {
             return \implode(DIRECTORY_SEPARATOR, $relHash);

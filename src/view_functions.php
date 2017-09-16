@@ -13,7 +13,8 @@ use Airship\Engine\Security\Permissions;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use ParagonIE\ConstantTime\{
     Base64,
-    Base64UrlSafe
+    Base64UrlSafe,
+    Hex
 };
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
@@ -550,7 +551,7 @@ function logout_token(): string
     if (\array_key_exists('logout_token', $_SESSION)) {
         return $_SESSION['logout_token'];
     }
-    $_SESSION['logout_token'] = \Sodium\bin2hex(
+    $_SESSION['logout_token'] = Hex::encode(
         \random_bytes(16)
     );
     return $_SESSION['logout_token'];

@@ -8,10 +8,10 @@ use ParagonIE\Halite\Halite;
  * This is loaded before everything else in the bootstrapping process.
  */
 
-if (PHP_VERSION_ID < 70000) {
-    die("Airship requires PHP 7.0.0 or newer. You are running PHP " . PHP_VERSION);
+if (PHP_VERSION_ID < 70200) {
+    die("Airship requires PHP 7.2.0 or newer. You are running PHP " . PHP_VERSION);
 }
-if (!extension_loaded('libsodium')) {
+if (!extension_loaded('sodium')) {
     die("Airship requires Libsodium.");
 }
 // This is set to FALSE. It allows us to give IDEs hints that should never be executed.

@@ -90,7 +90,7 @@ class Sign extends Command
         } else {
             $level = KeyFactory::SENSITIVE;
         }
-        $salt = \Sodium\hex2bin($args[1] ?? $this->config['salt']);
+        $salt = Hex::decode($args[1] ?? $this->config['salt']);
 
         echo 'Generating a signature for: ', $file, "\n";
         $password = $this->silentPrompt('Enter password: ');
@@ -115,7 +115,7 @@ class Sign extends Command
         }
         \file_put_contents($file.'.sig', $signature);
         echo 'File signed: ' . $file.'.sig', "\n";
-        echo 'Public key: ' . \Sodium\bin2hex(
+        echo 'Public key: ' . Hex::encode(
             $sign_kp->getPublicKey()->getRawKeyMaterial()
         ), "\n";
         return true;

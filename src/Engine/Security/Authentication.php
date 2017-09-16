@@ -13,7 +13,8 @@ use Airship\Engine\{
 use Airship\Engine\Security\Migration\WordPress;
 use ParagonIE\ConstantTime\{
     Base64,
-    Binary
+    Binary,
+    Hex
 };
 use ParagonIE\Halite\{
     HiddenString,
@@ -256,30 +257,30 @@ class Authentication
         $val = CryptoUtil::raw_hash(
             Binary::safeSubstr($decoded, self::SELECTOR_BYTES)
         );
-        \Sodium\memzero($decoded);
+        \sodium_memzero($decoded);
         
         $record = $this->db->row(
             'SELECT * FROM ' . $table . ' WHERE ' . $f['selector'] . ' = ?',
             Base64::encode($sel)
         );
         if (empty($record)) {
-            \Sodium\memzero($val);
+            \sodium_memzero($val);
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
             );
         }
-        $stored = \Sodium\hex2bin($record[$f['validator']]);
-        \Sodium\memzero($record[$f['validator']]);
+        $stored = Hex::decode($record[$f['validator']]);
+        \sodium_memzero($record[$f['validator']]);
 
         if (!\hash_equals($stored, $val)) {
-            \Sodium\memzero($val);
-            \Sodium\memzero($stored);
+            \sodium_memzero($val);
+            \sodium_memzero($stored);
             throw new LongTermAuthAlert(
                 \trk('errors.security.invalid_persistent_token')
             );
         }
-        \Sodium\memzero($stored);
-        \Sodium\memzero($val);
+        \sodium_memzero($stored);
+        \sodium_memzero($val);
 
         $userID = (int) $record[$f['userid']];
 
@@ -367,7 +368,7 @@ class Authentication
             return false;
         }
         $sel = Binary::safeSubstr($decoded, 0, self::SELECTOR_BYTES);
-        \Sodium\memzero($decoded);
+        \sodium_memzero($decoded);
 
         // Delete the old token
         $this->db->beginTransaction();

@@ -9,6 +9,7 @@ use Airship\Engine\{
     Hail,
     State
 };
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
     HiddenString,
@@ -580,7 +581,7 @@ class Skyport extends ModelGear
         }
         $publicKey = new SignaturePublicKey(
             new HiddenString(
-                \Sodium\hex2bin($channels[$ch]['publickey'])
+                Hex::decode($channels[$ch]['publickey'])
             )
         );
 

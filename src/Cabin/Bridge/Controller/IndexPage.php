@@ -237,11 +237,11 @@ class IndexPage extends ControllerGear
                         Halite::VERSION,
                     'libsodium' => [
                         'major' =>
-                            \Sodium\library_version_major(),
+                            \SODIUM_LIBRARY_MAJOR_VERSION,
                         'minor' =>
-                            \Sodium\library_version_minor(),
+                            \SODIUM_LIBRARY_MINOR_VERSION,
                         'version' =>
-                            \Sodium\version_string()
+                            \SODIUM_LIBRARY_VERSION
                     ],
                     'version' =>
                         \PHP_VERSION,

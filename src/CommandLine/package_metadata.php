@@ -56,7 +56,7 @@ if ($state->hail instanceof Hail) {
     foreach ($channels as $identifier => $channel) {
         $publicKey = new SignaturePublicKey(
             new HiddenString(
-                \Sodium\hex2bin($channel['public_key'])
+                Hex::decode($channel['public_key'])
             )
         );
 

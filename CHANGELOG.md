@@ -1,7 +1,7 @@
 ## Version 2.0.0 - Not Released Yet
 
-  * Set the minimum PHP version to 7.1. (Will be 7.2 by the time it's released.)
-  * Upgrade Halite to version 3. (It will require version 4 when it's released.)
+  * Set the minimum PHP version to 7.2.
+  * Upgrade Halite to version 4.
   * Rename Blueprints to Models.
   * Rename Lenses to Views.
   * Rename Landings to Controllers.

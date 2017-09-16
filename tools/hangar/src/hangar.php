@@ -73,8 +73,8 @@ if (!Halite::isLibsodiumSetupCorrectly()) {
 
     die(
         "Your libsodium is not setup correctly. Please make sure you have at least:\n\n" .
-        "\tlibsodium     v1.0.10 (Installed: " . \Sodium\version_string() .")\n" .
-        "\tlibsodium-php v1.0.6  (Installed: " . $version . ")\n"
+        "\tlibsodium     v1.0.13 (Installed: " . \SODIUM_LIBRARY_VERSION .")\n" .
+        "\tlibsodium-php v2.0.4  (Installed: " . $version . ")\n"
     );
 }
 

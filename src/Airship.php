@@ -730,7 +730,7 @@ function queryString(
     }
     $cacheKey = Util::hash(
         $cabin . '/' . $driver,
-        \Sodium\CRYPTO_GENERICHASH_BYTES_MIN
+        SODIUM_CRYPTO_GENERICHASH_BYTES_MIN
     );
     if (empty($_cache[$cacheKey])) {
         $driver = \preg_replace('/[^a-z]/', '', \strtolower($driver));

@@ -106,7 +106,7 @@ $twigEnv->addFilter(
             $absolute = $_SERVER['DOCUMENT_ROOT'] . $relative_path;
             if (\is_readable($absolute)) {
                 return $relative_path . '?' . Base64UrlSafe::encode(
-                    \Sodium\crypto_generichash(
+                    \sodium_crypto_generichash(
                         \file_get_contents($absolute) . \filemtime($absolute)
                     )
                 );

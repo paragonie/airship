@@ -444,7 +444,7 @@ class TreeUpdate
             if ($supKey['type'] !== 'master') {
                 continue;
             }
-            $pub = \Sodium\bin2hex(
+            $pub = Hex::encode(
                 $supKeyKey->getRawKeyMaterial()
             );
 

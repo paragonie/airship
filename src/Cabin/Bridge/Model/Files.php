@@ -11,6 +11,7 @@ use Airship\Engine\{
     Security\Util,
     State
 };
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\File as HaliteFile;
 
 require_once __DIR__.'/init_gear.php';
@@ -1096,14 +1097,14 @@ class Files extends ModelGear
      */
     private function moveUploadedFile(string $tmp_name): string
     {
-        $dir1 = \Sodium\bin2hex(\random_bytes(1));
-        $dir2 = \Sodium\bin2hex(\random_bytes(1));
+        $dir1 = Hex::encode(\random_bytes(1));
+        $dir2 = Hex::encode(\random_bytes(1));
         $base = AIRSHIP_UPLOADS . $dir1 . DIRECTORY_SEPARATOR . $dir2;
         if (!\file_exists($base)) {
             \mkdir($base, 0775, true);
         }
         do {
-            $filename = \Sodium\bin2hex(\random_bytes(22));
+            $filename = Hex::encode(\random_bytes(22));
         } while (\file_exists($base . DIRECTORY_SEPARATOR . $filename));
 
         if (!\move_uploaded_file($tmp_name, $base . DIRECTORY_SEPARATOR . $filename)) {

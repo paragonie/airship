@@ -92,10 +92,10 @@ class CSRF
         if ($this->hmacIP) {
             // Use a keyed BLAKE2b hash to only allow this particular IP to send this request
             $token = Base64UrlSafe::encode(
-                \Sodium\crypto_generichash(
+                \sodium_crypto_generichash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
                     Base64UrlSafe::decode($token),
-                    \Sodium\CRYPTO_GENERICHASH_BYTES
+                    \SODIUM_CRYPTO_GENERICHASH_BYTES
                 )
             );
         }

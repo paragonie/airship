@@ -15,7 +15,8 @@ use Airship\Engine\{
 use GuzzleHttp\Exception\TransferException;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
-    Binary
+    Binary,
+    Hex
 };
 use ParagonIE\Halite\{
     Asymmetric\Crypto as AsymmetricCrypto,
@@ -67,7 +68,7 @@ class ChannelUpdates extends ModelGear
         $channelConfig = \Airship\loadJSON(ROOT . '/config/channels.json');
         $this->channelPublicKey = new SignaturePublicKey(
             new HiddenString(
-                \Sodium\hex2bin($channelConfig[$channel]['publickey'])
+                Hex::encode($channelConfig[$channel]['publickey'])
             )
         );
         $this->urls = $channelConfig[$channel]['urls'];
@@ -226,7 +227,7 @@ class ChannelUpdates extends ModelGear
         }
         return (new MerkleTree(...$nodeList))
             ->setHashSize(
-                \Sodium\CRYPTO_GENERICHASH_BYTES_MAX
+                SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
             )
             ->setPersonalizationString(
                 \AIRSHIP_BLAKE2B_PERSONALIZATION
@@ -565,7 +566,7 @@ class ChannelUpdates extends ModelGear
             if (\hash_equals($keyData['public_key'], $masterData['public_key'])) {
                 $publicKey = new SignaturePublicKey(
                     new HiddenString(
-                        \Sodium\hex2bin($masterData['public_key'])
+                        Hex::decode($masterData['public_key'])
                     )
                 );
                 $message = \json_encode($keyData);

@@ -17,9 +17,13 @@
     "email":    "info@paragonie.com",
     "source":   "https://github.com/paragonie/airship"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^6",
+    "vimeo/psalm": "^0|^1"
+  },
   "require": {
-    "php": "^7",
+    "php": "^7.2",
     "paragonie/constant_time_encoding": "^2",
-    "paragonie/halite": "^3"
+    "paragonie/halite": "^4"
   }
 }

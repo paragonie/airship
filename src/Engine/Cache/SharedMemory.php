@@ -65,12 +65,12 @@ class SharedMemory implements CacheInterface
         $this->cacheKeyL = CryptoUtil::safeSubstr(
             $cacheKey->getRawKeyMaterial(),
             0,
-            \Sodium\CRYPTO_SHORTHASH_KEYBYTES
+            \SODIUM_CRYPTO_SHORTHASH_KEYBYTES
         );
         $this->cacheKeyR = CryptoUtil::safeSubstr(
             $cacheKey->getRawKeyMaterial(),
-            \Sodium\CRYPTO_SHORTHASH_KEYBYTES,
-            \Sodium\CRYPTO_SHORTHASH_KEYBYTES
+            \SODIUM_CRYPTO_SHORTHASH_KEYBYTES,
+            \SODIUM_CRYPTO_SHORTHASH_KEYBYTES
         );
 
         if ($authKey) {
@@ -96,8 +96,8 @@ class SharedMemory implements CacheInterface
 
         if ($this->authKey) {
             // We're authenticating this value:
-            $mac = Util::subString($data, 0, \Sodium\CRYPTO_GENERICHASH_BYTES_MAX);
-            $data = Util::subString($data, \Sodium\CRYPTO_GENERICHASH_BYTES_MAX);
+            $mac = Util::subString($data, 0, \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX);
+            $data = Util::subString($data, \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX);
             if (!Symmetric::verify($data, $this->authKey, $mac, true)) {
                 // Someone messed with our shared memory.
                 throw new DataCorrupted();
@@ -145,7 +145,7 @@ class SharedMemory implements CacheInterface
         $fetch = \apcu_fetch($shmKey);
         $length = Util::stringLength($fetch);
         // Wipe:
-        \Sodium\memzero($fetch);
+        \sodium_memzero($fetch);
         \apcu_store(
             $shmKey,
             \str_repeat("\0", $length)
@@ -175,11 +175,11 @@ class SharedMemory implements CacheInterface
     public function getSHMKey(string $lookup): string
     {
         return Base64UrlSafe::encode(
-            \Sodium\crypto_shorthash(
+            \sodium_crypto_shorthash(
                 $this->personalization . $lookup,
                 $this->cacheKeyL
             ) .
-            \Sodium\crypto_shorthash(
+            \sodium_crypto_shorthash(
                 $this->personalization . $lookup,
                 $this->cacheKeyR
             )
