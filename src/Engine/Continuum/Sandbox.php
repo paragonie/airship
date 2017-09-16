@@ -53,6 +53,11 @@ abstract class Sandbox
             // Wrong type. Abort!
             return [];
         }
-        return $db->safeQuery(\file_get_contents($file));
+        $contents = \file_get_contents($file);
+        if (!\is_string($contents)) {
+            // Wrong type. Abort!
+            return [];
+        }
+        return $db->safeQuery($contents);
     }
 }

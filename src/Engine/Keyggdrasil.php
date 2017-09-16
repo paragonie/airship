@@ -67,31 +67,30 @@ class Keyggdrasil
     /**
      * @var array<string, \Airship\Engine\Continuum\Supplier>
      */
-    protected $supplierCache;
+    protected $supplierCache = [];
 
     /**
      * @var array<mixed, Channel>
      */
-    protected $channelCache;
+    protected $channelCache = [];
 
     /**
      * Keyggdrasil constructor.
      *
      * @param Hail|null $hail
-     * @param DBInterface|null $db
+     * @param Database $db
      * @param array $channels
      */
     public function __construct(
         Hail $hail = null,
-        DBInterface $db = null,
+        Database $db = null,
         array $channels = []
     ) {
         $config = State::instance();
         if (empty($hail)) {
-            $this->hail = $config->hail;
-        } else {
-            $this->hail = $hail;
+            $hail = $config->hail;
         }
+        $this->hail = $hail;
 
         if (empty($db)) {
             $db = \Airship\get_database();
@@ -135,7 +134,7 @@ class Keyggdrasil
                 return false;
             }
             // Decode then verify signature
-            $message = Base64UrlSafe::decode($response['response']);
+            $message = (string) Base64UrlSafe::decode($response['response']);
             $signature = $response['signature'];
             $isValid = AsymmetricCrypto::verify(
                 $message,
@@ -360,7 +359,7 @@ class Keyggdrasil
             $signatureVerified = AsymmetricCrypto::verify(
                 $response['no_updates'],
                 $chan->getPublicKey(),
-                Base64UrlSafe::decode($response['signature']),
+                (string) Base64UrlSafe::decode($response['signature']),
                 true
             );
             if (!$signatureVerified) {
@@ -385,7 +384,7 @@ class Keyggdrasil
         // We were given updates. Let's validate them!
         $TreeUpdateArray = [];
         foreach ($response['updates'] as $update) {
-            $data = Base64UrlSafe::decode($update['data']);
+            $data = (string) Base64UrlSafe::decode($update['data']);
             $sig = $update['signature'];
             $signatureVerified = AsymmetricCrypto::verify(
                 $data,
@@ -396,11 +395,12 @@ class Keyggdrasil
                 // Invalid signature
                 throw new ChannelSignatureFailed();
             }
+            $decoded = \json_decode($data, true);
+            if (!\is_array($decoded)) {
+                throw new CouldNotUpdate('JSON error -- did not get an array');
+            }
             // Now that we know it was signed by the channel, time to update
-            $TreeUpdateArray[] = new TreeUpdate(
-                $chan,
-                \json_decode($data, true)
-            );
+            $TreeUpdateArray[] = new TreeUpdate($chan, $decoded);
         }
 
         // Sort by ID

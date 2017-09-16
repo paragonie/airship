@@ -403,7 +403,7 @@ class Database implements DBInterface
      *
      * @param string $statement SQL query without user data
      * @param mixed ...$params Parameters
-     * @return mixed
+     * @return bool
      */
     public function exists(string $statement, ...$params): bool
     {

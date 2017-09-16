@@ -45,7 +45,7 @@ class Peer
         $this->name = $config['name'];
         $this->publicKey = new SignaturePublicKey(
             new HiddenString(
-                Base64UrlSafe::decode($config['public_key'])
+                (string) Base64UrlSafe::decode($config['public_key'])
             )
         );
         $this->urls = $config['urls'];

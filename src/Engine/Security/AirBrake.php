@@ -11,6 +11,7 @@ use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     EncryptionPublicKey
 };
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\HiddenString;
 
 /**

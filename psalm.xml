@@ -10,4 +10,8 @@
     <stubs>
         <file name="vendor/paragonie/halite/stub/Sodium.stub.php" />
     </stubs>
+    <issueHandlers>
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <TooFewArguments errorLevel="suppress" />
+    </issueHandlers>
 </psalm>

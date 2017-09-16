@@ -39,22 +39,22 @@ class TreeUpdate
     /**
      * @var string
      */
-    protected $action;
+    protected $action = '';
 
     /**
      * @var int
      */
-    protected $channelId;
+    protected $channelId = 0;
 
     /**
      * @var string
      */
-    protected $channelName;
+    protected $channelName = '';
 
     /**
      * @var string
      */
-    protected $checksum;
+    protected $checksum = '';
 
     /**
      * @var bool
@@ -64,7 +64,7 @@ class TreeUpdate
     /**
      * @var string
      */
-    protected $keyType;
+    protected $keyType = '';
 
     /**
      * @var string|null
@@ -89,17 +89,17 @@ class TreeUpdate
     /**
      * @var array
      */
-    protected $stored;
+    protected $stored = [];
 
     /**
      * @var string
      */
-    protected $packageName;
+    protected $packageName = '';
 
     /**
      * @var string
      */
-    protected $packageType;
+    protected $packageType = '';
 
     /**
      * @var Supplier

@@ -213,7 +213,7 @@ class Authentication
      * if the database leaks like a sieve.
      * 
      * @param HiddenString $token
-     * @return mixed int
+     * @return int
      * @throws LongTermAuthAlert
      */
     public function loginByToken(HiddenString $token): int

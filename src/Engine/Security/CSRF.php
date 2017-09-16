@@ -165,7 +165,7 @@ class CSRF
             $expected = Base64UrlSafe::encode(
                 CryptoUtil::raw_keyed_hash(
                     $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
-                    Base64UrlSafe::decode($stored['token'])
+                    (string) Base64UrlSafe::decode($stored['token'])
                 )
             );
         }
