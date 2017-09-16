@@ -51,7 +51,7 @@
     "gregwar/rst": "^1.0",
     "guzzlehttp/guzzle": "^6",
     "league/commonmark": "^0.13",
-    "paragonie/constant_time_encoding": "^2",
+    "paragonie/constant_time_encoding": "^2.1",
     "paragonie/cookie": "^3.1",
     "paragonie/csp-builder": "^2",
     "paragonie/gpg-mailer": "^0|^1",
