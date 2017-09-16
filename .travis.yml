@@ -19,17 +19,7 @@ services:
 before_install:
   - sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
   - sudo apt-get -y update
-  - sudo apt-get install make build-essential automake php7.1-dev php-pear php7.1-curl
-  - git clone git://github.com/jedisct1/libsodium.git
-  - cd libsodium
-  - git checkout 1.0.13
-  - ./autogen.sh
-  - ./configure > /dev/null
-  - echo "Installing libsodium..."
-  - sudo make install > /dev/null
-  - cd ..
-  - echo "Installing ext/sodium..."
-  - pecl install libsodium > /dev/null
+  - sudo apt-get install make build-essential automake php7.2-dev php-pear php7.2-curl libsodium-dev php7.2-sodium
 
 install:
   - composer update
