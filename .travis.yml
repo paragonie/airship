@@ -22,14 +22,12 @@ before_install:
   - sudo apt-get install make build-essential automake php7.2-dev php-pear php7.2-curl php7.2-sodium
   - git clone git://github.com/jedisct1/libsodium.git
   - cd libsodium
-  - git checkout 1.0.13
+  - git checkout 1.0.15
   - ./autogen.sh
   - ./configure > /dev/null
   - echo "Installing libsodium..."
   - sudo make install > /dev/null
   - cd ..
-  - echo "Installing ext/sodium..."
-  - pecl install libsodium > /dev/null
 
 install:
   - composer update
