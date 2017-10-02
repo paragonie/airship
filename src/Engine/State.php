@@ -113,6 +113,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      */
     public function serialize()
     {
+        /** @var string $string */
         $string = \json_encode(
             $this->engine_state_registry,
             JSON_PRETTY_PRINT

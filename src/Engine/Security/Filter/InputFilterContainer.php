@@ -121,6 +121,7 @@ abstract class InputFilterContainer implements FilterContainerInterface
      */
     protected static function sanitize(string $input): string
     {
+        /** @var string $sanitized */
         $sanitized = \json_encode(
             \preg_replace('#[^\x20-\x7e]#', '', $input)
         );

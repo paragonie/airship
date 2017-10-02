@@ -33,10 +33,10 @@ class Supplier
     /**
      * Supplier constructor.
      *
-     * @param $name
+     * @param string $name
      * @param array $data
      */
-    public function __construct($name, array $data = [])
+    public function __construct(string $name, array $data = [])
     {
         // Do not allow invalid characters in the name:
         $this->name = \preg_replace(

@@ -8,7 +8,7 @@
 *The sky is only the beginning.*
 
 CMS Airship is a **secure-by-default** content management system, blog
-engine, and application development framework written for PHP 7.
+engine, and application development framework written for PHP 7.2 and above.
 
 CMS Airship is [Free Software](https://github.com/paragonie/airship/blob/master/LICENSE.txt)
 (GPL 3) developed and maintained by [Paragon Initiative Enterprises](https://paragonie.com).
@@ -39,9 +39,8 @@ See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
 
 ## Minimum Requirements
 
-* PHP 7.1 or newer
-* PECL Libsodium 1.0.6 or newer
-* Libsodium 1.0.10 or newer
+* PHP 7.2 or newer
+* Libsodium 1.0.13 or newer
 
 ### Getting Started
 

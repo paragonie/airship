@@ -36,4 +36,5 @@ if (\is_readable(ROOT . '/config/databases.json')) {
     $state->logger->info('Keyggdrasil concluded');
 } else {
     // We can't update keys without a place to persist the changes
+    return;
 }

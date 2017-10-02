@@ -206,7 +206,7 @@ class CSRF
      */
     protected function generateToken(string $lockTo = ''): array
     {
-        $index = '';
+        /** @var string $index */
         // Create a distinct index:
         do {
             $index = Base64UrlSafe::encode(

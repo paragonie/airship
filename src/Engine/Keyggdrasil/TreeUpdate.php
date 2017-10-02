@@ -223,6 +223,7 @@ class TreeUpdate
      */
     public function getNodeJSON(): string
     {
+        /** @var string $json */
         $json = \json_encode($this->updateMessage);
         if (!\is_string($json)) {
             throw new \Error('Could not get JSON data');
@@ -467,6 +468,7 @@ class TreeUpdate
                 \__('The provided public key does not match any known master key.')
             );
         }
+        /** @var string $encoded */
         $encoded = \json_encode($messageToSign);
         if (!\is_string($encoded)) {
             throw new CouldNotUpdate(

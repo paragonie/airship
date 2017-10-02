@@ -11,8 +11,7 @@ use Airship\Alerts\Continuum\{
 use Airship\Alerts\Hail\SignatureFailed;
 use Airship\Engine\{
     Bolt\Supplier as SupplierBolt,
-    Bolt\Log as LogBolt,
-    Contract\DBInterface
+    Bolt\Log as LogBolt
 };
 use Airship\Engine\Continuum\{
     API,

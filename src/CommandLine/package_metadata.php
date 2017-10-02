@@ -9,6 +9,7 @@ use Airship\Engine\{
 };
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\HiddenString;
+use ParagonIE\ConstantTime\Hex;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
 

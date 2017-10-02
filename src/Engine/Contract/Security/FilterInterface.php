@@ -19,7 +19,7 @@ interface FilterInterface
     /**
      * Set the default value (not applicable to booleans)
      *
-     * @param $value
+     * @param mixed $value
      * @return FilterInterface
      */
     public function setDefault($value): FilterInterface;

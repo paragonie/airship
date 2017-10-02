@@ -292,7 +292,7 @@ class Message implements MessageInterface
      * Mutate the current object. For internal use.
      *
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return self
      */
     public function mutate(string $key, $value): self

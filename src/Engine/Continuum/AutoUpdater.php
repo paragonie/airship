@@ -111,7 +111,7 @@ abstract class AutoUpdater
     protected function autoRunScript(array $autoRun)
     {
         $ret = null;
-        $script = '';
+        /** @var string $script */
 
         // Get a unique temporary file
         do {
@@ -505,7 +505,7 @@ abstract class AutoUpdater
     /**
      * Sort updates by version (newest to latest)
      *
-     * @param UpdateInfo ...$updates
+     * @param array<int, UpdateInfo> $updates
      * @return array<int, UpdateInfo>
      */
     protected function sortUpdatesByVersion(UpdateInfo ...$updates): array
