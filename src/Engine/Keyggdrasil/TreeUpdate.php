@@ -216,11 +216,18 @@ class TreeUpdate
     }
 
     /**
+     * Get the node data as a JSON encoded string.
+     *
      * @return string
+     * @throws \Error
      */
     public function getNodeJSON(): string
     {
-        return \json_encode($this->updateMessage);
+        $json = \json_encode($this->updateMessage);
+        if (!\is_string($json)) {
+            throw new \Error('Could not get JSON data');
+        }
+        return $json;
     }
     /**
      * @return array
@@ -461,6 +468,11 @@ class TreeUpdate
             );
         }
         $encoded = \json_encode($messageToSign);
+        if (!\is_string($encoded)) {
+            throw new CouldNotUpdate(
+                \__('Invalid JSON message.')
+            );
+        }
         if (!Asymmetric::verify($encoded, $this->supplierMasterKeyUsed, $master['signature'])) {
             throw new CouldNotUpdate(
                 \__('Invalid signature for this master key.')

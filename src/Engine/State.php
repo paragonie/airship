@@ -109,13 +109,18 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * Return a JSON encoded representation of the registry
      * 
      * @return string
+     * @throws \Error
      */
     public function serialize()
     {
-        return \json_encode(
+        $string = \json_encode(
             $this->engine_state_registry,
             JSON_PRETTY_PRINT
         );
+        if (!\is_string($string)) {
+            throw new \Error('Could not sanitize string');
+        }
+        return $string;
     }
 
     /**
@@ -134,10 +139,15 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * 
      * @param string $serialized
      * @return array
+     * @throws \Error
      */
     public function unserialize($serialized)
     {
-        return \json_decode($serialized, true);
+        $array = \json_decode($serialized, true);
+        if (!\is_array($array)) {
+            throw new \Error('Invalid JSON message');
+        }
+        return $array;
     }
     
     /** BEGIN SINGLETON REQUIREMENTS **/
