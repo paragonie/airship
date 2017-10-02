@@ -460,7 +460,7 @@ class Account extends ControllerGear
             unset($post['username'], $post['passphrase']);
         }
 
-        if (isset($post['email'])) {
+        if (!empty($post['email'])) {
             if (!Util::isValidEmail($post['email'])) {
                 $this->view(
                     'my_account',
@@ -536,7 +536,7 @@ class Account extends ControllerGear
             );
         }
 
-        if (isset($post['email'])) {
+        if (!empty($post['email'])) {
             if (!Util::isValidEmail($post['email'])) {
                 $this->view(
                     'board',
