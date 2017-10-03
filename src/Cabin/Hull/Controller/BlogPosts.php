@@ -522,7 +522,7 @@ class BlogPosts extends ControllerGear
     public function readPost(string $year, string $month, string $slug)
     {
         $blogPost = $this->blog->getBlogPost($year, $month, $slug);
-        $post = $this->post(new CommentFilter(), true);
+        $post = $this->post(new CommentFilter());
         if ($post) {
             if ($this->addComment($post, (int) $blogPost['postid'])) {
                 \Airship\redirect(
