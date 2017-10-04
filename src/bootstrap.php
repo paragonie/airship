@@ -121,11 +121,11 @@ if ($state->universal['debug']) {
 $lens = Gears::get('View', $twigEnv);
 
 // Load the View configuration
-include ROOT . '/config/lens.php';
+include ROOT . '/config/view.php';
 
 // Load the Cabin-specific filters etc, if applicable:
-if (\file_exists(ROOT . '/Cabin/' . $active['name'] . '/lens.php')) {
-    include ROOT . '/Cabin/' . $active['name'] . '/lens.php';
+if (\file_exists(ROOT . '/Cabin/' . $active['name'] . '/view.php')) {
+    include ROOT . '/Cabin/' . $active['name'] . '/view.php';
 }
 
 // Load the template variables for this Cabin:

@@ -91,7 +91,7 @@ class IndexPage extends ControllerGear
                 );
             }
 
-            $this->view('index',
+            $this->includeAjaxToken()->view('index',
                 [
                     'announcements' =>
                         $announce_bp->getForUser(

@@ -18,6 +18,16 @@ require_once __DIR__.'/init_gear.php';
 class Cabins extends LoggedInUsersOnly
 {
     /**
+     * This function is called after the dependencies have been injected by
+     * AutoPilot. Think of it as a user-land constructor.
+     */
+    public function airshipLand()
+    {
+        parent::airshipLand();
+        $this->includeAjaxToken();
+    }
+
+    /**
      * @param string $cabinName
      * @route cabin/{string}
      */

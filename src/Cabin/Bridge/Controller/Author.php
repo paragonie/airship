@@ -40,6 +40,7 @@ class Author extends LoggedInUsersOnly
         parent::airshipLand();
         $this->author = $this->model('Author');
         $this->storeViewVar('active_link', 'bridge-link-authors');
+        $this->includeAjaxToken();
     }
 
     /**

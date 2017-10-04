@@ -38,6 +38,7 @@ class Crew extends AdminOnly
 
         $this->account = $this->model('UserAccounts');
         $this->storeViewVar('active_submenu', ['Admin', 'Crew']);
+        $this->includeAjaxToken();
     }
 
     /**

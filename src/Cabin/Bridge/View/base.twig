@@ -13,6 +13,7 @@
         #}data-activelink="{% if active_link %}{#
             #}{{ active_link|json_encode|e('html_attr') }}{#
         #}{% endif %}"{#
+        #}{% if ajax_csrf_token %}data-ajaxtoken="{{ ajax_csrf_token }}" {% endif %}{#
     #}>{% block body %}
         <div id="site-wrapper" class="bridge-body-site-wrapper{% if not showmenu %} bridge-no-menu{% endif %}">
             <header>{% block header %}

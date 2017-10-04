@@ -74,6 +74,7 @@ class Account extends ControllerGear
         parent::airshipLand();
         $this->storeViewVar('showmenu', true);
         $this->acct = $this->model('UserAccounts');
+        $this->includeAjaxToken();
     }
 
     /**

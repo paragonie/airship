@@ -32,7 +32,8 @@ class Ajax extends LoggedInUsersOnly
                 \trk('errors.type.wrong_class', Announcements::class)
             );
         }
-        if (empty($_POST['dismiss'])) {
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (empty($post['dismiss'])) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => 'Insufficient parameters'
@@ -40,7 +41,7 @@ class Ajax extends LoggedInUsersOnly
         }
         $result = $announce_bp->dismissForUser(
             $this->getActiveUserId(),
-            $_POST['dismiss']
+            $post['dismiss']
         );
         if ($result) {
             \Airship\json_response([
@@ -72,7 +73,8 @@ class Ajax extends LoggedInUsersOnly
                 \trk('errors.type.wrong_class', Files::class)
             );
         }
-        $authorId = (int) ($_POST['author'] ?? 0);
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -84,13 +86,13 @@ class Ajax extends LoggedInUsersOnly
                 ]);
             }
         }
-        if (!\Airship\all_keys_exist(['context', 'author'], $_POST)) {
+        if (!\Airship\all_keys_exist(['context', 'author'], $post)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => 'Insufficient parameters'
             ]);
         }
-        $file = $auth_bp->getPhotoData($authorId, $_POST['context']);
+        $file = $auth_bp->getPhotoData($authorId, $post['context']);
         if (empty($file)) {
             // No file selected
             \Airship\json_response([
@@ -125,7 +127,8 @@ class Ajax extends LoggedInUsersOnly
             );
         }
 
-        $authorId = (int) ($_POST['author'] ?? 0);
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -138,7 +141,7 @@ class Ajax extends LoggedInUsersOnly
             }
         }
 
-        if (empty($_POST['cabin']) || !$authorId === 0) {
+        if (empty($post['cabin']) || !$authorId === 0) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => 'Insufficient parameters'
@@ -148,7 +151,7 @@ class Ajax extends LoggedInUsersOnly
         \Airship\json_response([
             'status' => 'OK',
             'message' => '',
-            'photos' => $auth_bp->getAvailablePhotos($authorId, $_POST['cabin'])
+            'photos' => $auth_bp->getAvailablePhotos($authorId, $post['cabin'])
         ]);
     }
 
@@ -171,13 +174,14 @@ class Ajax extends LoggedInUsersOnly
             );
         }
 
-        if (empty($_POST['author'])) {
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (empty($post['author'])) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No author selected.')
             ]);
         }
-        $authorId = (int) ($_POST['author'] ?? 0);
+        $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -189,7 +193,7 @@ class Ajax extends LoggedInUsersOnly
                 ]);
             }
         }
-        $existing = $_POST['existing'] ?? [];
+        $existing = $post['existing'] ?? [];
         if (!\is1DArray($existing)) {
             \Airship\json_response([
                 'status' => 'ERROR',
@@ -203,11 +207,11 @@ class Ajax extends LoggedInUsersOnly
             'status' => 'OK'
         ];
 
-        if (!empty($_POST['add'])) {
-            $newBlogPost = $blog_bp->getBlogPostById($_POST['add'] + 0);
+        if (!empty($post['add'])) {
+            $newBlogPost = $blog_bp->getBlogPostById($post['add'] + 0);
             if (!empty($newBlogPost)) {
                 if ($newBlogPost['author'] === $authorId) {
-                    $existing[] = (int) ($_POST['add'] ?? 0);
+                    $existing[] = (int) ($post['add'] ?? 0);
                     $response['new_item'] = $this->getViewAsText(
                         'ajax/bridge_blog_series_item',
                         [
@@ -246,7 +250,8 @@ class Ajax extends LoggedInUsersOnly
                 ]
             );
         }
-        if (empty($_POST['username'])) {
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (empty($post['username'])) {
             \Airship\json_response(
                 [
                     'status' => 'ERROR',
@@ -254,7 +259,7 @@ class Ajax extends LoggedInUsersOnly
                 ]
             );
         }
-        if (empty($_POST['context'])) {
+        if (empty($post['context'])) {
             \Airship\json_response(
                 [
                     'status' => 'ERROR',
@@ -262,7 +267,7 @@ class Ajax extends LoggedInUsersOnly
                 ]
             );
         }
-        if (empty($_POST['cabin'])) {
+        if (empty($post['cabin'])) {
             \Airship\json_response(
                 [
                     'status' => 'ERROR',
@@ -271,9 +276,9 @@ class Ajax extends LoggedInUsersOnly
             );
         }
         $this->getPermissionsDataForUser(
-            (int) $_POST['context'],
-            $_POST['username'],
-            $_POST['cabin']
+            (int) $post['context'],
+            $post['username'],
+            $post['cabin']
         );
     }
 
@@ -296,13 +301,14 @@ class Ajax extends LoggedInUsersOnly
             );
         }
 
-        if (empty($_POST['author'])) {
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (empty($post['author'])) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('No author selected.')
             ]);
         }
-        $authorId = (int) ($_POST['author'] ?? 0);
+        $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -314,7 +320,7 @@ class Ajax extends LoggedInUsersOnly
                 ]);
             }
         }
-        $existing = $_POST['existing'] ?? [];
+        $existing = $post['existing'] ?? [];
         if (!\is1DArray($existing)) {
             \Airship\json_response([
                 'status' => 'ERROR',
@@ -328,8 +334,8 @@ class Ajax extends LoggedInUsersOnly
             'status' => 'OK'
         ];
 
-        if (!empty($_POST['add'])) {
-            $add = (int) ($_POST['add'] ?? 0);
+        if (!empty($post['add'])) {
+            $add = (int) ($post['add'] ?? 0);
             $newSeries = $blog_bp->getSeries($add);
             if (!empty($newSeries)) {
                 if ($newSeries['author'] === $authorId) {
@@ -374,7 +380,9 @@ class Ajax extends LoggedInUsersOnly
                 ]
             );
         }
-        if (empty($_POST['url'])) {
+
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (empty($post['url'])) {
             \Airship\json_response(
                 [
                     'status' => 'ERROR',
@@ -383,8 +391,8 @@ class Ajax extends LoggedInUsersOnly
             );
         }
         try {
-            $cabin = $this->getCabinNameFromURL($_POST['url']);
-            $this->getPermissionDataForURL($_POST['url'], $cabin);
+            $cabin = $this->getCabinNameFromURL($post['url']);
+            $this->getPermissionDataForURL($post['url'], $cabin);
         } catch (CabinNotFound $ex) {
             \Airship\json_response([
                 'status' => 'ERROR',
@@ -398,20 +406,21 @@ class Ajax extends LoggedInUsersOnly
      */
     public function richTextPreview()
     {
-        if (\Airship\all_keys_exist(['format', 'body'], $_POST)) {
-            switch ($_POST['format']) {
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        if (\Airship\all_keys_exist(['format', 'body'], $post)) {
+            switch ($post['format']) {
                 case 'HTML':
                 case 'Rich Text':
                     \Airship\json_response([
                         'status' => 'OK',
-                        'body' => \Airship\ViewFunctions\get_purified($_POST['body'] ?? '')
+                        'body' => \Airship\ViewFunctions\get_purified($post['body'] ?? '')
                     ]);
                     break;
                 case 'Markdown':
                     \Airship\json_response([
                         'status' => 'OK',
                         'body' => \Airship\ViewFunctions\render_purified_markdown(
-                            $_POST['body'] ?? '',
+                            $post['body'] ?? '',
                             true
                         )
                     ]);
@@ -420,14 +429,14 @@ class Ajax extends LoggedInUsersOnly
                     \Airship\json_response([
                         'status' => 'OK',
                         'body' => \Airship\ViewFunctions\get_purified(
-                            \Airship\ViewFunctions\render_rst($_POST['body'] ?? '', true)
+                            \Airship\ViewFunctions\render_rst($post['body'] ?? '', true)
                         )
                     ]);
                     break;
                 default:
                     \Airship\json_response([
                         'status' => 'ERROR',
-                        'message' => 'Unknown format: ' . $_POST['format']
+                        'message' => 'Unknown format: ' . $post['format']
                     ]);
             }
         }
@@ -541,7 +550,8 @@ class Ajax extends LoggedInUsersOnly
                 \trk('errors.type.wrong_class', Author::class)
             );
         }
-        $authorId = (int) $_POST['author'];
+        $post = $this->ajaxPost($_POST, 'csrf_token');
+        $authorId = (int) $post['author'];
         if (!$this->isSuperUser()) {
             $authors = $auth_bp->getAuthorIdsForUser(
                 $this->getActiveUserId()
@@ -553,18 +563,18 @@ class Ajax extends LoggedInUsersOnly
                 ]);
             }
         }
-        if (!\Airship\all_keys_exist(['cabin', 'context', 'author', 'filename'], $_POST)) {
+        if (!\Airship\all_keys_exist(['cabin', 'context', 'author', 'filename'], $post)) {
             \Airship\json_response([
-                'keys' => array_keys($_POST),
+                'keys' => array_keys($post),
                 'status' => 'ERROR',
                 'message' => 'Insufficient parameters'
             ]);
         }
         $result = $auth_bp->savePhotoChoice(
             $authorId,
-            $_POST['context'],
-            $_POST['cabin'],
-            $_POST['filename']
+            $post['context'],
+            $post['cabin'],
+            $post['filename']
         );
         if (!$result) {
             \Airship\json_response([

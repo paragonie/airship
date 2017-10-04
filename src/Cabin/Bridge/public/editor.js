@@ -14,7 +14,8 @@ $(document).ready(function() {
             prefix + "ajax/rich_text_preview",
             {
                 "format": $("#" + richTextLookups[_name]).val(),
-                "body": $("#rich_text_" + _name).val()
+                "body": $("#rich_text_" + _name).val(),
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (response) {
                 if (typeof(response) === "string") {

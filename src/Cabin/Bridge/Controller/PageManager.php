@@ -45,6 +45,7 @@ class PageManager extends LoggedInUsersOnly
         parent::airshipLand();
         $this->pg = $this->model('CustomPages');
         $this->storeViewVar('active_submenu', 'Cabins');
+        $this->includeAjaxToken();
     }
 
     /**

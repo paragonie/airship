@@ -92,6 +92,7 @@ $lens->addGlobal('_COOKIE', $_COOKIE);
 $lens->addGlobal('_REQUEST_URI', $_SERVER['REQUEST_URI'] ?? '/');
 
 $lens->func('__', '\\__');
+$lens->func('ajax_token');
 $lens->func('cargo');
 $lens->func('base_template');
 $lens->func('form_token');

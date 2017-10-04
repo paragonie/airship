@@ -50,6 +50,7 @@ class Blog extends LoggedInUsersOnly
         $this->blog = $this->model('Blog');
         $this->author = $this->model('Author');
         $this->storeViewVar('active_submenu', 'Blog');
+        $this->includeAjaxToken();
     }
 
     /**

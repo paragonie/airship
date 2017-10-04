@@ -38,6 +38,7 @@ class Permissions extends AdminOnly
         $this->users = $this->model('UserAccounts');
         $this->storeViewVar('active_submenu', ['Admin', 'Crew']);
         $this->storeViewVar('active_link', 'bridge-link-admin-crew-perms');
+        $this->includeAjaxToken();
     }
 
     /**

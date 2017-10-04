@@ -57,7 +57,7 @@ class Skyport extends AdminOnly
      */
     public function ajaxGetAvailablePackages()
     {
-        $post = $_POST ?? [];
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
         $type = '';
         $headline = 'Available Extensions';
         if (isset($post['type'])) {
@@ -161,11 +161,11 @@ class Skyport extends AdminOnly
             'supplier',
             'type'
         ];
-        if (!\Airship\all_keys_exist($expected, $_POST)) {
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
+        if (!\Airship\all_keys_exist($expected, $post)) {
             echo 'Invalid POST request.', "\n";
             return;
         }
-        $post = $_POST ?? [];
         $type = '';
         if (isset($post['type'])) {
             switch ($post['type']) {
@@ -218,7 +218,8 @@ class Skyport extends AdminOnly
             'supplier',
             'type'
         ];
-        if (!\Airship\all_keys_exist($expected, $_POST)) {
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
+        if (!\Airship\all_keys_exist($expected, $post)) {
             echo 'Invalid POST request.', "\n";
             return;
         }
@@ -245,7 +246,7 @@ class Skyport extends AdminOnly
      */
     public function index()
     {
-        $this->view(
+        $this->includeAjaxToken()->view(
             'skyport',
             [
                 'left' => $this->skyport->getLeftMenu()
@@ -264,7 +265,8 @@ class Skyport extends AdminOnly
             'supplier',
             'type'
         ];
-        if (!\Airship\all_keys_exist($expected, $_POST)) {
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
+        if (!\Airship\all_keys_exist($expected, $post)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
@@ -272,8 +274,8 @@ class Skyport extends AdminOnly
         }
         if ($this->skyport->isLocked()) {
             $locked = true;
-            if ($this->skyport->isPasswordLocked() && !empty($_POST['password'])) {
-                $password = new HiddenString($_POST['password']);
+            if ($this->skyport->isPasswordLocked() && !empty($post['password'])) {
+                $password = new HiddenString($post['password']);
                 if ($this->skyport->tryUnlockPassword($password)) {
                     $_SESSION['airship_install_lock_override'] = true;
                     $locked = false;
@@ -299,7 +301,7 @@ class Skyport extends AdminOnly
         }
         try {
             $filter = new SkyportFilter();
-            $_POST = $filter($_POST);
+            $post = $filter($post);
         } catch (\TypeError $ex) {
             $this->log(
                 "Input violation",
@@ -321,12 +323,12 @@ class Skyport extends AdminOnly
             ' ',
             [
                 \escapeshellarg(
-                    Util::charWhitelist($_POST['type'], Util::PRINTABLE_ASCII)
+                    Util::charWhitelist($post['type'], Util::PRINTABLE_ASCII)
                 ),
                 \escapeshellarg(
-                    Util::charWhitelist($_POST['supplier'], Util::PRINTABLE_ASCII) .
+                    Util::charWhitelist($post['supplier'], Util::PRINTABLE_ASCII) .
                         '/' .
-                    Util::charWhitelist($_POST['package'], Util::PRINTABLE_ASCII)
+                    Util::charWhitelist($post['package'], Util::PRINTABLE_ASCII)
                 )
             ]
         );
@@ -348,6 +350,7 @@ class Skyport extends AdminOnly
             'supplier',
             'type'
         ];
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
         if (!\Airship\all_keys_exist($expected, $_POST)) {
             \Airship\json_response([
                 'status' => 'ERROR',
@@ -356,8 +359,8 @@ class Skyport extends AdminOnly
         }
         if ($this->skyport->isLocked()) {
             $locked = true;
-            if ($this->skyport->isPasswordLocked() && !empty($_POST['password'])) {
-                $password = new HiddenString($_POST['password']);
+            if ($this->skyport->isPasswordLocked() && !empty($post['password'])) {
+                $password = new HiddenString($post['password']);
                 if ($this->skyport->tryUnlockPassword($password)) {
                     $_SESSION['airship_install_lock_override'] = true;
                     $locked = false;
@@ -384,7 +387,7 @@ class Skyport extends AdminOnly
 
         try {
             $filter = new SkyportFilter();
-            $post = $filter($_POST);
+            $post = $filter($post);
         } catch (\TypeError $ex) {
             $this->log(
                 "Input violation",
@@ -421,7 +424,8 @@ class Skyport extends AdminOnly
             'type',
             'version'
         ];
-        if (!\Airship\all_keys_exist($expected, $_POST)) {
+        $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
+        if (!\Airship\all_keys_exist($expected, $post)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('Incomplete request.')
@@ -429,7 +433,7 @@ class Skyport extends AdminOnly
         }
         try {
             $filter = new SkyportFilter();
-            $_POST = $filter($_POST);
+            $post = $filter($post);
         } catch (\TypeError $ex) {
             $this->log(
                 "Input violation",
@@ -451,15 +455,15 @@ class Skyport extends AdminOnly
             ' ',
             [
                 \escapeshellarg(
-                    Util::charWhitelist($_POST['type'], Util::PRINTABLE_ASCII)
+                    Util::charWhitelist($post['type'], Util::PRINTABLE_ASCII)
                 ),
                 \escapeshellarg(
-                    Util::charWhitelist($_POST['supplier'], Util::PRINTABLE_ASCII) .
+                    Util::charWhitelist($post['supplier'], Util::PRINTABLE_ASCII) .
                         '/' .
-                    Util::charWhitelist($_POST['package'], Util::PRINTABLE_ASCII)
+                    Util::charWhitelist($post['package'], Util::PRINTABLE_ASCII)
                 ),
                 \escapeshellarg(
-                    Util::charWhitelist($_POST['version'], Util::PRINTABLE_ASCII)
+                    Util::charWhitelist($post['version'], Util::PRINTABLE_ASCII)
                 )
             ]
         );

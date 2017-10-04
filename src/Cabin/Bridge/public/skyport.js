@@ -42,7 +42,8 @@ var skyport = {
                 "type": type,
                 "supplier": supplier,
                 "package": pkg,
-                "password": password
+                "password": password,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (response) {
                 if (response.status === 'PROMPT') {
@@ -77,6 +78,8 @@ var skyport = {
             // Page number
             args["page"] = skyport.page;
         }
+        args["csrf_token"] = $("body").data('ajaxtoken');
+
         $.post(
             skyport.prefix + 'ajax/admin/skyport/' + which,
             args,
@@ -106,7 +109,8 @@ var skyport = {
             {
                 "type": type,
                 "supplier": supplier,
-                "package": pkg
+                "package": pkg,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function(response) {
                 if (response.status == "OK") {
@@ -124,7 +128,8 @@ var skyport = {
                 "type": type,
                 "supplier": supplier,
                 "package": pkg,
-                "password": password
+                "password": password,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (response) {
                 if (response.status === 'PROMPT') {
@@ -207,7 +212,8 @@ var skyport = {
                 "type": type,
                 "supplier": supplier,
                 "package": pkg,
-                "version": version
+                "version": version,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (response) {
                 if (response.status === 'ERROR') {
@@ -225,7 +231,8 @@ var skyport = {
             {
                 "type": type,
                 "supplier": supplier,
-                "package": pkg
+                "package": pkg,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function(html) {
                 $("#skyport-main").html(html);

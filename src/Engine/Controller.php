@@ -154,6 +154,28 @@ class Controller
     }
 
     /**
+     * @return ResponseInterface
+     */
+    public function getResponseObject(): ResponseInterface
+    {
+        if (!$this->airship_response instanceof ResponseInterface) {
+            $this->airship_response = new Response();
+        }
+        return $this->airship_response;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return self
+     */
+    public function replaceResponseObject(ResponseInterface $response): self
+    {
+        $this->airship_response = $response;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function resetBaseTemplate()
@@ -208,6 +230,65 @@ class Controller
     }
 
     /**
+     * Verify a challenge/authentication token
+     *
+     * @param array $rawInput
+     * @param string $tokenIndex
+     * @param InputFilterContainer|null $filterContainer
+     *
+     * @return array
+     * @throws SecurityAlert
+     */
+    protected function ajaxPost(
+        array $rawInput,
+        string $tokenIndex,
+        InputFilterContainer $filterContainer = null
+    ): array {
+        $state = State::instance();
+        if (!($this->airship_csrf instanceof CSRF)) {
+            return [];
+        }
+        if (!\array_key_exists($tokenIndex, $rawInput)) {
+            if ($state->universal['debug']) {
+                // This is only thrown during development, to be noisy.
+                throw new SecurityAlert(
+                    \__('Security token ' . $tokenIndex . ' not included in data')
+                );
+            }
+            return [];
+        }
+        if (!\is_string($rawInput[$tokenIndex])) {
+            return [];
+        }
+        if (!$this->airship_csrf->checkAjax($rawInput[$tokenIndex])) {
+            if ($state->universal['debug']) {
+                \Airship\json_response([$rawInput[$tokenIndex], $_SESSION]);
+                // This is only thrown during development, to be noisy.
+                throw new SecurityAlert(
+                    \__('CSRF validation failed')
+                );
+            }
+            $this->log('CSRF validation failed', LogLevel::ALERT);
+            return [];
+        }
+
+        // If we're here, we just need to filter our data and return it.
+        if ($filterContainer) {
+            try {
+                return $filterContainer($rawInput);
+            } catch (\TypeError $ex) {
+                $this->log(
+                    'Input validation threw a TypeError',
+                    LogLevel::ALERT,
+                    \Airship\throwableToArray($ex)
+                );
+                return [];
+            }
+        }
+        return $rawInput;
+    }
+
+    /**
      * @return View
      * @throws \TypeError
      */
@@ -220,15 +301,17 @@ class Controller
     }
 
     /**
-     * Render a View as text, return a string
+     * @param string $lockTo
      *
-     * @param string $name
-     * @param mixed[] ...$cArgs Constructor arguments
      * @return string
+     * @throws \TypeError
      */
-    protected function getViewAsText(string $name, ...$cArgs): string
+    protected function getAjaxToken(string $lockTo = ''): string
     {
-        return $this->getAirshipViewObject()->render($name, ...$cArgs);
+        if (!($this->airship_csrf instanceof CSRF)) {
+            throw new \TypeError('Internal consistnecy problem with CSRF protection');
+        }
+        return $this->airship_csrf->ajaxToken($lockTo);
     }
 
     /**
@@ -244,24 +327,28 @@ class Controller
     }
 
     /**
-     * @return ResponseInterface
+     * Render a View as text, return a string
+     *
+     * @param string $name
+     * @param mixed[] ...$cArgs Constructor arguments
+     * @return string
      */
-    public function getResponseObject(): ResponseInterface
+    protected function getViewAsText(string $name, ...$cArgs): string
     {
-        if (!$this->airship_response instanceof ResponseInterface) {
-            $this->airship_response = new Response();
-        }
-        return $this->airship_response;
+        return $this->getAirshipViewObject()->render($name, ...$cArgs);
     }
 
     /**
-     * @param ResponseInterface $response
+     * @param string $lockTo
      *
-     * @return self
+     * @return self;
      */
-    public function replaceResponseObject(ResponseInterface $response): self
+    protected function includeAjaxToken($lockTo = ''): self
     {
-        $this->airship_response = $response;
+        if (!empty($lockTo)) {
+            $lockTo = $this->airship_cabin_prefix . $lockTo;
+        }
+        $this->storeViewVar('ajax_csrf_token', $this->getAjaxToken($lockTo));
         return $this;
     }
 
@@ -443,7 +530,6 @@ class Controller
         /**
          * @var ResponseInterface
          */
-
         $this->airship_response = $this
             ->includeStandardHeaders($mimeType)
             ->withBody($stream);

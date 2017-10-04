@@ -51,6 +51,7 @@ class Admin extends AdminOnly
             }
         }
         $this->storeViewVar('active_submenu', 'Admin');
+        $this->includeAjaxToken();
     }
 
     /**

@@ -33,7 +33,8 @@ window.getCommentForm = function(cabinURL) {
         {
             "year": blogBody.data('year'),
             "month": blogBody.data('month'),
-            "slug": blogBody.data('slug')
+            "slug": blogBody.data('slug'),
+            "csrf_token": $("body").data('ajaxtoken')
         },
         function (response) {
             $("#blog-comment-form-container").html(response);
@@ -45,7 +46,8 @@ window.loadComments = function(cabinURL, uniqueID) {
     $.post(
         cabinURL + "ajax/blog_load_comments",
         {
-            "blogpost": uniqueID
+            "blogpost": uniqueID,
+            "csrf_token": $("body").data('ajaxtoken')
         },
         function (response) {
             if (response.status === "OK") {

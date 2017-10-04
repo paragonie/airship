@@ -5,10 +5,11 @@ $(document).ready(function() {
         $.post(
             $("#bridge_main_menu_left").data('linkprefix') + "announcement/dismiss",
             {
-                "dismiss": id
+                "dismiss": id,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (result) {
-                if (result.status == 'OK') {
+                if (result.status === 'OK') {
                     $("#announce-" + id).remove();
                     var container = $("#announcements");
                     if (container.html().trim() === '') {

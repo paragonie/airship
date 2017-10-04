@@ -58,7 +58,8 @@ window.populate_blogposts_select = function(authorId) {
         prefix + "ajax/authors_blog_posts",
         {
             "author": authorId,
-            "existing": window.existing_blogposts
+            "existing": window.existing_blogposts,
+            "csrf_token": $("body").data('ajaxtoken')
         },
         function (res) {
             if (res.status === 'OK') {
@@ -85,7 +86,8 @@ window.populate_series_select = function(authorId) {
         prefix + "ajax/authors_blog_series",
         {
             "author": authorId,
-            "existing": window.existing_series
+            "existing": window.existing_series,
+            "csrf_token": $("body").data('ajaxtoken')
         },
         function (res) {
             if (res.status === 'OK') {
@@ -140,7 +142,8 @@ $(document).ready(function() {
                     {
                         "add": addingId,
                         "author": authorId,
-                        "existing": window.existing_series
+                        "existing": window.existing_series,
+                        "csrf_token": $("body").data('ajaxtoken')
                     },
                     function (res) {
                         if (res.status == 'OK') {
@@ -169,7 +172,8 @@ $(document).ready(function() {
                     {
                         "add": addingId,
                         "author": authorId,
-                        "existing": window.existing_blogposts
+                        "existing": window.existing_blogposts,
+                        "csrf_token": $("body").data('ajaxtoken')
                     },
                     function (res) {
                         if (res.status == 'OK') {

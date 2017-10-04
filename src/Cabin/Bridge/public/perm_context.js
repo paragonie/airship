@@ -166,14 +166,14 @@ $(document).ready(function() {
     $('.perm_row').each(function() {
         var _myId = $(this).data('id');
         var _myParent = $(this).data('parent') || null;
-        if (_myParent == null) {
+        if (_myParent === null) {
             main_branch.push(_myId);
         } else {
             var parents = [_myParent];
             var curr = _myParent;
-            while (curr != null && curr != 0) {
+            while (curr !== null && curr !== 0) {
                 curr = $("#group_" + curr).data('parent');
-                if (curr == 0 || curr == null) {
+                if (curr === 0 || curr === null) {
                     break;
                 }
                 parents.push(curr);
@@ -191,7 +191,8 @@ $(document).ready(function() {
         var req = {
             "cabin": $("#cabin").val(),
             "context": $("#contextId").val(),
-            "username": $("#newUserField").val()
+            "username": $("#newUserField").val(),
+            "csrf_token": $("body").data('ajaxtoken')
         };
         if ($("#perm_username_" + req.username).length) {
             alert(req.username + " is already present in the list above");

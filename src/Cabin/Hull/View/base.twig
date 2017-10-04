@@ -8,7 +8,7 @@
 
         {{ display_notary_tag() }}
     {% endblock %}</head>
-    <body>{% block body %}
+    <body{% if ajax_csrf_token %} data-ajaxtoken="{{ ajax_csrf_token }}"{% endif %}>{% block body %}
         <div id="site-wrapper">
             <header>{% block header %}
                 {% include cargo("header") %}

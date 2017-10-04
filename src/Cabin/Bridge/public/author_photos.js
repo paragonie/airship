@@ -19,7 +19,8 @@ window.photoSelector = function() {
                 "ajax/authors_photo_available",
             {
                 "cabin": window.photoSelectorState.cabin,
-                "author": window.photoSelectorState.authorID
+                "author": window.photoSelectorState.authorID,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (res) {
                 if (res.status !== "OK") {
@@ -103,7 +104,8 @@ window.photoSelector = function() {
             $("#bridge_main_menu_left").data('linkprefix') + "ajax/authors_get_photo",
             {
                 'context': window.photoSelectorState.context,
-                "author": window.photoSelectorState.authorID
+                "author": window.photoSelectorState.authorID,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (res) {
                 if (res.status !== "OK") {
@@ -161,7 +163,8 @@ window.photoSelector = function() {
                 "author": window.photoSelectorState.authorID,
                 "cabin": window.photoSelectorState.cabin,
                 "context": window.photoSelectorState.context,
-                "filename": window.photoSelectorState.selectedPhoto
+                "filename": window.photoSelectorState.selectedPhoto,
+                "csrf_token": $("body").data('ajaxtoken')
             },
             function (res) {
                 if (res.status === "OK") {

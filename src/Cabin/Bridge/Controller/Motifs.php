@@ -27,6 +27,7 @@ class Motifs extends AdminOnly
         parent::airshipLand();
         $this->storeViewVar('active_submenu', ['Admin', 'Extensions']);
         $this->storeViewVar('active_link', 'bridge-link-admin-ext-motifs');
+        $this->includeAjaxToken();
     }
 
     /**

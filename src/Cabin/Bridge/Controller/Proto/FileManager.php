@@ -52,6 +52,7 @@ class FileManager extends LoggedInUsersOnly
     {
         parent::airshipLand();
         $this->files = $this->model('Files');
+        $this->includeAjaxToken();
     }
 
     /**

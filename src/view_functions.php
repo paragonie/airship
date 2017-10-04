@@ -3,11 +3,7 @@ declare(strict_types=1);
 namespace Airship\ViewFunctions;
 
 use Airship\Engine\{
-    Cache\ViewCache,
-    Gadgets,
-    Gears,
-    Security\Util,
-    State
+    Cache\ViewCache, Gadgets, Gears, Security\CSRF, Security\Util, State
 };
 use Airship\Engine\Security\Permissions;
 use ParagonIE\CSPBuilder\CSPBuilder;
@@ -24,6 +20,26 @@ use ParagonIE\Halite\{
     Symmetric\AuthenticationKey,
     Util as CryptoUtil
 };
+
+/**
+ * Return a reusable CSRF prevention token, for AJAX requests.
+ *
+ * @param string $lockTo
+ * @return string
+ * @throws \TypeError
+ */
+function ajax_token($lockTo = '')
+{
+    static $csrf = null;
+    if ($csrf === null) {
+        /** @var CSRF $csrf */
+        $csrf = Gears::get('CSRF');
+    }
+    if (!($csrf instanceof CSRF)) {
+        throw new \TypeError('Incorrect type for CSRF class');
+    }
+    return $csrf->ajaxToken($lockTo);
+}
 
 /**
  * Get the base template (normally "base.twig")
@@ -295,13 +311,18 @@ function csp_nonce(string $dir = 'script-src'): string
  * Insert a CSRF prevention token
  *
  * @param string $lockTo
- * @return mixed
+ * @return string
+ * @throws \TypeError
  */
 function form_token($lockTo = '')
 {
     static $csrf = null;
     if ($csrf === null) {
+        /** @var CSRF $csrf */
         $csrf = Gears::get('CSRF');
+        if (!($csrf instanceof CSRF)) {
+            throw new \TypeError('Incorrect type for CSRF class');
+        }
     }
     return $csrf->insertToken($lockTo);
 }
