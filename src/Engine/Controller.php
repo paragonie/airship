@@ -341,7 +341,7 @@ class Controller
     /**
      * @param string $lockTo
      *
-     * @return self;
+     * @return self
      */
     protected function includeAjaxToken($lockTo = ''): self
     {
