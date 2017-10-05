@@ -26,8 +26,8 @@ class Ajax extends LoggedInUsersOnly
      */
     public function dismissAnnouncement()
     {
-        $announce_bp = $this->model('Announcements');
-        if (!($announce_bp instanceof Announcements)) {
+        $announce_model = $this->model('Announcements');
+        if (!($announce_model instanceof Announcements)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Announcements::class)
             );
@@ -39,7 +39,7 @@ class Ajax extends LoggedInUsersOnly
                 'message' => 'Insufficient parameters'
             ]);
         }
-        $result = $announce_bp->dismissForUser(
+        $result = $announce_model->dismissForUser(
             $this->getActiveUserId(),
             $post['dismiss']
         );
@@ -61,14 +61,14 @@ class Ajax extends LoggedInUsersOnly
      */
     public function getAuthorsPhoto()
     {
-        $auth_bp = $this->model('Author');
-        if (!($auth_bp instanceof Author)) {
+        $auth_model = $this->model('Author');
+        if (!($auth_model instanceof Author)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Author::class)
             );
         }
-        $file_bp = $this->model('Files');
-        if (!($file_bp instanceof Files)) {
+        $file_model = $this->model('Files');
+        if (!($file_model instanceof Files)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Files::class)
             );
@@ -76,7 +76,7 @@ class Ajax extends LoggedInUsersOnly
         $post = $this->ajaxPost($_POST, 'csrf_token');
         $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
-            $authors = $auth_bp->getAuthorIdsForUser(
+            $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
@@ -92,7 +92,7 @@ class Ajax extends LoggedInUsersOnly
                 'message' => 'Insufficient parameters'
             ]);
         }
-        $file = $auth_bp->getPhotoData($authorId, $post['context']);
+        $file = $auth_model->getPhotoData($authorId, $post['context']);
         if (empty($file)) {
             // No file selected
             \Airship\json_response([
@@ -101,7 +101,7 @@ class Ajax extends LoggedInUsersOnly
                 'photo' => null
             ]);
         }
-        $cabin = $file_bp->getFilesCabin((int) $file['fileid']);
+        $cabin = $file_model->getFilesCabin((int) $file['fileid']);
         \Airship\json_response([
             'status' => 'OK',
             'message' => '',
@@ -109,7 +109,7 @@ class Ajax extends LoggedInUsersOnly
                 \Airship\ViewFunctions\cabin_url($cabin) .
                     'files/author/' .
                     $file['slug'] . '/' .
-                    $auth_bp->getPhotoDirName() . '/' .
+                    $auth_model->getPhotoDirName() . '/' .
                     $file['filename']
         ]);
     }
@@ -120,8 +120,8 @@ class Ajax extends LoggedInUsersOnly
      */
     public function getAuthorsAvailablePhotos()
     {
-        $auth_bp = $this->model('Author');
-        if (!($auth_bp instanceof Author)) {
+        $auth_model = $this->model('Author');
+        if (!($auth_model instanceof Author)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Author::class)
             );
@@ -130,7 +130,7 @@ class Ajax extends LoggedInUsersOnly
         $post = $this->ajaxPost($_POST, 'csrf_token');
         $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
-            $authors = $auth_bp->getAuthorIdsForUser(
+            $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
@@ -151,7 +151,7 @@ class Ajax extends LoggedInUsersOnly
         \Airship\json_response([
             'status' => 'OK',
             'message' => '',
-            'photos' => $auth_bp->getAvailablePhotos($authorId, $post['cabin'])
+            'photos' => $auth_model->getAvailablePhotos($authorId, $post['cabin'])
         ]);
     }
 
@@ -161,14 +161,14 @@ class Ajax extends LoggedInUsersOnly
      */
     public function getBlogPostsForAuthor()
     {
-        $auth_bp = $this->model('Author');
-        if (!($auth_bp instanceof Author)) {
+        $auth_model = $this->model('Author');
+        if (!($auth_model instanceof Author)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Author::class)
             );
         }
-        $blog_bp = $this->model('Blog');
-        if (!($blog_bp instanceof Blog)) {
+        $blog_model = $this->model('Blog');
+        if (!($blog_model instanceof Blog)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Blog::class)
             );
@@ -183,7 +183,7 @@ class Ajax extends LoggedInUsersOnly
         }
         $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
-            $authors = $auth_bp->getAuthorIdsForUser(
+            $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
@@ -208,7 +208,7 @@ class Ajax extends LoggedInUsersOnly
         ];
 
         if (!empty($post['add'])) {
-            $newBlogPost = $blog_bp->getBlogPostById($post['add'] + 0);
+            $newBlogPost = $blog_model->getBlogPostById($post['add'] + 0);
             if (!empty($newBlogPost)) {
                 if ($newBlogPost['author'] === $authorId) {
                     $existing[] = (int) ($post['add'] ?? 0);
@@ -226,7 +226,7 @@ class Ajax extends LoggedInUsersOnly
             }
         }
 
-        $series = $blog_bp->listPostsForAuthor($authorId, $existing);
+        $series = $blog_model->listPostsForAuthor($authorId, $existing);
         $response['options'] = $this->getViewAsText(
             'ajax/bridge_blog_series_select_blogpost',
             [
@@ -288,14 +288,14 @@ class Ajax extends LoggedInUsersOnly
      */
     public function getSeriesForAuthor()
     {
-        $auth_bp = $this->model('Author');
-        if (!($auth_bp instanceof Author)) {
+        $auth_model = $this->model('Author');
+        if (!($auth_model instanceof Author)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Author::class)
             );
         }
-        $blog_bp = $this->model('Blog');
-        if (!($blog_bp instanceof Blog)) {
+        $blog_model = $this->model('Blog');
+        if (!($blog_model instanceof Blog)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Blog::class)
             );
@@ -310,7 +310,7 @@ class Ajax extends LoggedInUsersOnly
         }
         $authorId = (int) ($post['author'] ?? 0);
         if (!$this->isSuperUser()) {
-            $authors = $auth_bp->getAuthorIdsForUser(
+            $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
@@ -336,7 +336,7 @@ class Ajax extends LoggedInUsersOnly
 
         if (!empty($post['add'])) {
             $add = (int) ($post['add'] ?? 0);
-            $newSeries = $blog_bp->getSeries($add);
+            $newSeries = $blog_model->getSeries($add);
             if (!empty($newSeries)) {
                 if ($newSeries['author'] === $authorId) {
                     $existing[] = $add;
@@ -354,9 +354,9 @@ class Ajax extends LoggedInUsersOnly
             }
         }
 
-        $existing = $blog_bp->getAllSeriesParents($existing);
+        $existing = $blog_model->getAllSeriesParents($existing);
 
-        $series = $blog_bp->getSeriesForAuthor($authorId, $existing);
+        $series = $blog_model->getSeriesForAuthor($authorId, $existing);
         $response['options'] = $this->getViewAsText(
             'ajax/bridge_blog_series_select_series',
             [
@@ -453,22 +453,22 @@ class Ajax extends LoggedInUsersOnly
      */
     protected function getPermissionDataForURL(string $url, string $cabin)
     {
-        $perm_bp = $this->model('Permissions');
-        if (!($perm_bp instanceof Permissions)) {
+        $perm_model = $this->model('Permissions');
+        if (!($perm_model instanceof Permissions)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Permissions::class)
             );
         }
 
-        $actions = $perm_bp->getActionNames($cabin);
-        $contexts = $perm_bp->getContextsForURI($url, $cabin);
-        $contextIds = $perm_bp->getContextIds($url, $cabin);
-        $tree = $perm_bp->buildMultiContextGroupTree(
+        $actions = $perm_model->getActionNames($cabin);
+        $contexts = $perm_model->getContextsForURI($url, $cabin);
+        $contextIds = $perm_model->getContextIds($url, $cabin);
+        $tree = $perm_model->buildMultiContextGroupTree(
             $cabin,
             $contextIds,
             $actions
         );
-        $list = $perm_bp->buildMultiContextUserList(
+        $list = $perm_model->buildMultiContextUserList(
             $cabin,
             $contextIds,
             $actions
@@ -499,28 +499,28 @@ class Ajax extends LoggedInUsersOnly
      */
     protected function getPermissionsDataForUser(int $contextId, string $username, string $cabin)
     {
-        $perm_bp = $this->model('Permissions');
-        if (!($perm_bp instanceof Permissions)) {
+        $perm_model = $this->model('Permissions');
+        if (!($perm_model instanceof Permissions)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Permissions::class)
             );
         }
-        $user_bp = $this->model('UserAccounts');
-        if (!($user_bp instanceof UserAccounts)) {
+        $user_model = $this->model('UserAccounts');
+        if (!($user_model instanceof UserAccounts)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', UserAccounts::class)
             );
         }
 
-        $user = $user_bp->getUserByUsername($username, true);
+        $user = $user_model->getUserByUsername($username, true);
         if (empty($user)) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => \__('There is no user with that username in the system')
             ]);
         }
-        $userPerms = $perm_bp->getUserPerms($user['userid'], $contextId);
-        $actions = $perm_bp->getActionNames($cabin);
+        $userPerms = $perm_model->getUserPerms($user['userid'], $contextId);
+        $actions = $perm_model->getActionNames($cabin);
         $perms = [];
         foreach ($actions as $action) {
             $perms[$action] = \in_array($action, $userPerms);
@@ -544,8 +544,8 @@ class Ajax extends LoggedInUsersOnly
      */
     public function saveAuthorsPhoto()
     {
-        $auth_bp = $this->model('Author');
-        if (!($auth_bp instanceof Author)) {
+        $auth_model = $this->model('Author');
+        if (!($auth_model instanceof Author)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', Author::class)
             );
@@ -553,10 +553,16 @@ class Ajax extends LoggedInUsersOnly
         $post = $this->ajaxPost($_POST, 'csrf_token');
         $authorId = (int) $post['author'];
         if (!$this->isSuperUser()) {
-            $authors = $auth_bp->getAuthorIdsForUser(
+            $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
             if (!\in_array($authorId, $authors)) {
+                \Airship\json_response([
+                    'status' => 'ERROR',
+                    'message' => \__('You do not have permission to access this author\'s posts.')
+                ]);
+            }
+            if (!$auth_model->userIsOwner($authorId)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
@@ -570,7 +576,7 @@ class Ajax extends LoggedInUsersOnly
                 'message' => 'Insufficient parameters'
             ]);
         }
-        $result = $auth_bp->savePhotoChoice(
+        $result = $auth_model->savePhotoChoice(
             $authorId,
             $post['context'],
             $post['cabin'],

@@ -126,6 +126,11 @@ class Author extends ModelGear
      */
     public function deleteAuthor(int $authorId, int $reassignTo = 0): bool
     {
+        if (!$this->isSuperUser()) {
+            if (!$this->userIsOwner($authorId)) {
+                return false;
+            }
+        }
         $this->db->beginTransaction();
 
         $this->reassignAuthorship($authorId, $reassignTo);
@@ -617,6 +622,13 @@ class Author extends ModelGear
                 \__("This User doesn't have access to this Author.")
             );
         }
+        if (!$this->isSuperUser()) {
+            if (!$this->userIsOwner($authorId)) {
+                throw new UserFeedbackException(
+                    \__("You are not in charge of this Author.")
+                );
+            }
+        }
         $this->db->delete(
             'hull_blog_author_owners',
             [
@@ -721,6 +733,13 @@ class Author extends ModelGear
             throw new UserFeedbackException(
                 \__("This User doesn't have access to this Author.")
             );
+        }
+        if (!$this->isSuperUser()) {
+            if (!$this->userIsOwner($authorId)) {
+                throw new UserFeedbackException(
+                    \__("You are not in charge of this Author.")
+                );
+            }
         }
         $this->db->update(
             'hull_blog_author_owners',
@@ -831,6 +850,9 @@ class Author extends ModelGear
         if ($userId < 1) {
             $userId = $this->getActiveUserId();
         }
+        if ($this->isSuperUser($userId)) {
+            return true;
+        }
         return $this->db->exists(
             'SELECT count(*) FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',
             $authorId,
@@ -849,6 +871,9 @@ class Author extends ModelGear
     {
         if ($userId < 1) {
             $userId = $this->getActiveUserId();
+        }
+        if ($this->isSuperUser($userId)) {
+            return true;
         }
         return (bool) $this->db->cell(
             'SELECT in_charge FROM view_hull_users_authors WHERE authorid = ? AND userid = ?',

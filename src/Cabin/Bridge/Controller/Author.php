@@ -131,6 +131,12 @@ class Author extends LoggedInUsersOnly
                     $this->airship_cabin_prefix . '/author'
                 );
             }
+            if (!$this->author->userIsOwner($authorId)) {
+                // You are not in charge of this author.
+                \Airship\redirect(
+                    $this->airship_cabin_prefix . '/author'
+                );
+            }
         }
 
         $post = $this->post(new AuthorFilter());
