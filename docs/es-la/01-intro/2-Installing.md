@@ -1,9 +1,9 @@
 # Instalando Airship
 
-## Modo Fàcil
+## Modo Fácil
 
 Hay un archivo docker-compose.yml en [el repositorio principal](https://github.com/paragonie/airship) que usado junto con
-docker-compose construirà el software requerido. Leer [la documentaciòn oficial de docker](https://docs.docker.com/compose/overview/) para màs detalles sobre còmo utilizar docker-compose.
+docker-compose construirá el software requerido. Leer [la documentaciòn oficial de docker](https://docs.docker.com/compose/overview/) para màs detalles sobre còmo utilizar docker-compose.
 
 ## Instalación Manual 
 
