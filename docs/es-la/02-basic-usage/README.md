@@ -1,14 +1,14 @@
-# Basic Airship Usage
+# Uso Básico de Airship
 
-This section of the documentation is aimed towards Airship users. It should
-help people get familiar with the basic UI and the most common features.
+Esta seccion de la documentación está dirigida a los usuarios de Airship. Debería
+ayudar a la gente a familiarizarse con la interfaz gráfica y las funcionalidades más comunes.
 
-## Sections in this Chapter 
+## Secciones en este Capítulo 
 
-  * [Crew](01-Crew.md): An overview of users, authors, groups, and permissions.
-  * [Using the Blog Features](02-Blog.md)
-  * [Account Settings](03-Account.md)
-  * [Uploading Files](04-Files.md)
-  * [Administrator Features](admin-features)
+  * [Tripulación](01-Crew.md): Un vistazo a los usuarios, contribuyentes y permisos.
+  * [Usando las funcionalidades del blog](02-Blog.md)
+  * [Configuraciones de la cuenta](03-Account.md)
+  * [Subiendo Archivos](04-Files.md)
+  * [Funciones Administrativas](admin-features)
 
-[Next Chapter: End Users' Guide](../03-end-users-guide)
+[Siguiente Capítulo: Guía de Usuario](../03-end-users-guide)
