@@ -48,7 +48,7 @@ encontramos tres tipos de extensiones soportadas:
 * `lang`    -> Archivos específicos del lenguaje (para internationalización)
 * `public`  -> Raíz web pública (Su webserver debe apuntar aquí)
 
-### Airship Architecture
+### Arquitectura de Airship
 
 Nuestra arquitectura es *similar* a MVC. Además de hacer la terminología 
 temáticamente apropiada, no tenemos objetos vista, simplemente tenemos plantillas
