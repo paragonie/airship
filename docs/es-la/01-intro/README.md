@@ -24,4 +24,3 @@ desarrollando una extensión que involucre la funcionalidad principal de Airship
   * [Glosario/Jerga](1-Lingo-Jargon.md)
   * [Instalando CMS Airship](2-Installing.md)
     * [Ejemplo de archivos de configuración](example-config)
-
