@@ -2,99 +2,99 @@
     "errors": {
         "crypto": {
             "cannot_both_be_public_keys":
-                "Both keys cannot be public keys, at least one must be a private key.",
+                "Al menos una llave tiene que ser privada, ambas no pueden ser públicas.",
             "cannot_both_be_secret_keys":
-                "Both keys cannot be secret keys, at least one must be a public key. You may in fact be doing something dangerous.",
+                "Al menos una llave tiene que ser pública. Tener ambas llaves secretas puede ser peligroso.",
             "cannot_generate_public_key":
-                "We can't just generate public keys on the fly. That wouldn't make any sense.",
+                "No podemos generar llaves públicas al vuelo. Eso carecería de sentido.",
             "expected_public_key":
-                "We were expecting a public key here.",
+                "Aquí se espera una llave pública.",
             "expected_secret_key":
-                "We were expecting a secret key here.",
+                "Aquí se espera una llave privada.",
             "expected_signing_key":
-                "We were expecting a signing key here. An encryption key was provided.",
+                "Aquí se esperaba una llave de firma, pero se proveyó una llave de cifrado.",
             "expected_asymmetric_key":
-                "We were expecting an asymmetric key here.",
+                "Esperábamos una llave asimétrica aqui.",
             "expected_symmetric_key":
-                "We were expecting a symmetric key here.",
+                "Esperábamos una llave simétrica aqui.",
             "file_stream_error":
-                "An unspecified error has occurred with the file streaming operations.",
+                "Se produjo un error no especificado en las operaciones de transmisión de archivos.",
             "general_error":
-                "We failed to safely perform cryptography operations.",
+                "No hemos podido completar con seguridad las operaciones criptográficas.",
             "helpful_need_secretkey":
-                "Since you cannot get a secret key from a public key, only passing a public key won't give you a valid keypair.",
+                "Ya que no se puede generar una llave secreta de una llave pública, tener solo la llave pública no es válido.",
             "hkdf_bad_digest_length":
-                "Bad output length requested of HKDF.",
+                "La longitud de salida no es buena para HKDF.",
             "keyring_missing":
-                "Keyring configuration file not found.",
+                "No se encontró el archivo de configuración del llavero.",
             "incorrect_secret_key":
-                "We failed to decrypt the message because the wrong secret key was used.",
+                "No pudimos descifrar el mensaje porque no se nos dio la llave secreta correcta.",
             "invalid_version_tag":
-                "Invalid version tag.",
+                "Etiqueta de versión inválida.",
             "mac_validation_failed":
-                "The ciphertext we attempted to decrypt was invalid.",
+                "El texto cifrado que intentamos descifrar es inválido.",
             "must_specify_public_or_private":
-                "Must specify PUBLIC or PRIVATE key type",
+                "Debe especificar si el tipo es PÚBLICO o PRIVADO",
             "must_specify_encryption_or_authentication":
-                "Must specify ENCRYPTION or SIGNATURE",
+                "Debe especificar si es CIFRADO o FIRMA",
             "unknown_key_type":
-                "Unknown key type: %s"
+                "Tipo de llave desconocido: %s"
         },
         "database": {
             "array_passed":
-                "Arrays cannot be passed to parameters; use json_encode() manually",
+                "Los arreglos no pueden pasar a los parámetros; use json_encode() manualmente",
             "insert_failed":
-                "Could not insert a row into %s. PDO error: %s",
+                "No pudimos insertar una fila en %s. PDO error: %s",
             "invalid_identifier":
-                "Invalid identifier: \"%s\" Must begin with a letter or undescore.",
+                "Identificador inválido: \"%s\" Debe comenzar con letra o guión bajo.",
             "multiple_candidates":
-                "There are multiple candidate queries for %s.",
+                "Hay múltiples búsquedas candidatas para %s.",
             "not_found":
-                "The database \"%s\" is not configured for this cabin.",
+                "La base de datos \"%s\" no ha sido configurada para esta cabin.",
             "not_implemented":
-                "This is not implemented for %s yet.",
+                "Ésto no se ha implementado para %s aún.",
             "pdo_exception":
-                "Could not create a database connection. Please check your username and password.",
+                "No se pudo crear una conexión a la base de datos. Revise su usuario y contraseña por favor.",
             "query_not_found":
-                "There are no candidate queries for %s."
+                "Nu hay candidatos para %s."
         },
         "email": {
             "invalid_transport":
-                "Misconfigured Email Configuration -- unknown transport: %s"
+                "Configuración de Email mal realizada -- transporte desconocido: %s"
         },
         "file": {
             "cannot_read_file":
-                "This file cannot be read by PHP. Please check its permissions.",
+                "Este archivo no puede ser leído por PHP. Revise los permisos, por favor.",
             "cannot_write_file":
-                "This file cannot be modified by PHP. Please check its permissions.",
+                "Este archivo no puede ser escrito por PHP. Revise los permisos, por favor.",
             "lfi":
-                "Local File Inclusion attack detected and blocked."
+                "Ataque de Inclusión Local de Archivos detectado y bloqueado."
         },
         "hail": {
             "invalid_api_version":
-                "Invalid version (%s) for the Hail API.",
+                "Versión inválida (%s) para Hail API.",
             "peer_checksum_failed":
-                "The file we received from upstream did not match what our peers had on file for version %s of %s",
+                "El archivo que recibimos no corresponde a lo que nuestros compañeros tienen para la versión %s de %s",
             "no_channel_configured":
-                "There is no channel configured for this Supplier: %s",
+                "No hay un canal configurado para este proveedor: %s",
             "no_channel_responded":
-                "No channel responded to our update query."
+                "Ningún canal respondió a nuestra petición de actualización."
         },
         "object": {
             "invalid_property":
-                "Unknown property %s of class %s."
+                "Propiedad %s desconocida de la clase %s."
         },
         "pages": {
             "collision":
-                "A name collision has been detected: A file already exists with the same name in the same directory.",
+                "Colisión de nombres detectada: Ya existe un archivo con el mismo nombre en la misma carpeta.",
             "directory_wrong_cabin":
-                "The specified directory (%s) does not exist in the cabin (%s), found in another cabin (%s).",
+                "Especificó un directorio (%s) que no existe en la cabin (%s), pero se encontró en la cabin (%s).",
             "directory_does_not_exist":
-                "The specified directory does not exist.",
+                "El directorio especificado no existe.",
             "page_does_not_exist":
-                "The specified page does not exist.",
+                "La página especificada no existe.",
             "unknown_page_version":
-                "No entry exists with this version ID."
+                "No hay entradas con esa ID de versión."
         },
         "router": {
             "fallback_loop":
@@ -102,19 +102,19 @@
         },
         "security": {
             "invalid_persistent_token":
-                "Your persistent authentication token is invalid.",
+                "Su token de autenticación persistente es inválido.",
             "not_authenticated":
-                "You are not currently logged in"
+                "No ha iniciado sesión"
         },
         "type": {
             "expected_resource":
-                "%s must be a resource.",
+                "%s debe ser un recurso.",
             "expected_1d_array":
-                "Expected a 1-dimensional array.",
+                "Se esperaba un arreglo unidimensional.",
             "expected_string_array":
-            "Expected a 1-dimensional array of strings; %s given at index %d.",
+            "Se esperaba un arreglo unidimensional de strings; %s dado en el índice %d.",
             "wrong_class":
-                "Expected an instance of %s, or of one of its child classes."
+                "Se esperaba una instancia de %s, para una clase hija."
         }
     }
 }
