@@ -1,0 +1,120 @@
+{
+    "errors": {
+        "crypto": {
+            "cannot_both_be_public_keys":
+                "Al menos una llave tiene que ser privada, ambas no pueden ser públicas.",
+            "cannot_both_be_secret_keys":
+                "Al menos una llave tiene que ser pública. Tener ambas llaves secretas puede ser peligroso.",
+            "cannot_generate_public_key":
+                "No podemos generar llaves públicas al vuelo. Eso carecería de sentido.",
+            "expected_public_key":
+                "Aquí se espera una llave pública.",
+            "expected_secret_key":
+                "Aquí se espera una llave privada.",
+            "expected_signing_key":
+                "Aquí se esperaba una llave de firma, pero se proveyó una llave de cifrado.",
+            "expected_asymmetric_key":
+                "Esperábamos una llave asimétrica aqui.",
+            "expected_symmetric_key":
+                "Esperábamos una llave simétrica aqui.",
+            "file_stream_error":
+                "Se produjo un error no especificado en las operaciones de transmisión de archivos.",
+            "general_error":
+                "No hemos podido completar con seguridad las operaciones criptográficas.",
+            "helpful_need_secretkey":
+                "Ya que no se puede generar una llave secreta de una llave pública, tener solo la llave pública no es válido.",
+            "hkdf_bad_digest_length":
+                "La longitud de salida no es buena para HKDF.",
+            "keyring_missing":
+                "No se encontró el archivo de configuración del llavero.",
+            "incorrect_secret_key":
+                "No pudimos descifrar el mensaje porque no se nos dio la llave secreta correcta.",
+            "invalid_version_tag":
+                "Etiqueta de versión inválida.",
+            "mac_validation_failed":
+                "El texto cifrado que intentamos descifrar es inválido.",
+            "must_specify_public_or_private":
+                "Debe especificar si el tipo es PÚBLICO o PRIVADO",
+            "must_specify_encryption_or_authentication":
+                "Debe especificar si es CIFRADO o FIRMA",
+            "unknown_key_type":
+                "Tipo de llave desconocido: %s"
+        },
+        "database": {
+            "array_passed":
+                "Los arreglos no pueden pasar a los parámetros; use json_encode() manualmente",
+            "insert_failed":
+                "No pudimos insertar una fila en %s. PDO error: %s",
+            "invalid_identifier":
+                "Identificador inválido: \"%s\" Debe comenzar con letra o guión bajo.",
+            "multiple_candidates":
+                "Hay múltiples búsquedas candidatas para %s.",
+            "not_found":
+                "La base de datos \"%s\" no ha sido configurada para esta cabin.",
+            "not_implemented":
+                "Ésto no se ha implementado para %s aún.",
+            "pdo_exception":
+                "No se pudo crear una conexión a la base de datos. Revise su usuario y contraseña por favor.",
+            "query_not_found":
+                "Nu hay candidatos para %s."
+        },
+        "email": {
+            "invalid_transport":
+                "Configuración de Email mal realizada -- transporte desconocido: %s"
+        },
+        "file": {
+            "cannot_read_file":
+                "Este archivo no puede ser leído por PHP. Revise los permisos, por favor.",
+            "cannot_write_file":
+                "Este archivo no puede ser escrito por PHP. Revise los permisos, por favor.",
+            "lfi":
+                "Ataque de Inclusión Local de Archivos detectado y bloqueado."
+        },
+        "hail": {
+            "invalid_api_version":
+                "Versión inválida (%s) para Hail API.",
+            "peer_checksum_failed":
+                "El archivo que recibimos no corresponde a lo que nuestros compañeros tienen para la versión %s de %s",
+            "no_channel_configured":
+                "No hay un canal configurado para este proveedor: %s",
+            "no_channel_responded":
+                "Ningún canal respondió a nuestra petición de actualización."
+        },
+        "object": {
+            "invalid_property":
+                "Propiedad %s desconocida de la clase %s."
+        },
+        "pages": {
+            "collision":
+                "Colisión de nombres detectada: Ya existe un archivo con el mismo nombre en la misma carpeta.",
+            "directory_wrong_cabin":
+                "Especificó un directorio (%s) que no existe en la cabin (%s), pero se encontró en la cabin (%s).",
+            "directory_does_not_exist":
+                "El directorio especificado no existe.",
+            "page_does_not_exist":
+                "La página especificada no existe.",
+            "unknown_page_version":
+                "No hay entradas con esa ID de versión."
+        },
+        "router": {
+            "fallback_loop":
+                "Fallback loop detected in AutoPilot. Likely cause: method does not exist."
+        },
+        "security": {
+            "invalid_persistent_token":
+                "Su token de autenticación persistente es inválido.",
+            "not_authenticated":
+                "No ha iniciado sesión"
+        },
+        "type": {
+            "expected_resource":
+                "%s debe ser un recurso.",
+            "expected_1d_array":
+                "Se esperaba un arreglo unidimensional.",
+            "expected_string_array":
+            "Se esperaba un arreglo unidimensional de strings; %s dado en el índice %d.",
+            "wrong_class":
+                "Se esperaba una instancia de %s, para una clase hija."
+        }
+    }
+}
