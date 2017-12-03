@@ -8,7 +8,7 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
 if (PHP_MAJOR_VERSION < 7) {
     die("Airship requires PHP 7.");
 }
-if (!extension_loaded('libsodium')) {
+if (!extension_loaded('sodium')) {
     die("Airship requires Libsodium.");
 }
 if (!\defined('IDE_HACKS')) {
