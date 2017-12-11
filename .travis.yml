@@ -17,18 +17,17 @@ services:
   - postgresql
 
 before_install:
-  - sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-  - sudo apt-get -y update
+  - sudo apt-get update
+  - sudo apt-get -y install make build-essential automake php-pear
   - git clone git://github.com/jedisct1/libsodium.git
   - cd libsodium
   - git checkout 1.0.15
   - ./autogen.sh
-  - ./configure > /dev/null
+  - ./configure && make check
   - echo "Installing libsodium..."
-  - sudo make install > /dev/null
+  - sudo make install
   - cd ..
   - echo "Installing ext/sodium..."
-  - sudo apt-get -y install make build-essential automake php7.2-dev php-pear php7.2-curl php7.2-sodium
   - pecl install libsodium > /dev/null
 
 install:
