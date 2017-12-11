@@ -86,7 +86,7 @@ class Stream implements StreamInterface
     public static function fromString(string $data): self
     {
         $resource = \fopen('php://memory', 'r+');
-        if (!$resource) {
+        if (!\is_resource($resource)) {
             throw new \UnexpectedValueException('Resource cannot be false');
         }
 
@@ -104,7 +104,7 @@ class Stream implements StreamInterface
     public static function fromHiddenString(HiddenString $data): self
     {
         $resource = \fopen('php://memory', 'r+');
-        if (!$resource) {
+        if (!\is_resource($resource)) {
             throw new \UnexpectedValueException('Resource cannot be false');
         }
 

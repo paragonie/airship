@@ -91,7 +91,7 @@ class Request extends Message implements RequestInterface
      * @link http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
      *     request-target forms allowed in request messages)
      * @param mixed $requestTarget
-     * @return self
+     * @return static
      */
     public function withRequestTarget($requestTarget)
     {
@@ -122,7 +122,7 @@ class Request extends Message implements RequestInterface
      * changed request method.
      *
      * @param string $method Case-sensitive method.
-     * @return self
+     * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
     public function withMethod($method): self
@@ -174,7 +174,7 @@ class Request extends Message implements RequestInterface
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
      * @param UriInterface $uri New request URI to use.
      * @param bool $preserveHost Preserve the original state of the Host header.
-     * @return self
+     * @return static
      */
     public function withUri(UriInterface $uri, $preserveHost = false): self
     {
@@ -190,7 +190,7 @@ class Request extends Message implements RequestInterface
     }
 
     /**
-     * @return self
+     * @return static
      */
     protected function updateHostFromUri(): self
     {

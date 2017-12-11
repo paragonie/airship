@@ -14,6 +14,7 @@ abstract class Sandbox
      * @param string $file
      * @param array $previous_metadata
      * @return bool
+     * @psalm-suppress UnresolvableInclude
      */
     public static function safeRequire(
         string $file,
@@ -29,6 +30,7 @@ abstract class Sandbox
      * @param string $file
      * @param array $previous_metadata
      * @return bool
+     * @psalm-suppress UnresolvableInclude
      */
     public static function safeInclude(
         string $file,

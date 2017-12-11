@@ -84,7 +84,7 @@ class InputFilter implements FilterInterface
             }
             if (\is_string($data)) {
             } elseif (\is_object($data) && \method_exists($data, '__toString')) {
-                $data = (string) $data;
+                $data = (string) $data->__toString();
             } elseif (\is_numeric($data)) {
                 $data = (string) $data;
             } elseif (\is_null($data)) {

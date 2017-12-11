@@ -107,6 +107,7 @@ abstract class AutoUpdater
      * @param array $autoRun
      * @return mixed
      * @psalm-suppress ForbiddenCode because we're running shell scripts to self-update
+     * @throws CouldNotUpdate
      */
     protected function autoRunScript(array $autoRun)
     {
@@ -116,6 +117,9 @@ abstract class AutoUpdater
         // Get a unique temporary file
         do {
             $script = \tempnam(ROOT . DIRECTORY_SEPARATOR . 'tmp', 'update-script-');
+            if (!\is_string($script)) {
+                throw new CouldNotUpdate('Cannot create temporary script file');
+            }
         } while (\file_exists($script));
 
         // What kind of autoRun script is it?

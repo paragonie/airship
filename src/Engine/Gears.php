@@ -307,6 +307,7 @@ abstract class Gears
      * 
      * @param string $file
      * @return bool
+     * @psalm-suppress UnresolvableInclude
      */
     protected static function sandboxRequire(string $file): bool
     {

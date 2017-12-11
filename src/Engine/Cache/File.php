@@ -85,9 +85,7 @@ class File implements CacheInterface
         $path = $this->getRelativePath($key);
 
         // Let's make sure both directories exist
-        $dirs = self::getRelativeHash(
-            $this->baseDir . DIRECTORY_SEPARATOR . $key
-        );
+        $dirs = self::getRelativeHashPieces($this->baseDir . DIRECTORY_SEPARATOR . $key);
         $dirName = \implode(
             DIRECTORY_SEPARATOR,
             [
@@ -113,6 +111,20 @@ class File implements CacheInterface
         ) !== false;
     }
 
+
+    /**
+     * Get a relative BLAKE2b hash of an input. Formatted as two lookup
+     * directories followed by a cache entry. 'hh/hh/hhhhhhhh...'
+     *
+     * @param string $preHash The cache identifier (will be hashed)
+     * @return string
+     * @throws InvalidType
+     */
+    public static function getRelativeHashAsString(string $preHash)
+    {
+        return \implode(DIRECTORY_SEPARATOR, static::getRelativeHashPieces($preHash));
+    }
+
     /**
      * Get a relative BLAKE2b hash of an input. Formatted as two lookup
      * directories followed by a cache entry. 'hh/hh/hhhhhhhh...'
@@ -126,6 +138,22 @@ class File implements CacheInterface
         string $preHash,
         bool $asString = false
     ) {
+        if ($asString) {
+            return \implode(DIRECTORY_SEPARATOR, static::getRelativeHashPieces($preHash));
+        }
+        return static::getRelativeHashPieces($preHash);
+    }
+
+    /**
+     * Get a relative BLAKE2b hash of an input. Formatted as two lookup
+     * directories followed by a cache entry. 'hh/hh/hhhhhhhh...'
+     *
+     * @param string $preHash The cache identifier (will be hashed)
+     * @return array<int, string>
+     * @throws InvalidType
+     */
+    public static function getRelativeHashPieces(string $preHash)
+    {
         $state = State::instance();
         $cacheKey = $state->keyring['cache.hash_key'];
 
@@ -151,9 +179,6 @@ class File implements CacheInterface
             Hex::encode($hash[1]),
             Hex::encode(Util::subString($hash, 2)),
         ];
-        if ($asString) {
-            return \implode(DIRECTORY_SEPARATOR, $relHash);
-        }
         return $relHash;
     }
 
@@ -167,9 +192,6 @@ class File implements CacheInterface
     {
         return $this->baseDir .
             DIRECTORY_SEPARATOR .
-            (string) self::getRelativeHash(
-                $this->baseDir . DIRECTORY_SEPARATOR . $key,
-                true
-            );
+            self::getRelativeHashAsString($this->baseDir . DIRECTORY_SEPARATOR . $key);
     }
 }

@@ -23,7 +23,7 @@ class WhiteList extends InputFilter
     }
 
     /**
-     * @param array ...$values
+     * @param array<int, mixed> values
      * @return self
      */
     protected function addToWhiteList(...$values)

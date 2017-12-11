@@ -229,7 +229,7 @@ class UploadedFile implements UploadedFileInterface
      * @throws \RuntimeException if the upload was not successful.
      * @psalm-suppress InvalidArgument as fopen can theoretically return false
      */
-    public function getStream()
+    public function getStream(): StreamInterface
     {
         $this->validateActive();
 

@@ -141,6 +141,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * @param string $serialized
      * @return array
      * @throws \Error
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function unserialize($serialized)
     {
