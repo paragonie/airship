@@ -132,6 +132,7 @@ class UserAccounts extends ModelGear
      *
      * @param array $post
      * @return int
+     * @throws \TypeError
      */
     public function createUser(array $post = []): int
     {
@@ -159,7 +160,9 @@ class UserAccounts extends ModelGear
                 'email' =>
                     $post['email'] ?? '',
                 'display_name' =>
-                    $post['display_name'] ?? '',
+                    empty($post['display_name'])
+                        ? $post['username']
+                        : $post['display_name'],
                 'real_name' =>
                     $post['real_name'] ?? '',
                 'allow_reset' =>
