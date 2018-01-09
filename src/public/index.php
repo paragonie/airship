@@ -93,11 +93,18 @@ if (!empty($state->universal['debug'])) {
                 \Airship\get_standard_headers('text/plain;charset=UTF-8')
             );
         }
-        $state->logger->log(
-            LogLevel::ERROR,
-            $e->getMessage(),
-            \Airship\throwableToArray($e)
-        );
+        try {
+            $state->logger->log(
+                LogLevel::ERROR,
+                $e->getMessage(),
+                \Airship\throwableToArray($e)
+            );
+        } catch (\Throwable $f) {
+            echo "FAILED TO LOG ERROR MESSAGE: ", \get_class($f), "\n\n",
+                $f->getMessage(), "\n\n",
+                $f->getCode(), "\n\n",
+                $f->getTraceAsString();
+        }
         echo "DEBUG ERROR: ", \get_class($e), "\n\n",
             $e->getMessage(), "\n\n",
             $e->getCode(), "\n\n",
