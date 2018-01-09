@@ -673,7 +673,7 @@ class Install
                     'test' => false // Unsure if we'll ever allow this
                 ],
                 'default-groups' => [ 2 ],
-                'email' => $this->data['config']['email'],
+                'email' => $this->data['config']['email'] ?? 'nobody@localhost',
                 'guest_groups' => [ 1 ],
                 'guzzle' => [],
                 'ledger' => $this->data['config']['ledger'],
