@@ -505,11 +505,15 @@ class Account extends ControllerGear
             ]
         );
     }
-    
+
     /**
      * Process a user account registration request
      *
      * @param array $post
+     *
+     * @throws \Airship\Alerts\Database\QueryError
+     * @throws \Airship\Alerts\Router\ControllerComplete
+     * @throws \TypeError
      */
     protected function processBoard(array $post = [])
     {
@@ -568,11 +572,17 @@ class Account extends ControllerGear
 
         \Airship\redirect($this->airship_cabin_prefix);
     }
-    
+
     /**
      * Handle user authentication
      *
      * @param array $post
+     * @throws InvalidMessage
+     * @throws \Airship\Alerts\Router\ControllerComplete
+     * @throws \Error
+     * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
+     * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
+     * @throws \ParagonIE\Halite\Alerts\InvalidType
      * @throws \TypeError
      */
     protected function processLogin(array $post = [])

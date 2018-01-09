@@ -48,21 +48,20 @@ $(document).ready(function() {
         heightStyle: "content"
     });
     $("#ledger_driver").on('change', function(e) {
+        var details_el = $("#ledger_details");
         var new_driver = $("#ledger_driver").val();
         // Update label
         if (new_driver === "file") {
             $("#ledger_details_label").html("Log Directory:");
-            $("#ledger_details").attr('name', 'universal[ledger][path]');
+            details_el.attr('name', 'universal[ledger][path]');
         } else {
             $("#ledger_details_label").html("Database Table:");
-            $("#ledger_details").attr('name', 'universal[ledger][table]');
+            details_el.attr('name', 'universal[ledger][table]');
         }
 
         // Swap out details:
-        ledger_defaults[old_driver] = $("#ledger_details").val();
-        $("#ledger_details").val(
-            ledger_defaults[new_driver]
-        );
+        ledger_defaults[old_driver] = details_el.val();
+        details_el.val(ledger_defaults[new_driver]);
 
         // Update the reference to the current driver
         old_driver = new_driver;

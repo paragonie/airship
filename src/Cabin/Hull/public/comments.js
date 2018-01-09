@@ -18,10 +18,18 @@ window.changedAuthorSelection = function() {
 };
 
 window.replyTo = function(commentId, author) {
+    Airship.assertType(commentId, string);
+    Airship.assertType(author, string);
     $("#reply-to").html(
         "<div class='blog-comment-label form-column'></div><div class='form-comment-field form-column'>" +
-        "<input type='hidden' name='reply_to' value='" + commentId + "' />" +
-            "Replying to " + author + " (Comment #" + commentId + ")" +
+        "<input type='hidden' name='reply_to' value='" +
+            Airship.e(commentId) +
+        "' />" +
+            "Replying to " +
+                Airship.e(author, Airship.E_HTML) +
+            " (Comment #" +
+                Airship.e(commentId, Airship.E_HTML) +
+            ")" +
         "</div>"
     );
 };

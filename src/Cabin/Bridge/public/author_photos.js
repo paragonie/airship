@@ -36,8 +36,12 @@ window.photoSelector = function() {
                         window.photoSelectorState.selectedCache[res.photos[i].context] = res.photos[i];
                         window.photoSelectorState.selectedPhoto = res.photos[i].filename;
                         if (dupes.indexOf(res.photos[i].filename) < 0) {
-                            html += "<option value=\"" + res.photos[i].filename + "\" selected=\"selected\" data-context=\"" + res.photos[i].context + "\">" +
-                                    res.photos[i].filename +
+                            html += "<option value=\"" +
+                                    Airship.e(res.photos[i].filename) +
+                                "\" selected=\"selected\" data-context=\"" +
+                                    Airship.e(res.photos[i].context) +
+                                "\">" +
+                                    Airship.e(res.photos[i].filename, Airship.E_HTML) +
                                 "</option>\n";
                         }
 
@@ -45,15 +49,21 @@ window.photoSelector = function() {
                     } else if (res.photos[i].context !== null) {
                         window.photoSelectorState.selectedCache[res.photos[i].context] = res.photos[i].filename;
                         if (dupes.indexOf(res.photos[i].filename) < 0) {
-                            html += "<option value=\"" + res.photos[i].filename + "\" data-context=\"" + res.photos[i].context + "\">" +
-                                res.photos[i].filename +
+                            html += "<option value=\"" +
+                                    Airship.e(res.photos[i].filename) +
+                                "\" data-context=\"" +
+                                    Airship.e(res.photos[i].context) +
+                                "\">" +
+                                    Airship.e(res.photos[i].filename, Airship.E_HTML) +
                                 "</option>\n";
                         }
                     // Not selected:
                     } else {
                         if (dupes.indexOf(res.photos[i].filename) < 0) {
-                            html += "<option value=\"" + res.photos[i].filename + "\">" +
-                                res.photos[i].filename +
+                            html += "<option value=\"" +
+                                Airship.e(res.photos[i].filename) +
+                            "\">" +
+                                Airship.e(res.photos[i].filename, Airship.E_HTML) +
                             "</option>\n";
                         }
                     }
@@ -116,7 +126,7 @@ window.photoSelector = function() {
                     $("#photo-selector-current").html("");
                 } else {
                     $("#photo-selector-current").html(
-                        "<img src=\"" + res.photo + "\" />"
+                        "<img src=\"" + Airship.e(res.photo) + "\" />"
                     );
                 }
             }
@@ -132,8 +142,11 @@ window.photoSelector = function() {
                 "<img src=\"" +
                     window.photoSelectorState.cabin_url +
                     "files/author/" + window.photoSelectorState.authorSlug + "/" +
-                    window.photoSelectorState.photoDir + "/" +
-                    window.photoSelectorState.selectedPhoto +
+                    Airship.e(
+                        window.photoSelectorState.photoDir + "/" +
+                        window.photoSelectorState.selectedPhoto,
+                        Airship.E_URL
+                    ) +
                 "\" />"
             );
         }

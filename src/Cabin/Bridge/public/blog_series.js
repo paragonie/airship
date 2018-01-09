@@ -146,7 +146,7 @@ $(document).ready(function() {
                         "csrf_token": $("body").data('ajaxtoken')
                     },
                     function (res) {
-                        if (res.status == 'OK') {
+                        if (res.status === 'OK') {
                             add_blog_series(res["new_item"]);
                             $("#existing_series").html(res.options);
                             add_delete_event("#series_items_series_" + addingId + " .delete_item");
@@ -176,7 +176,7 @@ $(document).ready(function() {
                         "csrf_token": $("body").data('ajaxtoken')
                     },
                     function (res) {
-                        if (res.status == 'OK') {
+                        if (res.status === 'OK') {
                             add_blog_post(res["new_item"]);
                             $("#existing_posts").html(res.options);
                             add_delete_event("#series_items_blogpost_" + addingId + " .delete_item");

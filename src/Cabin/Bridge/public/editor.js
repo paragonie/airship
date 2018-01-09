@@ -10,6 +10,7 @@ window.editor_html_wrapper = {};
 $(document).ready(function() {
     window.richTextUpdate = function(_name, show_after) {
         var prefix = $("#bridge_main_menu_left").data("linkprefix");
+        _name = Airship.filter(_name, Airship.FILTER_ID);
         $.post(
             prefix + "ajax/rich_text_preview",
             {
@@ -22,11 +23,11 @@ $(document).ready(function() {
                     response = $.parseJSON(response);
                 }
                 if (response.status === "OK") {
-                    $("#rich_text_" + _name + "_preview")
-                        .html(response.body);
+                    var preview_el = $("#rich_text_" + _name + "_preview");
+                    preview_el.html(response.body);
                     if (show_after) {
                         $("#rich_text_" + _name + "_text").hide();
-                        $("#rich_text_" + _name + "_preview").show();
+                        preview_el.show();
                     }
                 } else {
                     alert(status.message);
@@ -36,6 +37,7 @@ $(document).ready(function() {
     };
 
     window['richTextWrapper'] = function(name, format_name) {
+        name = Airship.filter(name, Airship.FILTER_ID);
         richTextLookups[name] = format_name;
 
         var editTab = $("#rich_text_" + name +"_edit_tab");
@@ -60,18 +62,20 @@ $(document).ready(function() {
             richTextUpdate(_name, true);
         });
 
-        $("#"+format_name).on('change', function(e) {
+        var format_name_el = $("#"+format_name);
+        format_name_el.on('change', function(e) {
             for (k in richTextLookups) {
-                if ($(this).attr('id') == richTextLookups[k]) {
+                var rich_text_el = $("#rich_text_" + k);
+                if ($(this).attr('id') === richTextLookups[k]) {
                     if ($(this).val() === "Rich Text") {
                         window.useWysiwyg(k);
                     } else if (window.editor_is_wysiwyg) {
-                        var cache_body = $("#rich_text_" + k).val();
+                        var cache_body = rich_text_el.val();
                         delete editors[k];
                         $("#rich_text_" + k + "_wrapper").html(
                             window.editor_html_wrapper[k]
                         );
-                        $("#rich_text_" + k).val(cache_body);
+                        rich_text_el.val(cache_body);
                         $("#rich_text_" + k + "_tabs").show();
                     }
                     if ($("#rich_text_" + k + "_preview").is(':visible')) {
@@ -80,13 +84,12 @@ $(document).ready(function() {
                     return;
                 }
             }
-            console.log(k);
         });
 
         $("#rich_text_" + name + "_text").show();
         $("#rich_text_" + name + "_preview").hide();
 
-        if ($("#" + format_name).val() === "Rich Text") {
+        if (format_name_el.val() === "Rich Text") {
             useWysiwyg(name);
         }
 

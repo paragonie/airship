@@ -12,8 +12,9 @@ $(document).ready(function() {
         $(this).html($(this).data('fullpath'));
     });
 
-    originalSlug = $("#blog_category_slug").data('original');
-    $("#blog_category_slug").on('change', function() {
+    var slug_el = $("#blog_category_slug");
+    originalSlug = slug_el.data('original');
+    slug_el.on('change', function() {
         toggleSlugCheckbox();
     });
     toggleSlugCheckbox();

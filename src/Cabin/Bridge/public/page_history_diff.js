@@ -12,12 +12,17 @@ $(document).ready(function () {
         pieces = change.value.split("\n");
         for (var i in pieces) {
             if (change.added) {
-                pieces[i] = '+ ' + pieces[i];
+                pieces[i] = '+ ' + Airship.e(pieces[i]);
             } else if (change.removed) {
-                pieces[i] = '- ' + pieces[i];
+                pieces[i] = '- ' + Airship.e(pieces[i]);
             }
         }
-        output += "<div class=\"diff_line" + (change.added ? ' diff_add' : '') + (change.removed ? ' diff_del' : '') + "\">" + pieces.join("<br />") + "</div>";
+        output += "<div class=\"diff_line" +
+                (change.added ? ' diff_add' : '') +
+                (change.removed ? ' diff_del' : '') +
+            "\">" +
+                pieces.join("<br />") +
+            "</div>";
     });
     $("#diff_output").html(output);
 });

@@ -51,7 +51,9 @@ $(document).ready(function() {
     "        <input" + "\n" +
     "            type=\"text\"" + "\n" +
         "            name=\"db_keys[{counter}]\"" + "\n" +
-        "            placeholder=\"" + $("#database-group-placeholder").val() + "\"" + "\n" +
+        "            placeholder=\"" +
+            Airship.e($("#database-group-placeholder").val()) +
+        "\"" + "\n" +
     "            required=\"required\"" + "\n" +
     "        />" + "\n" +
     "        </legend>" + "\n" +
@@ -65,7 +67,9 @@ $(document).ready(function() {
     "           data-counter=\"{counter}\"" + "\n" +
     "           data-next=\"1\"" + "\n" +
     "   >" + "\n" +
-    "        " + $("#database-add-connection-text").val() + "\n" +
+    "        " +
+        Airship.e($("#database-add-connection-text").val(), Airship.E_HTML) +
+        "\n" +
     "       </button>" + "\n" +
     "</fieldset>";
 

@@ -8,8 +8,9 @@ function toggleSlugCheckbox()
 }
 var originalSlug = '';
 $(document).ready(function() {
-    originalSlug = $("#author_slug").data('original');
-    $("#author_slug").on('change', function() {
+    var slug_el = $("#author_slug");
+    originalSlug = slug_el.data('original');
+    slug_el.on('change', function() {
         toggleSlugCheckbox();
     });
     toggleSlugCheckbox();

@@ -13,17 +13,19 @@ $(document).ready(function() {
         $(this).html($(this).data('fullpath'));
     });
 
-    $("#blog_posts_metadata").hide(0);
+    var meta_el = $("#blog_posts_metadata");
+    meta_el.hide(0);
     $("#show_metadata").on('change', function() {
-        if ($("#show_metadata").is(":checked")) {
-            $("#blog_posts_metadata").show(100);
+        if ($(this).is(":checked")) {
+            meta_el.show(100);
         } else {
-            $("#blog_posts_metadata").hide(100);
+            meta_el.hide(100);
         }
     });
 
-    originalSlug = $("#blog_post_slug").data('original');
-    $("#blog_post_slug").on('change', function() {
+    var slug_el = $("#blog_post_slug");
+    originalSlug = slug_el.data('original');
+    slug_el.on('change', function() {
         toggleSlugCheckbox();
     });
     toggleSlugCheckbox();

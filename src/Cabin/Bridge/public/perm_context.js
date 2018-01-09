@@ -7,20 +7,18 @@ var indicator = {
 };
 
 function toggleUserCheckbox() {
-    var userid = $(this).data('id');
-    var action = $(this).data('action');
+    var userid = Airship.filter($(this).data('id'), Airship.FILTER_ID);
+    var action = Airship.filter($(this).data('action'));
+
+    var el = $("#user_" + userid + "_" + action + "_indicator");
     if ($(this).is(':checked')) {
-        $("#user_" + userid + "_" + action + "_indicator").html(
-            indicator.on
-        );
-        $("#user_" + userid + "_" + action + "_indicator").parent()
+        el.html(indicator.on);
+        el.parent()
             .addClass('permtable_on')
             .removeClass('permtable_off');
     } else {
-        $("#user_" + userid + "_" + action + "_indicator").html(
-            indicator.off
-        );
-        $("#user_" + userid + "_" + action + "_indicator").parent()
+        el.html(indicator.off);
+        el.parent()
             .addClass('permtable_off')
             .removeClass('permtable_on');
     }
@@ -61,47 +59,46 @@ function redraw_branch(id) {
         if (typeof inherit[lbl] === 'undefined') {
             inherit[lbl] = false;
         }
-        if ($('#'+$(this).attr('id')+'_indicator').data('state') === 'admin') {
-            $('#'+$(this).attr('id')+'_cbox')
+        var ind_el = $('#'+$(this).attr('id')+'_indicator');
+        var cbox_el = $('#'+$(this).attr('id')+'_cbox');
+        if (ind_el.data('state') === 'admin') {
+            cbox_el
                 .prop('disabled', true)
                 .prop('checked', false);
-            $('#'+$(this).attr('id')+'_indicator')
+            ind_el
                 .html(indicator.admin);
-            $('#'+$(this).attr('id')+'_indicator').parent()
+            ind_el.parent()
                 .removeClass('permtable_on')
                 .removeClass('permtable_off')
                 .removeClass('permtable_inherits')
                 .addClass('permtable_admin');
         } else if (inherit[lbl]) {
-            $('#'+$(this).attr('id')+'_cbox').attr('disabled', 'disabled');
-            $('#'+$(this).attr('id')+'_indicator')
-                .html(indicator.inherited);
+            cbox_el.attr('disabled', 'disabled');
+            ind_el.html(indicator.inherited);
 
-            $('#'+$(this).attr('id')+'_indicator').parent()
+            ind_el.parent()
                 .removeClass('permtable_on')
                 .removeClass('permtable_off')
                 .addClass('permtable_inherits')
                 .removeClass('permtable_admin');
-        } else if ($('#'+$(this).attr('id')+'_cbox').is(':checked')) {
+        } else if (cbox_el.is(':checked')) {
             if (inherit[lbl]) {
-                $('#'+$(this).attr('id')+'_cbox').attr('disabled', 'disabled');
+                cbox_el.attr('disabled', 'disabled');
             } else {
-                $('#'+$(this).attr('id')+'_cbox').removeAttr('disabled');
+                cbox_el.removeAttr('disabled');
             }
             inherit[lbl] = true;
-            $('#'+$(this).attr('id')+'_indicator')
-                .html(indicator.on);
-            $('#'+$(this).attr('id')+'_indicator').parent()
+            ind_el.html(indicator.on);
+            ind_el.parent()
                 .addClass('permtable_on')
                 .removeClass('permtable_off')
                 .removeClass('permtable_inherits')
                 .removeClass('permtable_admin');
         } else {
-            $('#'+$(this).attr('id')+'_cbox').removeAttr('disabled');
-            $('#'+$(this).attr('id')+'_indicator')
-                .html(indicator.off);
+            cbox_el.removeAttr('disabled');
+            ind_el.html(indicator.off);
 
-            $('#'+$(this).attr('id')+'_indicator').parent()
+            ind_el.parent()
                 .removeClass('permtable_on')
                 .addClass('permtable_off')
                 .removeClass('permtable_inherits')
@@ -113,10 +110,12 @@ function redraw_branch(id) {
     for (var i = 0; i < kids.length; i++) {
         redraw_branch(kids[i], inherit);
     }
-    console.log('end_redraw');
 }
 
 function get_branch(id) {
+    // Filter the ID to prevent DOM-based abuse:
+    id = Airship.filter(id, Airship.FILTER_ID);
+
     console.log('begin_get_branch_'+id);
     var list = $("#group_"+id).data('ancestors');
     if (typeof list === 'undefined') {
@@ -199,7 +198,6 @@ $(document).ready(function() {
             return;
         }
 
-        console.log(req);
         var to = $("#bridge_main_menu_left").data('linkprefix') + "/ajax/get_perms_user";
         $.post(to, req, function (data) {
             if (data.status === 'OK') {

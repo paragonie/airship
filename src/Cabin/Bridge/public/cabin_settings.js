@@ -10,6 +10,10 @@ var counters = {};
  * @returns {string}
  */
 window.formatDynamicLink = function(id, i, config, idPrefix) {
+    id = Airship.filter(String(id), Airship.FILTER_ID);
+    i = Airship.filter(String(i), Airship.FILTER_ID);
+    idPrefix = Airship.filter(idPrefix, Airship.FILTER_ID);
+
     var elem = $("#" + id);
     var dataName = elem.data('name');
     if (typeof config === 'undefined') {
@@ -62,16 +66,16 @@ window.delDynamicNavLink = function() {
 window.setupDynamicNavigationEditor = function (id, config) {
     var elem = $("#" + id);
 
-    var dataName = elem.data('name');
-    var idPrefix = elem.data('idprefix');
+    var dataName = Airship.filter(elem.data('name'), Airship.FILTER_ID);
+    var idPrefix = Airship.filter(elem.data('idprefix'), Airship.FILTER_ID);
     var filled = elem.append("<ol id=\"" + idPrefix + "_filler\"></ol>")
         .append(
             "<button " +
-            "type=\"button\" " +
-            "data-idprefix=\"" + idPrefix + "\" " +
-            "id=\"" + idPrefix + "_add_link\" " +
-            "data-id=\"" + id + "\" " +
-            "class=\"pure-button pure-button-secondary\"" +
+                "type=\"button\" " +
+                "data-idprefix=\"" + idPrefix + "\" " +
+                "id=\"" + idPrefix + "_add_link\" " +
+                "data-id=\"" + Airship.e(id) + "\" " +
+                "class=\"pure-button pure-button-secondary\"" +
             ">Add Link</button>" + "\n"
         );
     var fillerHTML = "";

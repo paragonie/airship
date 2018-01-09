@@ -1,37 +1,39 @@
 $(document).ready(function() {
+    var dir_el = $("#directory");
+
     if ($.browser.webkit) {
         // Work around webkit being terrible and not letting us style <option> tags:
-        $("#directory").children("option").each(function () {
-            if ($(this).val() != parseInt($(this).val(), 10)) {
-                $(this).html("-- " + $(this).val() + " --");
+        dir_el.children("option").each(function () {
+            var val = $(this).val();
+            if (val !== parseInt(val, 10)) {
+                $(this).html("-- " + Airship.e(val) + " --");
             } else {
                 $(this).html($(this).data('fullpath'));
             }
         });
     }
 
-    $("#directory").on('change', function(e) {
+    dir_el.on('change', function(e) {
         var cabin = $(this).parents("form").data('currentcabin');
+        var chk_el = $("#create_redirect");
+        var chk = '0';
+
         if ($("option:selected", this).data('cabin') !== cabin) {
             // We're forcing this to be unchecked.
-            if ($("#create_redirect").is(":checked")) {
-                var chk = '1';
-            } else {
-                var chk = '0';
+            if (chk_el.is(":checked")) {
+                chk = '1';
             }
             $("#create_redirect_row")
                 .data("checked", chk)
                 .hide(200);
-            $("#create_redirect").prop(
-                'checked',
-                false
-            );
+            chk_el.prop('checked', false);
         } else {
-            $("#create_redirect").prop(
+            var row_el = $("#create_redirect_row");
+            chk_el.prop(
                 'checked',
-                $("#create_redirect_row").data("checked") == '1'
+                row_el.data("checked") === '1'
             );
-            $("#create_redirect_row").show(200);
+            row_el.show(200);
         }
     });
 
