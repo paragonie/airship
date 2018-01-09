@@ -443,8 +443,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      * Return an UploadedFile instance array.
      *
      * @param array $files A array which respect $_FILES structure
-     * @throws \InvalidArgumentException for unrecognized values
      * @return array
+     *
+     * @throws \Error
+     * @throws \InvalidArgumentException for unrecognized values
      */
     public static function normalizeFiles(array $files)
     {
@@ -455,8 +457,8 @@ class ServerRequest extends Request implements ServerRequestInterface
                 $normalized[$key] = $value;
             } elseif (is_array($value) && isset($value['tmp_name'])) {
                 $normalized[$key] = \is_array($value['tmp_name'])
-                    ? self::createUploadedFileFromSpec($value)
-                    : self::normalizeNestedFileSpec($value);
+                    ? self::normalizeNestedFileSpec($value)
+                    : self::createUploadedFileFromSpec($value);
             } elseif (is_array($value)) {
                 $normalized[$key] = self::normalizeFiles($value);
                 continue;
@@ -480,7 +482,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     private static function createUploadedFileFromSpec(array $value): UploadedFileInterface
     {
-        if (is_array($value['tmp_name'])) {
+        if (\is_array($value['tmp_name'])) {
             throw new \Error('Wrong subroutine accessed');
         }
 
@@ -501,6 +503,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @param array $files
      * @return UploadedFileInterface[]
+     * @throws \Error
      */
     private static function normalizeNestedFileSpec(array $files = []): array
     {

@@ -89,9 +89,9 @@ if (!empty($state->universal['debug'])) {
             $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
-            foreach (\Airship\get_standard_headers('text/plain;charset=UTF-8') as $left => $right) {
-                \header($left . ': ' . $right);
-            }
+            \Airship\sendHeaders(
+                \Airship\get_standard_headers('text/plain;charset=UTF-8')
+            );
         }
         $state->logger->log(
             LogLevel::ERROR,

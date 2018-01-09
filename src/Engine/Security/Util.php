@@ -110,12 +110,12 @@ abstract class Util
         $p = \strpos($mimeType, ';');
         if ($p !== false) {
             return self::charWhitelist(
-                self::subString($mimeType, 0, $p - 1),
+                self::subString($mimeType, 0, $p),
                 self::MIME_CHARS
             ) .
             '; ' .
             self::charWhitelist(
-                self::subString($mimeType, $p),
+                self::subString($mimeType, $p + 1),
                 self::MIME_CHARS
             );
         }
@@ -164,7 +164,11 @@ abstract class Util
         int $start,
         ?int $length = null
     ): string {
-        return Binary::safeSubstr($str, $start, $length);
+        try {
+            return Binary::safeSubstr($str, $start, $length);
+        } catch (\Throwable $ex) {
+            return '';
+        }
     }
 
     /**

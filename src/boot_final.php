@@ -23,6 +23,7 @@ require ROOT . '/cabin_gears.php';
 
 $lens->addGlobal('ACTIVE_CABIN', \CABIN_NAME);
 
+/** @var AutoPilot $autoPilot */
 $autoPilot = Gears::get(
     'AutoPilot',
     $active,

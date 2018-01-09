@@ -14,6 +14,7 @@ use Airship\Engine\{
     Database,
     State
 };
+use function foo\func;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary
@@ -24,6 +25,7 @@ use ParagonIE\Halite\{
     SignatureKeyPair,
     Util
 };
+use Psr\Http\Message\ResponseInterface;
 use ReCaptcha\ReCaptcha;
 use ReCaptcha\RequestMethod\CurlPost;
 
@@ -489,7 +491,6 @@ function json_response($result, $signingKey = null)
         foreach (get_standard_headers('application/json') as $left => $right) {
             \header($left . ': ' . $right);
         }
-        \header('X-Download-Options: noopen');
     }
     if ($signingKey instanceof SignatureSecretKey || $signingKey instanceof SignatureKeyPair) {
         if ($signingKey instanceof SignatureKeyPair) {
@@ -805,13 +806,27 @@ function saveJSON(string $file, $data = null): bool
 }
 
 /**
+ * @param ResponseInterface $response
+ */
+function sendHeaders(ResponseInterface $response): void
+{
+    foreach ($response->getHeaders() as $name => $values) {
+        foreach ($values as $value) {
+            \header(\sprintf('%s: %s', $name, $value), false);
+        }
+    }
+}
+
+/**
  * Shuffle an array using a CSPRNG
  *
  * @link https://paragonie.com/b/JvICXzh_jhLyt4y3
  *
  * @param array &$array reference to an array
+ * @return void
+ * @throws \Throwable
  */
-function secure_shuffle(array &$array)
+function secure_shuffle(array &$array): void
 {
     $size = \count($array);
     $keys = \array_keys($array);

@@ -5,6 +5,7 @@ namespace Airship\Cabin\Hull\Controller;
 use Airship\Cabin\Hull\Model as BP;
 use Airship\Alerts\{
     FileSystem\FileNotFound,
+    Router\ControllerComplete,
     Router\EmulatePageNotFound
 };
 use Airship\Engine\Security\Util;
@@ -54,6 +55,7 @@ class PublicFiles extends ControllerGear
      * @param string $path
      * @param string $default Default MIME type
      * @route files/(.*)
+     * @throws ControllerComplete
      * @throws EmulatePageNotFound
      */
     public function download(string $path, string $default = 'text/plain')
@@ -96,6 +98,7 @@ class PublicFiles extends ControllerGear
                 \header('X-Download-Options: noopen');
             }
             $this->includeStandardHeaders($fileData['type']);
+            \Airship\sendHeaders($this->airship_response);
             \readfile($realPath);
             exit;
         } catch (FileNotFound $ex) {
@@ -116,6 +119,6 @@ class PublicFiles extends ControllerGear
         if ($pos !== false) {
             $mimeHeader = Util::subString($mimeHeader, 0, $pos);
         }
-        return \in_array($mimeHeader, $this->viewableMimeTypes);
+        return \in_array($mimeHeader, $this->viewableMimeTypes, true);
     }
 }

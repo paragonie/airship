@@ -138,7 +138,6 @@ class Controller
             $this->airship_config = \Airship\loadJSON($file);
         }
         $this->airship_response = Gears::get('HTTPResponse');
-        $this->includeStandardHeaders();
         $this->airshipLand();
     }
     
@@ -541,8 +540,9 @@ class Controller
      *
      * @return ResponseInterface
      */
-    protected function includeStandardHeaders(string $mimeType = 'text/html;charset=UTF-8'): ResponseInterface
-    {
+    protected function includeStandardHeaders(
+        string $mimeType = 'text/html;charset=UTF-8'
+    ): ResponseInterface {
         static $secHeaders = false;
 
         $state = State::instance();
