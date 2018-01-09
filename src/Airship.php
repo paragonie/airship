@@ -819,8 +819,12 @@ function sendHeaders(ResponseInterface $response): void
 function sendHeadersArray(array $headers): void
 {
     foreach ($headers as $name => $values) {
-        foreach ($values as $value) {
-            \header(\sprintf('%s: %s', $name, $value), false);
+        if (\is_array($values)) {
+            foreach ($values as $value) {
+                \header(\sprintf('%s: %s', $name, $value), false);
+            }
+        } elseif (\is_string($values)) {
+            \header(\sprintf('%s: %s', $name, $values), false);
         }
     }
 }
