@@ -810,7 +810,15 @@ function saveJSON(string $file, $data = null): bool
  */
 function sendHeaders(ResponseInterface $response): void
 {
-    foreach ($response->getHeaders() as $name => $values) {
+    sendHeadersArray($response->getHeaders());
+}
+
+/**
+ * @param ResponseInterface $response
+ */
+function sendHeadersArray(array $headers): void
+{
+    foreach ($headers as $name => $values) {
         foreach ($values as $value) {
             \header(\sprintf('%s: %s', $name, $value), false);
         }

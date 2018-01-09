@@ -89,7 +89,7 @@ if (!empty($state->universal['debug'])) {
             $autoPilot->serveResponse();
     } catch (\Throwable $e) {
         if (!\headers_sent()) {
-            \Airship\sendHeaders(
+            \Airship\sendHeadersArray(
                 \Airship\get_standard_headers('text/plain;charset=UTF-8')
             );
         }
