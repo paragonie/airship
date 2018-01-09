@@ -17,6 +17,13 @@ body {
 .bridge-body-site-wrapper {
     background-color: #242424;
 }
+#login-prompt {
+    font-size: 20pt;
+    padding-bottom: 0.33ex;
+    border-color: #999;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+}
 #hull-header-icon {
     height: 64px;
 }
