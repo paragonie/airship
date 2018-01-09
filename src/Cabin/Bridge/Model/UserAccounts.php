@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Model;
 
 use Airship\Alerts\Database\QueryError;
+use Airship\Alerts\Security\ExpiredVersion;
 use Airship\Alerts\Security\UserNotFound;
 use Airship\Engine\{
     Security\Util,
@@ -578,6 +579,12 @@ class UserAccounts extends ModelGear
      *
      * @param int $userID
      * @return HiddenString
+     * @throws ExpiredVersion
+     * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
+     * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
+     * @throws \ParagonIE\Halite\Alerts\InvalidMessage
+     * @throws \ParagonIE\Halite\Alerts\InvalidSignature
+     * @throws \ParagonIE\Halite\Alerts\InvalidType
      */
     public function getTwoFactorSecret(int $userID): HiddenString
     {
@@ -589,12 +596,8 @@ class UserAccounts extends ModelGear
             return new HiddenString('');
         }
         $state = State::instance();
-        if (Binary::safeSubstr($secret, 0, 6) === '314202') {
-            return Symmetric::decrypt(
-                $secret,
-                $state->keyring['auth.password_key'],
-                false
-            );
+        if (Util::subString($secret, 0, 6) === '314202') {
+            throw new ExpiredVersion('This secret was encrypted with an outdated version of Halite.');
         }
         return Symmetric::decrypt(
             $secret,

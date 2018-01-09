@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Controller;
 
+use Airship\Alerts\Security\ExpiredVersion;
 use Airship\Alerts\Security\UserNotFound;
 use Airship\Cabin\Bridge\Model\UserAccounts;
 use Airship\Cabin\Bridge\Filter\Account\{
@@ -971,7 +972,12 @@ class Account extends ControllerGear
         if (!$userID) {
             $userID = $this->getActiveUserId();
         }
-        $secret = $this->acct->getTwoFactorSecret($userID);
+        /** @var HiddenString $secret */
+        try {
+            $secret = $this->acct->getTwoFactorSecret($userID);
+        } catch (ExpiredVersion $ex) {
+            $secret = new HiddenString('');
+        }
         if (empty($secret->getString())) {
             if (!$this->acct->resetTwoFactorSecret($userID)) {
                 \Airship\redirect($this->airship_cabin_prefix);
