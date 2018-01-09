@@ -57,6 +57,8 @@ class Install
      *
      * @param \Twig_Environment $twig
      * @param array $data
+     *
+     * @throws \Exception
      */
     public function __construct(\Twig_Environment $twig, array $data = [])
     {
@@ -478,11 +480,17 @@ class Install
             'twig_vars' => $this->data['twig_vars']
         ];
     }
-    
+
     /**
      * Finalize the install process
-     * 
+     *
      * @param array $post
+     *
+     * @throws \Exception
+     * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
+     * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
+     * @throws \ParagonIE\Halite\Alerts\InvalidMessage
+     * @throws \ParagonIE\Halite\Alerts\InvalidType
      */
     protected function finalize(array $post = [])
     {
@@ -565,13 +573,18 @@ class Install
         \chmod(ROOT . '/config/gadgets.json', 0664);
         \chmod(ROOT . '/config/universal.json', 0664);
     }
-    
+
     /**
      * Get the data for the cabins.json file
-     * 
+     *
      * This is in a separate method so it can be unit tested
      * @param \Twig_Environment $twig
      * @return string
+     *
+     * @throws \Airship\Alerts\FileSystem\AccessDenied
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function finalConfigCabins(\Twig_Environment $twig): string
     {
@@ -601,13 +614,16 @@ class Install
             ]
         );
     }
-    
+
     /**
      * Get the data for the databases.json file
-     * 
+     *
      * This is in a separate method so it can be unit tested
      * @param \Twig_Environment $twig
      * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function finalConfigDatabases(\Twig_Environment $twig): string
     {
@@ -650,13 +666,17 @@ class Install
             'databases' => $databases
         ]);
     }
-    
+
     /**
      * Get the data for the universal.json file
-     * 
+     *
      * This is in a separate method so it can be unit tested
      * @param \Twig_Environment $twig
      * @return string
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function finalConfigUniversal(\Twig_Environment $twig): string
     {
