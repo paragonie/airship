@@ -17,6 +17,7 @@ use ParagonIE\Halite\{
     Password
 };
 use ParagonIE\ConstantTime\Base64;
+use PHPUnit\Runner\Exception;
 use ZxcvbnPhp\Zxcvbn;
 
 /**
@@ -31,6 +32,11 @@ class Install
      * @var Database
      */
     protected $db;
+
+    /**
+     * @var bool
+     */
+    protected $dbReadOnly = false;
 
     /**
      * @var bool
@@ -68,6 +74,7 @@ class Install
             );
             exit(255);
         }
+
         $this->twig = $twig;
         $this->data = $data;
         $this->data['airship_version'] = \AIRSHIP_VERSION;
@@ -79,16 +86,20 @@ class Install
             $this->data['step'] = 1;
         }
         if (empty($this->data['token'])) {
-            $this->data['token'] = Base64::encode(
-                \random_bytes(33)
-            );
-            \setcookie(
-                'installer',
-                $this->data['token'],
-                \time() + 8640000,
-                '/'
-            );
-            \Airship\redirect('/');
+                if (!$this->preinstallPasswordCheck()) {
+                    exit(255);
+                }
+                $this->data['token'] = Base64::encode(
+                    \random_bytes(33)
+                );
+                \setcookie(
+                    'installer',
+                    $this->data['token'],
+                    \time() + 8640000,
+                    '/'
+                );
+                \Airship\redirect('/');
+            exit(255);
         } elseif (empty($_COOKIE['installer'])) {
             echo 'No installer authorization token found.', "\n";
             exit(255);
@@ -97,6 +108,7 @@ class Install
             echo 'Invalid installer authorization token.', "\n";
             exit(255);
         }
+
         $dirs = [
             'comments',
             'csp_hash',
@@ -727,6 +739,9 @@ class Install
         
         // Let's iterate through the SQL files and run them all
         $driver = $this->db->getDriver();
+        if ($this->finalDatabaseDetectAlreadySetup($driver)) {
+            return;
+        }
         $files = \Airship\list_all_files(
             ROOT . '/Installer/sql/' . $driver,
             'sql'
@@ -783,10 +798,32 @@ class Install
     }
 
     /**
+     * @param string $driver
+     *
+     * @return bool
+     */
+    public function finalDatabaseDetectAlreadySetup(string $driver): bool
+    {
+        if ($this->db->exists(
+            "SELECT 1
+             FROM   information_schema.tables 
+             WHERE  table_schema = 'public'
+             AND    table_name = 'airship_perm_actions'"
+        )) {
+            $this->dbReadOnly = true;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Reset the sequence values.
      */
     protected function databaseFinalPgsql()
     {
+        if ($this->dbReadOnly) {
+            return;
+        }
         /**
          * 'table' +> 'primary_key_column'
          */
@@ -864,6 +901,9 @@ class Install
             throw new \Exception(
                 \__('Passphrase is not defined. This is a serious error.')
             );
+        }
+        if ($this->dbReadOnly) {
+            return;
         }
         $sessionCanary = Base64UrlSafe::encode(\random_bytes(33));
         $userid = $this->db->insertGet(
@@ -972,4 +1012,45 @@ class Install
         );
         return $strength['score'] < 3;
     }
+
+    /**
+     * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    protected function preinstallPasswordCheck(): bool
+    {
+        if (!\file_exists(ROOT . '/config/pre-install-password')) {
+            return true;
+        }
+        /** @var $expected $expected */
+        $expected = \file_get_contents(ROOT . '/config/pre-install-password');
+        if (!\is_string($expected)) {
+            return true;
+        }
+        $expected = \trim($expected);
+        if (empty($expected)) {
+            return true;
+        }
+        $data = [];
+        try {
+            if (isset($_POST['pre-install-pw'])) {
+                if (!\is_string($_POST['pre-install-pw'])) {
+                    throw new Exception('Invalid type');
+                }
+                if (!\hash_equals($expected, $_POST['pre-install-pw'])) {
+                    throw new Exception('Incorrect pre-install password');
+                }
+                // Password matched. Continue.
+                return true;
+            }
+        } catch (\Throwable $ex) {
+            $data['error'] = $ex->getMessage();
+        }
+
+        echo $this->twig->render('pre_auth_prompt.twig', $data);
+        return false;
+    }
+
 }

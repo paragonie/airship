@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <div class="rwidth66 center" id="setup-main">
+    <h2>Please Enter the Setup Password</h2>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    <p>
+        If you are using AWS, this is your instance ID.
+    </p>
+    <form method="post">{{ form_token() }}
+        <input type="password" name="pre-install-pw" />
+        <button type="submit">Continue</button>
+    </form>
+    </div>
+{% endblock %}
+
+{# Style definitions are stored in other Twig templates #}
+{% block css %}
+    {% include "css/main.css.twig" %}
+    {% include "css/password.css.twig" %}
+{% endblock %}
