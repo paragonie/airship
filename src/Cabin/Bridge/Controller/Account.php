@@ -255,7 +255,7 @@ class Account extends ControllerGear
      */
     public function publicDirectory(string $page = '')
     {
-        if ($this->isLoggedIn())  {
+        if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         list($offset, $limit) = $this->getOffsetAndLimit($page);
