@@ -26,6 +26,10 @@ class Translation
      * @param mixed[] ...$params
      * @return string
      * @throws TranslationKeyNotFound
+     *
+     * @psalm-suppress MixedArrayAccess
+     * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
      */
     public function lookup(
         string $key,
@@ -45,10 +49,10 @@ class Translation
             }
             $v = $v[$k];
         }
+        /** @var string $str */
         $str = '';
         while (empty($str)) {
-            /** @noinspection PhpUsageOfSilenceOperatorInspection */
-            $str = @\sprintf($v, ...$params);
+            $str = (string) (@\sprintf($v, ...$params));
             \array_push($params, '');
         }
         return $str;

@@ -202,10 +202,9 @@ class CSRF
         }
 
         // This is the expected token value
-        if ($this->hmacIP === false) {
-            // We just stored it wholesale
-            $expected = $stored['token'];
-        } else {
+        // We just stored it wholesale
+        $expected = $stored['token'];
+        if ($this->hmacIP) {
             // We mixed in the client IP address to generate the output
             $expected = Base64UrlSafe::encode(
                 CryptoUtil::raw_keyed_hash(

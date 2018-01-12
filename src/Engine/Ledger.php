@@ -48,7 +48,9 @@ class Ledger implements LoggerInterface
                 $state->universal['ledger']['time-format'] ?? FileStore::TIME_FORMAT
             );
         }
-        $this->storage = $storage;
+        if ($storage instanceof LedgerStorageInterface) {
+            $this->storage = $storage;
+        }
 
         // We don't use $args, but a Gear can.
     }

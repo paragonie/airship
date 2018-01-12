@@ -142,6 +142,8 @@ class Motif extends BaseInstaller
             $zip->getArchiveComment(\ZipArchive::FL_UNCHANGED),
             true
         );
+        /** @var string $cabin */
+        $cabin = '';
         if (isset($metadata['cabin'])) {
             $cabin = $this->expandCabinName($metadata['cabin']);
             if (!\is_dir(ROOT . '/Cabin/' . $cabin)) {
@@ -151,8 +153,6 @@ class Motif extends BaseInstaller
                 );
                 return false;
             }
-        } else {
-            $cabin = null;
         }
 
         // Extract the new files to the current directory
@@ -165,13 +165,13 @@ class Motif extends BaseInstaller
         }
 
         // Add to the relevant motifs.json files
-        if ($cabin) {
+        if (!empty($cabin)) {
             $this->addMotifToCabin($cabin);
         } else {
-            foreach (\glob(ROOT . '/Cabin/') as $cabin) {
-                if (\is_dir($cabin)) {
+            foreach (\glob(ROOT . '/Cabin/') as $_cabin) {
+                if (\is_dir($_cabin)) {
                     $this->addMotifToCabin(
-                        \Airship\path_to_filename($cabin)
+                        \Airship\path_to_filename($_cabin)
                     );
                 }
             }

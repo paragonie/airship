@@ -100,7 +100,7 @@ class Database implements DBInterface
                 }
                 break;
         }
-        
+
         try {
             if (empty($username) && empty($password) && empty($options)) {
                 $pdo = new \PDO($dsn);
@@ -109,6 +109,11 @@ class Database implements DBInterface
             }
         } catch (\PDOException $e) {
             // Don't leak the DB password in a stack trace:
+            throw new DBAlert\DBException(
+                \trk('errors.database.pdo_exception')
+            );
+        }
+        if (!isset($pdo)) {
             throw new DBAlert\DBException(
                 \trk('errors.database.pdo_exception')
             );

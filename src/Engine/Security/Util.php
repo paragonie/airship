@@ -75,7 +75,7 @@ abstract class Util
      *
      * @param string $mimeType
      * @param string $default
-     * @param array $badSubstrings
+     * @param array<int, string> $badSubstrings
      * @return string
      */
     public static function downloadFileType(

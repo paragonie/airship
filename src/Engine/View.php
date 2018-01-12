@@ -21,7 +21,7 @@ class View
     private $twigEnv;
 
     /**
-     * @var array
+     * @var array<string, array<mixed, mixed>|string>
      */
     private $stored = [];
 
@@ -113,6 +113,10 @@ class View
      */
     public function store(string $key, $val): self
     {
+        if (!\is_array($val)) {
+            $val = [$val];
+        }
+        /** @var array<mixed, mixed> $val */
         $this->stored[$key] = $val;
         return $this;
     }
@@ -128,11 +132,12 @@ class View
     {
         if (!isset($this->stored[$key])) {
             $this->stored[$key] = [];
-        } elseif (!is_array($this->stored[$key])) {
+        }
+        if (!\is_array($this->stored[$key])) {
             // Let's store the existing value as the first index
             $this->stored[$key] = [$this->stored[$key]];
         }
-        $this->stored[$key] []= $val;
+        \array_push($this->stored[$key], $val);
         return $this;
     }
 
@@ -147,7 +152,8 @@ class View
     {
         if (!isset($this->stored[$key])) {
             $this->stored[$key] = [];
-        } elseif (!is_array($this->stored[$key])) {
+        }
+        if (!\is_array($this->stored[$key])) {
             // Let's store the existing value as the first index
             $this->stored[$key] = [$this->stored[$key]];
         }
@@ -262,21 +268,29 @@ class View
     public function loadMotifCargo(string $name): self
     {
         $state = State::instance();
+        /** @var array<string, array<string, array<string, array<string, string>>>> $motifs */
+        $motifs = $state->motifs;
         if (
-            isset($state->motifs[$name])
+            isset($motifs[$name])
                 &&
-            isset($state->motifs[$name]['config']['cargo'])
+            isset($motifs[$name]['config']['cargo'])
         ) {
+            /** @var array $cargoIterator */
             $cargoIterator = isset($state->cargoIterator)
                 ? $state->cargoIterator
                 : [];
-            foreach ($state->motifs[$name]['config']['cargo'] as $key => $subPath) {
+            /**
+             * @var string $key
+             * @var string $subPath
+             */
+            foreach ($motifs[$name]['config']['cargo'] as $key => $subPath) {
                 $cargoIterator[$key] = 0;
                 Gadgets::loadCargo(
                     $key,
-                    'motif/' . $name . '/cargo/' . $subPath
+                    'motif/' . $name . '/cargo/' . (string) ($subPath)
                 );
             }
+            /** @var array cargoIterator */
             $state->cargoIterator = $cargoIterator;
         }
         return $this;
@@ -295,6 +309,7 @@ class View
         if (isset($state->motifs[$name])) {
             try {
                 if (\file_exists(ROOT . '/config/motifs/' . $name . '.json')) {
+                    /** @var array $state->motif_config */
                     $state->motif_config = \Airship\loadJSON(
                         ROOT . '/config/motifs/' . $name . '.json'
                     );
@@ -313,11 +328,14 @@ class View
      *
      * @param string $name
      * @return bool
+     * @throws \TypeError
      */
     public function setActiveMotif(string $name): bool
     {
         $state = State::instance();
-        if (\in_array($name, \array_keys($state->motifs))) {
+        /** @var array<string, array<string, array<string, string>>> $motifs */
+        $motifs = $state->motifs;
+        if (\in_array($name, \array_keys($motifs), true)) {
             $this->stored['active_motif'] = $name;
             $this->setBaseTemplate($name);
             return true;
@@ -342,19 +360,24 @@ class View
      *
      * @param string $name
      * @return self
+     * @throws \TypeError
      */
     public function setBaseTemplate(string $name): self
     {
         $state = State::instance();
+        /** @var array<string, array<string, array<string, string>>> $motifs */
+        $motifs = $state->motifs;
         if (
-            isset($state->motifs[$name])
+            isset($motifs[$name])
                 &&
-            isset($state->motifs[$name]['config']['base_template'])
+            isset($motifs[$name]['config']['base_template'])
         ) {
+            /** @var string $base */
+            $base = $motifs[$name]['config']['base_template'];
             $state->base_template = 'motif/' .
                 $name .
                 '/' .
-                $state->motifs[$name]['config']['base_template'] .
+                $base .
                 '.twig';
         }
         return $this;

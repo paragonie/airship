@@ -42,7 +42,9 @@ class Permissions
      * @param string $context_path context regex (in perm_contexts)
      * @param string $cabin (defaults to current cabin)
      * @param integer $user_id (defaults to current user)
-     * @return boolean
+     * @return bool
+     *
+     * @throws NotImplementedException
      */
     public function can(
         string $action,
@@ -51,6 +53,8 @@ class Permissions
         int $user_id = 0
     ): bool {
         $state = State::instance();
+        /** @var array<string, mixed> $univ */
+        $univ = $state->universal;
         if (empty($cabin)) {
             $cabin = CABIN_NAME;
         }
@@ -70,6 +74,7 @@ class Permissions
         $failed_one = false;
         
         // Get all applicable contexts
+        /** @var array<int, int> $contexts */
         $contexts = $this->getOverlap($context_path, $cabin);
         if (empty($contexts)) {
             // Sane default: In the absence of permissions, return false
@@ -89,13 +94,15 @@ class Permissions
                 }
             }
         } else {
-            if (!$state->universal['guest_groups']) {
+            if (!$univ['guest_groups']) {
                 return false;
             }
             // Guests can be assigned to groups. This fails closed if they aren't given any.
+            /** @var array<string, int> $guest_groups */
+            $guest_groups = $univ['guest_groups'];
             foreach ($contexts as $c_id) {
                 $ctx_res = false;
-                foreach ($state->universal['guest_groups'] as $grp) {
+                foreach ($guest_groups as $grp) {
                     if ($this->checkGroup($action, $c_id, $grp)) {
                         $ctx_res = true;
                     }
@@ -164,6 +171,7 @@ class Permissions
                 return true;
             }
         }
+        /** @var int $check */
         $check = $this->db->single(
             \Airship\queryStringRoot(
                 'security.permissions.check_user',
@@ -226,6 +234,7 @@ class Permissions
         if (empty($context)) {
             $context = AutoPilot::$path;
         }
+        /** @var array<int, int> $ctx */
         $ctx = $this->db->first(
             \Airship\queryStringRoot(
                 'security.permissions.get_overlap',

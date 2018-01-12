@@ -82,7 +82,7 @@ class WordPress implements MigrationInterface
      *
      * @param HiddenString $password
      * @param HiddenString $pHash
-     * @param array $migrationData
+     * @param array<string, string> $migrationData
      * @param EncryptionKey $passwordKey
      * @return bool
      * @throws \Exception
@@ -138,6 +138,7 @@ class WordPress implements MigrationInterface
             return new HiddenString($output);
         }
 
+        /** @var int $count */
         $count = 1 << $count_log2;
         $salt = Binary::safeSubstr($setting, 4, 8);
         if (Binary::safeStrlen($salt) !== 8) {
@@ -168,18 +169,18 @@ class WordPress implements MigrationInterface
         $i = 0;
         do {
             $value = \ord($input[$i++]);
-            $output .= $this->itoa64[$value & 0x3f];
+            $output .= $this->itoa64[(int) ($value & 0x3f)];
             if ($i < $count)
                 $value |= \ord($input[$i]) << 8;
-            $output .= $this->itoa64[($value >> 6) & 0x3f];
+            $output .= $this->itoa64[(int) (($value >> 6) & 0x3f)];
             if ($i++ >= $count)
                 break;
             if ($i < $count)
                 $value |= \ord($input[$i]) << 16;
-            $output .= $this->itoa64[($value >> 12) & 0x3f];
+            $output .= $this->itoa64[(int) (($value >> 12) & 0x3f)];
             if ($i++ >= $count)
                 break;
-            $output .= $this->itoa64[($value >> 18) & 0x3f];
+            $output .= $this->itoa64[(int) (($value >> 18) & 0x3f)];
         } while ($i < $count);
         return $output;
     }

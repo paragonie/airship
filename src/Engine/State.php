@@ -85,10 +85,8 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      */
     public function offsetSet($key, $value)
     {
-        if (\is_null($key)) {
-            $this->engine_state_registry[] = $value;
-        } else {
-            $this->engine_state_registry[$key] = $value;
+        if (\is_string($key)) {
+            $this->set($key, $value);
         }
     }
     
@@ -97,9 +95,13 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * 
      * @param mixed $key
      * @return void
+     * @throws \TypeError
      */
     public function offsetUnset($key)
     {
+        if (!\is_string($key)) {
+            throw new \TypeError('Invalid type for State key');
+        }
         if ($this->offsetExists($key)) {
             unset($this->engine_state_registry[$key]);
         }
@@ -133,23 +135,30 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      */
     public function set($key = null, $value = null)
     {
-        $this->__set($key, $value);
+        $this->__set((string) ($key), $value);
     }
     
     /**
-     * 
      * @param string $serialized
-     * @return array
+     * @return void
      * @throws \Error
-     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @psalm-suppress MixedAssignment
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
+        /** @var array<string, mixed> $array */
         $array = \json_decode($serialized, true);
+        $this->engine_state_registry = new \ArrayObject();
         if (!\is_array($array)) {
             throw new \Error('Invalid JSON message');
         }
-        return $array;
+        /**
+         * @var string $key
+         * @var mixed $value
+         */
+        foreach ($array as $key => $value) {
+            $this->engine_state_registry[$key] = $value;
+        }
     }
     
     /** BEGIN SINGLETON REQUIREMENTS **/
@@ -212,6 +221,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * 
      * @param string $key
      * @param mixed $value
+     * @psalm-suppress MixedAssignment
      */
     public function __set($key, $value)
     {
@@ -233,6 +243,7 @@ class State implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countab
      * This runs when a variable is unset
      * 
      * @param mixed $key
+     * @psalm-suppress MixedArrayOffset
      */
     public function __unset($key)
     {
