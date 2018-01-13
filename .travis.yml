@@ -16,20 +16,6 @@ matrix:
 services:
   - postgresql
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get -y install make build-essential automake php-pear
-  - git clone git://github.com/jedisct1/libsodium.git
-  - cd libsodium
-  - git checkout 1.0.15
-  - ./autogen.sh
-  - ./configure && make check
-  - echo "Installing libsodium..."
-  - sudo make install
-  - cd ..
-  - echo "Installing ext/sodium..."
-  - pecl install libsodium > /dev/null
-
 install:
   - composer update
   - echo "[]" > src/config/gears.json
@@ -48,9 +34,10 @@ install:
   - chmod 0775 src/config/universal.json
   - psql -c 'create database airship_test;' -U postgres
   - chmod +x src/CommandLine/travis-build.sh
+  - chmod +x psalm.sh
   - src/CommandLine/travis-build.sh
 
 script:
   - vendor/bin/phpunit
-  - psalm.sh
+  - ./psalm.sh
 
