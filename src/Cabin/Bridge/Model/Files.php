@@ -123,7 +123,7 @@ class Files extends ModelGear
     /**
      * Does the directory already exist?
      *
-     * @param null $parent
+     * @param mixed $parent
      * @param string $cabin
      * @param string $dirName
      * @return bool
@@ -460,7 +460,7 @@ class Files extends ModelGear
     /**
      * Get all of the directories beneath the current one
      *
-     * @param null $directoryId
+     * @param mixed $directoryId
      * @param string $cabin
      * @return array
      */

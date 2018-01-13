@@ -21,7 +21,7 @@ class Cabins extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
         $this->includeAjaxToken();
@@ -31,8 +31,9 @@ class Cabins extends LoggedInUsersOnly
      * @param string $cabinName
      * @route cabin/{string}
      */
-    public function cabinMenu(string $cabinName = '')
+    public function cabinMenu(string $cabinName = ''): void
     {
+        $settings = [];
         if (!$this->isLoggedIn()) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
@@ -68,7 +69,7 @@ class Cabins extends LoggedInUsersOnly
     /**
      * @route cabins
      */
-    public function index()
+    public function index(): void
     {
         if (!$this->isLoggedIn()) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -85,7 +86,7 @@ class Cabins extends LoggedInUsersOnly
      * @route cabins/manage{_string}
      * @param string $cabinName
      */
-    public function manage(string $cabinName = '')
+    public function manage(string $cabinName = ''): void
     {
         if (!$this->isSuperUser()) {
             // Admins only!
@@ -371,7 +372,7 @@ class Cabins extends LoggedInUsersOnly
      *
      * @param string $cabin
      */
-    protected function setTemplateExtraData(string $cabin)
+    protected function setTemplateExtraData(string $cabin): void
     {
         $this->storeViewVar(
             'active_submenu',

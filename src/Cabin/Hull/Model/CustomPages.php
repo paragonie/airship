@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Model;
 
 use Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
+use Airship\Engine\Database;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -15,6 +16,11 @@ require_once __DIR__.'/init_gear.php';
  */
 class CustomPages extends ModelGear
 {
+    /**
+     * @var Database
+     */
+    public $db;
+
     /**
      * @var string
      */

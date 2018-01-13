@@ -888,7 +888,7 @@ class Author extends ModelGear
      *
      * @param int $authorId
      */
-    protected function deleteAuthorCascade(int $authorId)
+    protected function deleteAuthorCascade(int $authorId): void
     {
         $this->db->delete(
             'hull_blog_author_photos',
@@ -908,7 +908,7 @@ class Author extends ModelGear
      * @param int $oldAuthorId
      * @param int $newAuthorId = 0
      */
-    protected function reassignAuthorship(int $oldAuthorId, int $newAuthorId = 0)
+    protected function reassignAuthorship(int $oldAuthorId, int $newAuthorId = 0): void
     {
         if ($newAuthorId < 1) {
             $newAuthorId = null;

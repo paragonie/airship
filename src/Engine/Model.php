@@ -21,6 +21,8 @@ class Model
     use LogBolt;
     use SecurityBolt;
 
+    const TYPE_ERROR = 'Model not an instance of the expected type';
+
     /**
      * @var Database
      */

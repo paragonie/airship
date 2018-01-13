@@ -172,7 +172,7 @@ class Skyport extends ModelGear
         string $type = '',
         string $query = '',
         int $offset = 0,
-        int $limit
+        int $limit = 20
     ): array {
         $extra = '';
         $args = [];
@@ -429,7 +429,7 @@ class Skyport extends ModelGear
         if (!$this->isLocked()) {
             return false;
         }
-        $this->installHash = \file_get_contents(ROOT . '/config/install.lock');
+        $this->installHash = (string) \file_get_contents(ROOT . '/config/install.lock');
         if (\preg_match('/^3142[0-9a-f]{300,}$/', $this->installHash)) {
             // This looks like an encrypted password hash.
             return true;
@@ -644,7 +644,8 @@ class Skyport extends ModelGear
         /**
          * @security Watch this carefully:
          */
-        $ret .= \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Cabin/' . $search));
+        /** @psalm-suppress ForbiddenCode */
+        $ret .= (string) \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Cabin/' . $search));
 
         return $ret;
     }
@@ -747,7 +748,8 @@ class Skyport extends ModelGear
             list ($key, $path) = $pathInfo;
             $this->deleteMotifFromCabin($cabin, $key);
             if (\is_dir(ROOT . '/Motifs/' . $path)) {
-                $ret .= \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Motifs/' . $path));
+                /** @psalm-suppress ForbiddenCode -- always audit this */
+                $ret .= (string) \shell_exec('rm -rf ' . \escapeshellarg(ROOT . '/Motifs/' . $path));
                 \clearstatcache();
             }
             if (\is_link(ROOT . '/Cabin/' . $cabin . '/View/motif/' . $key)) {
@@ -762,8 +764,9 @@ class Skyport extends ModelGear
      *
      * @param string $cabin
      * @param string $key
+     * @return void
      */
-    protected function deleteMotifFromCabin(string $cabin, string $key)
+    protected function deleteMotifFromCabin(string $cabin, string $key): void
     {
         $filename = ROOT . '/Cabin/' . $cabin . '/config/motifs.json';
         $motifs = \Airship\loadJSON($filename);

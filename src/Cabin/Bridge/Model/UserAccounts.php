@@ -39,6 +39,9 @@ class UserAccounts extends ModelGear
         (self::RECOVERY_TOKEN_BYTES * 4 / 3)
     );
 
+    /** @var Zxcvbn $zxcvbn */
+    protected $zxcvbn = null;
+
     /**
      * Get the number of users with a public profile.
      *
@@ -473,7 +476,7 @@ class UserAccounts extends ModelGear
     /**
      * Get the group tree
      *
-     * @param int|null $parent
+     * @param int $parent
      * @param string $column What to call the child element?
      * @param array $seen
      * @return array
@@ -1036,8 +1039,9 @@ class UserAccounts extends ModelGear
      * on the user table.
      *
      * @param int $userId
+     * @return void
      */
-    protected function deleteUserCascade(int $userId)
+    protected function deleteUserCascade(int $userId): void
     {
         $this->db->delete(
             'airship_auth_tokens',
@@ -1062,8 +1066,9 @@ class UserAccounts extends ModelGear
      * on the group table.
      *
      * @param int $groupId
+     * @return void
      */
-    protected function deleteGroupCascade(int $groupId)
+    protected function deleteGroupCascade(int $groupId): void
     {
         $this->db->delete(
             'airship_users_groups',

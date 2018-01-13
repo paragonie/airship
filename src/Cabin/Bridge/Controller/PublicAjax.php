@@ -21,21 +21,22 @@ class PublicAjax extends ControllerGear
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->acct = $this->model('UserAccounts');
-        if (!($this->acct instanceof UserAccounts)) {
+        $acct = $this->model('UserAccounts');
+        if (!($acct instanceof UserAccounts)) {
             throw new \TypeError(
                 \__('UserAccounts Model')
             );
         }
+        $this->acct = $acct;
     }
 
     /**
      * AJAX + JSON API to see if a username is taken or invalid.
      */
-    public function checkUsername()
+    public function checkUsername(): void
     {
         // If you didn't supply a username, it's not available.
         if (!\array_key_exists('username', $_POST)) {

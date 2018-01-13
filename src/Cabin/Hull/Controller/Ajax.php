@@ -5,6 +5,7 @@ namespace Airship\Cabin\Hull\Controller;
 use Airship\Cabin\Hull\Model\Blog;
 use Airship\Cabin\Hull\Filter\Ajax\CommentForm;
 use Airship\Engine\Contract\CacheInterface;
+use Airship\Engine\Model;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -29,15 +30,20 @@ class Ajax extends ControllerGear
     public function airshipLand()
     {
         parent::airshipLand();
-        $this->blog = $this->model('Blog');
+        $blog = $this->model('Blog');
+        if (!$blog instanceof Blog) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->blog = $blog;
     }
 
     /**
      * Just get the blog comment reply form on cached pages
      *
      * @route ajax/blog_comment_form
+     * @return void
      */
-    public function blogCommentForm()
+    public function blogCommentForm(): void
     {
         $filter = new CommentForm();
         try {
@@ -77,8 +83,9 @@ class Ajax extends ControllerGear
     /**
      * @route ajax/clear_cache{_string}
      * @param string $key
+     * @return void
      */
-    public function clearCache(string $key)
+    public function clearCache(string $key): void
     {
         $secret = $this->config('cache-secret');
         if ($secret === null) {
@@ -102,8 +109,9 @@ class Ajax extends ControllerGear
 
     /**
      * @route ajax/blog_load_comments
+     * @return void
      */
-    public function loadComments()
+    public function loadComments(): void
     {
         $cache = $this->blog->getCommentCache();
         $blog = (string) ($_POST['blogpost'] ?? '');
@@ -123,8 +131,9 @@ class Ajax extends ControllerGear
     /**
      * @param CacheInterface $cache
      * @param string $uniqueID
+     * @return void
      */
-    protected function fetchComments(CacheInterface $cache, string $uniqueID)
+    protected function fetchComments(CacheInterface $cache, string $uniqueID): void
     {
         $blog = $this->blog->getBlogPostByUniqueId($uniqueID);
         $comments = $this->blog->getCommentTree((int) $blog['postid']);

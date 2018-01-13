@@ -13,11 +13,7 @@ use Airship\Cabin\Bridge\Filter\PageManager\{
 };
 use Airship\Cabin\Hull\Exceptions\CustomPageNotFoundException;
 use Airship\Engine\{
-    AutoPilot,
-    Bolt\Get,
-    Gears,
-    Security\Util,
-    State
+    AutoPilot, Bolt\Get, Gears, Model, Security\Util, State
 };
 use Psr\Log\LogLevel;
 
@@ -40,10 +36,14 @@ class PageManager extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->pg = $this->model('CustomPages');
+        $pg = $this->model('CustomPages');
+        if (!($pg instanceof CustomPages)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->pg = $pg;
         $this->storeViewVar('active_submenu', 'Cabins');
         $this->includeAjaxToken();
     }
@@ -54,7 +54,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/deleteDir
      * @param string $cabin
      */
-    public function deleteDir(string $cabin = '')
+    public function deleteDir(string $cabin = ''): void
     {
         $path = $this->determinePath($cabin);
         if (!\is1DArray($_GET)) {
@@ -143,7 +143,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/deletePage
      * @param string $cabin
      */
-    public function deletePage(string $cabin = '')
+    public function deletePage(string $cabin = ''): void
     {
         $page = [];
         $path = $this->determinePath($cabin);
@@ -214,7 +214,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/edit
      * @param string $cabin
      */
-    public function editPage(string $cabin = '')
+    public function editPage(string $cabin = ''): void
     {
         $page = [];
         $path = $this->determinePath($cabin);
@@ -268,10 +268,10 @@ class PageManager extends LoggedInUsersOnly
     /**
      * List all of the subdirectories and custom pages in a given directory
      *
-     * @param pages /{string}
+     * @route pages/{string}
      * @param string $cabin
      */
-    public function forCabin(string $cabin = '')
+    public function forCabin(string $cabin = ''): void
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
@@ -313,7 +313,7 @@ class PageManager extends LoggedInUsersOnly
      * Serve the index page
      * @route pages
      */
-    public function index()
+    public function index(): void
     {
         $this->storeViewVar('active_submenu', ['Cabins']);
         $this->view('pages', [
@@ -327,7 +327,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/newDir
      * @param string $cabin
      */
-    public function newDir(string $cabin = '')
+    public function newDir(string $cabin = ''): void
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
@@ -363,7 +363,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/newPage
      * @param string $cabin
      */
-    public function newPage(string $cabin = '')
+    public function newPage(string $cabin = ''): void
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
@@ -401,7 +401,7 @@ class PageManager extends LoggedInUsersOnly
      * @param string $cabin
      * @route pages/{string}/renameDir
      */
-    public function renameDir(string $cabin)
+    public function renameDir(string $cabin): void
     {
         $path = $this->determinePath($cabin);
         if (!\is1DArray($_GET)) {
@@ -477,7 +477,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/renamePage
      * @param string $cabin
      */
-    public function renamePage(string $cabin)
+    public function renamePage(string $cabin): void
     {
         $page = [];
         $path = $this->determinePath($cabin);
@@ -539,7 +539,7 @@ class PageManager extends LoggedInUsersOnly
      * @route pages/{string}/history
      * @param string $cabin
      */
-    public function pageHistory(string $cabin = '')
+    public function pageHistory(string $cabin = ''): void
     {
         $page = [];
         $history = [];
@@ -587,8 +587,11 @@ class PageManager extends LoggedInUsersOnly
      * @param string $leftUnique
      * @param string $rightUnique
      */
-    public function pageHistoryDiff(string $cabin, string $leftUnique, string $rightUnique)
-    {
+    public function pageHistoryDiff(
+        string $cabin,
+        string $leftUnique,
+        string $rightUnique
+    ): void {
         try {
             $left = $this->pg->getPageVersionByUniqueId($leftUnique);
             $right = $this->pg->getPageVersionByUniqueId($rightUnique);
@@ -624,7 +627,7 @@ class PageManager extends LoggedInUsersOnly
      * @param string $cabin
      * @param string $uniqueId
      */
-    public function pageHistoryView(string $cabin, string $uniqueId)
+    public function pageHistoryView(string $cabin, string $uniqueId): void
     {
         $page = [];
         $version = [];
@@ -843,7 +846,7 @@ class PageManager extends LoggedInUsersOnly
      * Move a page
      *
      * @param array $page
-     * @param array $post
+     * @param array<string, int|string> $post
      * @param string $cabin
      * @param string $dir
      * @return bool
@@ -854,10 +857,10 @@ class PageManager extends LoggedInUsersOnly
         string $cabin, string $dir
     ): bool {
         if (\is_numeric($post['directory'])) {
-            $post['cabin'] = $this->pg->getCabinForDirectory($post['directory']);
+            $post['cabin'] = $this->pg->getCabinForDirectory((int) $post['directory']);
         } elseif (\is_string($post['directory'])) {
             // We're setting this to the root directory of a cabin
-            $post['cabin'] = $post['directory'];
+            $post['cabin'] = (string) $post['directory'];
             $post['directory'] = 0;
         } else {
             // Invalid input.
@@ -873,7 +876,7 @@ class PageManager extends LoggedInUsersOnly
         ) {
             $this->pg->movePage(
                 (int) $page['pageid'],
-                $post['url'],
+                (string) $post['url'],
                 (int) $post['directory']
             );
             if (!empty($post['create_redirect'])) {
@@ -1087,7 +1090,7 @@ class PageManager extends LoggedInUsersOnly
      *
      * @param string $cabin
      */
-    protected function setTemplateExtraData(string $cabin)
+    protected function setTemplateExtraData(string $cabin): void
     {
         $this->storeViewVar(
             'active_submenu',

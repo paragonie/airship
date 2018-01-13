@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Controller;
 
+use Airship\Alerts\InvalidType;
 use Airship\Alerts\Router\EmulatePageNotFound;
 use Airship\Cabin\Hull\Model\Blog;
 use Airship\Cabin\Hull\Filter\BlogPosts\CommentFilter;
 use Airship\Engine\Security\Util;
+use Airship\Engine\Model;
 use ParagonIE\ConstantTime\Binary;
 
 require_once __DIR__.'/init_gear.php';
@@ -27,10 +29,20 @@ class BlogPosts extends ControllerGear
     /**
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
+     *
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function airshipLand()
     {
-        $this->blog = $this->model('Blog');
+        $blog = $this->model('Blog');
+        if (!$blog instanceof Blog) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->blog = $blog;
+        if (\is_null($this->airship_view_object)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
         $this->airship_view_object->store(
             'blogmenu',
             $this->blog->getBlogMenu()
@@ -134,8 +146,9 @@ class BlogPosts extends ControllerGear
      *
      * @route blog/all
      * @throws EmulatePageNotFound
+     * @return void
      */
-    public function listAll()
+    public function listAll(): void
     {
         if (!$this->can('read')) {
             throw new EmulatePageNotFound();
@@ -167,8 +180,9 @@ class BlogPosts extends ControllerGear
      * @param string $slug
      * @param string $page
      * @throws EmulatePageNotFound
+     * @return void
      */
-    public function listByAuthor(string $slug, string $page = '')
+    public function listByAuthor(string $slug, string $page = ''): void
     {
         if (!$this->can('read')) {
             throw new EmulatePageNotFound();
@@ -218,8 +232,9 @@ class BlogPosts extends ControllerGear
      * @param string $slug
      * @param string $page
      * @throws EmulatePageNotFound
+     * @return void
      */
-    public function listByCategory(string $slug = '', string $page = '')
+    public function listByCategory(string $slug = '', string $page = ''): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
@@ -271,8 +286,9 @@ class BlogPosts extends ControllerGear
      * List all of the blog posts for a given year
      *
      * @route blog/series
+     * @return void
      */
-    public function listSeries()
+    public function listSeries(): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit();
 
@@ -304,8 +320,9 @@ class BlogPosts extends ControllerGear
      * @route blog/series/{slug}/{page}
      * @param string $slug
      * @param string $page
+     * @return void
      */
-    public function listBySeries(string $slug = '', string $page = '')
+    public function listBySeries(string $slug = '', string $page = ''): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
@@ -340,8 +357,9 @@ class BlogPosts extends ControllerGear
      * @route blog/tag/{slug}/{page}
      * @param string $slug
      * @param string $page
+     * @return void
      */
-    public function listByTag(string $slug, string $page = '')
+    public function listByTag(string $slug, string $page = ''): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
@@ -387,8 +405,9 @@ class BlogPosts extends ControllerGear
      * @route blog/{year}/{month}
      * @param string $year
      * @param string $month
+     * @return void
      */
-    public function listMonth(string $year, string $month)
+    public function listMonth(string $year, string $month): void
     {
         $count = $this->blog->countByMonth($year, $month);
         list($offset, $limit) = $this->getOffsetAndLimit();
@@ -438,8 +457,9 @@ class BlogPosts extends ControllerGear
      * List all of the blog posts for a given year
      * @param string $year
      * @route blog/{year}
+     * @return void
      */
-    public function listYear(string $year)
+    public function listYear(string $year): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit();
         $count = $this->blog->countByYear($year);
@@ -485,8 +505,9 @@ class BlogPosts extends ControllerGear
      * Blog post home
      *
      * @route /
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         $blogRoll = $this->blog->recentFullPosts(
             (int) $this->config('homepage.blog-posts') ?? 5
@@ -516,10 +537,11 @@ class BlogPosts extends ControllerGear
      * @param string $year
      * @param string $month
      * @param string $slug
+     * @return void
      *
      * @route blog/{year}/{month}/{slug}
      */
-    public function readPost(string $year, string $month, string $slug)
+    public function readPost(string $year, string $month, string $slug): void
     {
         $blogPost = $this->blog->getBlogPost($year, $month, $slug);
         $post = $this->post(new CommentFilter());
@@ -562,8 +584,9 @@ class BlogPosts extends ControllerGear
      *
      * @param string $uniqueID
      * @route b/(.*)
+     * @return void
      */
-    public function shortURL(string $uniqueID = '')
+    public function shortURL(string $uniqueID = ''): void
     {
         if (empty($uniqueID)) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog');

@@ -30,7 +30,7 @@ class PreferencesFilter extends GeneralFilterContainer
             $filterContainer->addFilter(
                 'prefs.motif.' . $cabin,
                 (new StringFilter())->addCallback(
-                    function ($selected) use ($cabin, $activeCabin): string {
+                    function (string $selected) use ($cabin, $activeCabin): string {
                         foreach ($activeCabin as $cabinConfig) {
                             if ($selected === $cabinConfig['path']) {
                                 return $selected;

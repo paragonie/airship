@@ -18,6 +18,7 @@ use Airship\Cabin\Bridge\Filter\Blog\{
     NewTagFilter
 };
 use Airship\Engine\Bolt\Orderable;
+use Airship\Engine\Model;
 use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
@@ -44,11 +45,21 @@ class Blog extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->blog = $this->model('Blog');
-        $this->author = $this->model('Author');
+        $blog = $this->model('Blog');
+        if (!($blog instanceof BP\Blog)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->blog = $blog;
+
+        $author = $this->model('Author');
+        if (!($author instanceof BP\Author)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->author = $author;
+
         $this->storeViewVar('active_submenu', 'Blog');
         $this->includeAjaxToken();
     }
@@ -58,7 +69,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog
      */
-    public function index()
+    public function index(): void
     {
         $this->view('blog/index');
     }
@@ -69,7 +80,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/category/delete/{id}
      * @param string $id
      */
-    public function deleteCategory(string $id = '')
+    public function deleteCategory(string $id = ''): void
     {
         $id = (int) $id;
 
@@ -103,7 +114,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/post/delete/{id}
      * @param string $id
      */
-    public function deletePost(string $id)
+    public function deletePost(string $id): void
     {
         $id = (int) $id;
 
@@ -159,7 +170,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @param string $id
      */
-    public function deleteSeries(string $id = '')
+    public function deleteSeries(string $id = ''): void
     {
         $id = (int) $id;
         $post = $this->post(new DeleteSeriesFilter());
@@ -188,7 +199,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/category/edit/{id}
      * @param string $id
      */
-    public function editCategory(string $id = '')
+    public function editCategory(string $id = ''): void
     {
         $id = (int) $id;
         $post = $this->post(new EditCategoryFilter());
@@ -220,7 +231,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/post/edit/{id}
      * @param string $id
      */
-    public function editPost(string $id)
+    public function editPost(string $id): void
     {
         $id = (int) $id;
         // Load Data
@@ -279,7 +290,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @param string $seriesId
      */
-    public function editSeries(string $seriesId)
+    public function editSeries(string $seriesId): void
     {
         $seriesId = (int) $seriesId;
         $author = null;
@@ -352,7 +363,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/tag/edit/{id}
      * @param string $id
      */
-    public function editTag(string $id = '')
+    public function editTag(string $id = ''): void
     {
         $id = (int) $id;
         if (!$this->can('update')) {
@@ -385,7 +396,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog/category{_page}
      */
-    public function listCategories()
+    public function listCategories(): void
     {
         $this->view(
             'blog/category',
@@ -400,7 +411,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/comments{_page}
      * @param string $page
      */
-    public function listComments($page = null)
+    public function listComments($page = null): void
     {
         if (!$this->can('publish')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog');
@@ -429,7 +440,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/post{_page}
      * @param string $page
      */
-    public function listPosts($page = null)
+    public function listPosts($page = null): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
 
@@ -457,7 +468,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/series{_page}
      * @param mixed $page
      */
-    public function listSeries($page = null)
+    public function listSeries($page = null): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
         if ($this->isSuperUser()) {
@@ -504,7 +515,7 @@ class Blog extends LoggedInUsersOnly
      * @route blog/tag{_page}
      * @param mixed $page
      */
-    public function listTags($page = null)
+    public function listTags($page = null): void
     {
         list($offset, $limit) = $this->getOffsetAndLimit($page);
         list($sort, $dir) = $this->getSortArgs('name');
@@ -546,7 +557,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog/category/new
      */
-    public function newCategory()
+    public function newCategory(): void
     {
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog/category');
@@ -571,7 +582,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog/post/new
      */
-    public function newPost()
+    public function newPost(): void
     {
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
@@ -618,7 +629,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog/series/new
      */
-    public function newSeries()
+    public function newSeries(): void
     {
         if (!$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
@@ -659,7 +670,7 @@ class Blog extends LoggedInUsersOnly
      *
      * @route blog/post/history/{id}
      */
-    public function postHistory(string $postID = '')
+    public function postHistory(string $postID = ''): void
     {
         $blog = $this->blog->getBlogPostById((int) $postID);
         if (!$blog || !$this->can('read')) {
@@ -693,7 +704,7 @@ class Blog extends LoggedInUsersOnly
         string $postID = '',
         string $leftUnique = '',
         string $rightUnique = ''
-    ) {
+    ): void {
         $postID = (int) $postID;
         $blog = $this->blog->getBlogPostById($postID);
         if (!$blog || !$this->can('read')) {
@@ -737,7 +748,7 @@ class Blog extends LoggedInUsersOnly
     public function postHistoryView(
         string $postID = '',
         string $uniqueID = ''
-    ) {
+    ): void {
         $postID = (int) $postID;
         $blog = $this->blog->getBlogPostById($postID);
         if (!$blog || !$this->can('read')) {
@@ -798,7 +809,7 @@ class Blog extends LoggedInUsersOnly
      * @param string $commentId
      * @route blog/comments/view/{id}
      */
-    public function viewComment(string $commentId = '')
+    public function viewComment(string $commentId = ''): void
     {
         $commentId = (int) $commentId;
         $post = $this->post(new CommentFilter());

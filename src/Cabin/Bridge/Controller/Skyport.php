@@ -37,17 +37,19 @@ class Skyport extends AdminOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      *
+     * @return void
      * @throws \TypeError
      */
     public function airshipLand()
     {
         parent::airshipLand();
-        $this->skyport = $this->model('Skyport');
-        if (!($this->skyport instanceof SkyportBP)) {
+        $skyport = $this->model('Skyport');
+        if (!($skyport instanceof SkyportBP)) {
             throw new \TypeError(
                 \trk('errors.type.wrong_class', SkyportBP::class)
             );
         }
+        $this->skyport = $skyport;
         $this->storeViewVar('active_submenu', ['Admin', 'Extensions']);
         $this->storeViewVar('active_link', 'bridge-link-skyport');
     }
@@ -55,7 +57,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/browse
      */
-    public function ajaxGetAvailablePackages()
+    public function ajaxGetAvailablePackages(): void
     {
         $post = $this->ajaxPost($_POST ?? [], 'csrf_token');
         $type = '';
@@ -102,7 +104,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/installed
      */
-    public function ajaxGetInstalledPackages()
+    public function ajaxGetInstalledPackages(): void
     {
         $numInstalled = $this->skyport->countInstalled();
         list($page, $offset) = $this->getPaginated($numInstalled);
@@ -127,7 +129,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/leftmenu
      */
-    public function ajaxGetLeftMenu()
+    public function ajaxGetLeftMenu(): void
     {
         $this->view(
             'skyport/left',
@@ -140,7 +142,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/stale
      */
-    public function ajaxGetOutdatedPackages()
+    public function ajaxGetOutdatedPackages(): void
     {
         $this->view(
             'skyport/outdated',
@@ -154,7 +156,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/refresh
      */
-    public function ajaxRefreshPackageInfo()
+    public function ajaxRefreshPackageInfo(): void
     {
         $expected = [
             'package',
@@ -211,7 +213,7 @@ class Skyport extends AdminOnly
     /**
      * @route ajax/admin/skyport/view
      */
-    public function ajaxViewPackageInfo()
+    public function ajaxViewPackageInfo(): void
     {
         $expected = [
             'package',
@@ -244,7 +246,7 @@ class Skyport extends AdminOnly
     /**
      * @route admin/skyport
      */
-    public function index()
+    public function index(): void
     {
         $this->includeAjaxToken()->view(
             'skyport',
@@ -258,7 +260,7 @@ class Skyport extends AdminOnly
      * Trigger the package install process
      *
      */
-    public function installPackage()
+    public function installPackage(): void
     {
         $expected = [
             'package',
@@ -332,7 +334,8 @@ class Skyport extends AdminOnly
                 )
             ]
         );
-        $output = \shell_exec('php -dphar.readonly=0 ' . ROOT . '/CommandLine/install.sh ' . $args);
+        /** @psalm-suppress ForbiddenCode */
+        $output = (string) \shell_exec('php -dphar.readonly=0 ' . ROOT . '/CommandLine/install.sh ' . $args);
 
         \Airship\json_response([
             'status' => 'OK',
@@ -343,7 +346,7 @@ class Skyport extends AdminOnly
     /**
      * Trigger the package uninstall process.
      */
-    public function removePackage()
+    public function removePackage(): void
     {
         $expected = [
             'package',
@@ -416,7 +419,7 @@ class Skyport extends AdminOnly
     /**
      * Trigger the package install process
      */
-    public function updatePackage()
+    public function updatePackage(): void
     {
         $expected = [
             'package',
@@ -467,7 +470,8 @@ class Skyport extends AdminOnly
                 )
             ]
         );
-        $output = \shell_exec(
+        /** @psalm-suppress ForbiddenCode */
+        $output = (string) \shell_exec(
             'php -dphar.readonly=0 ' . ROOT . '/CommandLine/update_one.sh ' . $args
         );
 
@@ -482,7 +486,7 @@ class Skyport extends AdminOnly
      *
      * @route admin/skyport/log
      */
-    public function viewLog()
+    public function viewLog(): void
     {
         /** @todo allow a more granular window of logged events to be viewed */
         $this->view(

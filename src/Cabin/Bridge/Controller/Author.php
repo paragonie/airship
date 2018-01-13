@@ -12,6 +12,7 @@ use Airship\Cabin\Bridge\Filter\Author\{
     UsersFilter
 };
 use Airship\Engine\Bolt\Orderable as OrderableBolt;
+use Airship\Engine\Model;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -35,10 +36,14 @@ class Author extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->author = $this->model('Author');
+        $author = $this->model('Author');
+        if (!($author instanceof BP\Author)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->author = $author;
         $this->storeViewVar('active_link', 'bridge-link-authors');
         $this->includeAjaxToken();
     }
@@ -48,7 +53,7 @@ class Author extends LoggedInUsersOnly
      *
      * @route author/new
      */
-    public function create()
+    public function create(): void
     {
         $post = $this->post(new AuthorFilter());
         if (!empty($post['name'])) {
@@ -69,7 +74,7 @@ class Author extends LoggedInUsersOnly
      * @route author/edit/{id}
      * @param string $authorId
      */
-    public function delete(string $authorId = '')
+    public function delete(string $authorId = ''): void
     {
         $authorId = (int) $authorId;
 
@@ -117,7 +122,7 @@ class Author extends LoggedInUsersOnly
      * @route author/edit/{id}
      * @param string $authorId
      */
-    public function edit(string $authorId = '')
+    public function edit(string $authorId = ''): void
     {
         $authorId = (int) $authorId;
 
@@ -158,7 +163,7 @@ class Author extends LoggedInUsersOnly
      *
      * @route author{_page}
      */
-    public function index()
+    public function index(): void
     {
         $sort = (string) ($_GET['sort'] ?? 'name');
         $dir = (string) ($_GET['dir'] ?? 'ASC');
@@ -225,7 +230,7 @@ class Author extends LoggedInUsersOnly
      * @param string $authorId
      * @route author/photos/{id}
      */
-    public function photos(string $authorId = '')
+    public function photos(string $authorId = ''): void
     {
         $authorId = (int) $authorId;
         if (!$this->isSuperUser()) {
@@ -259,7 +264,7 @@ class Author extends LoggedInUsersOnly
      * @route author/users/{id}
      * @param string $authorId
      */
-    public function users(string $authorId = '')
+    public function users(string $authorId = ''): void
     {
         $authorId = (int) $authorId;
         if ($this->isSuperUser()) {

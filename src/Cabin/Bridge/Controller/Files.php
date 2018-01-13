@@ -16,7 +16,7 @@ class Files extends FileManager
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
 
@@ -37,7 +37,7 @@ class Files extends FileManager
      * @route file_manager/{string}/delete
      * @param string $cabin
      */
-    public function confirmDeleteFile(string $cabin = '')
+    public function confirmDeleteFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -55,7 +55,7 @@ class Files extends FileManager
      * @route file_manager/{string}/info
      * @param string $cabin
      */
-    public function getFileInfo(string $cabin = '')
+    public function getFileInfo(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -78,7 +78,7 @@ class Files extends FileManager
      * @route file_manager/{string}
      * @param string $cabin
      */
-    public function index(string $cabin = '')
+    public function index(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -92,7 +92,7 @@ class Files extends FileManager
      * @route file_manager/{string}/move
      * @param string $cabin
      */
-    public function moveFile(string $cabin = '')
+    public function moveFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -110,9 +110,9 @@ class Files extends FileManager
      * Cabin selection interface
      * @route file_manager
      */
-    public function selectCabin()
+    public function selectCabin(): void
     {
-        return $this->commonSelectCabin();
+        $this->commonSelectCabin();
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection */
@@ -131,7 +131,7 @@ class Files extends FileManager
      *
      * @param string $cabin
      */
-    protected function setTemplateExtraData(string $cabin)
+    protected function setTemplateExtraData(string $cabin): void
     {
         $this->storeViewVar(
             'active_submenu',

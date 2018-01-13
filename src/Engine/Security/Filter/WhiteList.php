@@ -15,7 +15,7 @@ class WhiteList extends InputFilter
 
     /**
      * WhiteList constructor.
-     * @param array ...$values
+     * @param mixed ...$values
      */
     public function __construct(...$values)
     {

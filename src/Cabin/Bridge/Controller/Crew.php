@@ -12,6 +12,7 @@ use Airship\Cabin\Bridge\Filter\Crew\{
     NewUserFilter
 };
 use Airship\Engine\Bolt\Get;
+use Airship\Engine\Model;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -32,11 +33,15 @@ class Crew extends AdminOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
 
-        $this->account = $this->model('UserAccounts');
+        $account = $this->model('UserAccounts');
+        if (!($account instanceof UserAccounts)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->account = $account;
         $this->storeViewVar('active_submenu', ['Admin', 'Crew']);
         $this->includeAjaxToken();
     }
@@ -46,7 +51,7 @@ class Crew extends AdminOnly
      *
      * @route crew
      */
-    public function index()
+    public function index(): void
     {
         $this->view('crew');
     }
@@ -56,7 +61,7 @@ class Crew extends AdminOnly
      *
      * @route crew/groups/new
      */
-    public function createGroup()
+    public function createGroup(): void
     {
         $post = $this->post(new NewGroupFilter());
         if (!empty($post)) {
@@ -81,7 +86,7 @@ class Crew extends AdminOnly
      * @route crew/users/new
      * @param string $userId
      */
-    public function createUser(string $userId = '')
+    public function createUser(string $userId = ''): void
     {
         $userId = (int) $userId;
         $user = $this->account->getUserAccount($userId, true);
@@ -126,7 +131,7 @@ class Crew extends AdminOnly
      * @param string $groupId
      * @route crew/groups/edit/{id}
      */
-    public function deleteGroup(string $groupId = '')
+    public function deleteGroup(string $groupId = ''): void
     {
         $groupId = (int) $groupId;
         $group = $this->account->getGroup($groupId);
@@ -153,7 +158,7 @@ class Crew extends AdminOnly
      * @param string $userId
      * @route crew/users/edit/{id}
      */
-    public function deleteUser(string $userId = '')
+    public function deleteUser(string $userId = ''): void
     {
         $userId = (int) $userId;
         $user = $this->account->getUserAccount($userId, true);
@@ -183,7 +188,7 @@ class Crew extends AdminOnly
      * @route crew/groups/edit/{id}
      * @param string $groupId
      */
-    public function editGroup(string $groupId = '')
+    public function editGroup(string $groupId = ''): void
     {
         $groupId = (int) $groupId;
         $post = $this->post(new EditGroupFilter());
@@ -214,7 +219,7 @@ class Crew extends AdminOnly
      * @route crew/users/edit/{id}
      * @param string $userId
      */
-    public function editUser(string $userId = '')
+    public function editUser(string $userId = ''): void
     {
         $userId = (int) $userId;
         $user = $this->account->getUserAccount($userId, true);
@@ -245,7 +250,7 @@ class Crew extends AdminOnly
      *
      * @route crew/groups
      */
-    public function groups()
+    public function groups(): void
     {
         $this->view(
             'crew/group_list',
@@ -263,7 +268,7 @@ class Crew extends AdminOnly
      *
      * @route crew/users
      */
-    public function users()
+    public function users(): void
     {
         $get = $this->httpGetParams();
         list ($offset, $limit) = $this->getOffsetAndLimit($get['page'] ?? 0);

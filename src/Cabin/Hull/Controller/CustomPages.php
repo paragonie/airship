@@ -7,6 +7,7 @@ use Airship\Cabin\Hull\Exceptions\{
     RedirectException
 };
 use Airship\Cabin\Hull\Model\CustomPages as PagesModel;
+use Airship\Engine\Model;
 use Airship\Engine\State;
 use Gregwar\RST\Parser as RSTParser;
 use League\CommonMark\CommonMarkConverter;
@@ -39,7 +40,11 @@ class CustomPages extends ControllerGear
      */
     public function airshipLand()
     {
-        $this->pages = $this->model('CustomPages');
+        $pages = $this->model('CustomPages');
+        if (!$pages instanceof PagesModel) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->pages = $pages;
         $this->pages->setCabin($this->cabin);
     }
 
@@ -49,7 +54,7 @@ class CustomPages extends ControllerGear
      * @return void
      * @throws CustomPageNotFoundException
      */
-    public function routeNotFound(...$args)
+    public function routeNotFound(...$args): void
     {
         if (!\is1DArray($args)) {
             throw new CustomPageNotFoundException(

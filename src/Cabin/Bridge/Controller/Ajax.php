@@ -24,7 +24,7 @@ class Ajax extends LoggedInUsersOnly
      * @route announcement/dismiss
      * @throws \TypeError
      */
-    public function dismissAnnouncement()
+    public function dismissAnnouncement(): void
     {
         $announce_model = $this->model('Announcements');
         if (!($announce_model instanceof Announcements)) {
@@ -59,7 +59,7 @@ class Ajax extends LoggedInUsersOnly
      * @route ajax/authors_get_photo
      * @throws \TypeError
      */
-    public function getAuthorsPhoto()
+    public function getAuthorsPhoto(): void
     {
         $auth_model = $this->model('Author');
         if (!($auth_model instanceof Author)) {
@@ -118,7 +118,7 @@ class Ajax extends LoggedInUsersOnly
      * @route ajax/authors_photo_available
      * @throws \TypeError
      */
-    public function getAuthorsAvailablePhotos()
+    public function getAuthorsAvailablePhotos(): void
     {
         $auth_model = $this->model('Author');
         if (!($auth_model instanceof Author)) {
@@ -141,7 +141,7 @@ class Ajax extends LoggedInUsersOnly
             }
         }
 
-        if (empty($post['cabin']) || !$authorId === 0) {
+        if (empty($post['cabin']) || !$authorId) {
             \Airship\json_response([
                 'status' => 'ERROR',
                 'message' => 'Insufficient parameters'
@@ -159,7 +159,7 @@ class Ajax extends LoggedInUsersOnly
      * @route ajax/authors_blog_posts
      * @throws \TypeError
      */
-    public function getBlogPostsForAuthor()
+    public function getBlogPostsForAuthor(): void
     {
         $auth_model = $this->model('Author');
         if (!($auth_model instanceof Author)) {
@@ -240,7 +240,7 @@ class Ajax extends LoggedInUsersOnly
     /**
      * @route ajax/get_perms_user
      */
-    public function getPermsForUser()
+    public function getPermsForUser(): void
     {
         if (!$this->isSuperUser()) {
             \Airship\json_response(
@@ -286,7 +286,7 @@ class Ajax extends LoggedInUsersOnly
      * @route ajax/authors_blog_series
      * @throws \TypeError
      */
-    public function getSeriesForAuthor()
+    public function getSeriesForAuthor(): void
     {
         $auth_model = $this->model('Author');
         if (!($auth_model instanceof Author)) {
@@ -370,7 +370,7 @@ class Ajax extends LoggedInUsersOnly
     /**
      * @route ajax/permission_test
      */
-    public function permissionTest()
+    public function permissionTest(): void
     {
         if (!$this->isSuperUser()) {
             \Airship\json_response(
@@ -404,7 +404,7 @@ class Ajax extends LoggedInUsersOnly
     /**
      * @route ajax/rich_text_preview
      */
-    public function richTextPreview()
+    public function richTextPreview(): void
     {
         $post = $this->ajaxPost($_POST, 'csrf_token');
         if (\Airship\all_keys_exist(['format', 'body'], $post)) {
@@ -451,7 +451,7 @@ class Ajax extends LoggedInUsersOnly
      * @param string $cabin
      * @throws \TypeError
      */
-    protected function getPermissionDataForURL(string $url, string $cabin)
+    protected function getPermissionDataForURL(string $url, string $cabin): void
     {
         $perm_model = $this->model('Permissions');
         if (!($perm_model instanceof Permissions)) {
@@ -497,8 +497,11 @@ class Ajax extends LoggedInUsersOnly
      * @param string $cabin
      * @throws \TypeError
      */
-    protected function getPermissionsDataForUser(int $contextId, string $username, string $cabin)
-    {
+    protected function getPermissionsDataForUser(
+        int $contextId,
+        string $username,
+        string $cabin
+    ): void {
         $perm_model = $this->model('Permissions');
         if (!($perm_model instanceof Permissions)) {
             throw new \TypeError(
@@ -542,7 +545,7 @@ class Ajax extends LoggedInUsersOnly
     /**
      * @route ajax/authors_save_photo
      */
-    public function saveAuthorsPhoto()
+    public function saveAuthorsPhoto(): void
     {
         $auth_model = $this->model('Author');
         if (!($auth_model instanceof Author)) {

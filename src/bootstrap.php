@@ -177,3 +177,11 @@ $hail = Gears::get(
     new HTTPClient($state->universal['guzzle'])
 );
 $state->hail = $hail;
+
+// PEAR support for Crypt_GPG
+if (!\class_exists('Crypt_GPG_Exception')) {
+    include_once 'Crypt/GPG/Exceptions.php';
+    if (!\class_exists('Crypt_GPG_Exception')) {
+        die('Crypt_GPG not installed.');
+    }
+}

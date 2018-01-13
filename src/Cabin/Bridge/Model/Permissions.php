@@ -104,7 +104,7 @@ class Permissions extends ModelGear
             }
 
             // Pass onto the next generation
-            $grp['children'] = self::buildGroupTree(
+            $grp['children'] = $this->buildGroupTree(
                 $cabin,
                 (int) $contextId,
                 $actions,

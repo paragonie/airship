@@ -47,7 +47,7 @@ class ConfigFilter extends InputFilterContainer
             ->addFilter(
                 'config_extra.two-factor.length',
                 (new IntFilter())->addCallback(
-                    function ($var): int {
+                    function (int $var): int {
                         if ($var < 6) {
                             return 6;
                         } elseif ($var > 8) {

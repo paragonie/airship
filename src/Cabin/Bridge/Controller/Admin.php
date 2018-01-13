@@ -10,9 +10,7 @@ use Airship\Cabin\Bridge\Filter\Admin\{
     SettingsFilter
 };
 use Airship\Engine\{
-    Hail,
-    Security\Util,
-    State
+    Hail, Model, Security\Util, State
 };
 use Psr\Log\LogLevel;
 
@@ -33,10 +31,15 @@ class Admin extends AdminOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->acct = $this->model('UserAccounts');
+        $acct = $this->model('UserAccounts');
+        if (!($acct instanceof UserAccounts)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->acct = $acct;
+
         if (!empty($_GET['msg'])) {
             if ($_GET['msg'] === 'saved') {
                 $this->storeViewVar(
@@ -117,7 +120,7 @@ class Admin extends AdminOnly
         if (!isset($channels[$ch])) {
             return false;
         }
-        $idx += 0;
+        $idx = (int) $idx;
 
         if ($channels[$ch]['notaries'][$idx]) {
             unset($channels[$ch]['notaries'][$idx]);
@@ -131,7 +134,7 @@ class Admin extends AdminOnly
     /**
      * @route admin
      */
-    public function index()
+    public function index(): void
     {
         $this->view('admin');
     }
@@ -139,7 +142,7 @@ class Admin extends AdminOnly
     /**
      * @route admin/database
      */
-    public function manageDatabase()
+    public function manageDatabase(): void
     {
         $databases = \Airship\loadJSON(
             ROOT . '/config/databases.json'
@@ -169,7 +172,7 @@ class Admin extends AdminOnly
      *
      * @route admin/extensions
      */
-    public function manageExtensions()
+    public function manageExtensions(): void
     {
         $this->view('admin_extensions');
     }
@@ -179,7 +182,7 @@ class Admin extends AdminOnly
      *
      * @route admin/notaries
      */
-    public function manageNotaries()
+    public function manageNotaries(): void
     {
         $this->storeViewVar('active_submenu', ['Admin', 'Extensions']);
         $channels = \Airship\loadJSON(ROOT . '/config/channels.json');
@@ -209,7 +212,7 @@ class Admin extends AdminOnly
     /**
      * @route admin/settings
      */
-    public function manageSettings()
+    public function manageSettings(): void
     {
         $state = State::instance();
         $settings = [

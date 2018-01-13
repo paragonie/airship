@@ -4,6 +4,7 @@ namespace Airship\Engine;
 
 use Airship\Alerts\{
     GearNotFound,
+    InvalidType,
     Router\ControllerComplete,
     Security\SecurityAlert
 };
@@ -15,17 +16,17 @@ use Airship\Engine\Bolt\{
 };
 use Airship\Engine\Contract\DBInterface;
 use Airship\Engine\Networking\HTTP\{
-    Response, ServerRequest, Stream, Uri
+    Response,
+    ServerRequest,
+    Stream,
+    Uri
 };
 use Airship\Engine\Security\{
     CSRF,
     Filter\InputFilterContainer
 };
 use ParagonIE\CSPBuilder\CSPBuilder;
-use ParagonIE\Halite\{
-    Alerts\InvalidType,
-    Util
-};
+use ParagonIE\Halite\Util;
 use ParagonIE\HPKPBuilder\HPKPBuilder;
 use Psr\Http\Message\{
     ResponseInterface,
@@ -422,15 +423,15 @@ class Controller
      * @param InputFilterContainer $filterContainer - Type filter for POST data
      * @param bool $ignoreCSRFToken - Don't validate CSRF tokens
      *
-     * @return array|bool
+     * @return array
      * @throws SecurityAlert
      */
     protected function post(
         InputFilterContainer $filterContainer = null,
         bool $ignoreCSRFToken = false
-    ) {
+    ): array {
         if ($this->airship_http_method !== 'POST' || empty($_POST)) {
-            return false;
+            return [];
         }
         if ($ignoreCSRFToken) {
             if ($filterContainer) {
@@ -442,14 +443,14 @@ class Controller
                         LogLevel::ALERT,
                         \Airship\throwableToArray($ex)
                     );
-                    return false;
+                    return [];
                 }
             }
             return $_POST;
         }
 
         if (!($this->airship_csrf instanceof CSRF)) {
-            return false;
+            return [];
         }
 
         if ($this->airship_csrf->check()) {
@@ -462,7 +463,7 @@ class Controller
                         LogLevel::ALERT,
                         \Airship\throwableToArray($ex)
                     );
-                    return false;
+                    return [];
                 }
             }
             return $_POST;
@@ -475,7 +476,7 @@ class Controller
             );
         }
         $this->log('CSRF validation failed', LogLevel::ALERT);
-        return false;
+        return [];
     }
 
     /**

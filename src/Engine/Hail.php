@@ -18,6 +18,7 @@ use ParagonIE\Halite\Asymmetric\{
     Crypto as Asymmetric,
     SignaturePublicKey
 };
+use Prophecy\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -121,18 +122,18 @@ class Hail
      *
      * @param string $url
      * @param array $params
-     * @return ResponseInterface
+     * @return PromiseInterface
      * @throws \TypeError
      */
     public function getAsync(
         string $url,
         array $params = []
-    ): ResponseInterface {
+    ): PromiseInterface {
         $response = $this->client->getAsync(
             $url,
             $this->params($params, $url)
         );
-        if (!($response instanceof ResponseInterface)) {
+        if (!($response instanceof PromiseInterface)) {
             throw new \TypeError(
                 \sprintf(
                     'Expected %s, got %s' ,
@@ -340,13 +341,12 @@ class Hail
      * 
      * @param string $url
      * @param array $params
-     * @return ResponseInterface
+     * @return PromiseInterface
      */
     public function postAsync(
         string $url,
         array $params = []
-    ): ResponseInterface {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
+    ): PromiseInterface {
         return $this->client->postAsync(
             $url,
             $this->params($params, $url)
