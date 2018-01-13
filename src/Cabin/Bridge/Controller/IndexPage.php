@@ -23,7 +23,7 @@ class IndexPage extends ControllerGear
     /**
      * @route announce
      */
-    public function announce()
+    public function announce(): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -61,7 +61,7 @@ class IndexPage extends ControllerGear
     /**
      * @route /
      */
-    public function index()
+    public function index(): void
     {
         if ($this->isLoggedIn())  {
             $this->storeViewVar('showmenu', true);
@@ -119,7 +119,7 @@ class IndexPage extends ControllerGear
     /**
      * @route error
      */
-    public function error()
+    public function error(): void
     {
         if (empty($_GET['error'])) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -145,7 +145,7 @@ class IndexPage extends ControllerGear
     /**
      * @route help
      */
-    public function helpPage()
+    public function helpPage(): void
     {
         if ($this->isLoggedIn())  {
             $this->storeViewVar('showmenu', true);
@@ -268,7 +268,7 @@ class IndexPage extends ControllerGear
      *
      * @route motif_extra.css
      */
-    public function motifExtra()
+    public function motifExtra(): void
     {
         $this->view('motif_extra', [], 'text/css; charset=UTF-8');
     }

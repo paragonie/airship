@@ -4,6 +4,7 @@ namespace Airship\Cabin\Bridge\Controller;
 
 use Airship\Cabin\Bridge\Model\Author;
 use Airship\Cabin\Bridge\Controller\Proto\FileManager;
+use Airship\Engine\Model;
 use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
@@ -38,10 +39,14 @@ class AuthorFiles extends FileManager
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->author = $this->model('Author');
+        $author = $this->model('Author');
+        if (!($author instanceof Author)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->author = $author;
         $this->storeViewVar('active_link', 'bridge-link-authors');
         $this->storeViewVar('title', \__('Author\'s Files'));
     }
@@ -51,7 +56,7 @@ class AuthorFiles extends FileManager
      * @param string $authorId
      * @param string $cabin
      */
-    public function confirmDeleteFile(string $authorId, string $cabin = '')
+    public function confirmDeleteFile(string $authorId, string $cabin = ''): void
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
@@ -64,10 +69,11 @@ class AuthorFiles extends FileManager
         }
 
         if (empty($_GET['file'])) {
-            return $this->commonConfirmDeleteDir($dir, $cabin);
+            $this->commonConfirmDeleteDir($dir, $cabin);
+            return;
         }
         $this->storeViewVar('title', \__('Confirm file delete'));
-        return $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
+        $this->commonConfirmDeleteFile($_GET['file'], $dir, $cabin);
     }
 
     /**
@@ -76,7 +82,7 @@ class AuthorFiles extends FileManager
      * @param string $cabin
      * @throws \TypeError
      */
-    public function getFileInfo(string $authorId, string $cabin = '')
+    public function getFileInfo(string $authorId, string $cabin = ''): void
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
@@ -106,7 +112,7 @@ class AuthorFiles extends FileManager
                 $this->authorName
             )
         );
-        return $this->commonGetFileInfo($fileName, $dir, $cabin);
+        $this->commonGetFileInfo($fileName, $dir, $cabin);
     }
 
     /**
@@ -114,7 +120,7 @@ class AuthorFiles extends FileManager
      * @param string $authorId
      * @param string $cabin
      */
-    public function index(string $authorId, string $cabin = '')
+    public function index(string $authorId, string $cabin = ''): void
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
@@ -124,7 +130,7 @@ class AuthorFiles extends FileManager
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        return $this->commonIndex($dir, $cabin);
+        $this->commonIndex($dir, $cabin);
     }
 
     /**
@@ -132,7 +138,7 @@ class AuthorFiles extends FileManager
      * @param string $authorId
      * @param string $cabin
      */
-    public function moveFile(string $authorId, string $cabin = '')
+    public function moveFile(string $authorId, string $cabin = ''): void
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->files->ensureDirExists($this->root_dir, $cabin);
@@ -143,16 +149,17 @@ class AuthorFiles extends FileManager
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
-            return $this->commonMoveDir($dir, $cabin);
+            $this->commonMoveDir($dir, $cabin);
+            return;
         }
-        return $this->commonMoveFile($_GET['file'], $dir, $cabin);
+        $this->commonMoveFile($_GET['file'], $dir, $cabin);
     }
 
     /**
      * @route author/files/{id}
      * @param string $authorId
      */
-    public function selectCabin(string $authorId = '')
+    public function selectCabin(string $authorId = ''): void
     {
         $this->loadAuthorInfo((int) $authorId);
         $this->commonSelectCabin();
@@ -184,7 +191,7 @@ class AuthorFiles extends FileManager
      *
      * @param int $authorId
      */
-    protected function loadAuthorInfo(int $authorId)
+    protected function loadAuthorInfo(int $authorId): void
     {
         $this->authorId = $authorId;
         $this->authorName = $this->author->getName($authorId);

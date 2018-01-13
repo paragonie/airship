@@ -22,7 +22,7 @@ class Motifs extends AdminOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
         $this->storeViewVar('active_submenu', ['Admin', 'Extensions']);
@@ -35,7 +35,7 @@ class Motifs extends AdminOnly
      *
      * @param string $motifName
      */
-    public function configure(string $motifName)
+    public function configure(string $motifName): void
     {
         $motifs = $this->getAllMotifs();
         if (!\array_key_exists($motifName, $motifs)) {
@@ -108,7 +108,7 @@ class Motifs extends AdminOnly
     /**
      * @route motifs
      */
-    public function index()
+    public function index(): void
     {
         $this->view(
             'motifs',
@@ -124,7 +124,7 @@ class Motifs extends AdminOnly
      *
      * @param string $cabinName
      */
-    public function manage(string $cabinName = '')
+    public function manage(string $cabinName = ''): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabinName, $cabins)) {
@@ -198,7 +198,10 @@ class Motifs extends AdminOnly
      */
     protected function getConfigFilter(string $path): InputFilterContainer
     {
-        /** @noinspection PhpIncludeInspection */
+        /**
+         * @noinspection PhpIncludeInspection
+         * @psalm-suppress UnresolvableInclude
+         */
         include $path;
 
         if (!isset($motifInputFilter)) {

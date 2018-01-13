@@ -67,7 +67,7 @@ class SettingsFilter extends InputFilterContainer
             ->addFilter('universal.email.from', new StringFilter())
             ->addFilter(
                 'universal.ledger.driver',
-                (new StringFilter())->addCallback(function ($driver): string {
+                (new StringFilter())->addCallback(function (string $driver): string {
                     if ($driver === 'file') {
                         return 'file';
                     } elseif ($driver === 'database') {
@@ -83,7 +83,7 @@ class SettingsFilter extends InputFilterContainer
             ->addFilter(
                 'universal.notary.channel',
                 (new StringFilter())
-                    ->addCallback(function () {
+                    ->addCallback(function (): string {
                         // In the future, this will be changeable.
                         return 'paragonie';
                     })
@@ -107,7 +107,7 @@ class SettingsFilter extends InputFilterContainer
             )
             ->addFilter(
                 'universal.rate-limiting.log-public-key',
-                (new StringFilter())->addCallback(function ($str): string {
+                (new StringFilter())->addCallback(function (string $str): string {
                     if (empty($str)) {
                         return '';
                     }

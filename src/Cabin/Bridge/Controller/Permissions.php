@@ -8,6 +8,7 @@ use Airship\Cabin\Bridge\Filter\Permissions\{
     SaveActionFilter,
     SaveContextFilter
 };
+use Airship\Engine\Model;
 
 require_once __DIR__.'/init_gear.php';
 
@@ -31,11 +32,21 @@ class Permissions extends AdminOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->perms = $this->model('Permissions');
-        $this->users = $this->model('UserAccounts');
+        $perms = $this->model('Permissions');
+        if (!($perms instanceof BP\Permissions)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->perms = $perms;
+
+        $users = $this->model('UserAccounts');
+        if (!($users instanceof BP\UserAccounts)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->users = $users;
+
         $this->storeViewVar('active_submenu', ['Admin', 'Crew']);
         $this->storeViewVar('active_link', 'bridge-link-admin-crew-perms');
         $this->includeAjaxToken();
@@ -46,7 +57,7 @@ class Permissions extends AdminOnly
      *
      * @param string $cabin
      */
-    public function cabinSubmenu(string $cabin)
+    public function cabinSubmenu(string $cabin): void
     {
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
             \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
@@ -78,7 +89,7 @@ class Permissions extends AdminOnly
      * @param string $cabin
      * @param string $actionId
      */
-    public function editAction(string $cabin, string $actionId)
+    public function editAction(string $cabin, string $actionId): void
     {
         $actionId = (int) $actionId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -115,7 +126,7 @@ class Permissions extends AdminOnly
      * @param string $cabin
      * @param string $contextId
      */
-    public function editContext(string $cabin, string $contextId)
+    public function editContext(string $cabin, string $contextId): void
     {
         $contextId = (int) $contextId;
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -201,7 +212,7 @@ class Permissions extends AdminOnly
     /**
      * @route crew/permissions
      */
-    public function index()
+    public function index(): void
     {
         $this->view(
             'perms/index',

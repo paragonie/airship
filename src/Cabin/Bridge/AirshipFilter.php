@@ -78,7 +78,7 @@ class AirshipFilter extends InputFilterContainer
                 (new IntFilter())
                     ->setDefault(32)
                     ->addCallback(
-                        function ($var): int {
+                        function (int $var): int {
                             if ($var < 1) {
                                 return 1;
                             } elseif ($var > 32) {
@@ -92,7 +92,7 @@ class AirshipFilter extends InputFilterContainer
                 (new IntFilter())
                     ->setDefault(64)
                     ->addCallback(
-                        function ($var): int {
+                        function (int $var): int {
                             if ($var < 1) {
                                 return 1;
                             } elseif ($var > 128) {
@@ -108,7 +108,7 @@ class AirshipFilter extends InputFilterContainer
             )
             ->addFilter('universal.rate-limiting.log-public-key',
                 (new StringFilter())
-                    ->addCallback(function ($var): string {
+                    ->addCallback(function (string $var): string {
                         // Hex-encoded public keys are 64-char hex strings.
                         if (\preg_match('/^[0-9A-Fa-f]{64}$/', $var)) {
                             return \strtolower($var);

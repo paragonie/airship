@@ -8,7 +8,11 @@ use Airship\Cabin\Hull\Exceptions\{
     CustomPageCollisionException,
     CustomPageNotFoundException
 };
-use Airship\Engine\Bolt\Cache;
+use Airship\Engine\Bolt\{
+    Cache,
+    Log,
+    Security
+};
 use Psr\Log\LogLevel;
 
 /**
@@ -23,6 +27,8 @@ class CustomPages extends HullCustomPages
     const MAX_DEDUP = 100;
 
     use Cache;
+    use Log;
+    use Security;
 
     /**
      * Create a new page (and initial page version)
@@ -211,9 +217,10 @@ class CustomPages extends HullCustomPages
                 'new' => $new
             ]
         );
+        /** @var int $oldDir */
         $oldDir = !empty($old['path'])
             ? $this->getParentDirFromStr($old['path'], $old['cabin'])
-            : null;
+            : 0;
 
         foreach ($this->listCustomPagesByDirectoryID($oldDir) as $page) {
             $oldPath = \explode('/', $old['path']);
@@ -255,9 +262,10 @@ class CustomPages extends HullCustomPages
                 'new' => $new
             ]
         );
+        /** @var int $oldDir */
         $oldDir = !empty($old['path'])
             ? $this->getParentDirFromStr($old['path'], $old['cabin'])
-            : null;
+            : 0;
 
         foreach ($this->listCustomPagesByDirectoryID($oldDir) as $page) {
             $_old = [
@@ -652,7 +660,7 @@ class CustomPages extends HullCustomPages
      * @return array
      * @throws CustomPageNotFoundException
      */
-    public function getPageInfo(string $cabin, string $path = '', string $page): array
+    public function getPageInfo(string $cabin, string $path = '', string $page = ''): array
     {
         if ($path === '') {
             $directory = 0;
@@ -1090,12 +1098,12 @@ class CustomPages extends HullCustomPages
     /**
      * Get the number of custom pages.
      *
-     * @param null $published
+     * @param ?bool $published
      * @return int
      */
-    public function numCustomPages($published = null): int
+    public function numCustomPages(?bool $published): int
     {
-        if ($published === null) {
+        if (\is_null($published)) {
             return (int) $this->db->cell(
                 'SELECT count(pageid) FROM airship_custom_page'
             );

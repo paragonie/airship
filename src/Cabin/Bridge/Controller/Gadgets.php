@@ -17,7 +17,7 @@ class Gadgets extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
         $this->storeViewVar('active_submenu', ['Admin', 'Extensions']);
@@ -28,7 +28,7 @@ class Gadgets extends LoggedInUsersOnly
     /**
      * @route gadgets
      */
-    public function index()
+    public function index(): void
     {
         $this->view(
             'gadgets',
@@ -42,7 +42,7 @@ class Gadgets extends LoggedInUsersOnly
      * @param string $cabinName
      * @route gadgets/cabin/{string}
      */
-    public function manageForCabin(string $cabinName = '')
+    public function manageForCabin(string $cabinName = ''): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabinName, $cabins)) {
@@ -77,7 +77,7 @@ class Gadgets extends LoggedInUsersOnly
     /**
      * @route gadgets/universal
      */
-    public function manageUniversal()
+    public function manageUniversal(): void
     {
         $cabins = $this->getCabinNamespaces();
         $gadgets = \Airship\loadJSON(ROOT . '/config/gadgets.json');

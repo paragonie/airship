@@ -8,6 +8,7 @@ use Airship\Alerts\{
     Router\ControllerComplete,
     Router\EmulatePageNotFound
 };
+use Airship\Engine\Model;
 use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
@@ -46,7 +47,11 @@ class PublicFiles extends ControllerGear
     public function airshipLand()
     {
         parent::airshipLand();
-        $this->files = $this->model('PublicFiles');
+        $files = $this->model('PublicFiles');
+        if (!($files instanceof BP\PublicFiles)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->files = $files;
     }
 
     /**
@@ -54,11 +59,12 @@ class PublicFiles extends ControllerGear
      *
      * @param string $path
      * @param string $default Default MIME type
+     * @return void
      * @route files/(.*)
      * @throws ControllerComplete
      * @throws EmulatePageNotFound
      */
-    public function download(string $path, string $default = 'text/plain')
+    public function download(string $path, string $default = 'text/plain'): void
     {
         if (!$this->can('read')) {
             throw new EmulatePageNotFound();
@@ -98,7 +104,9 @@ class PublicFiles extends ControllerGear
                 \header('X-Download-Options: noopen');
             }
             $this->includeStandardHeaders($fileData['type']);
-            \Airship\sendHeaders($this->airship_response);
+            if (!\is_null($this->airship_response)) {
+                \Airship\sendHeaders($this->airship_response);
+            }
             \readfile($realPath);
             exit;
         } catch (FileNotFound $ex) {

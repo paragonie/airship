@@ -22,15 +22,16 @@ class Redirects extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->pg = $this->model('CustomPages');
-        if (!($this->pg instanceof  CustomPages)) {
+        $pg = $this->model('CustomPages');
+        if (!($pg instanceof CustomPages)) {
             throw new \TypeError(
                 \__('Custom Pages Model')
             );
         }
+        $this->pg = $pg;
     }
 
     /**
@@ -39,7 +40,7 @@ class Redirects extends LoggedInUsersOnly
      * @param string $cabin
      * @param string $redirectId
      */
-    public function deleteRedirect(string $cabin, string $redirectId)
+    public function deleteRedirect(string $cabin, string $redirectId): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins) && !$this->can('delete')) {
@@ -80,7 +81,7 @@ class Redirects extends LoggedInUsersOnly
      * @param string $redirectId
      * @route redirects/{string}/edit/{id}
      */
-    public function editRedirect(string $cabin, string $redirectId)
+    public function editRedirect(string $cabin, string $redirectId): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins) && !$this->can('update')) {
@@ -123,7 +124,7 @@ class Redirects extends LoggedInUsersOnly
      * @param string $cabin
      * @route redirects/{string}
      */
-    public function forCabin(string $cabin = '')
+    public function forCabin(string $cabin = ''): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins)) {
@@ -144,7 +145,7 @@ class Redirects extends LoggedInUsersOnly
      *
      * @route redirects
      */
-    public function index()
+    public function index(): void
     {
         $this->view(
             'redirect',
@@ -160,7 +161,7 @@ class Redirects extends LoggedInUsersOnly
      * @param string $cabin
      * @route redirects/{string}/new
      */
-    public function newRedirect(string $cabin)
+    public function newRedirect(string $cabin): void
     {
         $cabins = $this->getCabinNamespaces();
         if (!\in_array($cabin, $cabins) && !$this->can('create')) {
@@ -205,7 +206,7 @@ class Redirects extends LoggedInUsersOnly
      *
      * @param string $cabin
      */
-    protected function setTemplateExtraData(string $cabin)
+    protected function setTemplateExtraData(string $cabin): void
     {
         $this->storeViewVar(
             'active_submenu',

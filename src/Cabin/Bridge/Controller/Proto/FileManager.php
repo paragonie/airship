@@ -14,6 +14,7 @@ use Airship\Cabin\Bridge\Filter\FileManager\{
 };
 use Airship\Engine\Bolt\Get;
 use Airship\Cabin\Bridge\Controller\LoggedInUsersOnly;
+use Airship\Engine\Model;
 use Psr\Log\LogLevel;
 
 /**
@@ -48,10 +49,14 @@ class FileManager extends LoggedInUsersOnly
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
-        $this->files = $this->model('Files');
+        $files = $this->model('Files');
+        if (!($files instanceof Files)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->files = $files;
         $this->includeAjaxToken();
     }
 
@@ -72,7 +77,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonConfirmDeleteDir(string $path, string $cabin)
+    protected function commonConfirmDeleteDir(string $path, string $cabin): void
     {
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -117,7 +122,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonConfirmDeleteFile(string $file, string $path, string $cabin)
+    protected function commonConfirmDeleteFile(string $file, string $path, string $cabin): void
     {
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -157,7 +162,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonGetFileInfo(string $file, string $path, string $cabin)
+    protected function commonGetFileInfo(string $file, string $path, string $cabin): void
     {
         $file = \rtrim($file, '/');
         list($publicPath, $root) = $this->loadCommonData($path, $cabin);
@@ -185,7 +190,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonMoveDir(string $path, string $cabin)
+    protected function commonMoveDir(string $path, string $cabin): void
     {
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -242,7 +247,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonMoveFile(string $file, string $path, string $cabin)
+    protected function commonMoveFile(string $file, string $path, string $cabin): void
     {
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -283,7 +288,7 @@ class FileManager extends LoggedInUsersOnly
      * @param string $path
      * @param string $cabin
      */
-    protected function commonIndex(string $path, string $cabin)
+    protected function commonIndex(string $path, string $cabin): void
     {
         list($publicPath, $root) = $this->loadCommonData($path, $cabin);
 
@@ -327,7 +332,7 @@ class FileManager extends LoggedInUsersOnly
     /**
      * Process the landing page.
      */
-    public function commonSelectCabin()
+    public function commonSelectCabin(): void
     {
         if (!$this->permCheck()) {
             \Airship\redirect($this->airship_cabin_prefix);

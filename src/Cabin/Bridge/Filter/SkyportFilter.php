@@ -21,7 +21,7 @@ class SkyportFilter extends InputFilterContainer
         $this->addFilter(
                 'type',
                 (new StringFilter())->addCallback(
-                    function ($input): string
+                    function (string $input): string
                     {
                         switch ($input) {
                             case 'Cabin':

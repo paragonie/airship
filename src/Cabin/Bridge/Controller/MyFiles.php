@@ -6,6 +6,7 @@ use Airship\Cabin\Bridge\{
     Model\UserAccounts,
     Controller\Proto\FileManager
 };
+use Airship\Engine\Model;
 use Airship\Engine\Security\Util;
 
 require_once __DIR__.'/init_gear.php';
@@ -30,11 +31,16 @@ class MyFiles extends FileManager
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
 
-        $this->users = $this->model('UserAccounts');
+        $users = $this->model('UserAccounts');
+        if (!($users instanceof UserAccounts)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->users = $users;
+
         $userId = $this->getActiveUserId();
         $this->userUniqueId = $this->users->getUniqueId($userId);
         $this->root_dir = 'user/' . $this->userUniqueId;
@@ -54,7 +60,7 @@ class MyFiles extends FileManager
      * @route my/files/{string}/delete
      * @param string $cabin
      */
-    public function confirmDeleteFile(string $cabin = '')
+    public function confirmDeleteFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -72,7 +78,7 @@ class MyFiles extends FileManager
      * @param string $cabin
      * @throws \TypeError
      */
-    public function getFileInfo(string $cabin = '')
+    public function getFileInfo(string $cabin = ''): void
     {
         $this->files->ensureDirExists($this->root_dir, $cabin);
         $dir = $this->determinePath($cabin);
@@ -88,7 +94,7 @@ class MyFiles extends FileManager
             throw new \TypeError('String expected');
         }
         $fileName = $_GET['file'];
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->storeViewVar(
@@ -108,7 +114,7 @@ class MyFiles extends FileManager
      * @route my/files/{string}
      * @param string $cabin
      */
-    public function index(string $cabin = '')
+    public function index(string $cabin = ''): void
     {
         $this->files->ensureDirExists($this->root_dir, $cabin);
         $dir = $this->determinePath($cabin);
@@ -122,7 +128,7 @@ class MyFiles extends FileManager
      * @route my/files/{string}/move
      * @param string $cabin
      */
-    public function moveFile(string $cabin = '')
+    public function moveFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
         if (!\in_array($cabin, $this->getCabinNamespaces())) {
@@ -138,7 +144,7 @@ class MyFiles extends FileManager
     /**
      * @route my/files
      */
-    public function selectCabin()
+    public function selectCabin(): void
     {
         $this->commonSelectCabin();
     }

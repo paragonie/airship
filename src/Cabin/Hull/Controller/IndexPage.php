@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Hull\Controller;
 
 use Airship\Cabin\Hull\Model\Blog;
+use Airship\Engine\Model;
 use ParagonIE\ConstantTime\Binary;
 
 require_once __DIR__.'/init_gear.php';
@@ -22,10 +23,15 @@ class IndexPage extends ControllerGear
      * The homepage for an Airship.
      *
      * @route /
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
-        $this->blog = $this->model('Blog');
+        $blog = $this->model('Blog');
+        if (!$blog instanceof Blog) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->blog = $blog;
 
         if (!\file_exists(ROOT . '/public/robots.txt')) {
             // Default robots.txt
@@ -56,8 +62,10 @@ class IndexPage extends ControllerGear
     }
 
     /**
+     * Display extra motif CSS
      *
      * @route motif_extra.css
+     * @return void
      */
     public function motifExtra()
     {

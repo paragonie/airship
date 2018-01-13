@@ -17,6 +17,7 @@ use Airship\Engine\{
     AutoPilot,
     Bolt\Security,
     Gears,
+    Model,
     State
 };
 use Airship\Engine\Security\{
@@ -70,11 +71,15 @@ class Account extends ControllerGear
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
         $this->storeViewVar('showmenu', true);
-        $this->acct = $this->model('UserAccounts');
+        $acct = $this->model('UserAccounts');
+        if (!($acct instanceof UserAccounts)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->acct = $acct;
         $this->includeAjaxToken();
     }
 
@@ -83,7 +88,7 @@ class Account extends ControllerGear
      *
      * @route board
      */
-    public function board()
+    public function board(): void
     {
         if ($this->isLoggedIn())  {
             // You're already logged in!
@@ -135,7 +140,7 @@ class Account extends ControllerGear
      *
      * @route login
      */
-    public function login()
+    public function login(): void
     {
         if ($this->isLoggedIn())  {
             // You're already logged in!
@@ -156,7 +161,7 @@ class Account extends ControllerGear
      * @route logout/(.*)
      * @param string $token
      */
-    public function logout(string $token)
+    public function logout(string $token): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -172,7 +177,7 @@ class Account extends ControllerGear
     /**
      * @route my/account
      */
-    public function my()
+    public function my(): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -200,7 +205,7 @@ class Account extends ControllerGear
     /**
      * @route my
      */
-    public function myIndex()
+    public function myIndex(): void
     {
         \Airship\redirect($this->airship_cabin_prefix . '/my/account');
     }
@@ -210,7 +215,7 @@ class Account extends ControllerGear
      *
      * @route my/preferences
      */
-    public function preferences()
+    public function preferences(): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -254,7 +259,7 @@ class Account extends ControllerGear
      * @param string $page
      * @route users{_page}
      */
-    public function publicDirectory(string $page = '')
+    public function publicDirectory(string $page = ''): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -280,7 +285,7 @@ class Account extends ControllerGear
      * @route recover-account
      * @param string $token
      */
-    public function recoverAccount(string $token = '')
+    public function recoverAccount(string $token = ''): void
     {
         if ($this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -315,7 +320,7 @@ class Account extends ControllerGear
      * @route my/account/2-factor/qr-code
      *
      */
-    public function twoFactorSetupQRCode()
+    public function twoFactorSetupQRCode(): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -345,7 +350,7 @@ class Account extends ControllerGear
     /**
      * @route my/account/2-factor
      */
-    public function twoFactorSetup()
+    public function twoFactorSetup(): void
     {
         if (!$this->isLoggedIn())  {
             \Airship\redirect($this->airship_cabin_prefix);
@@ -424,7 +429,7 @@ class Account extends ControllerGear
         array $post = [],
         array $account = [],
         string $gpg_public_key = ''
-    ) {
+    ): void {
         if (!empty($post['passphrase'])) {
             // Lazy hack
             $post['username'] = $account['username'];
@@ -516,7 +521,7 @@ class Account extends ControllerGear
      * @throws \Airship\Alerts\Router\ControllerComplete
      * @throws \TypeError
      */
-    protected function processBoard(array $post = [])
+    protected function processBoard(array $post = []): void
     {
         if (empty($post['username']) || empty($post['passphrase'])) {
             $this->view(
@@ -586,7 +591,7 @@ class Account extends ControllerGear
      * @throws \ParagonIE\Halite\Alerts\InvalidType
      * @throws \TypeError
      */
-    protected function processLogin(array $post = [])
+    protected function processLogin(array $post = []): void
     {
         $state = State::instance();
 
@@ -844,7 +849,9 @@ class Account extends ControllerGear
             ??
         'no-reply@' . AutoPilot::getHttpHost();
         if (!Util::isValidEmail($from)) {
-            $from = 'no-reply@[' . \long2ip(\ip2long($_SERVER['SERVER_ADDR'])) . ']';
+            $from = 'no-reply@[' . \long2ip(
+                (int)\ip2long($_SERVER['SERVER_ADDR'])
+            ) . ']';
         }
 
         $message = (new Message())
@@ -876,7 +883,7 @@ class Account extends ControllerGear
      *
      * @param string $token
      */
-    protected function processRecoveryToken(string $token)
+    protected function processRecoveryToken(string $token): void
     {
         if (Util::stringLength($token) < UserAccounts::RECOVERY_CHAR_LENGTH) {
             \Airship\redirect($this->airship_cabin_prefix . '/login');
@@ -1001,7 +1008,7 @@ class Account extends ControllerGear
      * @param int|null $per_page
      * @return int[]
      */
-    protected function getOffsetAndLimit($page = null, ?int $per_page = null)
+    protected function getOffsetAndLimit($page = null, ?int $per_page = null): array
     {
         if (!$per_page) {
             $per_page = $this->config('user-directory.per-page') ?? 20;

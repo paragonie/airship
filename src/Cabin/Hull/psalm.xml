@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<psalm
+        autoloader="src/testing-preamble.php"
+        stopOnFirstError="false"
+        useDocblockTypes="true"
+>
+    <projectFiles>
+        <directory name="src/Cabin/Hull" />
+    </projectFiles>
+    <stubs>
+        <file name="vendor/paragonie/halite/stub/Sodium.stub.php" />
+    </stubs>
+    <issueHandlers>
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <TooFewArguments errorLevel="suppress" />
+    </issueHandlers>
+</psalm>

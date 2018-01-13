@@ -20,7 +20,7 @@ class CommentForm extends InputFilterContainer
     {
         $this->addFilter(
                 'year',
-                (new StringFilter())->addCallback(function ($str): string {
+                (new StringFilter())->addCallback(function (string $str): string {
                     if (!\preg_match('/^[0-9]{4}$/', $str)) {
                         throw new \TypeError();
                     }
@@ -29,7 +29,7 @@ class CommentForm extends InputFilterContainer
             )
             ->addFilter(
                 'month',
-                (new StringFilter())->addCallback(function ($str): string {
+                (new StringFilter())->addCallback(function (string $str): string {
                     if (!\preg_match('/^[0-9]{2}$/', $str)) {
                         throw new \TypeError();
                     }
@@ -38,7 +38,7 @@ class CommentForm extends InputFilterContainer
             )
             ->addFilter(
                 'slug',
-                (new StringFilter())->addCallback(function ($str): string {
+                (new StringFilter())->addCallback(function (string $str): string {
                     if (!\preg_match('/^[a-z0-9\-]+$/', $str)) {
                         throw new \TypeError();
                     }

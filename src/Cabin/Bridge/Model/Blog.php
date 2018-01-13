@@ -853,7 +853,14 @@ class Blog extends ModelGear
             return [];
         }
         foreach ($rows as $i => $row) {
-            $rows[$i][$col] = $this->getSeriesTree((int) $row['seriesid'], $col, $depth + 1);
+            $so_far = $encountered;
+            $so_far []= (int) $row['seriesid'];
+            $rows[$i][$col] = $this->getSeriesTree(
+                (int) $row['seriesid'],
+                $col,
+                $so_far,
+                $depth + 1
+            );
         }
         return $rows;
     }

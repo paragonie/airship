@@ -13,6 +13,7 @@ use Airship\Engine\{
     State
 };
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Promise\PromiseInterface;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary,
@@ -92,7 +93,7 @@ class ChannelUpdates extends ModelGear
             'root' => $tree->getRoot(),
             'timestamp' => $now->format(\AIRSHIP_DATE_FORMAT)
         ];
-        $response = \json_encode($updates);
+        $response = (string) \json_encode($updates);
         return [
             Base64UrlSafe::encode($response),
             Base64UrlSafe::encode(
@@ -307,7 +308,7 @@ class ChannelUpdates extends ModelGear
     /**
      * This propagates the new update through the network.
      */
-    protected function notifyPeersOfNewUpdate()
+    protected function notifyPeersOfNewUpdate(): void
     {
         $state = State::instance();
         if (!($state->hail instanceof Hail)) {
@@ -315,6 +316,7 @@ class ChannelUpdates extends ModelGear
                 \trk('errors.type.wrong_class', Hail::class)
             );
         }
+        /** @var array<int, PromiseInterface> $resp */
         $resp = [];
         $peers = \Airship\loadJSON(ROOT . '/config/channel_peers/' . $this->channel . '.json');
         foreach ($peers as $peer) {
@@ -325,7 +327,10 @@ class ChannelUpdates extends ModelGear
             }
         }
         foreach ($resp as $r) {
-            $r->then(function (ResponseInterface $response) {
+            if (!$r instanceof PromiseInterface) {
+                throw new \TypeError();
+            }
+            $r->then(function (ResponseInterface $response): void {
                 $body = (string) $response->getBody();
                 $context = \json_decode(Binary::safeSubstr($body, 89));
                 $this->log(
@@ -569,7 +574,7 @@ class ChannelUpdates extends ModelGear
                         Hex::decode($masterData['public_key'])
                     )
                 );
-                $message = \json_encode($keyData);
+                $message = (string) \json_encode($keyData);
 
                 // If the signature is valid, we return true.
                 return AsymmetricCrypto::verify(

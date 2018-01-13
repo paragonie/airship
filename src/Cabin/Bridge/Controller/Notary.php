@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Controller;
 
 use Airship\Cabin\Bridge\Model\ChannelUpdates;
+use Airship\Engine\Model;
 use Airship\Engine\State;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
@@ -48,7 +49,7 @@ class Notary extends ControllerGear
      * This function is called after the dependencies have been injected by
      * AutoPilot. Think of it as a user-land constructor.
      */
-    public function airshipLand()
+    public function airshipLand(): void
     {
         parent::airshipLand();
         $config = State::instance();
@@ -60,16 +61,26 @@ class Notary extends ControllerGear
                     'This Airship does not offer Notary services.'
             ]);
         }
-        $this->sk = $config->keyring['notary.online_signing_key'];
+        $sk = $config->keyring['notary.online_signing_key'];
+        if (!($sk instanceof SignatureSecretKey)) {
+            throw new \TypeError('Expected a SignatureSecretKey');
+        }
+        $this->sk = $sk;
         $this->pk = $this->sk->derivePublicKey();
+
         $this->channel = $config->universal['notary']['channel'];
-        $this->chanUp = $this->model('ChannelUpdates', $this->channel);
+
+        $chanUp = $this->model('ChannelUpdates', $this->channel);
+        if (!($chanUp instanceof ChannelUpdates)) {
+            throw new \TypeError(Model::TYPE_ERROR);
+        }
+        $this->chanUp = $chanUp;
     }
 
     /**
      * @route notary
      */
-    public function index()
+    public function index(): void
     {
         \Airship\json_response(
             [
@@ -90,7 +101,7 @@ class Notary extends ControllerGear
     /**
      * @route notary/verify
      */
-    public function verify()
+    public function verify(): void
     {
         // Input validation
         if (empty($_POST['challenge'])) {
