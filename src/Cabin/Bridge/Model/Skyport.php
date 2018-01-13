@@ -12,6 +12,7 @@ use Airship\Engine\{
 use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\{
     Asymmetric\SignaturePublicKey,
+    Halite,
     HiddenString,
     Password
 };
@@ -430,7 +431,7 @@ class Skyport extends ModelGear
             return false;
         }
         $this->installHash = (string) \file_get_contents(ROOT . '/config/install.lock');
-        if (\preg_match('/^3142[0-9a-f]{300,}$/', $this->installHash)) {
+        if (\preg_match('/^' . Halite::VERSION_PREFIX .'[A-Za-z0-9\-_]+$/', $this->installHash)) {
             // This looks like an encrypted password hash.
             return true;
         }
