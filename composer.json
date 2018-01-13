@@ -42,7 +42,6 @@
     "ext-curl": "*",
     "ext-gd": "*",
     "ext-openssl": "*",
-    "ext-sodium": "*",
     "ext-mbstring": "*",
     "ext-zip": "*",
 
