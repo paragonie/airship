@@ -35,6 +35,9 @@ RUN echo "<VirtualHost *:80>" > $CONF && \
     echo "</Directory>" >> $CONF && \
     echo "</VirtualHost>" >> $CONF
 
+# make php-fpm log to STDERR so docker logs sees PHP's error logging
+RUN ln -s /dev/stderr /var/log/php7.2-fpm.log
+
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
 ENV APACHE_PID_FILE /var/run/apache2/apache2.pid
