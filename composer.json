@@ -2,7 +2,7 @@
   "name": "paragonie/airship",
   "description": "Simply Secure Content Management System - 'The sky is only the beginning'",
   "license": [
-    "GPL-3.0+"
+    "GPL-3.0-or-later"
   ],
   "authors": [
     {
