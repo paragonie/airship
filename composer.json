@@ -45,7 +45,7 @@
     "ext-mbstring": "*",
     "ext-zip": "*",
 
-    "bjeavons/zxcvbn-php": "*",
+    "bjeavons/zxcvbn-php": "^0.3|^1",
     "ezyang/htmlpurifier": "^4.8",
     "gregwar/rst": "^1.0",
     "guzzlehttp/guzzle": "^6",
@@ -56,7 +56,7 @@
     "paragonie/gpg-mailer": "^0|^1",
     "paragonie/halite": "^4",
     "paragonie/hpkp-builder": "^0|^1",
-    "paragonie/passwdqc": "dev-master",
+    "paragonie/passwdqc": "^0",
     "paragonie/multi-factor": "^0|^1",
     "paragonie/recaptcha": "^2",
     "psr/http-message": "^1",

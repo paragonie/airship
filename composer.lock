@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ecc6355f0b4f8bd20b9c0a5d0ce2edb",
+    "content-hash": "ff8e299fa4dfae801b69cb3c89eefdfa",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -507,16 +507,16 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "9e7d88e6e4015c2f06a3fa22f06e1d5faa77e6c4"
+                "reference": "7c74c5d08761ead7b5e89d07c854bc28eb0b2186"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/9e7d88e6e4015c2f06a3fa22f06e1d5faa77e6c4",
-                "reference": "9e7d88e6e4015c2f06a3fa22f06e1d5faa77e6c4",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/7c74c5d08761ead7b5e89d07c854bc28eb0b2186",
+                "reference": "7c74c5d08761ead7b5e89d07c854bc28eb0b2186",
                 "shasum": ""
             },
             "require": {
@@ -565,7 +565,7 @@
                 "hex2bin",
                 "rfc4648"
             ],
-            "time": "2017-09-22T14:55:37+00:00"
+            "time": "2018-01-23T00:54:57+00:00"
         },
         {
             "name": "paragonie/cookie",
@@ -719,20 +719,21 @@
         },
         {
             "name": "paragonie/halite",
-            "version": "v4.1.0",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "b060e0031b4b3f799c3272050c99bcabf89fe154"
+                "reference": "a875051b86f6b6a6602fce01bb8734a85106761d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/b060e0031b4b3f799c3272050c99bcabf89fe154",
-                "reference": "b060e0031b4b3f799c3272050c99bcabf89fe154",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/a875051b86f6b6a6602fce01bb8734a85106761d",
+                "reference": "a875051b86f6b6a6602fce01bb8734a85106761d",
                 "shasum": ""
             },
             "require": {
                 "paragonie/constant_time_encoding": "^2",
+                "paragonie/sodium_compat": "^1.5",
                 "php": "^7.2"
             },
             "require-dev": {
@@ -776,7 +777,7 @@
                 "signatures",
                 "sodium"
             ],
-            "time": "2018-01-05T22:48:21+00:00"
+            "time": "2018-01-15T21:08:25+00:00"
         },
         {
             "name": "paragonie/hpkp-builder",
@@ -890,7 +891,7 @@
         },
         {
             "name": "paragonie/passwdqc",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/passwdqc.git",
@@ -946,6 +947,54 @@
             "time": "2016-11-14T02:33:28+00:00"
         },
         {
+            "name": "paragonie/random_compat",
+            "version": "v2.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2017-09-27T21:40:39+00:00"
+        },
+        {
             "name": "paragonie/recaptcha",
             "version": "v2.1.0",
             "source": {
@@ -993,6 +1042,88 @@
             "time": "2017-11-05T19:10:38+00:00"
         },
         {
+            "name": "paragonie/sodium_compat",
+            "version": "v1.5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/sodium_compat.git",
+                "reference": "67cf10c3cd9afc43dff7afafc1111b742af14a9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/67cf10c3cd9afc43dff7afafc1111b742af14a9c",
+                "reference": "67cf10c3cd9afc43dff7afafc1111b742af14a9c",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": "^1|^2",
+                "php": "^5.2.4|^5.3|^5.4|^5.5|^5.6|^7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^3|^4|^5"
+            },
+            "suggest": {
+                "ext-libsodium": "PHP < 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security.",
+                "ext-sodium": "PHP >= 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com"
+                },
+                {
+                    "name": "Frank Denis",
+                    "email": "jedisct1@pureftpd.org"
+                }
+            ],
+            "description": "Pure PHP implementation of libsodium; uses the PHP extension if it exists",
+            "keywords": [
+                "Authentication",
+                "BLAKE2b",
+                "ChaCha20",
+                "ChaCha20-Poly1305",
+                "Chapoly",
+                "Curve25519",
+                "Ed25519",
+                "EdDSA",
+                "Edwards-curve Digital Signature Algorithm",
+                "Elliptic Curve Diffie-Hellman",
+                "Poly1305",
+                "Pure-PHP cryptography",
+                "RFC 7748",
+                "RFC 8032",
+                "Salpoly",
+                "Salsa20",
+                "X25519",
+                "XChaCha20-Poly1305",
+                "XSalsa20-Poly1305",
+                "Xchacha20",
+                "Xsalsa20",
+                "aead",
+                "cryptography",
+                "ecdh",
+                "elliptic curve",
+                "elliptic curve cryptography",
+                "encryption",
+                "libsodium",
+                "php",
+                "public-key cryptography",
+                "secret-key cryptography",
+                "side-channel resistant"
+            ],
+            "time": "2018-01-18T20:49:55+00:00"
+        },
+        {
             "name": "pear/console_commandline",
             "version": "v1.2.2",
             "source": {
@@ -1031,7 +1162,7 @@
             "authors": [
                 {
                     "name": "Richard Quadling",
-                    "email": "rquadling@gmail.com"
+                    "email": "RQuadling@GMail.com"
                 },
                 {
                     "name": "David Jean Louis",
@@ -1318,12 +1449,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "fe89fd2178cabef137b9a76fa91d64925474b956"
+                "reference": "eca509e364dcea7b7f41f9452d575684cc8e3fb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fe89fd2178cabef137b9a76fa91d64925474b956",
-                "reference": "fe89fd2178cabef137b9a76fa91d64925474b956",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/eca509e364dcea7b7f41f9452d575684cc8e3fb4",
+                "reference": "eca509e364dcea7b7f41f9452d575684cc8e3fb4",
                 "shasum": ""
             },
             "conflict": {
@@ -1337,9 +1468,10 @@
                 "codeigniter/framework": "<=3.0.6",
                 "composer/composer": "<=1.0.0-alpha11",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
-                "contao/core": ">=2,<3.5.31",
+                "contao/core": ">=2,<3.5.32",
                 "contao/core-bundle": ">=4,<4.4.8",
                 "contao/listing-bundle": ">=4,<4.4.8",
+                "contao/newsletter-bundle": ">=4,<4.1",
                 "doctrine/annotations": ">=1,<1.2.7",
                 "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
                 "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
@@ -1377,7 +1509,7 @@
                 "phpxmlrpc/extras": "<0.6.1",
                 "pusher/pusher-php-server": "<2.2.1",
                 "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
-                "shopware/shopware": "<5.2.25",
+                "shopware/shopware": "<5.3.7",
                 "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
                 "silverstripe/framework": ">=3,<3.3",
@@ -1455,7 +1587,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-01-07T00:56:33+00:00"
+            "time": "2018-01-22T14:51:56+00:00"
         },
         {
             "name": "twig/twig",
@@ -3178,16 +3310,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f"
+                "reference": "11c07feade1d65453e06df3b3b90171d6d982087"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
-                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/11c07feade1d65453e06df3b3b90171d6d982087",
+                "reference": "11c07feade1d65453e06df3b3b90171d6d982087",
                 "shasum": ""
             },
             "require": {
@@ -3238,7 +3370,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-12-22T14:50:35+00:00"
+            "time": "2018-01-12T06:34:42+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -3740,16 +3872,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473"
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/9b355654ea99460397b89c132b5c1087b6bf4473",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/d15f59a67ff805a44c50ea0516d2341740f81a38",
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38",
                 "shasum": ""
             },
             "require": {
@@ -3785,7 +3917,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2018-01-03T12:13:57+00:00"
+            "time": "2018-01-24T12:46:19+00:00"
         },
         {
             "name": "seld/phar-utils",
@@ -4147,16 +4279,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "0.3.77",
+            "version": "0.3.86",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "03ecfa2f2ff6a0c816cf2d710dd6e2dc8b4ab24a"
+                "reference": "24cbe6a52af9da97880b310d6b65f484c7daf96a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/03ecfa2f2ff6a0c816cf2d710dd6e2dc8b4ab24a",
-                "reference": "03ecfa2f2ff6a0c816cf2d710dd6e2dc8b4ab24a",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/24cbe6a52af9da97880b310d6b65f484c7daf96a",
+                "reference": "24cbe6a52af9da97880b310d6b65f484c7daf96a",
                 "shasum": ""
             },
             "require": {
@@ -4198,7 +4330,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2018-01-08T19:11:57+00:00"
+            "time": "2018-01-24T18:52:34+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -4254,7 +4386,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "paragonie/passwdqc": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
@@ -4264,7 +4395,6 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-openssl": "*",
-        "ext-sodium": "*",
         "ext-mbstring": "*",
         "ext-zip": "*"
     },
