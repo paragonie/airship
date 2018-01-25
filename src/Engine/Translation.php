@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\FileSystem\AccessDenied;
+use Airship\Alerts\FileSystem\FileNotFound;
 use Airship\Alerts\TranslationKeyNotFound;
 
 /**
@@ -17,10 +19,10 @@ class Translation
      * @var array
      */
     private $phrases = [];
-    
+
     /**
      * Lookup a string from a language file
-     * 
+     *
      * @param string $key
      * @param string $lang
      * @param mixed[] ...$params
@@ -30,6 +32,9 @@ class Translation
      * @psalm-suppress MixedArrayAccess
      * @psalm-suppress MixedArgument
      * @psalm-suppress MixedAssignment
+     *
+     * @throws AccessDenied
+     * @throws FileNotFound
      */
     public function lookup(
         string $key,
@@ -71,8 +76,13 @@ class Translation
     ): string {
         static $cacheDomain = '';
         if ($cacheDomain !== $domain) {
-            \textdomain($domain);
-            $cacheDomain = $domain;
+            if (\is_callable('\\textdomain')) {
+                \textdomain($domain);
+                $cacheDomain = $domain;
+            }
+        }
+        if (!\is_callable('\\gettext')) {
+            return $message;
         }
         return \gettext($message);
     }
@@ -86,6 +96,9 @@ class Translation
      */
     public function format(string $text, ...$params)
     {
+        if (!\is_callable('\\gettext')) {
+            return \sprintf($text, ...$params);
+        }
         return \sprintf(
             \gettext($text),
             ...$params
