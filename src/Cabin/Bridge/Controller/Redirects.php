@@ -25,6 +25,7 @@ class Redirects extends LoggedInUsersOnly
     public function airshipLand(): void
     {
         parent::airshipLand();
+        /** @var CustomPages $pg */
         $pg = $this->model('CustomPages');
         if (!($pg instanceof CustomPages)) {
             throw new \TypeError(

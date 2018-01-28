@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Model;
 
+use Airship\Alerts\Database\QueryError;
 use Airship\Alerts\FileSystem\FileNotFound;
 
 require_once __DIR__.'/init_gear.php';
@@ -28,6 +29,7 @@ class PublicFiles extends ModelGear
         $directoryId = null;
         do {
             $part = \array_shift($parts);
+            /** @psalm-suppress RedundantCondition -- this is only null for the first iteration */
             if (empty($directoryId)) {
                 $directoryId = $this->db->cell(
                     'SELECT
@@ -71,6 +73,7 @@ class PublicFiles extends ModelGear
      * @param string $filename
      * @return array
      * @throws FileNotFound
+     * @throws QueryError
      */
     public function getFileInfo(
         string $cabin = '',

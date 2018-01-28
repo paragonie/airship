@@ -2,6 +2,14 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Controller;
 
+use Airship\Alerts\{
+    FileSystem\AccessDenied,
+    FileSystem\FileNotFound,
+    InvalidType,
+    Router\ControllerComplete,
+    Security\SecurityAlert,
+    Security\UserNotLoggedIn
+};
 use Airship\Cabin\Bridge\Model\{
     Announcements,
     Author,
@@ -22,6 +30,11 @@ class IndexPage extends ControllerGear
 {
     /**
      * @route announce
+     *
+     * @throws ControllerComplete
+     * @throws InvalidType
+     * @throws SecurityAlert
+     * @throws \TypeError
      */
     public function announce(): void
     {
@@ -60,6 +73,11 @@ class IndexPage extends ControllerGear
 
     /**
      * @route /
+     *
+     * @throws InvalidType
+     * @throws ControllerComplete
+     * @throws UserNotLoggedIn
+     * @throws \TypeError
      */
     public function index(): void
     {
@@ -84,6 +102,7 @@ class IndexPage extends ControllerGear
                     \trk('errors.type.wrong_class', Blog::class)
                 );
             }
+            /** @var CustomPages $page_bp */
             $page_bp = $this->model('CustomPages');
             if (!($page_bp instanceof CustomPages)) {
                 throw new \TypeError(
@@ -118,6 +137,8 @@ class IndexPage extends ControllerGear
 
     /**
      * @route error
+     *
+     * @throws ControllerComplete
      */
     public function error(): void
     {
@@ -144,6 +165,11 @@ class IndexPage extends ControllerGear
 
     /**
      * @route help
+     *
+     * @throws ControllerComplete
+     * @throws UserNotLoggedIn
+     * @throws AccessDenied
+     * @throws FileNotFound
      */
     public function helpPage(): void
     {
@@ -265,8 +291,10 @@ class IndexPage extends ControllerGear
     }
 
     /**
+     * Load the extra CSS for this motif
      *
      * @route motif_extra.css
+     * @throws ControllerComplete
      */
     public function motifExtra(): void
     {

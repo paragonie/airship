@@ -12,6 +12,10 @@
       "role": "Development Team"
     }
   ],
+  "config": {
+    "preferred-install": "dist",
+    "optimize-autoloader": true
+  },
   "support": {
     "email": "security@paragonie.com",
     "issues": "https://github.com/paragonie/airship/issues",
