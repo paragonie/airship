@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff8e299fa4dfae801b69cb3c89eefdfa",
+    "content-hash": "d86f77039123e146def8d7b0c9af0fbf",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -663,6 +663,66 @@
                 "xss"
             ],
             "time": "2017-11-20T16:18:59+00:00"
+        },
+        {
+            "name": "paragonie/easydb",
+            "version": "v2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/easydb.git",
+                "reference": "1069934433b25b87c67442441e835b9211dde9b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/easydb/zipball/1069934433b25b87c67442441e835b9211dde9b4",
+                "reference": "1069934433b25b87c67442441e835b9211dde9b4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5",
+                "spatie/7to5": "^1.0",
+                "squizlabs/php_codesniffer": "^2.7",
+                "vimeo/psalm": "^0|^1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ParagonIE\\EasyDB\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Scott Arciszewski",
+                    "email": "scott@paragonie.com",
+                    "homepage": "https://paragonie.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Woody Gilk",
+                    "homepage": "https://github.com/shadowhand",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "SignpostMarv",
+                    "homepage": "https://github.com/SignpostMarv",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "Easy-to-use database abstraction",
+            "keywords": [
+                "database",
+                "pdo",
+                "security",
+                "sql"
+            ],
+            "time": "2017-12-27T18:55:11+00:00"
         },
         {
             "name": "paragonie/gpg-mailer",
