@@ -10,8 +10,7 @@ use Airship\Engine\{
     State
 };
 use ParagonIE\ConstantTime\{
-    Base64UrlSafe,
-    Binary
+    Base64UrlSafe
 };
 use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;

@@ -199,8 +199,8 @@ class Motifs extends AdminOnly
     protected function getConfigFilter(string $path): InputFilterContainer
     {
         /**
-         * @noinspection PhpIncludeInspection
          * @psalm-suppress UnresolvableInclude
+         * @noinspection PhpIncludeInspection
          */
         include $path;
 

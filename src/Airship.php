@@ -14,7 +14,7 @@ use Airship\Engine\{
     Database,
     State
 };
-use function foo\func;
+
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Binary

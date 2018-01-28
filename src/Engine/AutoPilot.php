@@ -10,7 +10,7 @@ use Airship\Alerts\Router\{
 };
 use Airship\Engine\Contract\RouterInterface;
 use Airship\Engine\Security\Util;
-use function Airship\json_response;
+
 use ParagonIE\ConstantTime\Binary;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -13,8 +13,7 @@ use ParagonIE\ConstantTime\Binary;
 use ParagonIE\Halite\{
     Key,
     Symmetric\Crypto as Symmetric,
-    Symmetric\AuthenticationKey,
-    Util as CryptoUtil
+    Symmetric\AuthenticationKey
 };
 
 /**
