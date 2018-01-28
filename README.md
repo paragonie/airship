@@ -34,7 +34,7 @@ See [how the out-of-the-box security of CMS Airship compares to WordPress, Drupa
 
 ## Documentation
 
-See [paragonie/airship-docs](https://github.com/paragonie/airship-docs).
+The [CMS Airship Documentation](https://github.com/paragonie/airship/tree/master/docs) is in the `docs` directory.
 
 # [Available on the AWS Marketplace](https://aws.amazon.com/marketplace/seller-profile?ref=cns_srchrow&id=139a5240-4d65-457b-81cf-6f13833a6ecd)
 
