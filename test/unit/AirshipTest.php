@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Airship\UnitTests;
 use Airship\Engine\Hail;
 use function Airship\get_var_type;
+use function Airship\makeHTTPS;
 use GuzzleHttp\Client;
 use ParagonIE\ConstantTime\Binary;
 use PHPUnit\Framework\TestCase;
@@ -266,6 +267,12 @@ class AirshipTest extends TestCase
         $hail = new Hail(new Client());
         $this->assertSame('object (Airship\Engine\Hail)', get_var_type($hail));
         $this->assertSame('object (Airship\Engine\Hail, -- no parents --)', get_var_type($hail, true));
+    }
+
+    public function testMakeHTTPS()
+    {
+        $this->assertSame('https://localhost', makeHTTPS('http://localhost'));
+        $this->assertSame('wss://localhost:9001/test', makeHTTPS('ws://localhost:9001/test'));
     }
 
     /**

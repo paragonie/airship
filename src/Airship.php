@@ -621,6 +621,41 @@ function parseJSON(
 }
 
 /**
+ * Force the schema to begin with HTTPS
+ *
+ * @param string $url
+ *
+ * @return string
+ * @throws \Exception
+ */
+function makeHTTPS(string $url): string
+{
+    $pos = \strpos($url, '://');
+    if (!\is_int($pos)) {
+        throw new \Exception('A malformed URL was passed to \\Airship\\makeHTTPS()');
+    }
+
+    /** @var array<string, string> $pieces */
+    $pieces = \parse_url($url);
+    if (!\is_array($pieces)) {
+        throw new \Exception('A malformed URL was passed to \\Airship\\makeHTTPS()');
+    }
+    switch ($pieces['scheme']) {
+        case 'http':
+        case 'https':
+            $scheme = 'https';
+            break;
+        case 'ws':
+        case 'wss':
+            $scheme = 'wss';
+            break;
+        default:
+            throw new \Exception('Disallowed scheme');
+    }
+    return $scheme . '://' . Binary::safeSubstr($url, $pos + 3);
+}
+
+/**
  * Given a file path, only return the file name. Optionally, trim the
  * extension.
  *

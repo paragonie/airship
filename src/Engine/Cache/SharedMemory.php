@@ -9,6 +9,7 @@ use Airship\Engine\{
     State
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\ConstantTime\Binary;
 use ParagonIE\Halite\{
     Key,
     Symmetric\Crypto as Symmetric,
@@ -62,12 +63,12 @@ class SharedMemory implements CacheInterface
         }
 
         // We need a short hash key:
-        $this->cacheKeyL = CryptoUtil::safeSubstr(
+        $this->cacheKeyL = Binary::safeSubstr(
             $cacheKey->getRawKeyMaterial(),
             0,
             \SODIUM_CRYPTO_SHORTHASH_KEYBYTES
         );
-        $this->cacheKeyR = CryptoUtil::safeSubstr(
+        $this->cacheKeyR = Binary::safeSubstr(
             $cacheKey->getRawKeyMaterial(),
             \SODIUM_CRYPTO_SHORTHASH_KEYBYTES,
             \SODIUM_CRYPTO_SHORTHASH_KEYBYTES

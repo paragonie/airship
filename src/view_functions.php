@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Airship\ViewFunctions;
 
 use Airship\Engine\{
-    Cache\ViewCache, Gadgets, Gears, Security\CSRF, Security\Util, State
+    AutoPilot, Cache\ViewCache, Gadgets, Gears, Security\CSRF, Security\Util, State
 };
 use Airship\Engine\Security\Permissions;
 use ParagonIE\CSPBuilder\CSPBuilder;
@@ -87,10 +87,13 @@ function cabin_custom_config(string $name = \CABIN_NAME): array
  *
  * @param string $cabin
  * @return string
+ *
+ * @throws \Exception
  */
 function cabin_url(string $cabin = \CABIN_NAME): string
 {
     static $lookup = [];
+    $noArgs = \func_num_args() === 0;
     if (!empty($lookup[$cabin])) {
         // It was cached
         return $lookup[$cabin];
@@ -100,6 +103,9 @@ function cabin_url(string $cabin = \CABIN_NAME): string
         if ($c['name'] === $cabin) {
             if (isset($c['canon_url'])) {
                 $lookup[$cabin] = \rtrim($c['canon_url'], '/') . '/';
+                if (AutoPilot::isHTTPSConnection() && $cabin === \CABIN_NAME) {
+                    $lookup[$cabin] = \Airship\makeHttps($lookup[$cabin]);
+                }
                 return $lookup[$cabin];
             }
             $lookup[$cabin] = '/';
