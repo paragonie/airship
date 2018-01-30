@@ -4,7 +4,7 @@ Please make pull requests against the `master` branch. If we need to backport a
 bugfix into a different branch, we will take care of that.
 
 If you would like to improve the documentation, you want the 
-[documentation repository](https://github.com/paragonie/airship-docs).
+[documentation repository](https://github.com/paragonie/airship/master/tree/docs).
 
 ## Current Branches
 
