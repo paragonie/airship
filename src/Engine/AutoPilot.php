@@ -8,7 +8,10 @@ use Airship\Alerts\Router\{
     FallbackLoop,
     ControllerComplete
 };
-use Airship\Engine\Contract\RouterInterface;
+use Airship\Engine\Contract\{
+    RouterInterface,
+    Never
+};
 use Airship\Engine\Security\Util;
 
 use ParagonIE\ConstantTime\Binary;
@@ -513,9 +516,9 @@ class AutoPilot implements RouterInterface
 
     /**
      * @param null|ResponseInterface $response
-     * @return void
+     * @return Never
      */
-    public function serveResponse(?ResponseInterface $response = null): void
+    public function serveResponse(?ResponseInterface $response = null): Never
     {
         if (empty($response)) {
             $response = $this->getController()
@@ -530,6 +533,7 @@ class AutoPilot implements RouterInterface
         }
         echo (string) $response->getBody();
         exit(0);
+        return new Never;
     }
 
     /**

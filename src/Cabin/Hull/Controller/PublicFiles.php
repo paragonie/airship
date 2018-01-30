@@ -8,6 +8,7 @@ use Airship\Alerts\{
     Router\ControllerComplete,
     Router\EmulatePageNotFound
 };
+use Airship\Engine\Contract\Never;
 use Airship\Engine\Model;
 use Airship\Engine\Security\Util;
 
@@ -59,12 +60,12 @@ class PublicFiles extends ControllerGear
      *
      * @param string $path
      * @param string $default Default MIME type
-     * @return void
+     * @return Never
      * @route files/(.*)
      * @throws ControllerComplete
      * @throws EmulatePageNotFound
      */
-    public function download(string $path, string $default = 'text/plain'): void
+    public function download(string $path, string $default = 'text/plain'): Never
     {
         if (!$this->can('read')) {
             throw new EmulatePageNotFound();
@@ -109,11 +110,13 @@ class PublicFiles extends ControllerGear
             }
             \readfile($realPath);
             exit;
+            return new Never;
         } catch (FileNotFound $ex) {
             // When all else fails, 404 not found
             \http_response_code(404);
             $this->view('404');
             exit(1);
+            return new Never;
         }
     }
 
