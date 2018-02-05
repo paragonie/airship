@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\PageManager;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\InputFilterContainer;
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
-    InputFilterContainer,
     StringFilter
 };
 

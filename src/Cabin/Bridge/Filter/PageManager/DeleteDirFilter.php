@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\PageManager;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
-    IntFilter,
-    InputFilterContainer
+    IntFilter
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class DeleteDirFilter

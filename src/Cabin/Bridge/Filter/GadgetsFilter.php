@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
-    GeneralFilterContainer,
     IntFilter
 };
+use ParagonIE\Ionizer\GeneralFilterContainer;
 
 /**
  * Class GadgetsFilter

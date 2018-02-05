@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Account;
 
-use Airship\Engine\Security\Filter\{
-    GeneralFilterContainer,
-    StringFilter
-};
+use ParagonIE\Ionizer\Filter\StringFilter;
+use ParagonIE\Ionizer\GeneralFilterContainer;
 
 /**
  * Class PreferencesFilter

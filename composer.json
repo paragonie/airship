@@ -61,6 +61,7 @@
     "paragonie/gpg-mailer": "^0|^1",
     "paragonie/halite": "^4",
     "paragonie/hpkp-builder": "^0|^1",
+    "paragonie/ionizer": "^0|^1",
     "paragonie/passwdqc": "^0",
     "paragonie/multi-factor": "^0|^1",
     "paragonie/recaptcha": "^2",

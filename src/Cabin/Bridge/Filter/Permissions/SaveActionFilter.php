@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Permissions;
 
-use Airship\Engine\Security\Filter\{
-    InputFilterContainer,
-    StringFilter
-};
+use ParagonIE\Ionizer\InputFilterContainer;
+use ParagonIE\Ionizer\Filter\StringFilter;
 
 /**
  * Class SaveActionFilter
