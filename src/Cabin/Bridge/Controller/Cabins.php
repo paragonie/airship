@@ -4,10 +4,8 @@ namespace Airship\Cabin\Bridge\Controller;
 
 use Airship\Alerts\FileSystem\FileNotFound;
 
-use Airship\Engine\Security\Filter\{
-    ArrayFilter,
-    GeneralFilterContainer
-};
+use ParagonIE\Ionizer\Filter\ArrayFilter;
+use ParagonIE\Ionizer\GeneralFilterContainer;
 
 require_once __DIR__.'/init_gear.php';
 

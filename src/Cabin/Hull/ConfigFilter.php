@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
-    InputFilterContainer,
     IntFilter,
     StringFilter
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class ConfigFilter

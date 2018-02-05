@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
     FloatFilter,
-    GeneralFilterContainer,
     IntFilter,
     StringFilter
 };
+use ParagonIE\Ionizer\GeneralFilterContainer;
 
 $colorCallback = function ($input): int {
     if ($input < 0 || $input > 255) {
