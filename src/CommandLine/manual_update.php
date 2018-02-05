@@ -8,6 +8,7 @@ use Airship\Engine\Continuum\Updaters\{
     Motif
 };
 use Airship\Engine\State;
+use Airship\Engine\Contract\Never;
 use ParagonIE\ConstantTime\Binary;
 
 require_once \dirname(__DIR__).'/bootstrap.php';
@@ -15,7 +16,7 @@ require_once \dirname(__DIR__).'/bootstrap.php';
 /**
  * Show the usage
  */
-function usage()
+function usage(): Never
 {
     echo 'Command Line Extension Updater - Usage:', "\n";
     echo 'To download from the Internet:', "\n\t";
