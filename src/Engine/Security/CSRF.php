@@ -4,6 +4,7 @@ namespace Airship\Engine\Security;
 
 use Airship\Alerts\Security\CSRF\InvalidConfig;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
 use ParagonIE\Halite\Util as CryptoUtil;
 
 /**
@@ -43,6 +44,8 @@ class CSRF
      * CSRF constructor.
      *
      * @param array $options
+     * @throws InvalidConfig
+     * @throws \TypeError
      */
     public function __construct(array $options = [])
     {
@@ -55,6 +58,8 @@ class CSRF
      * @param string $lockTo This CSRF token is only valid for this HTTP request endpoint
      * @param bool $echo if true, echo instead of returning
      * @return string
+     *
+     * @throws \TypeError
      */
     public function insertToken(
         string $lockTo = '',
@@ -79,6 +84,7 @@ class CSRF
      * @param string $lockTo
      *
      * @return string
+     * @throws \TypeError
      */
     public function ajaxToken(string $lockTo = ''): string
     {
@@ -91,6 +97,7 @@ class CSRF
      * @param string $lockTo - Only get tokens locked to a particular form
      * 
      * @return string
+     * @throws \TypeError
      */
     public function getTokenString(string $lockTo = '', bool $ajax = false): string
     {
@@ -128,6 +135,8 @@ class CSRF
      * @param string $token
      *
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws \TypeError
      */
     public function checkAjax(string $token): bool
     {
@@ -138,6 +147,8 @@ class CSRF
      * Validate a request based on $_SESSION and $_POST data
      *
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws \TypeError
      */
     public function check(): bool
     {
@@ -154,6 +165,8 @@ class CSRF
      * @param string $providedValue
      *
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws \TypeError
      */
     protected function checkInternal(string $sessionIndex, string $providedValue): bool
     {
@@ -223,6 +236,7 @@ class CSRF
      * @param array $options
      * @throws InvalidConfig
      * @return void
+     * @throws \TypeError
      */
     public function reconfigure(array $options = []): void
     {
