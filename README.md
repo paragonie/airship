@@ -4,7 +4,6 @@
 [![Latest Stable Version](https://poser.pugx.org/paragonie/airship/v/stable)](https://packagist.org/packages/paragonie/airship)
 [![Latest Unstable Version](https://poser.pugx.org/paragonie/airship/v/unstable)](https://packagist.org/packages/paragonie/airship)
 [![License](https://poser.pugx.org/paragonie/airship/license)](https://packagist.org/packages/paragonie/airship)
-[![Downloads](https://img.shields.io/packagist/dt/paragonie/airship.svg)](https://packagist.org/packages/paragonie/airship)
 
 *The sky is only the beginning.*
 

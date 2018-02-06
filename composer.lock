@@ -897,16 +897,16 @@
         },
         {
             "name": "paragonie/ionizer",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/ionizer.git",
-                "reference": "b76a0e3b09e80349dffb58f442aa66c4210b3e0e"
+                "reference": "31b66536a8c23053b577d3404025f1388365e9f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/ionizer/zipball/b76a0e3b09e80349dffb58f442aa66c4210b3e0e",
-                "reference": "b76a0e3b09e80349dffb58f442aa66c4210b3e0e",
+                "url": "https://api.github.com/repos/paragonie/ionizer/zipball/31b66536a8c23053b577d3404025f1388365e9f1",
+                "reference": "31b66536a8c23053b577d3404025f1388365e9f1",
                 "shasum": ""
             },
             "require": {
@@ -935,7 +935,7 @@
                     "role": "Development Team"
                 }
             ],
-            "time": "2018-02-05T20:33:36+00:00"
+            "time": "2018-02-06T00:57:52+00:00"
         },
         {
             "name": "paragonie/multi-factor",
