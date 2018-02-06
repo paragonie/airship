@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Blog;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     ArrayFilter,
     IntFilter,
-    InputFilterContainer,
     StringFilter,
     WhiteList
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class EditSeriesFilter

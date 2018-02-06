@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Author;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
-    InputFilterContainer,
     StringFilter
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class UsersFilter

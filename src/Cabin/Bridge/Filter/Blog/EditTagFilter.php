@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Blog;
 
-use Airship\Engine\Security\Filter\{
-    InputFilterContainer,
-    StringFilter
-};
+use ParagonIE\Ionizer\Filter\StringFilter;
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class EditTagFilter

@@ -2,15 +2,15 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Admin;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     BoolFilter,
     FloatFilter,
-    InputFilterContainer,
     IntArrayFilter,
     IntFilter,
     StringArrayFilter,
     StringFilter
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class SettingsFilter

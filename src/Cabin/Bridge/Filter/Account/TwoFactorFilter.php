@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Account;
 
-use Airship\Engine\Security\Filter\{
-    InputFilterContainer,
-    BoolFilter
-};
+use ParagonIE\Ionizer\Filter\BoolFilter;
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class TwoFactorFilter

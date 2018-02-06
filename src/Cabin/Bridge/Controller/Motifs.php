@@ -4,7 +4,7 @@ namespace Airship\Cabin\Bridge\Controller;
 
 use Airship\Cabin\Bridge\Filter\MotifsFilter;
 use Airship\Engine\Gadgets;
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\{
     GeneralFilterContainer,
     InputFilterContainer
 };

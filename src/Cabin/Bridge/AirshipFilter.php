@@ -3,16 +3,16 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     ArrayFilter,
     BoolFilter,
     FloatFilter,
-    InputFilterContainer,
     IntArrayFilter,
     IntFilter,
     StringFilter,
     WhiteList
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class AirshipFilter

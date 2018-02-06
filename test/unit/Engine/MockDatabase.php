@@ -79,7 +79,7 @@ class MockDatabase extends Database
         );
     }
 
-    public function insert(string $table, array $map = [])
+    public function insert(string $table, array $map = []): int
     {
         return $this->getExpected(
             \json_encode([
@@ -102,9 +102,9 @@ class MockDatabase extends Database
         );
     }
 
-    public function insertMany(string $table, array $maps): bool
+    public function insertMany(string $table, array $maps): int
     {
-        return true;
+        return 1;
     }
 
     public function row(string $statement, ...$params)
@@ -129,11 +129,23 @@ class MockDatabase extends Database
         );
     }
 
-
+    /**
+     * Perform a Parametrized Query
+     *
+     * @param string $statement          The query string (hopefully untainted
+     *                                   by user input)
+     * @param array $params              The parameters (used in prepared
+     *                                   statements)
+     * @param int $fetchStyle            PDO::FETCH_STYLE
+     * @param bool $returnNumAffected    Return the number of rows affected?
+     *
+     * @return array|int|mixed|object
+     */
     public function safeQuery(
         string $statement,
         array $params = [],
-        int $fetch_style = \PDO::FETCH_ASSOC
+        int $fetchStyle = self::DEFAULT_FETCH_STYLE,
+        bool $returnNumAffected = false
     ) {
         return $this->getExpected(
             \json_encode([
@@ -155,7 +167,7 @@ class MockDatabase extends Database
         );
     }
 
-    public function update(string $table, array $changes, array $conditions)
+    public function update(string $table, array $changes, array $conditions): int
     {
         return $this->getExpected(
             \json_encode([

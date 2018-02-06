@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Hull\Filter\BlogPosts;
 
-use Airship\Engine\Security\Filter\{
-    InputFilterContainer,
+use ParagonIE\Ionizer\Filter\{
     IntFilter,
     StringFilter
 };
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class CommentFilter

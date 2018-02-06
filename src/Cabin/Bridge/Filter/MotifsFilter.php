@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter;
 
-use Airship\Engine\Security\Filter\{
-    BoolFilter,
-    GeneralFilterContainer
-};
+use ParagonIE\Ionizer\GeneralFilterContainer;
+use ParagonIE\Ionizer\Filter\BoolFilter;
 
 /**
  * Class MotifsFilter

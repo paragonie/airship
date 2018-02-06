@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Admin;
 
-use Airship\Engine\Security\Filter\{
+use ParagonIE\Ionizer\Filter\{
     ArrayFilter,
-    GeneralFilterContainer,
     IntFilter,
     StringFilter
 };
+use ParagonIE\Ionizer\GeneralFilterContainer;
 
 /**
  * Class DatabaseFilter

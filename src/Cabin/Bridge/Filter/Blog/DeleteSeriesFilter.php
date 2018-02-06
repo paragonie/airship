@@ -2,10 +2,8 @@
 declare(strict_types=1);
 namespace Airship\Cabin\Bridge\Filter\Blog;
 
-use Airship\Engine\Security\Filter\{
-    BoolFilter,
-    InputFilterContainer
-};
+use ParagonIE\Ionizer\Filter\BoolFilter;
+use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
  * Class DeleteSeriesFilter
