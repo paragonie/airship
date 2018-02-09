@@ -10,6 +10,11 @@ use Airship\Engine\{
 };
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
+use ParagonIE\Halite\Alerts\{
+    InvalidMessage,
+    InvalidSignature,
+    InvalidType
+};
 use ParagonIE\Halite\{
     Key,
     Symmetric\Crypto as Symmetric,
@@ -50,6 +55,7 @@ class SharedMemory implements CacheInterface
      * @param Key|null $cacheKey
      * @param AuthenticationKey|null $authKey
      * @param string $personalization
+     * @throws \TypeError
      */
     public function __construct(
         Key $cacheKey = null,
@@ -85,6 +91,10 @@ class SharedMemory implements CacheInterface
      * @param string $key
      * @return null|mixed
      * @throws DataCorrupted
+     * @throws InvalidSignature
+     * @throws InvalidMessage
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function get(string $key)
     {
@@ -112,6 +122,9 @@ class SharedMemory implements CacheInterface
      * @param string $key
      * @param $value
      * @return bool
+     * @throws InvalidMessage
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function set(string $key, $value): bool
     {

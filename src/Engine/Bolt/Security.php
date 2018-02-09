@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Airship\Engine\Bolt;
 
 use Airship\Alerts\{
+    Database\DBException,
+    Database\NotImplementedException,
     Security\SecurityAlert,
     Security\LongTermAuthAlert,
     Security\UserNotLoggedIn
@@ -17,6 +19,13 @@ use Airship\Engine\{
 use ParagonIE\Cookie\{
     Cookie,
     Session
+};
+use ParagonIE\Halite\Alerts\{
+    CannotPerformOperation,
+    InvalidDigestLength,
+    InvalidMessage,
+    InvalidSignature,
+    InvalidType
 };
 use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\Symmetric\Crypto as Symmetric;
@@ -45,6 +54,7 @@ trait Security
      * After loading the Security bolt in place, configure it.
      *
      * @return void
+     * @throws DBException
      */
     public function tightenSecurityBolt(): void
     {
@@ -75,6 +85,8 @@ trait Security
      * @param string $cabin (defaults to current cabin)
      * @param integer $userID (defaults to current user)
      * @return bool
+     * @throws DBException
+     * @throws NotImplementedException
      */
     public function can(
         string $action,
@@ -98,6 +110,7 @@ trait Security
      *
      * @return int
      * @throws UserNotLoggedIn
+     * @throws \TypeError
      */
     public function getActiveUserId(): int
     {
@@ -109,12 +122,13 @@ trait Security
         return (int) $_SESSION['userid'];
     }
 
-
     /**
      * Are we currently logged in as an admin?
      *
      * @param integer $userId (defaults to current user)
      * @return bool
+     * @throws DBException
+     * @throws \TypeError
      */
     public function isSuperUser(int $userId = 0): bool
     {
@@ -130,11 +144,20 @@ trait Security
         }
         return $this->airship_perms->isSuperUser($userId);
     }
-    
+
     /**
      * Are we logged in to a user account?
-     * 
+     *
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws DBException
+     * @throws InvalidDigestLength
+     * @throws InvalidMessage
+     * @throws InvalidSignature
+     * @throws InvalidType
+     * @throws LongTermAuthAlert
+     * @throws SecurityAlert
+     * @throws \TypeError
      */
     public function isLoggedIn(): bool
     {
@@ -170,7 +193,15 @@ trait Security
      * @param string $uid_idx
      * @param string $token_idx
      * @return bool
-     * @throws LongTermAuthAlert (only in debug mode)
+     *
+     * @throws CannotPerformOperation
+     * @throws DBException
+     * @throws InvalidDigestLength
+     * @throws InvalidMessage
+     * @throws InvalidSignature
+     * @throws InvalidType
+     * @throws LongTermAuthAlert
+     * @throws SecurityAlert
      * @throws \TypeError
      */
     protected function doAutoLogin(
@@ -264,6 +295,13 @@ trait Security
      * Completely wipe all authentication mechanisms (Session, Cookie)
      *
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws DBException
+     * @throws InvalidDigestLength
+     * @throws InvalidMessage
+     * @throws InvalidSignature
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function completeLogOut(): bool
     {
@@ -309,6 +347,13 @@ trait Security
      * @param int $userID
      * @param bool $logOut
      * @return bool
+     * @throws CannotPerformOperation
+     * @throws DBException
+     * @throws InvalidDigestLength
+     * @throws InvalidMessage
+     * @throws InvalidSignature
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function verifySessionCanary(int $userID, bool $logOut = true): bool
     {

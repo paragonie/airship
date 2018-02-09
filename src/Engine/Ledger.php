@@ -26,8 +26,11 @@ class Ledger implements LoggerInterface
 
     /**
      * Ledger constructor.
+     *
      * @param LedgerStorageInterface|null $storage
      * @param mixed[] ...$args
+     *
+     * @throws \TypeError
      */
     public function __construct(LedgerStorageInterface $storage = null, ...$args)
     {
@@ -119,6 +122,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function emergency($message, array $context = [])
     {
@@ -131,6 +135,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function critical($message, array $context = [])
     {
@@ -143,6 +148,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function alert($message, array $context = [])
     {
@@ -155,6 +161,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function error($message, array $context = [])
     {
@@ -167,6 +174,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function warning($message, array $context = [])
     {
@@ -179,6 +187,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function notice($message, array $context = [])
     {
@@ -191,6 +200,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function info($message, array $context = [])
     {
@@ -203,6 +213,7 @@ class Ledger implements LoggerInterface
      * @param string $message
      * @param array $context
      * @return mixed
+     * @throws \TypeError
      */
     public function debug($message, array $context = [])
     {

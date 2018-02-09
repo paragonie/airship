@@ -21,13 +21,11 @@ use Airship\Engine\Networking\HTTP\{
     Stream,
     Uri
 };
-use Airship\Engine\Security\{
-    CSRF,
-    Filter\InputFilterContainer
-};
+use Airship\Engine\Security\CSRF;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use ParagonIE\Halite\Util;
 use ParagonIE\HPKPBuilder\HPKPBuilder;
+use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -273,7 +271,7 @@ class Controller
         }
 
         // If we're here, we just need to filter our data and return it.
-        if ($filterContainer) {
+        if ($filterContainer instanceof InputFilterContainer) {
             try {
                 return $filterContainer($rawInput);
             } catch (\TypeError $ex) {

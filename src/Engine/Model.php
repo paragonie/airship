@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Airship\Engine;
 
+use Airship\Alerts\Database\DBException;
 use Airship\Engine\Bolt\{
     Common as CommonBolt,
     Log as LogBolt,
@@ -31,6 +32,7 @@ class Model
     /**
      * Model constructor.
      * @param Database|null $db
+     * @throws DBException
      */
     public function __construct(Database $db = null)
     {

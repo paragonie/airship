@@ -20,6 +20,7 @@ trait Get
      *
      * @param string& $lastPiece (optional)
      * @return array
+     * @throws \TypeError
      */
     protected function httpGetParams(string &$lastPiece = null): array
     {

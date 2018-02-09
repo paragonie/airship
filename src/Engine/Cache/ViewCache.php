@@ -7,6 +7,7 @@ use Airship\Engine\Security\Util;
 use Gregwar\RST\Parser as RSTParser;
 use League\CommonMark\CommonMarkConverter;
 use ParagonIE\ConstantTime\Binary;
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
 use ParagonIE\Halite\Util as CryptoUtil;
 
 /**
@@ -37,6 +38,10 @@ class ViewCache
      * @param bool $return
      *
      * @return string
+     *
+     * @throws \Error
+     * @throws CannotPerformOperation
+     * @throws \TypeError
      */
     public static function markdown(string $data, bool $return = false): string
     {
@@ -59,6 +64,9 @@ class ViewCache
      *
      * @param string $data
      * @return string
+     * @throws CannotPerformOperation
+     * @throws \Error
+     * @throws \TypeError
      */
     public static function purify(string $data): string
     {
@@ -89,6 +97,9 @@ class ViewCache
      * @param bool $return
      *
      * @return string
+     * @throws CannotPerformOperation
+     * @throws \Error
+     * @throws \TypeError
      */
     public static function rst(string $data, bool $return = false): string
     {
@@ -181,6 +192,9 @@ class ViewCache
      * @param string $hashData
      *
      * @return array<int, string>
+     * @throws CannotPerformOperation
+     * @throws \Error
+     * @throws \TypeError
      */
     public static function getFile(string $domainSeparator, string $subdir, string $hashData = ''): array
     {

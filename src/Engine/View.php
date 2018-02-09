@@ -40,6 +40,7 @@ class View
      * @param string $base  Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
      * @return bool
+     * @throws \Twig_Error
      */
     public function display(
         string $base, 
@@ -58,6 +59,7 @@ class View
      * @param string $file Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
      * @return bool
+     * @throws \Twig_Error
      */
     public function unsafeDisplay(
         string $file,
@@ -76,6 +78,7 @@ class View
      * @param string $base Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
      * @return string
+     * @throws \Twig_Error
      */
     public function render(
         string $base,
@@ -93,6 +96,7 @@ class View
      * @param string $file Template to render (e.g. 'index' or 'dir/index')
      * @param array $params Parameters to pass towards the array
      * @return string
+     * @throws \Twig_Error
      */
     public function unsafeRender(
         string $file,

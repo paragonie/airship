@@ -43,6 +43,8 @@ class File implements CacheInterface
      *
      * @param string $key
      * @return bool
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function delete(string $key): bool
     {
@@ -58,6 +60,8 @@ class File implements CacheInterface
      *
      * @param string $key
      * @return null|mixed
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function get(string $key)
     {
@@ -79,6 +83,8 @@ class File implements CacheInterface
      * @param string $key
      * @param $value
      * @return bool
+     * @throws InvalidType
+     * @throws \TypeError
      */
     public function set(string $key, $value): bool
     {
@@ -119,6 +125,7 @@ class File implements CacheInterface
      * @param string $preHash The cache identifier (will be hashed)
      * @return string
      * @throws InvalidType
+     * @throws \TypeError
      */
     public static function getRelativeHashAsString(string $preHash)
     {
@@ -133,6 +140,7 @@ class File implements CacheInterface
      * @param bool $asString Return a string?
      * @return string|array
      * @throws InvalidType
+     * @throws \TypeError
      */
     public static function getRelativeHash(
         string $preHash,
@@ -151,6 +159,7 @@ class File implements CacheInterface
      * @param string $preHash The cache identifier (will be hashed)
      * @return array<int, string>
      * @throws InvalidType
+     * @throws \TypeError
      */
     public static function getRelativeHashPieces(string $preHash)
     {
@@ -187,6 +196,8 @@ class File implements CacheInterface
      *
      * @param string $key
      * @return string
+     * @throws InvalidType
+     * @throws \TypeError
      */
     protected function getRelativePath(string $key): string
     {

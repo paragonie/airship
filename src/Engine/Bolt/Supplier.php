@@ -110,7 +110,9 @@ trait Supplier
      * @param string $supplier
      * @param boolean $force_flush
      * @return SupplierObject|array<mixed, SupplierObject>
+     * @throws AccessDenied
      * @throws NoSupplier
+     * @throws \TypeError
      */
     public function getSupplier(
         string $supplier = '',
