@@ -79,7 +79,7 @@ class Ajax extends LoggedInUsersOnly
             $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authors)) {
+            if (!\in_array($authorId, $authors, true)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
@@ -133,7 +133,7 @@ class Ajax extends LoggedInUsersOnly
             $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authors)) {
+            if (!\in_array($authorId, $authors, true)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
@@ -186,7 +186,7 @@ class Ajax extends LoggedInUsersOnly
             $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authors)) {
+            if (!\in_array($authorId, $authors, true)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
@@ -313,7 +313,7 @@ class Ajax extends LoggedInUsersOnly
             $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authors)) {
+            if (!\in_array($authorId, $authors, true)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')
@@ -526,7 +526,7 @@ class Ajax extends LoggedInUsersOnly
         $actions = $perm_model->getActionNames($cabin);
         $perms = [];
         foreach ($actions as $action) {
-            $perms[$action] = \in_array($action, $userPerms);
+            $perms[$action] = \in_array($action, $userPerms, true);
         }
 
         \Airship\json_response([
@@ -559,7 +559,7 @@ class Ajax extends LoggedInUsersOnly
             $authors = $auth_model->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authors)) {
+            if (!\in_array($authorId, $authors, true)) {
                 \Airship\json_response([
                     'status' => 'ERROR',
                     'message' => \__('You do not have permission to access this author\'s posts.')

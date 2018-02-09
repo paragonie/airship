@@ -142,7 +142,7 @@ class TreeUpdate
             self::ACTION_CORE_UPDATE,
             self::ACTION_PACKAGE_UPDATE
         ];
-        if (\in_array($this->action, $packageRelatedActions)) {
+        if (\in_array($this->action, $packageRelatedActions, true)) {
             // This is a package-related update:
             $this->checksum = $this->stored['checksum'];
 

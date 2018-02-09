@@ -40,7 +40,7 @@ class Files extends FileManager
     public function confirmDeleteFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -58,7 +58,7 @@ class Files extends FileManager
     public function getFileInfo(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -81,7 +81,7 @@ class Files extends FileManager
     public function index(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -95,7 +95,7 @@ class Files extends FileManager
     public function moveFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);

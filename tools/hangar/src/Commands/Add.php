@@ -94,7 +94,7 @@ class Add extends SessionCommand
             return 0;
         }
 
-        if (\in_array($path, $this->session['add'])) {
+        if (\in_array($path, $this->session['add'], true)) {
             echo $this->c['yellow'], 'File already added: ', $this->c[''], $path, "\n";
             return 0;
         }

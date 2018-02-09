@@ -66,7 +66,7 @@ abstract class Gadgets
         \array_unshift($cargo[$name], $source);
         $cargo[$name] = \array_values($cargo[$name]);
 
-        if (!\in_array($name, $cargoIterator)) {
+        if (!\in_array($name, $cargoIterator, true)) {
             $cargoIterator[$name] = 0;
         }
         $state->cargoIterator = $cargoIterator;

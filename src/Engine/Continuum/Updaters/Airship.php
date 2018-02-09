@@ -208,7 +208,7 @@ class Airship extends AutoUpdater implements ContinuumInterface
         }
 
         // If we included composer.lock, we need to install the dependencies.
-        if (\in_array('composer.lock', $metadata['files'])) {
+        if (\in_array('composer.lock', $metadata['files'], true)) {
             $composers = [
                 '/usr/bin/composer',
                 '/usr/bin/composer.phar',

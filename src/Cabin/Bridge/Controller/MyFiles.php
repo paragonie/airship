@@ -63,7 +63,7 @@ class MyFiles extends FileManager
     public function confirmDeleteFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
@@ -118,7 +118,7 @@ class MyFiles extends FileManager
     {
         $this->files->ensureDirExists($this->root_dir, $cabin);
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->commonIndex($dir, $cabin);
@@ -131,7 +131,7 @@ class MyFiles extends FileManager
     public function moveFile(string $cabin = ''): void
     {
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {

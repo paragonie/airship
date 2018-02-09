@@ -64,7 +64,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -154,7 +154,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -225,7 +225,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -276,7 +276,7 @@ class PageManager extends LoggedInUsersOnly
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->pg->setCabin($cabin);
@@ -332,7 +332,7 @@ class PageManager extends LoggedInUsersOnly
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -368,7 +368,7 @@ class PageManager extends LoggedInUsersOnly
     {
         $path = $this->determinePath($cabin);
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -411,7 +411,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -486,7 +486,7 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -549,7 +549,7 @@ class PageManager extends LoggedInUsersOnly
             \Airship\redirect($this->airship_cabin_prefix . '/pages/' . \trim($cabin, '/'));
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -639,7 +639,7 @@ class PageManager extends LoggedInUsersOnly
             );
         }
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -732,7 +732,7 @@ class PageManager extends LoggedInUsersOnly
                 $this->pg->getDirectoryPieces($destination)
             );
         } else {
-            if (!\in_array($post['move_destination'], $cabins)) {
+            if (!\in_array($post['move_destination'], $cabins, true)) {
                 // Cabin doesn't exist!
                 return false;
             }
@@ -921,7 +921,7 @@ class PageManager extends LoggedInUsersOnly
                 Util::NON_DIRECTORY
             );
             $newPath = \implode('/', $newPieces);
-        } elseif (!\in_array($post['move_destination'], $cabins)) {
+        } elseif (!\in_array($post['move_destination'], $cabins, true)) {
             // Cabin doesn't exist!
             return false;
         } else {

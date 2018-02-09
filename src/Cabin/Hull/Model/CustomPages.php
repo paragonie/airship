@@ -95,7 +95,7 @@ class CustomPages extends ModelGear
         }
 
         // Prevent infinite loops:
-        if (\in_array($row['parent'], $idsEncountered)) {
+        if (\in_array($row['parent'], $idsEncountered, true)) {
             return [ $row['url'] ];
         }
 

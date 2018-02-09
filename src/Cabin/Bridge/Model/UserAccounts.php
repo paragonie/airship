@@ -302,7 +302,7 @@ class UserAccounts extends ModelGear
      */
     public function editGroup(int $groupId, array $post = []): bool
     {
-        if (\in_array($post['parent'], $this->getGroupChildren($groupId))) {
+        if (\in_array($post['parent'], $this->getGroupChildren($groupId), true)) {
             return false;
         }
         $this->db->beginTransaction();

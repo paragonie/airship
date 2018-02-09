@@ -45,7 +45,7 @@ class Gadgets extends LoggedInUsersOnly
     public function manageForCabin(string $cabinName = ''): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabinName, $cabins)) {
+        if (!\in_array($cabinName, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix . '/gadgets');
         }
         if (!$this->can('update')) {

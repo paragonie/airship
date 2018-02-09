@@ -63,7 +63,7 @@ class Blog extends ModelGear
             $authors = $this->getAuthorsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($post['author'], $authors)) {
+            if (!\in_array($post['author'], $authors, true)) {
                 $this->db->rollBack();
                 return false;
             }

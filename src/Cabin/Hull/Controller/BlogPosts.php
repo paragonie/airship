@@ -85,7 +85,7 @@ class BlogPosts extends ControllerGear
         if ($this->isLoggedIn() && !$this->isSuperUser()) {
             if (!empty($post['author'])) {
                 $allowedAuthors = $this->blog->getAuthorsForUser($this->getActiveUserId());
-                if (!\in_array($post['author'], $allowedAuthors)) {
+                if (!\in_array($post['author'], $allowedAuthors, true)) {
                     $this->storeViewVar(
                         'blog_error',
                         \__('You do not have permission to post as this author.')
@@ -244,7 +244,7 @@ class BlogPosts extends ControllerGear
                 throw new EmulatePageNotFound();
             }
             $cats = $this->blog->expandCategory($category['categoryid']);
-            if (!\in_array($category['categoryid'], $cats)) {
+            if (!\in_array($category['categoryid'], $cats, true)) {
                 \array_unshift($cats, $category['categoryid']);
             }
         } else {

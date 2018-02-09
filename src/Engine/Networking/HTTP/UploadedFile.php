@@ -159,7 +159,7 @@ class UploadedFile implements UploadedFileInterface
      */
     protected function isStringOrNull($param): bool
     {
-        return \in_array(\gettype($param), ['string', 'NULL']);
+        return \in_array(\gettype($param), ['string', 'NULL'], true);
     }
 
     /**

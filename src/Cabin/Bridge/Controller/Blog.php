@@ -138,7 +138,7 @@ class Blog extends LoggedInUsersOnly
         // The 'delete' permission here means "delete any", not just "delete mine":
         if (!$this->can('delete')) {
             // Does this author belong to you?
-            if (!\in_array((int) $blogPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $blogPost['author'], $authorsAllowed, true)) {
                 // No? Then you don't belong here
                 \Airship\redirect(
                     $this->airship_cabin_prefix . '/blog/post'
@@ -253,7 +253,7 @@ class Blog extends LoggedInUsersOnly
         // The 'update' permission here means "update any", not just "update mine":
         if (!$this->can('update')) {
             // Does this author belong to you?
-            if (!\in_array((int) $blogPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $blogPost['author'], $authorsAllowed, true)) {
                 // No? Then you don't belong here
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/post');
             }
@@ -324,7 +324,7 @@ class Blog extends LoggedInUsersOnly
                     break;
                 }
             }
-            if (!\in_array((int) $series['author'], $authorsAllowed)) {
+            if (!\in_array((int) $series['author'], $authorsAllowed, true)) {
                 // You are not allowed
                 \Airship\redirect($this->airship_cabin_prefix . '/blog/series');
             }
@@ -904,7 +904,7 @@ class Blog extends LoggedInUsersOnly
         if (!$this->isSuperUser()) {
             if (!$this->can('delete')) {
                 // Does this author belong to you?
-                if (!\in_array((int) $oldPost['author'], $authorsAllowed)) {
+                if (!\in_array((int) $oldPost['author'], $authorsAllowed, true)) {
                     return false;
                 }
             }
@@ -941,7 +941,7 @@ class Blog extends LoggedInUsersOnly
                 // Only administrators can transfer ownership; block this request
                 return false;
             }
-            if (!\in_array((int) $oldPost['author'], $authorsAllowed)) {
+            if (!\in_array((int) $oldPost['author'], $authorsAllowed, true)) {
                 // This author is invalid.
                 return false;
             }
@@ -983,7 +983,7 @@ class Blog extends LoggedInUsersOnly
         if (!\Airship\all_keys_exist($required, $post)) {
             return false;
         }
-        if (!\in_array($post['author'], $authorsAllowed)) {
+        if (!\in_array($post['author'], $authorsAllowed, true)) {
             return false;
         }
         $publish = $this->can('publish')
@@ -1051,7 +1051,7 @@ class Blog extends LoggedInUsersOnly
         if (!\Airship\all_keys_exist(['author', 'items'], $post)) {
             return false;
         }
-        if (!\in_array($post['author'], $authorsAllowed)) {
+        if (!\in_array($post['author'], $authorsAllowed, true)) {
             return false;
         }
         return $this->blog->createSeries($post);

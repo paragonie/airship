@@ -127,7 +127,7 @@ class Motifs extends AdminOnly
     public function manage(string $cabinName = ''): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabinName, $cabins)) {
+        if (!\in_array($cabinName, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix . '/motifs');
         }
         if (!$this->can('update')) {

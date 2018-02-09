@@ -457,7 +457,7 @@ function is_disabled(string $function): bool
     if ($disabled === null) {
         $disabled = \explode(',', \ini_get('disable_functions'));
     }
-    return \in_array($function, $disabled);
+    return \in_array($function, $disabled, true);
 }
 
 /**

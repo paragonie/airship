@@ -39,7 +39,7 @@ class Cabins extends LoggedInUsersOnly
         if (!$this->can('read')) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        if (!\in_array($cabinName, $this->getCabinNamespaces())) {
+        if (!\in_array($cabinName, $this->getCabinNamespaces(), true)) {
             // Invalid cabin name
             \Airship\redirect($this->airship_cabin_prefix . '/cabins');
         }
@@ -90,7 +90,7 @@ class Cabins extends LoggedInUsersOnly
             // Admins only!
             \Airship\redirect($this->airship_cabin_prefix);
         }
-        if (!\in_array($cabinName, $this->getCabinNamespaces())) {
+        if (!\in_array($cabinName, $this->getCabinNamespaces(), true)) {
             // Invalid cabin name
             \Airship\redirect($this->airship_cabin_prefix . '/cabins');
         }

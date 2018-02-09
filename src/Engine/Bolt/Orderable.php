@@ -52,7 +52,7 @@ trait Orderable
         array $whiteList = [],
         string $default = 'name'
     ): string {
-        if (!\in_array($column, $whiteList)) {
+        if (!\in_array($column, $whiteList, true)) {
             $column = $default;
         }
         if ($direction !== 'ASC' && $direction !== 'DESC') {

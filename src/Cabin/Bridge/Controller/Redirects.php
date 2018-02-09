@@ -44,7 +44,7 @@ class Redirects extends LoggedInUsersOnly
     public function deleteRedirect(string $cabin, string $redirectId): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins) && !$this->can('delete')) {
+        if (!\in_array($cabin, $cabins, true) && !$this->can('delete')) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/redirects'
             );
@@ -85,7 +85,7 @@ class Redirects extends LoggedInUsersOnly
     public function editRedirect(string $cabin, string $redirectId): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins) && !$this->can('update')) {
+        if (!\in_array($cabin, $cabins, true) && !$this->can('update')) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/redirects'
             );
@@ -128,7 +128,7 @@ class Redirects extends LoggedInUsersOnly
     public function forCabin(string $cabin = ''): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins)) {
+        if (!\in_array($cabin, $cabins, true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->setTemplateExtraData($cabin);
@@ -165,7 +165,7 @@ class Redirects extends LoggedInUsersOnly
     public function newRedirect(string $cabin): void
     {
         $cabins = $this->getCabinNamespaces();
-        if (!\in_array($cabin, $cabins) && !$this->can('create')) {
+        if (!\in_array($cabin, $cabins, true) && !$this->can('create')) {
             \Airship\redirect($this->airship_cabin_prefix . '/redirects');
         }
         $this->setTemplateExtraData($cabin);

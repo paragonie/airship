@@ -63,7 +63,7 @@ class AuthorFiles extends FileManager
 
         $dir = $this->determinePath($cabin);
 
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
             $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
         }
@@ -98,7 +98,7 @@ class AuthorFiles extends FileManager
         $fileName = $_GET['file'];
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->storeViewVar(
@@ -127,7 +127,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         $this->commonIndex($dir, $cabin);
@@ -145,7 +145,7 @@ class AuthorFiles extends FileManager
         $this->files->ensureDirExists($this->root_dir . '/photos', $cabin);
 
         $dir = $this->determinePath($cabin);
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix);
         }
         if (empty($_GET['file'])) {
@@ -180,7 +180,7 @@ class AuthorFiles extends FileManager
             $this->getActiveUserId()
         );
         // Check
-        if (!\in_array($this->authorId, $authorsForUser)) {
+        if (!\in_array($this->authorId, $authorsForUser, true)) {
             return false;
         }
         return true;

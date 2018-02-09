@@ -751,7 +751,7 @@ class Permissions extends ModelGear
         foreach ($groupIds as $group) {
             $allowed = $this->getGroupPerms((int) $group, $contextId);
             foreach ($actions as $act) {
-                $perms[$group][$act] = \in_array($act, $allowed);
+                $perms[$group][$act] = \in_array($act, $allowed, true);
             }
         }
         return $perms;
@@ -774,7 +774,7 @@ class Permissions extends ModelGear
         foreach ($userIds as $user) {
             $allowed = $this->getUserPerms((int) $user, $contextId);
             foreach ($actions as $act) {
-                $perms[$user][$act] = \in_array($act, $allowed);
+                $perms[$user][$act] = \in_array($act, $allowed, true);
             }
         }
         return $perms;

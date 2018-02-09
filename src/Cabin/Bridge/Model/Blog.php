@@ -169,7 +169,7 @@ class Blog extends ModelGear
         // Populate tags (only allow this if the tag actually exists)
         $allTags = $this->db->column('SELECT tagid FROM hull_blog_tags');
         foreach ($post['tags'] as $tag) {
-            if (!\in_array($tag, $allTags)) {
+            if (!\in_array($tag, $allTags, true)) {
                 continue;
             }
             $this->db->insert(
@@ -1601,7 +1601,7 @@ class Blog extends ModelGear
                 continue;
             }
             list ($type, $itemId) = \explode('_', $new);
-            if (\in_array($new, $inserts)) {
+            if (\in_array($new, $inserts, true)) {
                 switch ($type) {
                     case 'series':
                         $this->db->insert(

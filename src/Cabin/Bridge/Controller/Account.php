@@ -708,7 +708,7 @@ class Account extends ControllerGear
             if (!empty($post['remember'])) {
                 /** @var AutoPilot $autoPilot */
                 $autoPilot = $state->autoPilot;
-                if(!\in_array(AutoPilot::class, \Airship\get_ancestors(\get_class($autoPilot)))) {
+                if(!\in_array(AutoPilot::class, \Airship\get_ancestors(\get_class($autoPilot)), true)) {
                     throw new \TypeError(
                         \trk('errors.type.wrong_class', AutoPilot::class)
                     );
@@ -940,7 +940,7 @@ class Account extends ControllerGear
     ): bool {
         // Validate the motifs
         foreach ($prefs['motif'] as $cabin => $selectedMotif) {
-            if (!\in_array($cabin, $cabins)) {
+            if (!\in_array($cabin, $cabins, true)) {
                 unset($prefs['motif'][$cabin]);
                 continue;
             }

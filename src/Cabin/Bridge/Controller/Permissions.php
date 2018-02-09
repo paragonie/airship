@@ -59,7 +59,7 @@ class Permissions extends AdminOnly
      */
     public function cabinSubmenu(string $cabin): void
     {
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect($this->airship_cabin_prefix . '/crew/permissions');
         }
         $post = $this->post(new CabinSubmenuFilter());
@@ -92,7 +92,7 @@ class Permissions extends AdminOnly
     public function editAction(string $cabin, string $actionId): void
     {
         $actionId = (int) $actionId;
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/crew/permissions'
             );
@@ -129,7 +129,7 @@ class Permissions extends AdminOnly
     public function editContext(string $cabin, string $contextId): void
     {
         $contextId = (int) $contextId;
-        if (!\in_array($cabin, $this->getCabinNamespaces())) {
+        if (!\in_array($cabin, $this->getCabinNamespaces(), true)) {
             \Airship\redirect(
                 $this->airship_cabin_prefix . '/crew/permissions'
             );

@@ -70,7 +70,7 @@ class Assemble extends SessionCommand
         $this->pharStub = $workspace . DIRECTORY_SEPARATOR . 'index.php';
         $this->buildPhar($workspace, $args);
 
-        if (!\in_array('build_history', $this->config)) {
+        if (!\in_array('build_history', $this->config, true)) {
             $this->config['build_history'] = [];
         }
         $dt = new \DateTime('now');
@@ -82,7 +82,7 @@ class Assemble extends SessionCommand
         ];
 
         // Unless we passed --no-flush, we nuke this first
-        if (!\in_array('--no-flush', $args)) {
+        if (!\in_array('--no-flush', $args, true)) {
             $this->session = [];
         }
         return true;
@@ -282,7 +282,7 @@ class Assemble extends SessionCommand
     {
         unset($args);
         $from = $this->session['dir'];
-        if (\in_array('metadata', $this->session)) {
+        if (\in_array('metadata', $this->session, true)) {
             $this->metadata = $this->session['metadata'];
         }
 

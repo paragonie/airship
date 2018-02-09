@@ -75,7 +75,7 @@ class Cabin extends AutoUpdater implements ContinuumInterface
         return (
             $this->getSupplier()->getName() === $state->universal['airship']['trusted-supplier']
                 &&
-            \in_array($this->name, self::AIRSHIP_SPECIAL_CABINS)
+            \in_array($this->name, self::AIRSHIP_SPECIAL_CABINS, true)
         );
     }
     

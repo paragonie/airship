@@ -41,7 +41,7 @@ foreach ($allDirs as $file) {
         echo "\n";
     }
     if (\preg_match('/\.([^.]+)$/', $name, $m)) {
-        if (!\in_array($m[1], $extensions)) {
+        if (!\in_array($m[1], $extensions, true)) {
             continue;
         }
     } else {

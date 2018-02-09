@@ -78,7 +78,7 @@ class Admin extends AdminOnly
 
         $found = false;
         foreach ($channels[$ch]['notaries'] as $i => $notary) {
-            if (\in_array($url, $notary['urls'])) {
+            if (\in_array($url, $notary['urls'], true)) {
                 if ($notary['public_key'] === $notaryInfo['public_key']) {
                     // Duplicate
                     return false;

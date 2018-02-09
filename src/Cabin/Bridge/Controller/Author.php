@@ -83,7 +83,7 @@ class Author extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             // Check
-            if (!\in_array($authorId, $authorsForUser)) {
+            if (!\in_array($authorId, $authorsForUser, true)) {
                 \Airship\redirect(
                     $this->airship_cabin_prefix . '/author'
                 );
@@ -131,7 +131,7 @@ class Author extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             // Check
-            if (!\in_array($authorId, $authorsForUser)) {
+            if (!\in_array($authorId, $authorsForUser, true)) {
                 \Airship\redirect(
                     $this->airship_cabin_prefix . '/author'
                 );
@@ -237,7 +237,7 @@ class Author extends LoggedInUsersOnly
             $authorsForUser = $this->author->getAuthorIdsForUser(
                 $this->getActiveUserId()
             );
-            if (!\in_array($authorId, $authorsForUser)) {
+            if (!\in_array($authorId, $authorsForUser, true)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/author');
             }
         }
@@ -274,7 +274,7 @@ class Author extends LoggedInUsersOnly
                 $this->getActiveUserId()
             );
             // Check
-            if (!\in_array($authorId, $authorsForUser)) {
+            if (!\in_array($authorId, $authorsForUser, true)) {
                 \Airship\redirect($this->airship_cabin_prefix . '/author');
             }
             $inCharge = $this->author->userIsOwner($authorId);
