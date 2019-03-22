@@ -53,7 +53,7 @@
     "ezyang/htmlpurifier": "^4.8",
     "gregwar/rst": "^1.0",
     "guzzlehttp/guzzle": "^6",
-    "league/commonmark": "^0.13",
+    "league/commonmark": "^0.18.3",
     "paragonie/constant_time_encoding": "^2.1",
     "paragonie/cookie": "^3.1",
     "paragonie/easydb": "^2",
